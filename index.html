@@ -535,6 +535,7 @@ onAuthStateChanged(auth, async user => {
     if (u.exists() && u.data().theme) setTheme(u.data().theme, false);
     if (u.exists() && u.data().plan) { const pl = u.data().plan; if (Array.isArray(pl.types)) TYPES = pl.types; if (pl.week) WEEK = { ...DEFAULT_WEEK, ...pl.week }; }
     const ud = u.exists() ? u.data() : {};
+    S.pushOn = !!ud.push?.enabled && (ud.push?.tokens || []).length > 0;
     if (Array.isArray(ud.remindTimes)) REMIND_TIMES = ud.remindTimes;
     else if (ud.remindAt && /^\d\d:\d\d$/.test(ud.remindAt)) REMIND_TIMES = [ud.remindAt];
     // Gewicht-Aufgaben einmalig bei bestehender eigener Liste ergänzen
@@ -547,6 +548,8 @@ onAuthStateChanged(auth, async user => {
   watchToday();
   watchTodos();
   loadAllWo();
+  applyPending();
+  writePushCfg();
   renderAll();
   loadWorkout(S.trainDate);
 });
@@ -1191,6 +1194,7 @@ function renderPerf() {
 /* ===================== TRAININGSPLAN BEARBEITEN ===================== */
 async function savePlan() {
   try { await setDoc(userRef(), { plan: { types: TYPES, week: WEEK } }, { merge: true }); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+  writePushCfg();
   renderStart(); renderTrain();
 }
 function openPlanEditor() {
@@ -1602,8 +1606,14 @@ function openSettings() {
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <b style="font-size:18px">Erinnerungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
-    <h2 style="margin-top:12px">Allgemein</h2>
-    <p class="muted" style="margin:0 0 10px;font-size:14px">Zu diesen Uhrzeiten bekommst du eine Übersicht über alles, was noch offen ist.</p>
+    <div class="card" style="margin-top:8px;${S.pushOn ? "border-color:color-mix(in srgb, var(--accent) 60%, var(--border))" : ""}">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div><b>${S.pushOn ? "✓ Push ist an" : "Push bei geschlossener App"}</b>
+          <div class="muted" style="font-size:13px;margin-top:2px">${S.pushOn ? "Erinnerungen kommen auch, wenn die App zu ist." : VAPID_KEY ? "Erinnerungen auch, wenn die App ganz geschlossen ist." : "Noch nicht eingerichtet – siehe Anleitung im Chat."}</div></div>
+        ${VAPID_KEY ? `<button class="btn ${S.pushOn ? "" : "primary"}" style="padding:8px 12px;flex:none" data-action="${S.pushOn ? "pushoff" : "pushon"}">${S.pushOn ? "Aus" : "Aktivieren"}</button>` : ""}
+      </div></div>
+    <h2 style="margin-top:16px">Allgemein</h2>
+    <p class="muted" style="margin:0 0 10px;font-size:14px">Zu diesen Uhrzeiten bekommst du jede offene Aufgabe als Benachrichtigung – mit „✓ Erledigt“ zum direkten Abhaken.</p>
     <div class="tasks">${REMIND_TIMES.length ? REMIND_TIMES.map(t => `
       <div class="todo"><span class="tap" style="font-size:20px;font-weight:800">${t} Uhr</span>
         <button class="mini" data-action="delgen" data-v="${t}" title="Entfernen">${ICON.x}</button></div>`).join("")
@@ -1705,6 +1715,8 @@ document.addEventListener("click", async e => {
   else if (a === "addgen") { const v = $("#genIn").value; if (v) { REMIND_TIMES.push(v); saveGeneralTimes(); if ("Notification" in window && Notification.permission === "default") enableNotifications(); } }
   else if (a === "delgen") { REMIND_TIMES = REMIND_TIMES.filter(x => x !== el.dataset.v); saveGeneralTimes(); }
   else if (a === "taskbell") openTaskBell(el.dataset.key);
+  else if (a === "pushon") enablePush();
+  else if (a === "pushoff") disablePush();
   else if (a === "savebell") saveTaskBell(el.dataset.key, !!el.dataset.off);
   else if (a === "gotodo") setTab("todo");
   else if (a === "todoadd") addTodo();
@@ -1799,9 +1811,12 @@ document.addEventListener("input", e => {
 });
 
 /* ===================== ERINNERUNG / BENACHRICHTIGUNG ===================== */
+// Öffentlicher Web-Push-Schlüssel aus Firebase (Projekteinstellungen → Cloud Messaging → Web-Push-Zertifikate)
+const VAPID_KEY = "BObITakMKFitnb_6SsNda__5RGrPi7jsYIiowIHo4o4rJVMvDCtWg6J2WQPVUnyQ9qUr9xtXhyxnP4ktBWmn5DY";
 let swReg = null;
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js").then(r => { swReg = r; registerPeriodic(); }).catch(() => {});
+  navigator.serviceWorker.register("./sw.js").then(r => { swReg = r; registerPeriodic(); applyPending(); }).catch(() => {});
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data?.type === "refresh") applyPending(); });
 }
 async function enableNotifications() {
   const p = await Notification.requestPermission();
@@ -1817,59 +1832,110 @@ async function registerPeriodic() {
     if (st.state === "granted") await swReg.periodicSync.register("tracker-reminder", { minInterval: 60 * 60 * 1000 });
   } catch {}
 }
-function openTasksToday() {
+// Offene Punkte von heute als einzelne Einträge (jeder wird eine eigene Benachrichtigung mit „✓ Erledigt“)
+function openItemsToday() {
   const k = todayKey(), done = S.days[k]?.done || {};
-  const tasks = tasksFor(new Date()).filter(t => !done[t.key]).map(t => t.t);
-  const todos = todosForToday().filter(t => !t.done).map(t => "To-Do: " + t.text);
+  const tasks = tasksFor(new Date()).filter(t => !done[t.key]).map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, kind: t.kind === "weight" ? "weight" : "task" }));
+  const todos = todosForToday().filter(t => !t.done).map(t => ({ id: "todo-" + t.id, todoId: t.id, t: t.text, kind: "todo" }));
   return [...tasks, ...todos];
 }
-// Gemeinsamer Plan für App und Service Worker: was soll heute wann erinnert werden?
+function openTasksToday() { return openItemsToday().map(i => (i.kind === "todo" ? "To-Do: " : "") + i.t); }
+// Gemeinsamer Plan für App und Service Worker
 function reminderPlan() {
   const k = todayKey(), done = S.days[k]?.done || {};
   return {
-    date: k,
-    general: REMIND_TIMES,
-    open: openTasksToday(),
-    tasks: tasksFor(new Date()).filter(t => t.remind).map(t => ({ key: t.key, t: t.t, time: t.remind, done: !!done[t.key] })),
+    date: k, total: tasksFor(new Date()).length, general: REMIND_TIMES, items: openItemsToday(),
+    tasks: tasksFor(new Date()).filter(t => t.remind).map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, time: t.remind, done: !!done[t.key], kind: t.kind === "weight" ? "weight" : "task" })),
+    pushOn: !!S.pushOn,
   };
 }
 async function readState() {
   const c = await caches.open("tracker-state");
   return { c, st: await c.match("state").then(r => r ? r.json() : {}).catch(() => ({})) };
 }
-// Speichert den aktuellen Stand für den Service Worker (Erinnerung im Hintergrund)
 async function saveReminderState() {
   try { const { c, st } = await readState(); await c.put("state", new Response(JSON.stringify({ ...st, plan: reminderPlan() }))); } catch {}
+  writePushCfg();
 }
-// Fällige Erinnerungen (höchstens 90 Minuten alt, damit nach langer Pause nicht alles auf einmal kommt)
+// Fällige Erinnerungen → Pakete mit Einträgen (höchstens 90 Minuten alt)
 function dueNotifications(plan, fired, nowMin) {
   const out = [];
   const recent = t => toMin(t) <= nowMin && nowMin - toMin(t) <= 90;
   const gen = plan.general.filter(recent).filter(t => !fired.includes("g" + t)).pop();
-  if (gen) {
-    out.push({ id: "g" + gen, title: plan.open.length ? `Noch ${plan.open.length} offen` : "Alles erledigt 🔥",
-      body: plan.open.length ? plan.open.join(", ") : "Stark – heute ist alles abgehakt.", skip: !plan.open.length });
-    plan.general.filter(t => toMin(t) <= nowMin).forEach(t => fired.includes("g" + t) || out.push({ id: "g" + t, skip: true }));
-  }
+  if (gen) out.push({ id: "g" + gen, items: plan.items });
+  plan.general.filter(t => toMin(t) <= nowMin).forEach(t => { if (!fired.includes("g" + t) && t !== gen) out.push({ id: "g" + t, items: [] }); });
   for (const t of plan.tasks) {
     const id = "t" + t.key + t.time;
     if (fired.includes(id) || toMin(t.time) > nowMin) continue;
-    out.push({ id, title: t.t, body: "Noch nicht erledigt – jetzt abhaken?", skip: t.done || !recent(t.time) });
+    out.push({ id, items: !t.done && recent(t.time) ? [t] : [] });
   }
   return out;
 }
 async function checkReminder() {
   if (!S.uid || !("Notification" in window) || Notification.permission !== "granted" || !swReg) return;
+  if (S.pushOn) return;   // Push vom Server übernimmt die Erinnerungen
   const now = new Date(), plan = reminderPlan();
   const { c, st } = await readState();
   const fired = st.firedDate === plan.date ? (st.fired || []) : [];
   const due = dueNotifications(plan, fired, now.getHours() * 60 + now.getMinutes());
   if (!due.length) return;
-  for (const n of due) {
-    if (!n.skip) swReg.showNotification(n.title, { body: n.body, icon: "./icon-192.png", badge: "./icon-192.png", tag: n.id });
-    fired.push(n.id);
-  }
+  const items = [], seen = new Set();
+  for (const n of due) { fired.push(n.id); for (const it of n.items) if (!seen.has(it.id)) { seen.add(it.id); items.push(it); } }
+  if (items.length) (swReg.active || navigator.serviceWorker.controller)?.postMessage({ type: "show", payload: { date: plan.date, total: plan.total, items } });
   await c.put("state", new Response(JSON.stringify({ ...st, plan, firedDate: plan.date, fired })));
+}
+// Abhaken aus der Benachrichtigung, das der Service Worker nicht direkt speichern konnte, jetzt nachholen
+async function applyPending() {
+  if (!S.uid) return;
+  try {
+    const { c, st } = await readState();
+    const pend = st.pending || []; if (!pend.length) return;
+    await c.put("state", new Response(JSON.stringify({ ...st, pending: [] })));
+    for (const p of pend) {
+      if (p.kind === "todo") { const t = S.todos.find(x => x.id === p.todoId); if (t && !t.done) await toggleTodo(p.todoId); }
+      else if (p.date === todayKey() && !S.days[p.date]?.done?.[p.key]) await toggleTask(p.date, p.key);
+    }
+    toast(`${pend.length} Punkt${pend.length > 1 ? "e" : ""} aus Benachrichtigungen abgehakt ✓`);
+  } catch {}
+}
+
+/* ---------- Push vom Server (auch wenn die App geschlossen ist) ---------- */
+let pushCfgT;
+function writePushCfg() {
+  if (!S.uid || !S.pushOn) return;
+  clearTimeout(pushCfgT);
+  pushCfgT = setTimeout(() => {
+    const weekNames = {}, restDays = [];
+    for (let d = 0; d < 7; d++) { const p = planFor(d); weekNames[d] = p.name; if (p.type === "rest") restDays.push(d); }
+    const cfg = {
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Berlin",
+      general: REMIND_TIMES, weekNames, restDays,
+      tasks: (S.taskCfg || DEFAULT_TASKS).map(t => ({ key: t.key, t: t.t || "Training", days: t.days || null, remind: t.remind || null, training: !!t.training, kind: t.kind || null })),
+    };
+    setDoc(userRef(), { push: { enabled: true, cfg } }, { merge: true }).catch(() => {});
+  }, 800);
+}
+async function enablePush() {
+  if (!VAPID_KEY) { toast("Push ist noch nicht eingerichtet (Schlüssel fehlt)"); return; }
+  try {
+    if (Notification.permission !== "granted" && (await Notification.requestPermission()) !== "granted") { toast("Benachrichtigungen wurden nicht erlaubt"); return; }
+    const { getMessaging, getToken, isSupported } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js");
+    if (!(await isSupported())) { toast("Push wird von diesem Browser nicht unterstützt"); return; }
+    const reg = swReg || await navigator.serviceWorker.ready;
+    const token = await getToken(getMessaging(fbApp), { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
+    if (!token) throw new Error("kein Token");
+    const u = await getDoc(userRef());
+    const tokens = [...new Set([...(u.data()?.push?.tokens || []), token])].slice(-5);
+    await setDoc(userRef(), { push: { enabled: true, tokens } }, { merge: true });
+    S.pushOn = true; writePushCfg(); saveReminderState();
+    toast("Push ist an – auch bei geschlossener App 🔔");
+    openSettings();
+  } catch (e) { toast("Push konnte nicht aktiviert werden: " + (e.code || e.message)); }
+}
+async function disablePush() {
+  S.pushOn = false;
+  try { await setDoc(userRef(), { push: { enabled: false } }, { merge: true }); } catch {}
+  saveReminderState(); openSettings(); toast("Push ist aus");
 }
 setInterval(() => {
   if (S.uid && todayKey() !== S.curToday) { watchToday(); renderAll(); }   // Tageswechsel um Mitternacht
