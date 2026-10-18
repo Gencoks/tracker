@@ -1,5 +1,5 @@
-// Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um die Erinnerung
-const CACHE = "tracker-v1";
+// Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um Erinnerungen
+const CACHE = "tracker-v4";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -24,9 +24,10 @@ self.addEventListener("fetch", e => {
   );
 });
 
-// Erinnerung im Hintergrund (Android/Chrome, wenn als App installiert)
+// ---------- Erinnerungen im Hintergrund (Android/Chrome, wenn installiert) ----------
 const pad = n => String(n).padStart(2, "0");
 const todayKey = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const toMin = t => +t.slice(0, 2) * 60 + +t.slice(3);
 
 self.addEventListener("periodicsync", e => {
   if (e.tag === "tracker-reminder") e.waitUntil(backgroundReminder());
@@ -35,22 +36,26 @@ async function backgroundReminder() {
   const c = await caches.open("tracker-state");
   const r = await c.match("state");
   const st = r ? await r.json() : {};
-  const at = st.at || { h: 19, m: 30 };
-  const now = new Date();
-  if (now.getHours() * 60 + now.getMinutes() < at.h * 60 + at.m) return;
-  const k = todayKey();
-  if (st.notified === k) return;
-  let title, body;
-  if (st.date === k) {
-    if (!st.open || !st.open.length) return;
-    title = `Noch ${st.open.length} Aufgabe${st.open.length > 1 ? "n" : ""} offen`;
-    body = st.open.join(", ");
-  } else {
-    title = "Tracker";
-    body = "Du hast heute noch nichts abgehakt.";
+  const plan = st.plan; if (!plan) return;
+  const k = todayKey(), now = new Date(), nowMin = now.getHours() * 60 + now.getMinutes();
+  const fresh = plan.date === k;   // App heute schon geöffnet? Sonst ist noch nichts erledigt
+  const fired = st.firedDate === k ? (st.fired || []) : [];
+  const recent = t => toMin(t) <= nowMin && nowMin - toMin(t) <= 90;
+  const show = (id, title, body) => self.registration.showNotification(title, { body, icon: "./icon-192.png", badge: "./icon-192.png", tag: id });
+
+  const gen = (plan.general || []).filter(recent).filter(t => !fired.includes("g" + t)).pop();
+  if (gen) {
+    if (!fresh) await show("g" + gen, "Tracker", "Du hast heute noch nichts abgehakt.");
+    else if (plan.open.length) await show("g" + gen, `Noch ${plan.open.length} offen`, plan.open.join(", "));
+    (plan.general || []).filter(t => toMin(t) <= nowMin).forEach(t => fired.includes("g" + t) || fired.push("g" + t));
   }
-  await self.registration.showNotification(title, { body, icon: "./icon-192.png", badge: "./icon-192.png", tag: "tracker-reminder" });
-  await c.put("state", new Response(JSON.stringify({ ...st, notified: k })));
+  for (const t of plan.tasks || []) {
+    const id = "t" + t.key + t.time;
+    if (fired.includes(id) || toMin(t.time) > nowMin) continue;
+    if ((!fresh || !t.done) && recent(t.time)) await show(id, t.t, "Noch nicht erledigt – jetzt abhaken?");
+    fired.push(id);
+  }
+  await c.put("state", new Response(JSON.stringify({ ...st, firedDate: k, fired })));
 }
 
 self.addEventListener("notificationclick", e => {

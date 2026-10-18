@@ -10,11 +10,28 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  // Design sofort anwenden (bevor die Seite gezeichnet wird), damit nichts aufblitzt
+  window.applyTheme = function (t) {
+    t = t || {};
+    var mode = t.mode || "dark", accent = t.accent || "#FFC400", r = document.documentElement;
+    var light = mode === "light" || (mode === "system" && window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches);
+    r.dataset.theme = light ? "light" : "dark";
+    r.style.setProperty("--accent", accent);
+    var h = accent.replace("#", ""), R = parseInt(h.substr(0, 2), 16) / 255, G = parseInt(h.substr(2, 2), 16) / 255, B = parseInt(h.substr(4, 2), 16) / 255;
+    var lin = function (c) { return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    var L = 0.2126 * lin(R) + 0.7152 * lin(G) + 0.0722 * lin(B);
+    r.style.setProperty("--accent-ink", L > 0.36 ? "#111111" : "#ffffff");
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = light ? "#f3f3f5" : "#0e0e0f";
+  };
+  try { applyTheme(JSON.parse(localStorage.getItem("tracker-theme") || "{}")); } catch (e) { applyTheme({}); }
+</script>
 <style>
-  /* ============ FARBEN – hier später das Gelb austauschen ============ */
+  /* ============ FARBEN ============ */
   :root {
-    --accent: #FFC400;          /* <- Gelbton (Platzhalter) */
-    --accent-ink: #111111;      /* Schrift auf Gelb */
+    --accent: #FFC400;          /* Akzentfarbe – in der App unter ⚙ Einstellungen änderbar */
+    --accent-ink: #111111;      /* Schrift auf der Akzentfarbe */
+    --accent-text: var(--accent);  /* Akzentfarbe als Schrift (im Hellmodus etwas dunkler) */
     --bg: #0e0e0f;
     --surface: #18181a;
     --surface-2: #222225;
@@ -23,9 +40,22 @@
     --muted: #8b8b93;
     --danger: #ff5c5c;
     --radius: 14px;
+    --shade: rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f3f5;
+    --surface: #ffffff;
+    --surface-2: #ececef;
+    --border: #dcdce2;
+    --text: #141416;
+    --muted: #6c6c75;
+    --accent-text: color-mix(in srgb, var(--accent) 62%, #000);
+    --shade: rgba(20,20,25,.35);
+    color-scheme: light;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; background: var(--bg); color: var(--text);
+  html, body { margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
   body { min-height: 100dvh; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
@@ -61,7 +91,7 @@
   .stats { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 
   /* Wochenleiste */
-  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 14px; }
+  .week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
   .week .d { text-align: center; font-size: 11px; color: var(--muted); }
   .week .box { margin: 4px auto 0; width: 100%; aspect-ratio: 1; max-width: 40px; border-radius: 9px; border: 2px solid var(--border); background: var(--surface); }
   .week .box.full { background: var(--accent); border-color: var(--accent); }
@@ -70,8 +100,13 @@
 
   /* Aufgabenliste */
   .tasks { display: flex; flex-direction: column; gap: 8px; }
-  .task { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px; border-radius: var(--radius);
-    background: var(--surface); border: 1px solid var(--border); transition: border-color .15s, opacity .15s; }
+  .task { display: flex; align-items: center; gap: 4px; width: 100%; text-align: left; padding: 6px 6px 6px 14px; border-radius: var(--radius);
+    background: var(--surface); border: 1px solid var(--border); transition: border-color .15s, opacity .15s; min-height: 64px; }
+  .task-main { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; text-align: left; padding: 8px 0; }
+  .kg-in { display: flex; align-items: center; gap: 4px; margin-left: auto; flex: none; }
+  .kg-in .num-in { width: 76px; padding: 8px; }
+  .kg-in small { color: var(--muted); font-size: 12px; }
+  .mini.on { color: var(--accent-text); }
   .task .t { font-weight: 600; }
   .task .s { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .task.done { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
@@ -84,7 +119,7 @@
   /* Kalender */
   .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .cal-head b { font-size: 18px; }
-  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .cal .wd { text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 4px; }
   .cal .c { aspect-ratio: 1; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); display: grid; place-items: center;
     font-size: 14px; font-weight: 600; position: relative; }
@@ -99,7 +134,7 @@
   .legend { display: flex; gap: 14px; margin-top: 12px; font-size: 12px; color: var(--muted); }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .legend i { width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--border); display: inline-block; }
-  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
   .kpi b { font-size: 22px; font-weight: 800; display: block; }
   .kpi span { font-size: 12px; color: var(--muted); }
@@ -112,7 +147,7 @@
   .ex-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .ex-head .n { font-weight: 700; font-size: 16px; }
   .ex-head .last { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .sets { margin-top: 12px; display: grid; grid-template-columns: 54px 1fr 1fr 32px; gap: 8px; align-items: center; }
+  .sets { margin-top: 12px; display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr) 32px; gap: 8px; align-items: center; }
   .sets .h { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
   .sets .lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
   .num-in { width: 100%; padding: 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); text-align: center; font-weight: 600; }
@@ -124,17 +159,20 @@
   textarea { min-height: 80px; resize: vertical; }
   .field { margin-top: 12px; }
   .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
   .saved { font-size: 12px; color: var(--muted); text-align: right; min-height: 16px; margin-top: 8px; }
 
   /* Bottom-Sheet für Übungsauswahl */
-  .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 40; }
+  .sheet-bg { position: fixed; inset: 0; background: var(--shade); z-index: 40; }
   .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; max-width: 640px; margin: 0 auto; background: var(--surface);
     border-top-left-radius: 20px; border-top-right-radius: 20px; border: 1px solid var(--border); max-height: 82dvh; display: flex; flex-direction: column;
     padding-bottom: env(safe-area-inset-bottom); }
   .sheet .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--border); margin: 10px auto 6px; }
-  .sheet .inner { padding: 8px 16px 16px; overflow: auto; }
-  .groups { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+  .sheet .inner { padding: 0 16px 16px; overflow: auto; }
+  .sheet.tall { height: 84dvh; }
+  .sheet.tall .inner { flex: 1; }
+  .sheet-top { position: sticky; top: 0; z-index: 2; background: var(--surface); padding: 8px 0 6px; }
+  .groups { position: relative; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scroll-behavior: auto; }
   .groups .chip { flex: none; }
   .ex-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
   .ex-item { text-align: left; padding: 13px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 600;
@@ -144,15 +182,15 @@
   /* Navigation unten */
   nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 88%, transparent);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom); }
-  nav.bottom .wrap { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
-  nav.bottom button { position: relative; padding: 10px 0 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  nav.bottom .wrap { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  nav.bottom button { min-width: 0; position: relative; padding: 10px 0 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); }
   nav.bottom .badge { position: absolute; top: 5px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
     background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 800; display: grid; place-items: center; }
 
   /* „Wie letztes Mal“-Karte */
   .repeat { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
   .repeat .top-row { display: flex; align-items: center; gap: 12px; }
-  .repeat .ico { width: 38px; height: 38px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent);
+  .repeat .ico { width: 38px; height: 38px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent-text);
     display: grid; place-items: center; flex: none; }
   .repeat ul { margin: 10px 0 12px; padding-left: 18px; color: var(--muted); font-size: 14px; }
   .repeat li { margin: 2px 0; }
@@ -168,16 +206,39 @@
   .todo .tap { display: flex; align-items: center; gap: 14px; flex: 1; text-align: left; min-width: 0; }
   .todo .t { font-weight: 600; word-break: break-word; }
   .todo .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .todo .s.late { color: var(--accent); }
+  .todo .s.late { color: var(--accent-text); }
   .todo.done .t { color: var(--muted); text-decoration: line-through; }
   .todo.done .box-check { background: var(--accent); border-color: var(--accent); }
   .todo.done .box-check svg { opacity: 1; transform: scale(1); }
+  .swatches { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 6px; }
+  .sw { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; min-width: 0; }
+  .sw span { width: 40px; height: 40px; border-radius: 12px; background: var(--c); border: 2px solid transparent; box-shadow: 0 0 0 1px var(--border) inset; }
+  .sw small { font-size: 11px; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sw.on span { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
+  .sw.on small { color: var(--text); font-weight: 700; }
+  /* Leistung / Diagramme */
+  .perf-card { margin-top: 12px; }
+  .perf-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .perf-head .k { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .perf-head .v { font-size: 28px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+  .perf-head .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .delta { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--text); }
+  .chart { position: relative; margin-top: 10px; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart .ctip { position: absolute; transform: translate(-50%, -115%); background: var(--text); color: var(--bg); font-size: 12px; font-weight: 600;
+    padding: 5px 8px; border-radius: 8px; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .chart [data-tip] { cursor: pointer; }
+  .legend2 { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .legend2 span { display: inline-flex; align-items: center; gap: 6px; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+  .seg { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .seg .chip { flex: none; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
   .empty { text-align: center; padding: 22px 16px; color: var(--muted); }
   nav.bottom button svg { width: 24px; height: 24px; }
-  nav.bottom button.on { color: var(--accent); }
+  nav.bottom button.on { color: var(--accent-text); }
 
   /* Login */
   .login { min-height: 100dvh; display: grid; place-items: center; padding: 24px; text-align: center; }
@@ -194,7 +255,7 @@
 <!-- Ladebildschirm / Login -->
 <div id="login" class="login hidden">
   <div>
-    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--accent-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
     <h1>Tracker</h1>
     <p class="muted" style="margin:8px 0 24px">Tägliche Aufgaben &amp; Training</p>
     <button id="loginBtn" class="btn primary">Mit Google anmelden</button>
@@ -206,6 +267,7 @@
   <section id="view-start"></section>
   <section id="view-cal" class="hidden"></section>
   <section id="view-train" class="hidden"></section>
+  <section id="view-perf" class="hidden"></section>
   <section id="view-todo" class="hidden"></section>
 </div>
 
@@ -217,6 +279,8 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Überblick</button>
     <button data-tab="train">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Training</button>
+    <button data-tab="perf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg>Leistung</button>
     <button data-tab="todo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/></svg>To-Do<span id="todoBadge" class="badge hidden"></span></button>
   </div>
@@ -253,21 +317,28 @@ const auth = getAuth(fbApp);
 const db = initializeFirestore(fbApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 
 /* ===================== EINSTELLUNGEN ===================== */
-let REMIND_AT = { h: 19, m: 30 };     // Standard-Uhrzeit der Erinnerung (in der App änderbar)
-const remindTxt = () => `${pad(REMIND_AT.h)}:${pad(REMIND_AT.m)}`;
+let REMIND_TIMES = ["19:30"];          // allgemeine Erinnerungen (in der App änderbar, mehrere möglich)
+const remindTxt = () => REMIND_TIMES.length ? REMIND_TIMES.join(", ") : "aus";
+const toMin = t => +t.slice(0, 2) * 60 + +t.slice(3);
 
+// Trainingsarten (in der App unter Training → „Bearbeiten“ änderbar)
+// type: gym = Übungen mit Sätzen, session = Einheit mit Dauer, run = Laufen, rest = Pause
+const DEFAULT_TYPES = [
+  { name: "Push", type: "gym", groups: ["Brust", "Schultern", "Trizeps"] },
+  { name: "Pull", type: "gym", groups: ["Rücken", "Bizeps", "Hintere Schulter"] },
+  { name: "Ergänzungstraining", type: "gym", groups: ["Beine", "Bauch", "Unterarme"] },
+  { name: "Kickboxen", type: "session" },
+  { name: "Calisthenics", type: "gym", groups: ["Calisthenics Push", "Calisthenics Pull", "Calisthenics Beine", "Core"] },
+  { name: "Laufen", type: "run" },
+  { name: "Rest Day", type: "rest" },
+];
 // Wochenplan: 0 = Sonntag, 1 = Montag … 6 = Samstag
-const PLAN = {
-  1: { name: "Push", type: "gym", groups: ["Brust", "Schultern", "Trizeps"] },
-  2: { name: "Pull", type: "gym", groups: ["Rücken", "Bizeps", "Hintere Schulter"] },
-  3: { name: "Ergänzungstraining", type: "gym", groups: ["Beine", "Bauch", "Unterarme"] },
-  4: { name: "Kickboxen", type: "session" },
-  5: { name: "Calisthenics", type: "gym", groups: ["Calisthenics Push", "Calisthenics Pull", "Calisthenics Beine", "Core"] },
-  6: { name: "Rest Day", type: "rest" },
-  0: { name: "Laufen", type: "run" },
-};
-const PLAN_OPTIONS = ["Push", "Pull", "Ergänzungstraining", "Kickboxen", "Calisthenics", "Laufen", "Rest Day"];
-const planByName = n => Object.values(PLAN).find(p => p.name === n);
+const DEFAULT_WEEK = { 1: "Push", 2: "Pull", 3: "Ergänzungstraining", 4: "Kickboxen", 5: "Calisthenics", 6: "Rest Day", 0: "Laufen" };
+let TYPES = JSON.parse(JSON.stringify(DEFAULT_TYPES));
+let WEEK = { ...DEFAULT_WEEK };
+const KIND_LABEL = { gym: "Krafttraining", session: "Einheit (Dauer)", run: "Laufen", rest: "Pause" };
+const planByName = n => TYPES.find(p => p.name === n);
+const planFor = wd => planByName(WEEK[wd]) || { name: WEEK[wd] || "Frei", type: "rest" };
 
 // Übungen pro Muskelgruppe (eigene Übungen kann man in der App ergänzen)
 const LIB = {
@@ -303,15 +374,17 @@ const CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const ICON = {
   left: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`,
   right: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`,
+  gear: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>`,
   bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg>`,
   out: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>`,
   x: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
   trash: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/></svg>`,
 };
 // Ja/Nein-Rückfrage
-function askYesNo(text) {
+function askYesNo(text, yes = "Ja, löschen") {
   return new Promise(res => {
     $("#dlgText").textContent = text;
+    $("#dlgYes").textContent = yes;
     $("#dlg").classList.remove("hidden"); $("#dlgBg").classList.remove("hidden");
     const done = v => { $("#dlg").classList.add("hidden"); $("#dlgBg").classList.add("hidden"); res(v); };
     $("#dlgYes").onclick = () => done(true);
@@ -326,6 +399,8 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.re
 // Standard-Aufgaben (beim ersten Start). Danach in der App bearbeitbar: X zum Löschen, + zum Hinzufügen.
 // days: an welchen Wochentagen (0 = So … 6 = Sa); fehlt es, gilt die Aufgabe jeden Tag.
 const DEFAULT_TASKS = [
+  { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", remind: "07:00" },
+  { key: "gewicht_pm", t: "Gewicht abends", kind: "weight", slot: "pm", remind: "21:00" },
   { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" },
   { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
   { key: "lesen", t: "15 Minuten gelesen" },
@@ -336,7 +411,7 @@ const DEFAULT_TASKS = [
   { key: "training", training: true },   // Name kommt aus dem Wochenplan
 ];
 function tasksFor(date) {
-  const wd = date.getDay(), p = PLAN[wd];
+  const wd = date.getDay(), p = planFor(wd);
   return (S.taskCfg || DEFAULT_TASKS)
     .filter(t => !t.days || t.days.includes(wd))
     .filter(t => !t.training || p.type !== "rest")
@@ -395,8 +470,16 @@ onAuthStateChanged(auth, async user => {
     S.custom = (u.exists() && u.data().custom) || {};
     S.hidden = (u.exists() && u.data().hidden) || {};
     if (u.exists() && Array.isArray(u.data().tasks)) S.taskCfg = u.data().tasks;
-    const ra = u.exists() && u.data().remindAt;
-    if (ra && /^\d\d:\d\d$/.test(ra)) REMIND_AT = { h: +ra.slice(0, 2), m: +ra.slice(3) };
+    if (u.exists() && u.data().theme) setTheme(u.data().theme, false);
+    if (u.exists() && u.data().plan) { const pl = u.data().plan; if (Array.isArray(pl.types)) TYPES = pl.types; if (pl.week) WEEK = { ...DEFAULT_WEEK, ...pl.week }; }
+    const ud = u.exists() ? u.data() : {};
+    if (Array.isArray(ud.remindTimes)) REMIND_TIMES = ud.remindTimes;
+    else if (ud.remindAt && /^\d\d:\d\d$/.test(ud.remindAt)) REMIND_TIMES = [ud.remindAt];
+    // Gewicht-Aufgaben einmalig bei bestehender eigener Liste ergänzen
+    if (S.taskCfg && !ud.weightAdded && !S.taskCfg.some(t => t.kind === "weight")) {
+      S.taskCfg = [...DEFAULT_TASKS.filter(t => t.kind === "weight"), ...S.taskCfg];
+      setDoc(userRef(), { tasks: S.taskCfg, weightAdded: true }, { merge: true }).catch(() => {});
+    }
   } catch {}
   await loadRange(keyOf(addDays(new Date(), -120)), todayKey());
   watchToday();
@@ -427,11 +510,26 @@ async function toggleTask(k, key) {
   const done = { ...(cur.done || {}) };
   done[key] = !done[key];
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { date: k, done, count, total: tasks.length, complete: count === tasks.length };
+  const data = { date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) toast("Quote erfüllt! 🔥");
   try { await setDoc(dayRef(k), data); } catch (e) { toast("Speichern fehlgeschlagen – bist du offline?"); }
+}
+async function setWeight(k, key, slot, raw) {
+  const v = String(raw).trim().replace(",", ".");
+  const num = v === "" ? "" : parseFloat(v);
+  if (v !== "" && (isNaN(num) || num < 20 || num > 400)) { toast("Bitte ein gültiges Gewicht eingeben"); return; }
+  const tasks = tasksFor(fromKey(k));
+  const cur = S.days[k] || { done: {} };
+  const done = { ...(cur.done || {}) }, weight = { ...(cur.weight || {}) };
+  if (num === "") { delete weight[slot]; done[key] = false; } else { weight[slot] = num; done[key] = true; }
+  const count = tasks.filter(t => done[t.key]).length;
+  const data = { date: k, done, weight, count, total: tasks.length, complete: count === tasks.length };
+  S.days[k] = data;
+  renderStart(); if (S.tab === "cal") renderCal();
+  if (data.complete && !cur.complete) toast("Quote erfüllt! 🔥");
+  try { await setDoc(dayRef(k), data); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
 }
 const dayInfo = k => {
   const d = S.days[k];
@@ -454,7 +552,7 @@ function renderStart() {
   const cnt = tasks.filter(t => done[t.key]).length;
   const pct = tasks.length ? cnt / tasks.length : 0;
   const C = 2 * Math.PI * 44;
-  const plan = PLAN[now.getDay()];
+  const plan = planFor(now.getDay());
   const monday = addDays(now, -((now.getDay() + 6) % 7));
   const week = [...Array(7)].map((_, i) => {
     const d = addDays(monday, i), dk = keyOf(d), inf = dayInfo(dk);
@@ -463,8 +561,8 @@ function renderStart() {
   }).join("");
   const notifOk = "Notification" in window && Notification.permission === "granted";
   const notifBanner = ("Notification" in window && !notifOk) ? `
-    <div class="card banner"><span style="color:var(--accent)">${ICON.bell.replace("<svg", '<svg width="22" height="22"')}</span>
-      <p>Erinnerung um ${remindTxt()} Uhr für offene Aufgaben</p>
+    <div class="card banner"><span style="color:var(--accent-text)">${ICON.bell.replace("<svg", '<svg width="22" height="22"')}</span>
+      <p>Erinnerungen für offene Aufgaben einschalten</p>
       <button class="btn primary" data-action="notif" style="padding:8px 12px">Aktivieren</button></div>` : "";
   const openTodos = todosForToday().filter(t => !t.done).length;
 
@@ -473,6 +571,7 @@ function renderStart() {
       <div><div class="eyebrow">${fmtDate(now)}</div><h1>Hi${S.name ? " " + esc(S.name) : ""}</h1></div>
       <div style="display:flex;gap:8px">
         <button class="icon-btn" data-action="settings" title="Erinnerung einstellen">${ICON.bell}</button>
+        <button class="icon-btn" data-action="prefs" title="Einstellungen">${ICON.gear}</button>
         <button class="icon-btn" data-action="logout" title="Abmelden">${ICON.out}</button>
       </div>
     </header>
@@ -498,17 +597,22 @@ function renderStart() {
     ${notifBanner}
     <h2>Heute</h2>
     <div class="tasks">${tasks.map(t => taskHTML(t, done[t.key], k, true)).join("")}</div>
-    <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent)" data-action="newtask">+ Aufgabe hinzufügen</button>`;
+    <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent-text)" data-action="newtask">+ Aufgabe hinzufügen</button>`;
 }
 const taskHTML = (t, isDone, k, editable = false) => {
-  const sub = [t.s, !t.training ? daysTxt(t.days) : ""].filter(Boolean).join(" · ");
-  const btn = `<button class="task ${isDone ? "done" : ""}" ${editable ? 'style="border:0;background:none;padding:0;flex:1"' : ""} data-action="toggle" data-key="${t.key}" data-day="${k}">
-    <span class="box-check">${CHECK}</span>
-    <span><div class="t">${esc(t.t)}</div>${sub ? `<div class="s">${esc(sub)}</div>` : ""}</span>
-  </button>`;
-  if (!editable) return btn;
-  return `<div class="task ${isDone ? "done" : ""}" style="padding:12px 8px 12px 14px">${btn}
-    <button class="mini" data-action="deltask" data-key="${t.key}" title="Aufgabe löschen">${ICON.x}</button></div>`;
+  const sub = [t.s, !t.training ? daysTxt(t.days) : "", t.remind ? `🔔 ${t.remind}` : ""].filter(Boolean).join(" · ");
+  const text = `<span style="min-width:0"><div class="t">${esc(t.t)}</div>${sub ? `<div class="s">${esc(sub)}</div>` : ""}</span>`;
+  let main;
+  if (t.kind === "weight") {
+    const val = S.days[k]?.weight?.[t.slot] ?? "";
+    main = `<div class="task-main"><span class="box-check">${CHECK}</span>${text}
+      <span class="kg-in"><input class="num-in" inputmode="decimal" placeholder="–" data-weight="${t.slot}" data-key="${t.key}" data-day="${k}" value="${esc(val)}"><small>kg</small></span></div>`;
+  } else {
+    main = `<button class="task-main" data-action="toggle" data-key="${t.key}" data-day="${k}"><span class="box-check">${CHECK}</span>${text}</button>`;
+  }
+  return `<div class="task ${isDone ? "done" : ""}">${main}${editable ? `
+    <button class="mini ${t.remind ? "on" : ""}" data-action="taskbell" data-key="${t.key}" title="Erinnerung für diese Aufgabe">${ICON.bell.replace("<svg", '<svg width="17" height="17"')}</button>
+    <button class="mini" data-action="deltask" data-key="${t.key}" title="Aufgabe löschen">${ICON.x}</button>` : ""}</div>`;
 };
 
 /* ===================== GESAMTÜBERBLICK (KALENDER) ===================== */
@@ -562,7 +666,7 @@ async function changeMonth(delta) {
 /* ===================== TRAINING ===================== */
 async function loadWorkout(k) {
   S.trainDate = k;
-  const plan = PLAN[fromKey(k).getDay()];
+  const plan = planFor(fromKey(k).getDay());
   S.workout = { date: k, plan: plan.name, exercises: [], session: {}, run: {}, extra: {} };
   S.prevSame = null;
   renderTrain();
@@ -623,7 +727,8 @@ async function loadLastFor(names) {
 }
 function renderTrain() {
   if (!S.workout) return;
-  const w = S.workout, date = fromKey(S.trainDate), plan = planByName(w.plan) || PLAN[date.getDay()];
+  const w = S.workout, date = fromKey(S.trainDate);
+  const plan = planByName(w.plan) || ((w.exercises || []).length ? { name: w.plan, type: "gym", groups: [] } : planFor(date.getDay()));
   const isToday = S.trainDate === todayKey();
   let body = "";
   const p = S.prevSame;
@@ -667,11 +772,13 @@ function renderTrain() {
     <header class="top"><div><div class="eyebrow">Training</div><h1>${esc(plan.name)}</h1></div></header>
     <div class="card datebar">
       <button class="icon-btn" data-action="tprev">${ICON.left}</button>
-      <div class="mid"><b>${isToday ? "Heute" : fmtDate(date)}</b><div class="muted" style="font-size:12px">${isToday ? fmtDate(date) : "Plan: " + PLAN[date.getDay()].name}</div></div>
+      <div class="mid"><b>${isToday ? "Heute" : fmtDate(date)}</b><div class="muted" style="font-size:12px">${isToday ? fmtDate(date) : "Plan: " + planFor(date.getDay()).name}</div></div>
       <button class="icon-btn" data-action="tnext">${ICON.right}</button>
     </div>
-    <div class="field"><label>Trainingsart (falls du tauschst)</label>
-      <select class="select" data-action="plansel">${PLAN_OPTIONS.map(o => `<option ${o === w.plan ? "selected" : ""}>${o}</option>`).join("")}</select></div>
+    <div class="field"><label style="display:flex;justify-content:space-between;align-items:center">Trainingsart (falls du tauschst)
+        <button class="chip" data-action="planedit" style="font-size:12px;padding:4px 10px">✎ Bearbeiten</button></label>
+      <div class="seg">${[...(planByName(w.plan) ? [] : [{ name: w.plan }]), ...TYPES].map(o =>
+        `<button class="chip ${o.name === w.plan ? "accent" : ""}" data-action="plansel" data-v="${esc(o.name)}">${esc(o.name)}</button>`).join("")}</div></div>
     <h2>${plan.type === "gym" ? "Übungen" : "Eintrag"}</h2>
     ${body}
     <div class="saved" id="saved"></div>`;
@@ -712,33 +819,319 @@ function saveWorkout(rerender = false) {
 /* Übungsauswahl (Bottom Sheet) */
 function openSheet() {
   const plan = planByName(S.workout.plan);
-  const pg = plan.groups || [];
-  const groups = [...pg, "Sonstiges", ...Object.keys(LIB).filter(g => !pg.includes(g) && g !== "Sonstiges")];
+  const pg = plan?.groups || [];
+  const groups = [...pg, ...Object.keys(LIB).filter(g => !pg.includes(g) && g !== "Sonstiges"), "Sonstiges"];
+  const prevScroll = $("#sheetInner .groups")?.scrollLeft || 0;
   if (!S.sheetGroup || !groups.includes(S.sheetGroup)) S.sheetGroup = groups[0];
   const g = S.sheetGroup;
   const hidden = new Set(S.hidden[g] || []);
   const list = [...(LIB[g] || []), ...(S.custom[g] || [])].filter(n => !hidden.has(n));
   const used = new Set(S.workout.exercises.map(e => e.name));
-  $("#sheetInner").innerHTML = `
+  const listScroll = $("#sheetInner")?.scrollTop || 0;
+  $("#sheetInner").innerHTML = `<div class="sheet-top">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <b style="font-size:18px">Übung auswählen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
     <div class="groups">${groups.map(x => `<button class="chip ${x === g ? "accent" : ""}" data-action="group" data-g="${esc(x)}">${esc(x)}</button>`).join("")}</div>
     <div class="field" style="margin-top:10px"><div class="add-row">
       <input class="text-in" id="customEx" placeholder="Eigene Übung zu „${esc(g)}“ …">
-      <button class="btn primary plus" data-action="addcustom" title="Hinzufügen">+</button></div></div>
+      <button class="btn primary plus" data-action="addcustom" title="Hinzufügen">+</button></div></div></div>
     <div class="ex-list">${list.length ? list.map(n => `
       <div style="display:flex;gap:6px;align-items:stretch">
         <button class="ex-item" style="flex:1" data-action="pickex" data-n="${esc(n)}">${esc(n)}${used.has(n) ? `<span class="muted">schon drin</span>` : ""}</button>
         <button class="mini" style="height:auto;width:44px;border:1px solid var(--border);border-radius:12px" data-action="delchoice" data-n="${esc(n)}" title="Aus der Liste löschen">${ICON.x}</button>
       </div>`).join("") : `<div class="empty">Hier ist noch nichts drin.<br>Schreib oben etwas rein und tipp auf +.</div>`}</div>`;
+  showSheet(true);
+  $("#sheetInner").scrollTop = S.keepListScroll ? listScroll : 0; S.keepListScroll = false;
+  // Gruppenleiste dort lassen, wo sie war, und die gewählte Gruppe sichtbar halten
+  const gEl = $("#sheetInner .groups");
+  if (gEl) {
+    gEl.scrollLeft = prevScroll;
+    const on = gEl.querySelector(".chip.accent");
+    if (on && (on.offsetLeft < gEl.scrollLeft || on.offsetLeft + on.offsetWidth > gEl.scrollLeft + gEl.clientWidth))
+      gEl.scrollLeft = on.offsetLeft - 16;
+  }
+}
+function showSheet(tall = false) {
+  $("#sheet").classList.toggle("tall", tall);
   $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
 }
-function closeSheet() { $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); }
+function closeSheet() { $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
 async function pickExercise(name) {
   S.workout.exercises.push({ name, group: S.sheetGroup, sets: [{ kg: "", reps: "" }, { kg: "", reps: "" }, { kg: "", reps: "" }] });
   closeSheet();
   await loadLastFor([name]);
   saveWorkout(true);
+}
+
+/* ===================== LEISTUNG (AUSWERTUNGEN) ===================== */
+const numv = x => { const v = parseFloat(String(x ?? "").replace(",", ".")); return isNaN(v) ? 0 : v; };
+const fmtN = (v, d = 1) => (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("de-DE");
+const dShort = k => { const d = fromKey(k); return `${d.getDate()}.${d.getMonth() + 1}.`; };
+// Bester Satz einer Übung: mit Gewicht = geschätztes Maximalgewicht (Epley), ohne Gewicht = Wiederholungen
+const setScore = st => { const kg = numv(st.kg), r = numv(st.reps); if (!r) return 0; return kg > 0 ? kg * (1 + r / 30) : r; };
+const exBest = e => Math.max(0, ...(e.sets || []).map(setScore));
+const exWeighted = e => (e.sets || []).some(x => numv(x.kg) > 0 && numv(x.reps) > 0);
+const exVolume = e => (e.sets || []).reduce((a, x) => a + numv(x.kg) * numv(x.reps), 0);
+const exSets = e => (e.sets || []).filter(x => numv(x.reps) > 0).length;
+
+async function loadPerf() {
+  renderPerf();
+  try {
+    const q = query(collection(db, "users", S.uid, "workouts"), orderBy("date", "desc"), limit(400));
+    S.allWo = (await getDocs(q)).docs.map(d => ({ id: d.id, ...d.data() })).filter(w => w.date).sort((a, b) => a.date.localeCompare(b.date));
+  } catch { S.allWo = S.allWo || []; }
+  const from = keyOf(addDays(new Date(), -400));
+  if (!S.daysFull) { try { await loadRange(from, todayKey()); S.daysFull = true; } catch {} }
+  renderPerf();
+}
+function rangeStart() {
+  const r = S.perfRange || "3m";
+  return r === "all" ? "0000" : keyOf(addDays(new Date(), r === "4w" ? -28 : r === "3m" ? -91 : -182));
+}
+
+/* ---- Diagramme (SVG, ohne Bibliothek) ---- */
+function niceTicks(min, max, n = 4) {
+  if (min === max) { min -= 1; max += 1; }
+  const span = max - min, step0 = span / (n - 1), mag = 10 ** Math.floor(Math.log10(step0));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => s >= step0) || step0;
+  const lo = Math.floor(min / step) * step, hi = Math.ceil(max / step) * step;
+  const ticks = []; for (let v = lo; v <= hi + step / 2; v += step) ticks.push(+v.toFixed(6));
+  return ticks;
+}
+function lineChart(series, { unit = "", dec = 1, height = 170 } = {}) {
+  const pts = series.flatMap(s => s.pts);
+  if (!pts.length) return "";
+  const W = 340, H = height, L = 36, Rm = 12, T = 14, B = 22;
+  const xs = pts.map(p => fromKey(p.x).getTime()), x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const ys = pts.map(p => p.y), ticks = niceTicks(Math.min(...ys), Math.max(...ys));
+  const y0 = ticks[0], y1 = ticks[ticks.length - 1];
+  const X = k => x1 === x0 ? L + (W - L - Rm) / 2 : L + (fromKey(k).getTime() - x0) / (x1 - x0) * (W - L - Rm);
+  const Y = v => T + (1 - (v - y0) / (y1 - y0 || 1)) * (H - T - B);
+  let g = ticks.map(t => `<line x1="${L}" x2="${W - Rm}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--border)" stroke-width="1"/>
+    <text x="${L - 6}" y="${Y(t) + 3.5}" text-anchor="end" font-size="10" fill="var(--muted)">${fmtN(t, 1)}</text>`).join("");
+  const xl = [...new Set(pts.map(p => p.x))].sort();
+  const lab = xl.length > 1 ? [xl[0], xl[xl.length - 1]] : xl;
+  g += lab.map((k, i) => `<text x="${X(k)}" y="${H - 6}" text-anchor="${lab.length > 1 ? (i ? "end" : "start") : "middle"}" font-size="10" fill="var(--muted)">${dShort(k)}</text>`).join("");
+  for (const s of series) {
+    const sp = [...s.pts].sort((a, b) => a.x.localeCompare(b.x));
+    if (sp.length > 1) g += `<path d="${sp.map((p, i) => `${i ? "L" : "M"}${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join("")}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" ${s.dash ? 'stroke-dasharray="5 4"' : ""}/>`;
+    const dense = sp.length > 20;
+    g += sp.map((p, i) => dense && i < sp.length - 1 ? "" : `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="4" fill="${s.color}" stroke="var(--surface)" stroke-width="2"/>`).join("");
+    const last = sp[sp.length - 1];
+    if (s.label !== false) g += `<text x="${Math.min(X(last.x), W - Rm)}" y="${Y(last.y) - 9}" text-anchor="end" font-size="11" font-weight="700" fill="var(--text)">${fmtN(last.y, dec)}${unit}</text>`;
+    g += sp.map(p => `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="13" fill="transparent" data-tip="${esc(p.tip || `${dShort(p.x)}: ${fmtN(p.y, dec)}${unit}`)}" data-px="${X(p.x) / W * 100}" data-py="${Y(p.y) / H * 100}"/>`).join("");
+  }
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+}
+function barChart(items, { unit = "", dec = 0, height = 150 } = {}) {
+  if (!items.length) return "";
+  const W = 340, H = height, L = 8, Rm = 8, T = 18, B = 22;
+  const max = Math.max(1, ...items.map(i => i.y)), n = items.length;
+  const slot = (W - L - Rm) / n, bw = Math.min(34, slot * .62);
+  let g = `<line x1="${L}" x2="${W - Rm}" y1="${H - B}" y2="${H - B}" stroke="var(--border)"/>`;
+  items.forEach((it, i) => {
+    const cx = L + slot * (i + .5), h = (it.y / max) * (H - T - B), y = H - B - h;
+    if (it.y > 0) {
+      const r = Math.min(4, h, bw / 2);
+      g += `<path d="M${cx - bw / 2},${H - B} V${y + r} Q${cx - bw / 2},${y} ${cx - bw / 2 + r},${y} H${cx + bw / 2 - r} Q${cx + bw / 2},${y} ${cx + bw / 2},${y + r} V${H - B} Z" fill="${it.dim ? "color-mix(in srgb, var(--accent) 35%, var(--surface-2))" : "var(--accent)"}"/>`;
+      if (it.showVal) g += `<text x="${cx}" y="${y - 5}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">${fmtN(it.y, dec)}${unit}</text>`;
+    }
+    g += `<text x="${cx}" y="${H - 6}" text-anchor="middle" font-size="10" fill="${it.hl ? "var(--text)" : "var(--muted)"}" font-weight="${it.hl ? 700 : 400}">${esc(it.label)}</text>`;
+    g += `<rect x="${cx - slot / 2}" y="${T - 10}" width="${slot}" height="${H - T - B + 10}" fill="transparent" data-tip="${esc(it.tip || `${it.label}: ${fmtN(it.y, dec)}${unit}`)}" data-px="${cx / W * 100}" data-py="${Math.max(y, T) / H * 100}"/>`;
+  });
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+}
+const deltaTxt = (a, b, unit = "%", dec = 1) => {
+  if (b == null || !isFinite(a) || !isFinite(b)) return "";
+  const d = unit === "%" ? (b ? (a - b) / b * 100 : 0) : a - b;
+  const arrow = d > 0.05 ? "▲" : d < -0.05 ? "▼" : "■";
+  return `<span class="delta">${arrow} ${d > 0 ? "+" : ""}${fmtN(d, dec)}${unit === "%" ? " %" : " " + unit}</span>`;
+};
+
+function renderPerf() {
+  const v = $("#view-perf"); if (!v) return;
+  const all = S.allWo, from = rangeStart();
+  const chip = (attr, val, cur, l) => `<button class="chip ${cur === val ? "accent" : ""}" data-action="${attr}" data-v="${esc(val)}">${esc(l)}</button>`;
+  const rng = S.perfRange || "3m";
+  let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>Deine Entwicklung</h1></div></header>
+    <div class="seg">${chip("prange", "4w", rng, "4 Wochen")}${chip("prange", "3m", rng, "3 Monate")}${chip("prange", "6m", rng, "6 Monate")}${chip("prange", "all", rng, "Alles")}</div>`;
+  if (!all) { v.innerHTML = html + `<div class="card empty perf-card">Lade Daten …</div>`; return; }
+
+  /* --- 1. Kraft-Index pro Trainingsart --- */
+  const gymTypes = ["Push", "Pull", "Ergänzungstraining", "Calisthenics"];
+  const base = {};   // erster Wert jeder Übung = 100 %
+  for (const w of all) for (const e of w.exercises || []) { const b = exBest(e); if (b > 0 && !(e.name in base)) base[e.name] = b; }
+  const sessions = all.filter(w => gymTypes.includes(w.plan)).map(w => {
+    const rel = (w.exercises || []).map(e => ({ e, b: exBest(e) })).filter(x => x.b > 0 && base[x.e.name]).map(x => x.b / base[x.e.name] * 100);
+    return { date: w.date, plan: w.plan, idx: rel.length ? rel.reduce((a, b) => a + b, 0) / rel.length : null,
+      vol: (w.exercises || []).reduce((a, e) => a + exVolume(e), 0), sets: (w.exercises || []).reduce((a, e) => a + exSets(e), 0), n: rel.length };
+  }).filter(x => x.idx != null);
+  const typesWithData = gymTypes.filter(t => sessions.some(x => x.plan === t));
+  if (!S.perfType || !typesWithData.includes(S.perfType)) S.perfType = typesWithData[typesWithData.length - 1] || "Push";
+  const ts = sessions.filter(x => x.plan === S.perfType && x.date >= from);
+  html += `<div class="card perf-card">
+    <div class="seg">${(typesWithData.length ? typesWithData : gymTypes).map(t => chip("ptype", t, S.perfType, t === "Ergänzungstraining" ? "Ergänzung" : t)).join("")}</div>`;
+  if (ts.length) {
+    const last = ts[ts.length - 1], prev = ts[ts.length - 2], first = ts[0];
+    html += `<div class="perf-head" style="margin-top:14px"><div><div class="k">Kraft-Index ${esc(S.perfType)}</div><div class="v">${fmtN(last.idx, 0)}</div>
+        <div class="d">${prev ? `${deltaTxt(last.idx, prev.idx)} zum letzten Mal` : "Erstes Training im Zeitraum"}</div></div>
+      <div style="text-align:right"><div class="k">seit ${dShort(first.date)}</div><div class="d" style="margin-top:6px">${ts.length > 1 ? deltaTxt(last.idx, first.idx) : "–"}</div></div></div>
+      ${lineChart([{ color: "var(--accent)", pts: ts.map(x => ({ x: x.date, y: x.idx, tip: `${dShort(x.date)}: Index ${fmtN(x.idx, 0)} · ${x.sets} Sätze · ${fmtN(x.vol, 0)} kg bewegt` })) }], { dec: 0 })}
+      <div class="note">100 = deine erste Einheit je Übung. Der Index vergleicht den besten Satz jeder Übung mit deinem Start (geschätztes Maximalgewicht aus Gewicht × Wiederholungen, ohne Gewicht zählen die Wiederholungen).</div>`;
+  } else html += `<div class="empty">Noch keine Daten für ${esc(S.perfType)} in diesem Zeitraum.<br>Trag im Training Gewicht und Wiederholungen ein.</div>`;
+  html += `</div>`;
+
+  /* --- 2. Woche Mo–So --- */
+  const off = S.perfWeek || 0, today = new Date();
+  const monday = addDays(today, -((today.getDay() + 6) % 7) + off * 7);
+  const wk = [...Array(7)].map((_, i) => {
+    const d = addDays(monday, i), k = keyOf(d), w = all.find(x => x.date === k);
+    const sets = w ? (w.exercises || []).reduce((a, e) => a + exSets(e), 0) : 0;
+    const vol = w ? (w.exercises || []).reduce((a, e) => a + exVolume(e), 0) : 0;
+    const extra = w?.run?.km ? ` · ${w.run.km} km` : w?.session?.minutes ? ` · ${w.session.minutes} min` : "";
+    return { label: WD[d.getDay()], y: sets, hl: k === todayKey(), showVal: sets > 0,
+      tip: w ? `${WD[d.getDay()]} ${dShort(k)} · ${w.plan}: ${sets} Sätze${vol ? ` · ${fmtN(vol, 0)} kg` : ""}${extra}` : `${WD[d.getDay()]} ${dShort(k)}: kein Eintrag`, w };
+  });
+  const wSets = wk.reduce((a, x) => a + x.y, 0), wDays = wk.filter(x => x.w && hasContent(x.w)).length;
+  html += `<div class="card perf-card">
+    <div class="perf-head"><div><div class="k">${off === 0 ? "Diese Woche" : off === -1 ? "Letzte Woche" : `Woche ab ${dShort(keyOf(monday))}`}</div>
+      <div class="v">${wSets} <span style="font-size:15px;font-weight:600;color:var(--muted)">Sätze</span></div><div class="d">${wDays} Trainingstag${wDays === 1 ? "" : "e"}</div></div>
+      <div style="display:flex;gap:6px"><button class="icon-btn" data-action="pweek" data-v="-1">${ICON.left}</button><button class="icon-btn" data-action="pweek" data-v="1" ${off >= 0 ? "disabled style='opacity:.35'" : ""}>${ICON.right}</button></div></div>
+    ${barChart(wk)}
+    <div class="note">Tipp auf einen Tag für Details (Training, Sätze, bewegtes Gewicht).</div></div>`;
+
+  /* --- 3. Übung im Detail --- */
+  const exNames = [...new Set(all.flatMap(w => (w.exercises || []).filter(e => exBest(e) > 0).map(e => e.name)))].sort((a, b) => a.localeCompare(b, "de"));
+  if (exNames.length) {
+    if (!S.perfEx || !exNames.includes(S.perfEx)) {
+      const lastW = [...all].reverse().find(w => (w.exercises || []).some(e => exBest(e) > 0));
+      S.perfEx = lastW.exercises.find(e => exBest(e) > 0).name;
+    }
+    const hist = all.filter(w => w.date >= from).map(w => ({ w, e: (w.exercises || []).find(e => e.name === S.perfEx) })).filter(x => x.e && exBest(x.e) > 0);
+    const weighted = hist.some(x => exWeighted(x.e));
+    const pts = hist.map(x => {
+      const top = [...(x.e.sets || [])].sort((a, b) => setScore(b) - setScore(a))[0];
+      return { x: x.w.date, y: exBest(x.e), tip: `${dShort(x.w.date)}: ${numv(top.kg) ? `${top.kg} kg × ${top.reps}` : `${top.reps} Wdh.`}${weighted ? ` ≈ ${fmtN(exBest(x.e), 1)} kg max` : ""}` };
+    });
+    const best = pts.length ? Math.max(...pts.map(p => p.y)) : 0, lastP = pts[pts.length - 1], prevP = pts[pts.length - 2];
+    html += `<div class="card perf-card">
+      <div class="field" style="margin-top:0"><label>Übung im Detail</label>
+        <select class="select" data-action="pex">${exNames.map(n => `<option ${n === S.perfEx ? "selected" : ""}>${esc(n)}</option>`).join("")}</select></div>`;
+    if (pts.length) {
+      html += `<div class="perf-head" style="margin-top:14px"><div><div class="k">${weighted ? "Geschätztes Maximalgewicht" : "Beste Wiederholungen"}</div>
+          <div class="v">${fmtN(lastP.y, weighted ? 1 : 0)}${weighted ? " kg" : ""}</div>
+          <div class="d">${prevP ? `${deltaTxt(lastP.y, prevP.y, weighted ? "kg" : "Wdh.", weighted ? 1 : 0)} zum letzten Mal` : "Erster Eintrag im Zeitraum"}</div></div>
+        <div style="text-align:right"><div class="k">Rekord</div><div class="v" style="font-size:20px">${fmtN(best, weighted ? 1 : 0)}${weighted ? " kg" : ""}</div>${lastP.y >= best && pts.length > 1 ? `<div class="d">🏆 neuer Rekord</div>` : ""}</div></div>
+        ${lineChart([{ color: "var(--accent)", pts }], { unit: weighted ? " kg" : "", dec: weighted ? 1 : 0 })}`;
+    } else html += `<div class="empty">Keine Einträge für diese Übung im Zeitraum.</div>`;
+    html += `</div>`;
+  }
+
+  /* --- 4. Körpergewicht --- */
+  const wDaysAll = Object.values(S.days).filter(d => d.weight && (d.weight.am || d.weight.pm) && d.date >= from).sort((a, b) => a.date.localeCompare(b.date));
+  html += `<div class="card perf-card">`;
+  if (wDaysAll.length) {
+    const am = wDaysAll.filter(d => d.weight.am).map(d => ({ x: d.date, y: numv(d.weight.am) }));
+    const pm = wDaysAll.filter(d => d.weight.pm).map(d => ({ x: d.date, y: numv(d.weight.pm) }));
+    const main = am.length ? am : pm, lastW = main[main.length - 1];
+    const weekAgo = keyOf(addDays(fromKey(lastW.x), -7));
+    const ref = [...main].reverse().find(p => p.x <= weekAgo);
+    const last7 = main.filter(p => p.x > keyOf(addDays(new Date(), -7)));
+    html += `<div class="perf-head"><div><div class="k">Körpergewicht ${am.length ? "morgens" : "abends"}</div><div class="v">${fmtN(lastW.y, 1)} kg</div>
+        <div class="d">${ref ? `${deltaTxt(lastW.y, ref.y, "kg", 1)} in 7 Tagen` : "Noch keine Woche Daten"}</div></div>
+      <div style="text-align:right"><div class="k">Ø 7 Tage</div><div class="v" style="font-size:20px">${last7.length ? fmtN(last7.reduce((a, p) => a + p.y, 0) / last7.length, 1) + " kg" : "–"}</div></div></div>
+      ${lineChart([{ name: "Morgens", color: "var(--accent)", pts: am.map(p => ({ ...p, tip: `${dShort(p.x)} morgens: ${fmtN(p.y, 1)} kg` })) },
+                   { name: "Abends", color: "var(--muted)", dash: true, label: false, pts: pm.map(p => ({ ...p, tip: `${dShort(p.x)} abends: ${fmtN(p.y, 1)} kg` })) }].filter(x => x.pts.length), { unit: " kg", dec: 1 })}
+      ${am.length && pm.length ? `<div class="legend2"><span><svg width="18" height="6"><line x1="0" x2="18" y1="3" y2="3" stroke="var(--accent)" stroke-width="2"/></svg>Morgens</span>
+        <span><svg width="18" height="6"><line x1="0" x2="18" y1="3" y2="3" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4"/></svg>Abends</span></div>` : ""}`;
+  } else html += `<div class="k" style="font-size:13px;color:var(--muted);font-weight:600">Körpergewicht</div><div class="empty">Trag auf der Startseite dein Gewicht morgens und abends ein, dann siehst du hier den Verlauf.</div>`;
+  html += `</div>`;
+
+  /* --- 5. Laufen --- */
+  const runs = all.filter(w => w.date >= from && numv(w.run?.km) > 0);
+  if (runs.length) {
+    const km = runs.reduce((a, w) => a + numv(w.run.km), 0);
+    const paces = runs.filter(w => numv(w.run.minutes) > 0).map(w => numv(w.run.minutes) / numv(w.run.km));
+    const bestPace = paces.length ? Math.min(...paces) : null;
+    const pf = p => `${Math.floor(p)}:${pad(Math.round((p % 1) * 60) % 60)}`;
+    html += `<div class="card perf-card"><div class="perf-head"><div><div class="k">Laufen</div><div class="v">${fmtN(km, 1)} km</div><div class="d">${runs.length} Läufe im Zeitraum</div></div>
+      <div style="text-align:right"><div class="k">Beste Pace</div><div class="v" style="font-size:20px">${bestPace ? pf(bestPace) : "–"}</div><div class="d">min/km</div></div></div>
+      ${barChart(runs.slice(-10).map(w => ({ label: dShort(w.date), y: numv(w.run.km), showVal: true,
+        tip: `${dShort(w.date)}: ${w.run.km} km${numv(w.run.minutes) ? ` in ${w.run.minutes} min (${pf(numv(w.run.minutes) / numv(w.run.km))} min/km)` : ""}` })), { dec: 1 })}</div>`;
+  }
+
+  /* --- 6. Konsistenz: Quote pro Woche --- */
+  const weeks = [...Array(8)].map((_, i) => {
+    const mon = addDays(today, -((today.getDay() + 6) % 7) - (7 - i) * 7);
+    let full = 0, cnt = 0;
+    for (let j = 0; j < 7; j++) { const k = keyOf(addDays(mon, j)); if (k > todayKey()) continue; cnt++; if (dayInfo(k).complete) full++; }
+    return { label: dShort(keyOf(mon)), y: cnt ? Math.round(full / cnt * 100) : 0, showVal: true, hl: i === 7, dim: i === 7,
+      tip: `Woche ab ${dShort(keyOf(mon))}: ${full} von ${cnt} Tagen erfüllt` };
+  });
+  html += `<div class="card perf-card"><div class="perf-head"><div><div class="k">Konsistenz</div><div class="v">${weeks[6].y} %</div>
+      <div class="d">Tagesquote letzte Woche ${deltaTxt(weeks[6].y, weeks[5].y, "Pkt.", 0)}</div></div></div>
+    ${barChart(weeks, { unit: "%" })}<div class="note">Anteil der Tage pro Woche, an denen alle täglichen Aufgaben erledigt waren. Die laufende Woche ist heller.</div></div>`;
+
+  v.innerHTML = html;
+}
+
+/* ===================== TRAININGSPLAN BEARBEITEN ===================== */
+async function savePlan() {
+  try { await setDoc(userRef(), { plan: { types: TYPES, week: WEEK } }, { merge: true }); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+  renderStart(); renderTrain();
+}
+function openPlanEditor() {
+  const f = S.planForm;
+  let html = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-size:18px">${f ? (f.i < 0 ? "Neue Trainingsart" : "Trainingsart bearbeiten") : "Trainingsplan"}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div></div>`;
+  if (f) {
+    html += `<div class="field"><label>Name</label><input class="text-in" id="typeName" placeholder="z. B. Oberkörper, Schwimmen, Yoga" value="${esc(f.name)}"></div>
+      <div class="field"><label>Art</label><div class="groups" style="flex-wrap:wrap">${Object.entries(KIND_LABEL).map(([k, l]) =>
+        `<button class="chip ${f.type === k ? "accent" : ""}" data-action="typekind" data-v="${k}">${l}</button>`).join("")}</div></div>
+      ${f.type === "gym" ? `<div class="field"><label>Muskelgruppen (erscheinen zuerst bei „Übung hinzufügen“)</label>
+        <div class="groups" style="flex-wrap:wrap">${Object.keys(LIB).map(g => `<button class="chip ${f.groups.includes(g) ? "accent" : ""}" data-action="typegroup" data-v="${esc(g)}">${esc(g)}</button>`).join("")}</div></div>` : ""}
+      <div class="two" style="margin-top:18px"><button class="btn" data-action="typecancel">Zurück</button><button class="btn primary" data-action="typesave">Speichern</button></div>`;
+  } else {
+    const order = [1, 2, 3, 4, 5, 6, 0];
+    html += `<h2 style="margin-top:12px">Wochenplan</h2>
+      <div class="tasks">${order.map(d => `<div class="card" style="padding:12px">
+        <div style="font-weight:700;margin-bottom:8px">${WD_LONG[d]}</div>
+        <div class="seg">${TYPES.map(t => `<button class="chip ${WEEK[d] === t.name ? "accent" : ""}" data-action="wkset" data-d="${d}" data-v="${esc(t.name)}">${esc(t.name)}</button>`).join("")}</div></div>`).join("")}</div>
+      <h2>Trainingsarten</h2>
+      <div class="tasks">${TYPES.map((t, i) => `<div class="todo">
+        <button class="tap" data-action="typeedit" data-i="${i}"><span style="min-width:0"><div class="t">${esc(t.name)}</div>
+          <div class="s">${KIND_LABEL[t.type] || t.type}${t.type === "gym" && t.groups?.length ? " · " + esc(t.groups.join(", ")) : ""}</div></span></button>
+        <button class="mini" data-action="typeedit" data-i="${i}" title="Bearbeiten">✎</button>
+        <button class="mini" data-action="typedel" data-i="${i}" title="Löschen">${ICON.x}</button></div>`).join("")}</div>
+      <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent-text)" data-action="typenew">+ Trainingsart hinzufügen</button>
+      <button class="btn block" style="margin-top:10px" data-action="closesheet">Fertig</button>`;
+  }
+  $("#sheetInner").innerHTML = html;
+  showSheet(true);
+}
+async function saveTypeForm() {
+  const f = S.planForm, name = $("#typeName").value.trim();
+  if (!name) { $("#typeName").focus(); return; }
+  if (TYPES.some((t, i) => t.name === name && i !== f.i)) { toast("Diesen Namen gibt es schon"); return; }
+  const t = { name, type: f.type }; if (f.type === "gym") t.groups = f.groups;
+  if (f.i < 0) TYPES.push(t);
+  else {
+    const old = TYPES[f.i].name; TYPES[f.i] = t;
+    for (const d in WEEK) if (WEEK[d] === old) WEEK[d] = name;
+    if (S.workout?.plan === old) S.workout.plan = name;
+  }
+  S.planForm = null;
+  await savePlan(); openPlanEditor();
+  toast("Gespeichert");
+}
+async function deleteType(i) {
+  const t = TYPES[i]; if (!t) return;
+  const used = Object.entries(WEEK).filter(([, n]) => n === t.name).map(([d]) => WD[d]);
+  if (!(await askYesNo(`Willst du „${t.name}“ wirklich löschen?${used.length ? ` Die Tage ${used.join(", ")} werden dann zum Ruhetag.` : ""}`))) return;
+  TYPES.splice(i, 1);
+  const rest = TYPES.find(x => x.type === "rest")?.name || "Frei";
+  for (const d in WEEK) if (WEEK[d] === t.name) WEEK[d] = rest;
+  await savePlan(); openPlanEditor();
 }
 
 /* ===================== TO-DO ===================== */
@@ -821,7 +1214,7 @@ async function saveTaskCfg() {
   // Heutigen Stand an die neue Liste anpassen
   const k = todayKey(), tasks = tasksFor(new Date()), done = S.days[k]?.done || {};
   const count = tasks.filter(t => done[t.key]).length;
-  S.days[k] = { date: k, done, count, total: tasks.length, complete: tasks.length > 0 && count === tasks.length };
+  S.days[k] = { date: k, done, weight: S.days[k]?.weight || {}, count, total: tasks.length, complete: tasks.length > 0 && count === tasks.length };
   try { await setDoc(dayRef(k), S.days[k]); } catch {}
   renderStart(); saveReminderState();
 }
@@ -849,67 +1242,137 @@ function openNewTask() {
         <button class="chip ${all ? "accent" : ""}" data-action="newdays" data-v="all">Jeden Tag</button>
         ${order.map(d => `<button class="chip ${!all && S.newDays.includes(d) ? "accent" : ""}" data-action="newdays" data-v="${d}">${WD[d]}</button>`).join("")}
       </div></div>
+    <div class="field"><label>Erinnerung (optional)</label>
+      <input type="time" class="text-in" id="newTaskR" value="${esc(S.newTaskR || "")}"></div>
     <button class="btn primary block" style="margin-top:16px" data-action="savetask">+ Hinzufügen</button>`;
-  $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
+  showSheet();
   $("#newTaskT").focus();
 }
 async function saveNewTask() {
-  const t = $("#newTaskT").value.trim(), s = $("#newTaskS").value.trim();
+  const t = $("#newTaskT").value.trim(), s = $("#newTaskS").value.trim(), rem = $("#newTaskR").value;
   if (!t) { $("#newTaskT").focus(); return; }
   if (!S.newDays.length) { toast("Wähl mindestens einen Tag aus"); return; }
   const task = { key: "c_" + Date.now(), t };
   if (s) task.s = s;
+  if (rem) task.remind = rem;
   if (S.newDays.length < 7) task.days = [...S.newDays].sort();
   S.taskCfg = [...(S.taskCfg || DEFAULT_TASKS), task];
-  S.newTaskT = S.newTaskS = ""; S.newDays = [0, 1, 2, 3, 4, 5, 6];
+  S.newTaskT = S.newTaskS = S.newTaskR = ""; S.newDays = [0, 1, 2, 3, 4, 5, 6];
   closeSheet();
   await saveTaskCfg();
   toast(task.days && !task.days.includes(new Date().getDay()) ? `Gespeichert – erscheint an: ${daysTxt(task.days)}` : "Aufgabe hinzugefügt");
 }
 
-/* ===================== EINSTELLUNGEN: ERINNERUNG ===================== */
+/* ===================== EINSTELLUNGEN: DESIGN ===================== */
+const COLORS = [
+  ["#FFC400", "Gelb"], ["#FFD84D", "Zitrone"], ["#D4A017", "Gold"], ["#FF8A00", "Orange"], ["#FF5E57", "Koralle"],
+  ["#E5383B", "Rot"], ["#C1121F", "Weinrot"], ["#FF4FA3", "Pink"], ["#F28FD0", "Rosa"], ["#C77DFF", "Flieder"],
+  ["#9B5DE5", "Lila"], ["#6C63FF", "Violett"], ["#3A86FF", "Blau"], ["#1F4FD8", "Royal"], ["#4CC9F0", "Himmelblau"],
+  ["#00B4D8", "Ozean"], ["#00C2A8", "Türkis"], ["#2EE59D", "Mint"], ["#38B000", "Grün"], ["#B5E61D", "Limette"],
+  ["#6B8E23", "Oliv"], ["#E0B783", "Sand"], ["#A47148", "Bronze"], ["#B8BCC6", "Silber"],
+];
+const curTheme = () => { try { return JSON.parse(localStorage.getItem("tracker-theme") || "{}"); } catch { return S.theme || {}; } };
+function setTheme(t, save = true) {
+  const th = { mode: "dark", accent: "#FFC400", ...curTheme(), ...t };
+  S.theme = th;
+  window.applyTheme(th);
+  try { localStorage.setItem("tracker-theme", JSON.stringify(th)); } catch {}
+  if (save && S.uid) setDoc(userRef(), { theme: th }, { merge: true }).catch(() => {});
+}
+function openPrefs() {
+  const th = { mode: "dark", accent: "#FFC400", ...curTheme() };
+  const modeBtn = (v, l) => `<button class="chip ${th.mode === v ? "accent" : ""}" style="flex:1;justify-content:center;padding:10px" data-action="mode" data-v="${v}">${l}</button>`;
+  const custom = !COLORS.some(c => c[0].toLowerCase() === th.accent.toLowerCase());
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <b style="font-size:18px">Einstellungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <h2 style="margin-top:12px">Darstellung</h2>
+    <div style="display:flex;gap:8px">${modeBtn("dark", "🌙 Dunkel")}${modeBtn("light", "☀️ Hell")}${modeBtn("system", "📱 Wie Handy")}</div>
+    <h2>Akzentfarbe</h2>
+    <div class="swatches">${COLORS.map(([c, n]) => `
+      <button class="sw ${th.accent.toLowerCase() === c.toLowerCase() ? "on" : ""}" style="--c:${c}" data-action="accent" data-v="${c}" title="${n}"><span></span><small>${n}</small></button>`).join("")}
+      <label class="sw ${custom ? "on" : ""}" title="Eigene Farbe" style="--c:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"}">
+        <span style="background:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"}"></span><small>Eigene</small>
+        <input type="color" id="accentPick" value="${th.accent}" style="position:absolute;opacity:0;width:0;height:0"></label>
+    </div>
+    <h2>Erinnerung</h2>
+    <button class="btn block" style="justify-content:space-between" data-action="settings"><span>${ICON.bell.replace("<svg", '<svg width="18" height="18"')} Erinnerungen</span><b>${remindTxt()}</b></button>
+    <h2>Tägliche Aufgaben</h2>
+    <button class="btn block" data-action="resettasks">Auf Standard-Aufgaben zurücksetzen</button>
+    <h2>Konto</h2>
+    <button class="btn block" data-action="logout">${ICON.out.replace("<svg", '<svg width="18" height="18"')} Abmelden</button>
+    <p class="muted" style="font-size:12px;text-align:center;margin:18px 0 4px">Tracker · Version 3</p>`;
+  showSheet();
+}
+
+/* ===================== EINSTELLUNGEN: ERINNERUNGEN ===================== */
+function permHint() {
+  if (!("Notification" in window)) return `<p class="muted" style="font-size:13px">Dieser Browser unterstützt keine Benachrichtigungen.</p>`;
+  const p = Notification.permission;
+  if (p === "granted") return `<p class="muted" style="font-size:13px;margin:12px 0 0">✓ Benachrichtigungen sind erlaubt.</p>`;
+  if (p === "denied") return `<p class="muted" style="font-size:13px;margin:12px 0 0">Benachrichtigungen sind blockiert. Erlaube sie in den Website-Einstellungen von Chrome (Symbol links neben der Adresse).</p>`;
+  return `<button class="btn primary block" style="margin-top:12px" data-action="notif">Benachrichtigungen erlauben</button>`;
+}
 function openSettings() {
-  const supported = "Notification" in window;
-  const perm = supported ? Notification.permission : "denied";
+  const withRemind = (S.taskCfg || DEFAULT_TASKS).filter(t => t.remind);
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <b style="font-size:18px">Erinnerungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <h2 style="margin-top:12px">Allgemein</h2>
+    <p class="muted" style="margin:0 0 10px;font-size:14px">Zu diesen Uhrzeiten bekommst du eine Übersicht über alles, was noch offen ist.</p>
+    <div class="tasks">${REMIND_TIMES.length ? REMIND_TIMES.map(t => `
+      <div class="todo"><span class="tap" style="font-size:20px;font-weight:800">${t} Uhr</span>
+        <button class="mini" data-action="delgen" data-v="${t}" title="Entfernen">${ICON.x}</button></div>`).join("")
+      : `<div class="card empty">Keine allgemeine Erinnerung</div>`}</div>
+    <div class="add-row" style="margin-top:10px"><input type="time" id="genIn" class="text-in" value="12:00">
+      <button class="btn primary plus" data-action="addgen" title="Hinzufügen">+</button></div>
+    <h2>Pro Aufgabe</h2>
+    <p class="muted" style="margin:0 0 10px;font-size:14px">Tipp auf der Startseite auf die kleine Glocke neben einer Aufgabe, um ihr eine eigene Uhrzeit zu geben. Die Erinnerung kommt nur, wenn die Aufgabe noch offen ist.</p>
+    ${withRemind.length ? `<div class="tasks">${withRemind.map(t => `
+      <div class="todo"><span class="tap"><span style="min-width:0"><div class="t">${esc(t.training ? "Training" : t.t)}</div><div class="s">🔔 ${t.remind} Uhr</div></span></span>
+        <button class="mini" data-action="taskbell" data-key="${t.key}">${ICON.bell.replace("<svg", '<svg width="17" height="17"')}</button></div>`).join("")}</div>` : ""}
+    ${permHint()}`;
+  showSheet();
+}
+async function saveGeneralTimes() {
+  REMIND_TIMES = [...new Set(REMIND_TIMES)].sort();
+  try { await setDoc(userRef(), { remindTimes: REMIND_TIMES }, { merge: true }); } catch {}
+  saveReminderState(); openSettings(); renderStart();
+}
+function openTaskBell(key) {
+  const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key); if (!t) return;
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <b style="font-size:18px">Erinnerung</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
-    <p class="muted" style="margin:0 0 14px;font-size:14px">Zu dieser Uhrzeit bekommst du eine Benachrichtigung, wenn noch Aufgaben oder To-Dos offen sind.</p>
-    <div class="field"><label>Uhrzeit</label>
-      <input type="time" id="remindIn" class="text-in" value="${remindTxt()}" style="font-size:22px;font-weight:700;text-align:center"></div>
-    <button class="btn primary block" style="margin-top:14px" data-action="savetime">Speichern</button>
-    ${!supported ? `<p class="muted" style="font-size:13px">Dieser Browser unterstützt keine Benachrichtigungen.</p>`
-      : perm === "granted" ? `<p class="muted" style="font-size:13px;margin-top:12px">✓ Benachrichtigungen sind erlaubt.</p>`
-      : perm === "denied" ? `<p class="muted" style="font-size:13px;margin-top:12px">Benachrichtigungen sind blockiert. Erlaube sie in den Website-Einstellungen von Chrome (Schloss-Symbol neben der Adresse).</p>`
-      : `<button class="btn block" style="margin-top:10px" data-action="notif">Benachrichtigungen erlauben</button>`}`;
-  $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
+    <p class="muted" style="margin:0 0 14px;font-size:14px">„${esc(t.training ? "Training" : t.t)}“ – du bekommst eine Benachrichtigung, wenn die Aufgabe um diese Uhrzeit noch offen ist.</p>
+    <input type="time" id="taskTime" class="text-in" value="${t.remind || "08:00"}" style="font-size:22px;font-weight:700;text-align:center">
+    <button class="btn primary block" style="margin-top:14px" data-action="savebell" data-key="${key}">Speichern</button>
+    ${t.remind ? `<button class="btn block" style="margin-top:8px" data-action="savebell" data-key="${key}" data-off="1">Erinnerung ausschalten</button>` : ""}
+    ${permHint()}`;
+  showSheet();
 }
-async function saveRemindTime() {
-  const v = $("#remindIn").value;
-  if (!/^\d\d:\d\d$/.test(v)) return;
-  REMIND_AT = { h: +v.slice(0, 2), m: +v.slice(3) };
-  try { await setDoc(userRef(), { remindAt: v }, { merge: true }); } catch {}
-  // Falls heute schon erinnert wurde und die neue Zeit später liegt: heute nochmal erinnern
-  try {
-    const c = await caches.open("tracker-state");
-    const st = await c.match("state").then(r => r ? r.json() : {}).catch(() => ({}));
-    const now = new Date();
-    if (REMIND_AT.h * 60 + REMIND_AT.m > now.getHours() * 60 + now.getMinutes()) delete st.notified;
-    await c.put("state", new Response(JSON.stringify({ ...st, at: REMIND_AT })));
-  } catch {}
-  saveReminderState();
-  closeSheet(); renderStart();
-  toast(`Erinnerung um ${v} Uhr gespeichert`);
+async function saveTaskBell(key, off) {
+  const v = $("#taskTime").value;
+  S.taskCfg = (S.taskCfg || DEFAULT_TASKS).map(t => {
+    if (t.key !== key) return t;
+    const n = { ...t }; if (off || !v) delete n.remind; else n.remind = v; return n;
+  });
+  closeSheet();
+  await saveTaskCfg();
+  toast(off ? "Erinnerung ausgeschaltet" : `Erinnerung um ${v} Uhr`);
+  if (!off && "Notification" in window && Notification.permission === "default") enableNotifications();
 }
 
 /* ===================== NAVIGATION & EVENTS ===================== */
+try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => { if (curTheme().mode === "system") window.applyTheme(curTheme()); }); } catch {}
 function setTab(t) {
   S.tab = t;
-  ["start", "cal", "train", "todo"].forEach(x => $("#view-" + x).classList.toggle("hidden", x !== t));
+  ["start", "cal", "train", "perf", "todo"].forEach(x => $("#view-" + x).classList.toggle("hidden", x !== t));
   document.querySelectorAll("nav.bottom button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
   if (t === "cal") renderCal();
   if (t === "start") renderStart();
   if (t === "todo") renderTodo();
+  if (t === "perf") loadPerf();
   window.scrollTo(0, 0);
 }
 function renderAll() { renderStart(); renderCal(); renderTrain(); }
@@ -917,18 +1380,35 @@ function renderAll() { renderStart(); renderCal(); renderTrain(); }
 document.querySelectorAll("nav.bottom button").forEach(b => b.onclick = () => setTab(b.dataset.tab));
 $("#sheetBg").onclick = closeSheet;
 
+document.addEventListener("click", e => {
+  document.querySelectorAll(".ctip").forEach(t => t.remove());
+  const hit = e.target.closest("[data-tip]"); if (!hit) return;
+  const box = hit.closest(".chart"), tip = document.createElement("div");
+  tip.className = "ctip"; tip.textContent = hit.dataset.tip;
+  box.appendChild(tip);
+  const px = +hit.dataset.px, w = tip.offsetWidth / box.clientWidth * 100;
+  tip.style.left = Math.min(100 - w / 2, Math.max(w / 2, px)) + "%";
+  tip.style.top = hit.dataset.py + "%";
+});
 document.addEventListener("click", async e => {
   const el = e.target.closest("[data-action]"); if (!el) return;
   const a = el.dataset.action, w = S.workout;
   if (a === "toggle") toggleTask(el.dataset.day, el.dataset.key);
-  else if (a === "logout") { if (confirm("Abmelden?")) signOut(auth); }
+  else if (a === "logout") { if (await askYesNo("Wirklich abmelden?", "Ja, abmelden")) { closeSheet(); signOut(auth); } }
   else if (a === "notif") enableNotifications();
   else if (a === "settings") openSettings();
+  else if (a === "prefs") openPrefs();
+  else if (a === "mode") { setTheme({ mode: el.dataset.v }); openPrefs(); }
+  else if (a === "accent") { setTheme({ accent: el.dataset.v }); openPrefs(); }
+  else if (a === "resettasks") {
+    if (!(await askYesNo("Alle täglichen Aufgaben auf die Standard-Liste zurücksetzen? Eigene Aufgaben gehen dabei verloren.", "Ja, zurücksetzen"))) return;
+    S.taskCfg = DEFAULT_TASKS.map(t => ({ ...t })); await saveTaskCfg(); closeSheet(); toast("Zurückgesetzt");
+  }
   else if (a === "deltask") deleteTask(el.dataset.key);
-  else if (a === "newtask") { S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.newTaskT = S.newTaskS = ""; openNewTask(); }
+  else if (a === "newtask") { S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.newTaskT = S.newTaskS = S.newTaskR = ""; openNewTask(); }
   else if (a === "savetask") saveNewTask();
   else if (a === "newdays") {
-    S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value;
+    S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value; S.newTaskR = $("#newTaskR").value;
     const v = el.dataset.v;
     if (v === "all") S.newDays = [0, 1, 2, 3, 4, 5, 6];
     else {
@@ -938,20 +1418,36 @@ document.addEventListener("click", async e => {
     }
     openNewTask();
   }
-  else if (a === "savetime") saveRemindTime();
+  else if (a === "addgen") { const v = $("#genIn").value; if (v) { REMIND_TIMES.push(v); saveGeneralTimes(); if ("Notification" in window && Notification.permission === "default") enableNotifications(); } }
+  else if (a === "delgen") { REMIND_TIMES = REMIND_TIMES.filter(x => x !== el.dataset.v); saveGeneralTimes(); }
+  else if (a === "taskbell") openTaskBell(el.dataset.key);
+  else if (a === "savebell") saveTaskBell(el.dataset.key, !!el.dataset.off);
   else if (a === "gotodo") setTab("todo");
   else if (a === "todoadd") addTodo();
   else if (a === "todotoggle") toggleTodo(el.dataset.id);
   else if (a === "tododel") deleteTodo(el.dataset.id);
   else if (a === "todowhen") { S.todoDate = $("#todoDate")?.value; const keep = $("#todoIn")?.value; S.todoWhen = el.dataset.v; renderTodo(); $("#todoIn").value = keep || ""; }
   else if (a === "repeat") copyPrevious();
+  else if (a === "plansel") { S.workout.plan = el.dataset.v; findPrevSame(); saveWorkout(true); }
+  else if (a === "planedit") { S.planForm = null; openPlanEditor(); }
+  else if (a === "wkset") { WEEK[el.dataset.d] = el.dataset.v; savePlan(); openPlanEditor(); }
+  else if (a === "typeedit") { const t = TYPES[+el.dataset.i]; S.planForm = { i: +el.dataset.i, name: t.name, type: t.type, groups: [...(t.groups || [])] }; openPlanEditor(); }
+  else if (a === "typenew") { S.planForm = { i: -1, name: "", type: "gym", groups: [] }; openPlanEditor(); }
+  else if (a === "typekind") { S.planForm.name = $("#typeName").value; S.planForm.type = el.dataset.v; openPlanEditor(); }
+  else if (a === "typegroup") { S.planForm.name = $("#typeName").value; const g = el.dataset.v, f = S.planForm; f.groups = f.groups.includes(g) ? f.groups.filter(x => x !== g) : [...f.groups, g]; openPlanEditor(); }
+  else if (a === "typecancel") { S.planForm = null; openPlanEditor(); }
+  else if (a === "typesave") saveTypeForm();
+  else if (a === "typedel") deleteType(+el.dataset.i);
+  else if (a === "prange") { S.perfRange = el.dataset.v; renderPerf(); }
+  else if (a === "ptype") { S.perfType = el.dataset.v; renderPerf(); }
+  else if (a === "pweek") { S.perfWeek = Math.min(0, (S.perfWeek || 0) + +el.dataset.v); renderPerf(); }
   else if (a === "delchoice") {
     const n = el.dataset.n, g = S.sheetGroup;
     if (!(await askYesNo(`Willst du „${n}“ wirklich aus der Liste „${g}“ löschen?`))) return;
     if ((S.custom[g] || []).includes(n)) S.custom[g] = S.custom[g].filter(x => x !== n);
     else (S.hidden[g] ||= []).push(n);
     try { await setDoc(userRef(), { custom: S.custom, hidden: S.hidden }, { merge: true }); } catch {}
-    openSheet(); toast("Übung gelöscht");
+    S.keepListScroll = true; openSheet(); toast("Übung gelöscht");
   }
   else if (a === "calprev") changeMonth(-1);
   else if (a === "calnext") changeMonth(1);
@@ -975,16 +1471,21 @@ document.addEventListener("click", async e => {
   else if (a === "delset") { w.exercises[el.dataset.i].sets.splice(el.dataset.j, 1); saveWorkout(true); }
 });
 document.addEventListener("change", e => {
-  if (e.target.dataset.action === "plansel") { S.workout.plan = e.target.value; findPrevSame(); saveWorkout(true); }
+  if (e.target.dataset.action === "pex") { S.perfEx = e.target.value; renderPerf(); }
+
   if (e.target.id === "todoDate") S.todoDate = e.target.value;
+  if (e.target.dataset.weight) setWeight(e.target.dataset.day, e.target.dataset.key, e.target.dataset.weight, e.target.value);
+  if (e.target.id === "accentPick") { setTheme({ accent: e.target.value }); openPrefs(); }
 });
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter") return;
   if (e.target.id === "todoIn") { e.preventDefault(); addTodo(); }
   if (e.target.id === "customEx") { e.preventDefault(); document.querySelector('[data-action="addcustom"]')?.click(); }
+  if (e.target.dataset.weight) { e.preventDefault(); e.target.blur(); }
 });
 document.addEventListener("input", e => {
   const t = e.target;
+  if (t.id === "accentPick") { window.applyTheme({ ...curTheme(), accent: t.value }); return; }
   if (t.dataset.set) { const [i, j, f] = t.dataset.set.split("."); S.workout.exercises[i].sets[j][f] = t.value; saveWorkout(); }
   else if (t.dataset.in) {
     const [grp, f] = t.dataset.in.split("."); (S.workout[grp] ||= {})[f] = t.value;
@@ -1000,9 +1501,10 @@ if ("serviceWorker" in navigator) {
 }
 async function enableNotifications() {
   const p = await Notification.requestPermission();
-  if (p === "granted") { toast(`Erinnerung um ${remindTxt()} Uhr ist an`); registerPeriodic(); saveReminderState(); }
+  if (p === "granted") { toast("Benachrichtigungen sind an"); registerPeriodic(); saveReminderState(); }
   else toast("Benachrichtigungen wurden nicht erlaubt");
   renderStart();
+  if (!$("#sheet").classList.contains("hidden")) openSettings();
 }
 async function registerPeriodic() {
   try {
@@ -1017,28 +1519,53 @@ function openTasksToday() {
   const todos = todosForToday().filter(t => !t.done).map(t => "To-Do: " + t.text);
   return [...tasks, ...todos];
 }
+// Gemeinsamer Plan für App und Service Worker: was soll heute wann erinnert werden?
+function reminderPlan() {
+  const k = todayKey(), done = S.days[k]?.done || {};
+  return {
+    date: k,
+    general: REMIND_TIMES,
+    open: openTasksToday(),
+    tasks: tasksFor(new Date()).filter(t => t.remind).map(t => ({ key: t.key, t: t.t, time: t.remind, done: !!done[t.key] })),
+  };
+}
+async function readState() {
+  const c = await caches.open("tracker-state");
+  return { c, st: await c.match("state").then(r => r ? r.json() : {}).catch(() => ({})) };
+}
 // Speichert den aktuellen Stand für den Service Worker (Erinnerung im Hintergrund)
 async function saveReminderState() {
-  try {
-    const c = await caches.open("tracker-state");
-    const prev = await c.match("state").then(r => r ? r.json() : {}).catch(() => ({}));
-    await c.put("state", new Response(JSON.stringify({ ...prev, date: todayKey(), open: openTasksToday(), at: REMIND_AT })));
-  } catch {}
+  try { const { c, st } = await readState(); await c.put("state", new Response(JSON.stringify({ ...st, plan: reminderPlan() }))); } catch {}
+}
+// Fällige Erinnerungen (höchstens 90 Minuten alt, damit nach langer Pause nicht alles auf einmal kommt)
+function dueNotifications(plan, fired, nowMin) {
+  const out = [];
+  const recent = t => toMin(t) <= nowMin && nowMin - toMin(t) <= 90;
+  const gen = plan.general.filter(recent).filter(t => !fired.includes("g" + t)).pop();
+  if (gen) {
+    out.push({ id: "g" + gen, title: plan.open.length ? `Noch ${plan.open.length} offen` : "Alles erledigt 🔥",
+      body: plan.open.length ? plan.open.join(", ") : "Stark – heute ist alles abgehakt.", skip: !plan.open.length });
+    plan.general.filter(t => toMin(t) <= nowMin).forEach(t => fired.includes("g" + t) || out.push({ id: "g" + t, skip: true }));
+  }
+  for (const t of plan.tasks) {
+    const id = "t" + t.key + t.time;
+    if (fired.includes(id) || toMin(t.time) > nowMin) continue;
+    out.push({ id, title: t.t, body: "Noch nicht erledigt – jetzt abhaken?", skip: t.done || !recent(t.time) });
+  }
+  return out;
 }
 async function checkReminder() {
-  if (!S.uid || !("Notification" in window) || Notification.permission !== "granted") return;
-  const now = new Date();
-  if (now.getHours() * 60 + now.getMinutes() < REMIND_AT.h * 60 + REMIND_AT.m) return;
-  const c = await caches.open("tracker-state");
-  const st = await c.match("state").then(r => r ? r.json() : {}).catch(() => ({}));
-  if (st.notified === todayKey()) return;
-  const open = openTasksToday();
-  if (open.length && swReg) {
-    swReg.showNotification(`Noch ${open.length} Aufgabe${open.length > 1 ? "n" : ""} offen`, {
-      body: open.join(", "), icon: "./icon-192.png", badge: "./icon-192.png", tag: "tracker-reminder",
-    });
+  if (!S.uid || !("Notification" in window) || Notification.permission !== "granted" || !swReg) return;
+  const now = new Date(), plan = reminderPlan();
+  const { c, st } = await readState();
+  const fired = st.firedDate === plan.date ? (st.fired || []) : [];
+  const due = dueNotifications(plan, fired, now.getHours() * 60 + now.getMinutes());
+  if (!due.length) return;
+  for (const n of due) {
+    if (!n.skip) swReg.showNotification(n.title, { body: n.body, icon: "./icon-192.png", badge: "./icon-192.png", tag: n.id });
+    fired.push(n.id);
   }
-  await c.put("state", new Response(JSON.stringify({ ...st, notified: todayKey() })));
+  await c.put("state", new Response(JSON.stringify({ ...st, plan, firedDate: plan.date, fired })));
 }
 setInterval(() => {
   if (S.uid && todayKey() !== S.curToday) { watchToday(); renderAll(); }   // Tageswechsel um Mitternacht
