@@ -150,6 +150,10 @@
   .sets { margin-top: 12px; display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr) 32px; gap: 8px; align-items: center; }
   .sets .h { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
   .sets .lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .sets .pace-row { grid-column: 2 / 4; font-size: 12px; color: var(--muted); margin-top: -4px; }
+  .sets .pace-row:empty { display: none; }
+  .modes { margin-top: 10px; }
+  .modes .chip { font-size: 12px; padding: 4px 10px; }
   .num-in { width: 100%; padding: 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); text-align: center; font-weight: 600; }
   .num-in:focus, .select:focus, textarea:focus, .text-in:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
   .mini { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: var(--muted); }
@@ -355,8 +359,20 @@ const LIB = {
   "Calisthenics Pull": ["Klimmzüge", "Chin-ups", "Australian Pull-ups", "Muscle-up", "Scapula Pull-ups"],
   "Calisthenics Beine": ["Kniebeugen (Körpergewicht)", "Pistol Squats", "Jump Squats", "Ausfallschritte", "Wadenheben"],
   "Core": ["Plank", "L-Sit", "Hollow Hold", "Hängendes Beinheben", "Dragon Flag"],
+  "Ausdauer": ["Laufen", "Laufband", "Radfahren", "Ergometer", "Rudergerät", "Crosstrainer", "Seilspringen", "Gehen / Steigung"],
   "Sonstiges": [],
 };
+
+// Messart pro Übung: weight = kg + Wdh., band = Band/Stufe + Wdh., reps = nur Wdh., cardio = km + Minuten (Pace)
+const MODES = { weight: "Gewicht", band: "Band / Stufe", reps: "Nur Wdh.", cardio: "Ausdauer" };
+const MODE_SHORT = { weight: "Gewicht", band: "Band", reps: "Wdh.", cardio: "Ausdauer" };
+const defaultMode = (group, name) => S.exModes?.[name] || (group === "Ausdauer" ? "cardio" : /^Calisthenics|^Core$/.test(group || "") ? "band" : "weight");
+const exMode = e => e.mode || (e.group === "Ausdauer" ? "cardio" : "weight");
+const emptySet = mode => mode === "cardio" ? { km: "", min: "" } : mode === "band" ? { band: "", reps: "" } : mode === "reps" ? { reps: "" } : { kg: "", reps: "" };
+const setFilled = st => ["kg", "reps", "band", "km", "min"].some(f => st[f] !== undefined && String(st[f]).trim() !== "");
+const paceOf = (km, min) => { const k = parseFloat(String(km || "").replace(",", ".")), m = parseFloat(String(min || "").replace(",", ".")); if (!k || !m) return ""; const p = m / k, mm = Math.floor(p), ss = Math.round((p - mm) * 60); return `${ss === 60 ? mm + 1 : mm}:${String(ss === 60 ? 0 : ss).padStart(2, "0")}`; };
+const setTxt = (st, mode) => mode === "cardio" ? `${st.km || "–"} km${st.min ? ` in ${st.min} min` : ""}${paceOf(st.km, st.min) ? ` (${paceOf(st.km, st.min)}/km)` : ""}`
+  : mode === "band" ? `${st.band ? st.band + " × " : ""}${st.reps || "–"}` : mode === "reps" ? `${st.reps || "–"} Wdh.` : `${st.kg ? st.kg + " kg × " : ""}${st.reps || "–"}`;
 
 /* ===================== HILFSFUNKTIONEN ===================== */
 const $ = s => document.querySelector(s);
@@ -469,6 +485,7 @@ onAuthStateChanged(auth, async user => {
     const u = await getDoc(userRef());
     S.custom = (u.exists() && u.data().custom) || {};
     S.hidden = (u.exists() && u.data().hidden) || {};
+    S.exModes = (u.exists() && u.data().exModes) || {};
     if (u.exists() && Array.isArray(u.data().tasks)) S.taskCfg = u.data().tasks;
     if (u.exists() && u.data().theme) setTheme(u.data().theme, false);
     if (u.exists() && u.data().plan) { const pl = u.data().plan; if (Array.isArray(pl.types)) TYPES = pl.types; if (pl.week) WEEK = { ...DEFAULT_WEEK, ...pl.week }; }
@@ -714,11 +731,15 @@ async function loadLastFor(names) {
       lastCache[n] = "";
       for (const d of snap.docs) {
         const ex = (d.data().exercises || []).find(e => e.name === n);
-        const sets = ex?.sets?.filter(s => s.kg !== "" || s.reps !== "") || [];
+        const sets = ex?.sets?.filter(setFilled) || [];
         if (sets.length) {
-          const kg = sets.map(s => parseFloat(String(s.kg).replace(",", "."))).filter(x => !isNaN(x));
-          const kgTxt = kg.length ? `${String(Math.max(...kg)).replace(".", ",")} kg × ` : "";
-          lastCache[n] = `Letztes Mal (${fromKey(d.id).getDate()}.${fromKey(d.id).getMonth() + 1}.): ${kgTxt}${sets.map(s => s.reps || "–").join(" · ")}`;
+          const mode = exMode(ex);
+          let txt;
+          if (mode === "weight") {
+            const kg = sets.map(s => parseFloat(String(s.kg ?? "").replace(",", "."))).filter(x => !isNaN(x));
+            txt = `${kg.length ? `${String(Math.max(...kg)).replace(".", ",")} kg × ` : ""}${sets.map(s => s.reps || "–").join(" · ")}`;
+          } else txt = sets.map(s => setTxt(s, mode)).join(" · ");
+          lastCache[n] = `Letztes Mal (${fromKey(d.id).getDate()}.${fromKey(d.id).getMonth() + 1}.): ${txt}`;
           break;
         }
       }
@@ -736,8 +757,8 @@ function renderTrain() {
     const pd = fromKey(p.date || p.id);
     const items = plan.type === "gym"
       ? (p.exercises || []).map(e => {
-          const s = (e.sets || []).filter(x => x.kg !== "" || x.reps !== "");
-          return `<li>${esc(e.name)}${s.length ? ` – ${s.length} × ${esc(s[0].reps || "–")}${s[0].kg ? ` @ ${esc(s[0].kg)} kg` : ""}` : ""}</li>`;
+          const s = (e.sets || []).filter(setFilled), m = exMode(e);
+          return `<li>${esc(e.name)}${s.length ? ` – ${m === "cardio" ? esc(setTxt(s[0], m)) : `${s.length} × ${esc(setTxt(s[0], m))}`}` : ""}</li>`;
         }).join("")
       : plan.type === "run" ? `<li>${esc(p.run?.km || "–")} km in ${esc(p.run?.minutes || "–")} min</li>`
       : `<li>${esc(p.session?.minutes || "–")} Minuten</li>`;
@@ -783,22 +804,32 @@ function renderTrain() {
     ${body}
     <div class="saved" id="saved"></div>`;
 }
-const exHTML = (e, i) => `
+const exHTML = (e, i) => {
+  const mode = exMode(e);
+  const head = mode === "cardio" ? `<div class="h">Satz</div><div class="h">Distanz (km)</div><div class="h">Zeit (min)</div><div></div>`
+    : mode === "band" ? `<div class="h">Satz</div><div class="h">Band / Stufe</div><div class="h">Wdh.</div><div></div>`
+    : mode === "reps" ? `<div class="h">Satz</div><div class="h" style="grid-column:span 2">Wiederholungen</div><div></div>`
+    : `<div class="h">Satz</div><div class="h">Gewicht (kg)</div><div class="h">Wdh.</div><div></div>`;
+  const row = (st, j) => {
+    const f = (field, im, ph = "–", extra = "") => `<input class="num-in" ${im ? `inputmode="${im}"` : ""} placeholder="${ph}" data-set="${i}.${j}.${field}" value="${esc(st[field])}" ${extra}>`;
+    const cells = mode === "cardio" ? f("km", "decimal") + f("min", "decimal")
+      : mode === "band" ? f("band", "", "z. B. Grün", 'style="text-align:left;padding-left:10px"') + f("reps", "numeric")
+      : mode === "reps" ? f("reps", "numeric", "–", 'style="grid-column:span 2"')
+      : f("kg", "decimal") + f("reps", "numeric");
+    const pace = mode === "cardio" ? `<div class="pace-row" id="pace-${i}-${j}">${paceOf(st.km, st.min) ? `Pace ${paceOf(st.km, st.min)} min/km` : ""}</div>` : "";
+    return `<div class="lbl">${j + 1}</div>${cells}<button class="mini" data-action="delset" data-i="${i}" data-j="${j}">${ICON.x}</button>${pace}`;
+  };
+  return `
   <div class="card ex">
     <div class="ex-head">
-      <div><div class="n">${esc(e.name)}</div><div class="last">${esc(e.group)}${lastCache[e.name] ? " · " + esc(lastCache[e.name]) : ""}</div></div>
+      <div style="min-width:0"><div class="n">${esc(e.name)}</div><div class="last">${esc(e.group)}${lastCache[e.name] ? " · " + esc(lastCache[e.name]) : ""}</div></div>
       <button class="mini" data-action="delex" data-i="${i}" title="Übung entfernen">${ICON.trash}</button>
     </div>
-    <div class="sets">
-      <div class="h">Satz</div><div class="h">Gewicht (kg)</div><div class="h">Wdh.</div><div></div>
-      ${e.sets.map((s, j) => `
-        <div class="lbl">${j + 1}</div>
-        <input class="num-in" inputmode="decimal" placeholder="–" data-set="${i}.${j}.kg" value="${esc(s.kg)}">
-        <input class="num-in" inputmode="numeric" placeholder="–" data-set="${i}.${j}.reps" value="${esc(s.reps)}">
-        <button class="mini" data-action="delset" data-i="${i}" data-j="${j}">${ICON.x}</button>`).join("")}
-    </div>
-    <div class="row-btns"><button class="btn" style="padding:8px 12px;font-size:14px" data-action="addset" data-i="${i}">+ Satz</button></div>
+    <div class="seg modes">${Object.entries(MODES).map(([k, l]) => `<button class="chip ${k === mode ? "accent" : ""}" data-action="exmode" data-i="${i}" data-v="${k}">${MODE_SHORT[k]}</button>`).join("")}</div>
+    <div class="sets" ${mode === "band" ? 'style="grid-template-columns:32px minmax(0,1.7fr) minmax(0,1fr) 32px"' : ""}>${head}${e.sets.map(row).join("")}</div>
+    <div class="row-btns"><button class="btn" style="padding:8px 12px;font-size:14px" data-action="addset" data-i="${i}">+ ${mode === "cardio" ? "Abschnitt" : "Satz"}</button></div>
   </div>`;
+};
 function paceTxt(r) {
   const km = parseFloat(String(r?.km || "").replace(",", ".")), min = parseFloat(String(r?.minutes || "").replace(",", "."));
   if (!km || !min) return "–";
@@ -820,7 +851,8 @@ function saveWorkout(rerender = false) {
 function openSheet() {
   const plan = planByName(S.workout.plan);
   const pg = plan?.groups || [];
-  const groups = [...pg, ...Object.keys(LIB).filter(g => !pg.includes(g) && g !== "Sonstiges"), "Sonstiges"];
+  const groups = ["Ausdauer", ...pg.filter(g => g !== "Ausdauer"), ...Object.keys(LIB).filter(g => !pg.includes(g) && g !== "Sonstiges" && g !== "Ausdauer"), "Sonstiges"];
+  if (!S.sheetGroup) S.sheetGroup = pg[0] || "Ausdauer";
   const prevScroll = $("#sheetInner .groups")?.scrollLeft || 0;
   if (!S.sheetGroup || !groups.includes(S.sheetGroup)) S.sheetGroup = groups[0];
   const g = S.sheetGroup;
@@ -857,7 +889,9 @@ function showSheet(tall = false) {
 }
 function closeSheet() { $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
 async function pickExercise(name) {
-  S.workout.exercises.push({ name, group: S.sheetGroup, sets: [{ kg: "", reps: "" }, { kg: "", reps: "" }, { kg: "", reps: "" }] });
+  const mode = defaultMode(S.sheetGroup, name);
+  const n = mode === "cardio" ? 1 : 3;
+  S.workout.exercises.push({ name, group: S.sheetGroup, mode, sets: [...Array(n)].map(() => emptySet(mode)) });
   closeSheet();
   await loadLastFor([name]);
   saveWorkout(true);
@@ -868,11 +902,24 @@ const numv = x => { const v = parseFloat(String(x ?? "").replace(",", ".")); ret
 const fmtN = (v, d = 1) => (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("de-DE");
 const dShort = k => { const d = fromKey(k); return `${d.getDate()}.${d.getMonth() + 1}.`; };
 // Bester Satz einer Übung: mit Gewicht = geschätztes Maximalgewicht (Epley), ohne Gewicht = Wiederholungen
+// Kraft: mit Gewicht = geschätztes Maximalgewicht (Epley), sonst Wiederholungen. Ausdauer zählt nicht zur Kraft.
 const setScore = st => { const kg = numv(st.kg), r = numv(st.reps); if (!r) return 0; return kg > 0 ? kg * (1 + r / 30) : r; };
-const exBest = e => Math.max(0, ...(e.sets || []).map(setScore));
-const exWeighted = e => (e.sets || []).some(x => numv(x.kg) > 0 && numv(x.reps) > 0);
-const exVolume = e => (e.sets || []).reduce((a, x) => a + numv(x.kg) * numv(x.reps), 0);
-const exSets = e => (e.sets || []).filter(x => numv(x.reps) > 0).length;
+const exBest = e => exMode(e) === "cardio" ? 0 : Math.max(0, ...(e.sets || []).map(setScore));
+const exWeighted = e => exMode(e) === "weight" && (e.sets || []).some(x => numv(x.kg) > 0 && numv(x.reps) > 0);
+const exVolume = e => exMode(e) === "weight" ? (e.sets || []).reduce((a, x) => a + numv(x.kg) * numv(x.reps), 0) : 0;
+const exSets = e => (e.sets || []).filter(x => numv(x.reps) > 0 || numv(x.km) > 0).length;
+// Alle Ausdauer-Einträge (eigener Lauftag + Ausdauer-Übungen vor dem Training)
+function cardioEntries(all) {
+  const out = [];
+  for (const w of all) {
+    if (numv(w.run?.km) > 0) out.push({ date: w.date, name: "Laufen", km: numv(w.run.km), min: numv(w.run.minutes) });
+    for (const e of w.exercises || []) if (exMode(e) === "cardio") {
+      const km = (e.sets || []).reduce((a, x) => a + numv(x.km), 0), min = (e.sets || []).reduce((a, x) => a + numv(x.min), 0);
+      if (km > 0) out.push({ date: w.date, name: e.name, km, min });
+    }
+  }
+  return out;
+}
 
 async function loadPerf() {
   renderPerf();
@@ -1011,7 +1058,7 @@ function renderPerf() {
     const weighted = hist.some(x => exWeighted(x.e));
     const pts = hist.map(x => {
       const top = [...(x.e.sets || [])].sort((a, b) => setScore(b) - setScore(a))[0];
-      return { x: x.w.date, y: exBest(x.e), tip: `${dShort(x.w.date)}: ${numv(top.kg) ? `${top.kg} kg × ${top.reps}` : `${top.reps} Wdh.`}${weighted ? ` ≈ ${fmtN(exBest(x.e), 1)} kg max` : ""}` };
+      return { x: x.w.date, y: exBest(x.e), tip: `${dShort(x.w.date)}: ${setTxt(top, exMode(x.e))}${exMode(x.e) === "reps" ? "" : exMode(x.e) === "band" ? " Wdh." : ""}${weighted ? ` ≈ ${fmtN(exBest(x.e), 1)} kg max` : ""}` };
     });
     const best = pts.length ? Math.max(...pts.map(p => p.y)) : 0, lastP = pts[pts.length - 1], prevP = pts[pts.length - 2];
     html += `<div class="card perf-card">
@@ -1048,16 +1095,19 @@ function renderPerf() {
   html += `</div>`;
 
   /* --- 5. Laufen --- */
-  const runs = all.filter(w => w.date >= from && numv(w.run?.km) > 0);
+  const runs = cardioEntries(all).filter(r => r.date >= from);
   if (runs.length) {
-    const km = runs.reduce((a, w) => a + numv(w.run.km), 0);
-    const paces = runs.filter(w => numv(w.run.minutes) > 0).map(w => numv(w.run.minutes) / numv(w.run.km));
+    const km = runs.reduce((a, r) => a + r.km, 0);
+    const paces = runs.filter(r => r.min > 0).map(r => r.min / r.km);
     const bestPace = paces.length ? Math.min(...paces) : null;
-    const pf = p => `${Math.floor(p)}:${pad(Math.round((p % 1) * 60) % 60)}`;
-    html += `<div class="card perf-card"><div class="perf-head"><div><div class="k">Laufen</div><div class="v">${fmtN(km, 1)} km</div><div class="d">${runs.length} Läufe im Zeitraum</div></div>
+    const pf = p => paceOf(1, p);
+    // pro Tag zusammenfassen
+    const byDay = {}; for (const r of runs) { const d = (byDay[r.date] ||= { km: 0, min: 0, names: [] }); d.km += r.km; d.min += r.min; d.names.push(r.name); }
+    const days = Object.entries(byDay).sort((a, b) => a[0].localeCompare(b[0])).slice(-10);
+    html += `<div class="card perf-card"><div class="perf-head"><div><div class="k">Ausdauer</div><div class="v">${fmtN(km, 1)} km</div><div class="d">${runs.length} Einheiten im Zeitraum</div></div>
       <div style="text-align:right"><div class="k">Beste Pace</div><div class="v" style="font-size:20px">${bestPace ? pf(bestPace) : "–"}</div><div class="d">min/km</div></div></div>
-      ${barChart(runs.slice(-10).map(w => ({ label: dShort(w.date), y: numv(w.run.km), showVal: true,
-        tip: `${dShort(w.date)}: ${w.run.km} km${numv(w.run.minutes) ? ` in ${w.run.minutes} min (${pf(numv(w.run.minutes) / numv(w.run.km))} min/km)` : ""}` })), { dec: 1 })}</div>`;
+      ${barChart(days.map(([k, d]) => ({ label: dShort(k), y: d.km, showVal: true,
+        tip: `${dShort(k)}: ${fmtN(d.km, 1)} km${d.min ? ` in ${fmtN(d.min, 0)} min (${pf(d.min / d.km)} min/km)` : ""} · ${[...new Set(d.names)].join(", ")}` })), { dec: 1 })}</div>`;
   }
 
   /* --- 6. Konsistenz: Quote pro Woche --- */
@@ -1467,7 +1517,19 @@ document.addEventListener("click", async e => {
     pickExercise(v);
   }
   else if (a === "delex") { if (await askYesNo(`„${w.exercises[el.dataset.i].name}“ aus dem heutigen Training entfernen?`)) { w.exercises.splice(el.dataset.i, 1); saveWorkout(true); } }
-  else if (a === "addset") { const ex = w.exercises[el.dataset.i]; const last = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ kg: last.kg || "", reps: "" }); saveWorkout(true); }
+  else if (a === "addset") {
+    const ex = w.exercises[el.dataset.i], mode = exMode(ex), last = ex.sets[ex.sets.length - 1] || {}, ns = emptySet(mode);
+    if (mode === "weight") ns.kg = last.kg || ""; if (mode === "band") ns.band = last.band || "";
+    ex.sets.push(ns); saveWorkout(true);
+  }
+  else if (a === "exmode") {
+    const ex = w.exercises[el.dataset.i], mode = el.dataset.v; if (exMode(ex) === mode) return;
+    ex.mode = mode;
+    ex.sets = ex.sets.map(st => ({ ...emptySet(mode), ...(st.reps !== undefined && mode !== "cardio" ? { reps: st.reps } : {}) }));
+    (S.exModes ||= {})[ex.name] = mode;
+    setDoc(userRef(), { exModes: S.exModes }, { merge: true }).catch(() => {});
+    saveWorkout(true);
+  }
   else if (a === "delset") { w.exercises[el.dataset.i].sets.splice(el.dataset.j, 1); saveWorkout(true); }
 });
 document.addEventListener("change", e => {
@@ -1486,7 +1548,11 @@ document.addEventListener("keydown", e => {
 document.addEventListener("input", e => {
   const t = e.target;
   if (t.id === "accentPick") { window.applyTheme({ ...curTheme(), accent: t.value }); return; }
-  if (t.dataset.set) { const [i, j, f] = t.dataset.set.split("."); S.workout.exercises[i].sets[j][f] = t.value; saveWorkout(); }
+  if (t.dataset.set) {
+    const [i, j, f] = t.dataset.set.split("."), st = S.workout.exercises[i].sets[j]; st[f] = t.value;
+    const pr = $(`#pace-${i}-${j}`); if (pr) { const pc = paceOf(st.km, st.min); pr.textContent = pc ? `Pace ${pc} min/km` : ""; }
+    saveWorkout();
+  }
   else if (t.dataset.in) {
     const [grp, f] = t.dataset.in.split("."); (S.workout[grp] ||= {})[f] = t.value;
     if (grp === "run") { const p = $("#pace"); if (p) p.textContent = paceTxt(S.workout.run); }
