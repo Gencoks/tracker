@@ -268,6 +268,16 @@
     animation-name: fall; animation-timing-function: cubic-bezier(.3,.6,.6,1); animation-fill-mode: forwards; }
   @keyframes fall { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 100% { opacity: .9; transform: translate(var(--dx), 105vh) rotate(var(--rot)); } }
   @media (prefers-reduced-motion: reduce) { .confetti { display: none; } .pr-banner, .pr-banner .trophy { animation-duration: .01s; } }
+  /* Übungen verschieben */
+  #exList .ex { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .grip { font-size: 20px; cursor: grab; touch-action: none; color: var(--muted); }
+  .ex.dragging { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform: scale(1.03); box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    border-color: var(--accent); transition: transform .12s; }
+  #exList.compact .modes, #exList.compact .sets, #exList.compact .row-btns, #exList.compact .last, #exList.compact .mini:not(.grip) { display: none; }
+  #exList.compact .ex { padding: 14px 16px; }
+  .ex-ph { border: 2px dashed color-mix(in srgb, var(--accent) 70%, var(--border)); border-radius: var(--radius); margin-top: 10px;
+    background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  body.drag-on { user-select: none; -webkit-user-select: none; cursor: grabbing; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -806,7 +816,8 @@ function renderTrain() {
     </div>`;
   }
   if (plan.type === "gym") {
-    body += w.exercises.length ? w.exercises.map((e, i) => exHTML(e, i)).join("") :
+    body += w.exercises.length ? `<div id="exList">${w.exercises.map((e, i) => exHTML(e, i)).join("")}</div>
+      ${w.exercises.length > 1 ? `<div class="note" style="text-align:center">Tipp: Übung gedrückt halten oder am ⠿ ziehen, um die Reihenfolge zu ändern.</div>` : ""}` :
       `<div class="card muted" style="text-align:center;padding:26px 16px">Noch keine Übung eingetragen.<br>Wähl unten Übungen für ${esc(plan.name)} aus.</div>`;
     body += `<button class="btn primary block" style="margin-top:12px" data-action="addex">+ Übung hinzufügen</button>
       <h2>Sonstiges</h2>
@@ -858,9 +869,10 @@ const exHTML = (e, i) => {
     return `<div class="lbl">${j + 1}</div>${cells}<button class="mini" data-action="delset" data-i="${i}" data-j="${j}">${ICON.x}</button>${pace}`;
   };
   return `
-  <div class="card ex">
+  <div class="card ex" data-ex="${i}">
     <div class="ex-head">
-      <div style="min-width:0"><div class="n">${esc(e.name)}</div><div class="last">${esc(e.group)}${lastCache[e.name] ? " · " + esc(lastCache[e.name]) : ""}</div></div>
+      <div style="min-width:0;flex:1"><div class="n">${esc(e.name)}</div><div class="last">${esc(e.group)}${lastCache[e.name] ? " · " + esc(lastCache[e.name]) : ""}</div></div>
+      <button class="mini grip" title="Ziehen zum Verschieben" aria-label="Verschieben">⠿</button>
       <button class="mini" data-action="delex" data-i="${i}" title="Übung entfernen">${ICON.trash}</button>
     </div>
     <div class="seg modes">${Object.entries(MODES).map(([k, l]) => `<button class="chip ${k === mode ? "accent" : ""}" data-action="exmode" data-i="${i}" data-v="${k}">${MODE_SHORT[k]}</button>`).join("")}</div>
@@ -1233,6 +1245,68 @@ async function deleteType(i) {
   const rest = TYPES.find(x => x.type === "rest")?.name || "Frei";
   for (const d in WEEK) if (WEEK[d] === t.name) WEEK[d] = rest;
   await savePlan(); openPlanEditor();
+}
+
+/* ===================== ÜBUNGEN PER DRAG & DROP SORTIEREN ===================== */
+let pend = null, drag = null;
+document.addEventListener("pointerdown", e => {
+  const card = e.target.closest("#exList .ex[data-ex]"); if (!card || drag) return;
+  const onGrip = !!e.target.closest(".grip");
+  if (!onGrip && e.target.closest("input, textarea, button, select")) return;
+  if (onGrip) { e.preventDefault(); startDrag(card, e.clientY); return; }
+  pend = { card, x: e.clientX, y: e.clientY, t: setTimeout(() => { if (pend) { const p = pend; pend = null; startDrag(p.card, p.y); } }, 380) };
+});
+document.addEventListener("pointermove", e => {
+  if (pend && Math.hypot(e.clientX - pend.x, e.clientY - pend.y) > 8) { clearTimeout(pend.t); pend = null; }
+  if (drag) moveDrag(e.clientY);
+});
+const endPointer = () => { if (pend) { clearTimeout(pend.t); pend = null; } if (drag) endDrag(); };
+document.addEventListener("pointerup", endPointer);
+document.addEventListener("pointercancel", endPointer);
+document.addEventListener("touchmove", e => { if (drag) e.preventDefault(); }, { passive: false });
+document.addEventListener("contextmenu", e => { if (e.target.closest("#exList .ex")) e.preventDefault(); });
+
+function startDrag(card, y) {
+  const list = $("#exList"); if (!list) return;
+  // Alle Übungen kompakt anzeigen, damit man nicht weit ziehen muss; Liste bleibt unter dem Finger
+  const before = card.getBoundingClientRect().top;
+  list.classList.add("compact");
+  const after = card.getBoundingClientRect().top;
+  scrollBy(0, after - y + 28);   // Kopf der Übung wieder unter den Finger holen
+  const r = card.getBoundingClientRect();
+  const ph = document.createElement("div"); ph.className = "ex-ph"; ph.style.height = r.height + "px";
+  card.parentNode.insertBefore(ph, card);
+  card.classList.add("dragging");
+  const off = Math.min(28, r.height / 2);   // Karte sitzt immer direkt unter dem Finger
+  Object.assign(card.style, { left: r.left + "px", top: (y - off) + "px", width: r.width + "px" });
+  document.body.classList.add("drag-on");
+  drag = { card, ph, list, off, y, h: r.height };
+  moveDrag(y);
+  try { navigator.vibrate?.(25); } catch {}
+  drag.tick = setInterval(() => {   // automatisch scrollen am Bildschirmrand
+    if (!drag) return;
+    const edge = 90, h = innerHeight - 70;
+    if (drag.y < edge) { scrollBy(0, -10); moveDrag(drag.y); }
+    else if (drag.y > h - edge) { scrollBy(0, 10); moveDrag(drag.y); }
+  }, 16);
+}
+function moveDrag(y) {
+  const d = drag; d.y = y;
+  d.card.style.top = (y - d.off) + "px";
+  const others = [...d.list.querySelectorAll(".ex[data-ex]")].filter(c => c !== d.card);
+  const cy = y - d.off + d.h / 2;   // Mitte der gezogenen Übung
+  const before = others.find(c => { const r = c.getBoundingClientRect(); return cy < r.top + r.height / 2; });
+  if (before) { if (d.ph.nextSibling !== before) d.list.insertBefore(d.ph, before); }
+  else if (d.ph !== d.list.lastElementChild) d.list.appendChild(d.ph);
+}
+function endDrag() {
+  const d = drag; drag = null; clearInterval(d.tick);
+  document.body.classList.remove("drag-on");
+  d.list.classList.remove("compact");
+  const order = [...d.list.children].map(el => el === d.ph ? +d.card.dataset.ex : el.classList.contains("ex") && el !== d.card ? +el.dataset.ex : null).filter(x => x !== null);
+  const old = S.workout.exercises, changed = order.some((v, i) => v !== i);
+  if (changed) { S.workout.exercises = order.map(i => old[i]); saveWorkout(true); }
+  else renderTrain();
 }
 
 /* ===================== ERFOLGE / REKORDE ===================== */
