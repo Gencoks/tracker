@@ -15,6 +15,6 @@ jobs:
         with:
           node-version: 20
       - run: npm install --no-save --no-audit --no-fund firebase-admin@12
-      - run: node push/send-reminders.mjs
+      - run: node push/push/send-reminders.mjs
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
