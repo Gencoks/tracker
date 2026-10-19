@@ -301,6 +301,17 @@
   .ach.god { border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(120deg, #FFD84D, #FF8A00, #FF4FA3, #9B5DE5, #3A86FF, #FFD84D) border-box; background-size: 100% 100%, 300% 300%; animation: godglow 5s linear infinite; }
   .ach-badge { width: 54px; height: 54px; flex: none; }
+  .ach .ach-ico { width: 52px; height: 52px; border-radius: 15px; font-size: 26px;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--tc) 30%, transparent), color-mix(in srgb, var(--tc) 8%, transparent)); box-shadow: 0 0 0 2px var(--tc) inset; }
+  .ach .ach-ico.off { filter: grayscale(1); opacity: .45; box-shadow: 0 0 0 1.5px var(--border) inset; background: var(--surface-2); }
+  .ach .ach-ico.god { box-shadow: 0 0 0 2px #FFD84D inset, 0 0 18px rgba(255,79,163,.5); }
+  .ach-info { margin-top: 8px; }
+  .ach-info summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 4px 0; }
+  .ach-info summary::-webkit-details-marker { display: none; }
+  .ach-info[open] summary { color: var(--accent-text); }
+  .i-btn { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11px; font-weight: 900; font-style: italic; font-family: Georgia, serif;
+    border: 1.5px solid currentColor; }
+  .tier-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; justify-self: center; }
   .badge-svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,.25)); }
   .badge-svg.god { filter: drop-shadow(0 0 8px rgba(255,79,163,.45)); }
   .ach-top { display: flex; align-items: center; gap: 12px; }
@@ -454,16 +465,17 @@
   .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
   .tw-quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
-  /* animierte Flamme */
-  .flame { display: inline-block; transform-origin: 50% 90%; animation: flicker 1.6s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(255,120,0,.55)); }
-  @keyframes flicker {
-    0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 3px rgba(255,120,0,.45)); }
-    20% { transform: scale(1.08, 1.14) rotate(3deg) translateY(-.5px); filter: drop-shadow(0 0 6px rgba(255,150,0,.7)); }
-    40% { transform: scale(.96, 1.02) rotate(-3deg); }
-    60% { transform: scale(1.06, 1.12) rotate(2deg) translateY(-.5px); filter: drop-shadow(0 0 7px rgba(255,90,0,.7)); }
-    80% { transform: scale(.98, 1.05) rotate(-1deg); }
-  }
-  @media (prefers-reduced-motion: reduce) { .flame { animation: none; } }
+  /* animierte Flamme: die Zungen züngeln, der Fuß bleibt stehen */
+  .flame-svg { width: 15px; height: 19px; flex: none; overflow: visible; filter: drop-shadow(0 0 3px rgba(255,110,0,.55)); }
+  .flame-svg .fl { transform-box: fill-box; transform-origin: 50% 100%; }
+  .flame-svg .fl-o { animation: lickO 1.9s ease-in-out infinite; }
+  .flame-svg .fl-m { animation: lickM 1.3s ease-in-out infinite; }
+  .flame-svg .fl-i { animation: lickI .9s ease-in-out infinite; }
+  @keyframes lickO { 0%, 100% { transform: skewX(0) scaleY(1); } 25% { transform: skewX(4deg) scaleY(1.04); } 50% { transform: skewX(-2deg) scaleY(.97); } 75% { transform: skewX(-5deg) scaleY(1.05); } }
+  @keyframes lickM { 0%, 100% { transform: skewX(0) scale(1, 1); } 30% { transform: skewX(-6deg) scale(.97, 1.08); } 60% { transform: skewX(5deg) scale(1.02, .95); } }
+  @keyframes lickI { 0%, 100% { transform: skewX(0) scaleY(1); opacity: 1; } 40% { transform: skewX(7deg) scaleY(1.12); opacity: .9; } 70% { transform: skewX(-6deg) scaleY(.92); } }
+  @media (prefers-reduced-motion: reduce) { .flame-svg .fl { animation: none; } }
+  .streak-chip { gap: 5px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -651,6 +663,15 @@ function askYesNo(text, yes = "Ja, löschen") {
     $("#dlgBg").onclick = () => done(false);
   });
 }
+// Animierte Flamme (drei Flammenzungen, die unabhängig voneinander züngeln)
+const FLAME = `<svg class="flame-svg" viewBox="0 0 32 40" aria-hidden="true">
+  <defs><linearGradient id="flO" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF3D00"/><stop offset=".55" stop-color="#FF7A00"/><stop offset="1" stop-color="#FFB300"/></linearGradient>
+    <linearGradient id="flM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8F00"/><stop offset="1" stop-color="#FFD54F"/></linearGradient>
+    <linearGradient id="flI" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFE082"/><stop offset="1" stop-color="#FFFDE7"/></linearGradient></defs>
+  <path class="fl fl-o" fill="url(#flO)" d="M16 39c-7.5 0-12-5-12-11.5 0-6 4.2-9.3 6.4-14.2.6 3.4 2.3 5.3 4 5.9C14.6 13.6 16.2 7 21.3 1c-.2 6.4 3.3 9.8 5.2 14.2 1.3 3 1.5 5.6 1.5 7.7C28 33.6 23.5 39 16 39z"/>
+  <path class="fl fl-m" fill="url(#flM)" d="M16 39c-5 0-8-3.4-8-7.9 0-4.4 2.9-6.6 4.4-10 .4 2.4 1.6 3.6 2.8 4 .5-3.9 1.8-7.4 5-10.6 0 4.4 2.4 6.8 3.6 9.6.9 2 1.2 3.7 1.2 5.2C25 35.5 21.2 39 16 39z"/>
+  <path class="fl fl-i" fill="url(#flI)" d="M16 39c-2.9 0-4.7-2-4.7-4.6 0-2.6 1.7-4 2.6-6 .3 1.3.9 2 1.6 2.2.3-2.2 1.1-4.2 2.9-6 0 2.5 1.3 3.9 2 5.5.5 1.1.7 2.1.7 3 0 3.6-2.2 5.9-5.1 5.9z"/>
+</svg>`;
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.add("hidden"), 2600); }
 
@@ -676,6 +697,9 @@ function tasksFor(date) {
     .filter(t => !t.training || p.type !== "rest")
     .map(t => t.training ? { ...t, t: `Training: ${p.name}`, s: "laut Wochenplan" } : t);
 }
+// Erinnerungen einer Aufgabe (früher eine einzelne Uhrzeit, jetzt beliebig viele)
+const remindsOf = t => (Array.isArray(t.reminds) ? t.reminds : t.remind ? [t.remind] : []).slice().sort();
+const withReminds = (t, list) => { const n = { ...t }; delete n.remind; list = [...new Set(list)].sort(); if (list.length) n.reminds = list; else delete n.reminds; return n; };
 const daysTxt = d => !d || d.length === 7 ? "" : [1, 2, 3, 4, 5, 6, 0].filter(x => d.includes(x)).map(x => WD[x]).join(", ");
 
 /* ===================== ZUSTAND ===================== */
@@ -854,7 +878,7 @@ function renderStart() {
         <div class="hero-text">
           <div class="big">${cnt === tasks.length ? "Quote erfüllt 🔥" : `Noch ${tasks.length - cnt} offen`}</div>
           <div class="stats">
-            <span class="chip streak-chip"><span class="flame">🔥</span> ${streak()} Tage Serie</span>
+            <span class="chip streak-chip">${FLAME} ${streak()} Tage Serie</span>
             <span class="chip accent">${esc(plan.name)}</span>
             ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span></button>`; })() : ""}
             ${openTodos ? `<button class="chip" data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}
@@ -869,7 +893,8 @@ function renderStart() {
     <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent-text)" data-action="newtask">+ Aufgabe hinzufügen</button>`;
 }
 const taskHTML = (t, isDone, k, editable = false) => {
-  const sub = [t.s, !t.training ? daysTxt(t.days) : "", t.remind ? `🔔 ${t.remind}` : ""].filter(Boolean).join(" · ");
+  const rs = remindsOf(t);
+  const sub = [t.s, !t.training ? daysTxt(t.days) : "", rs.length ? `🔔 ${rs.join(", ")}` : ""].filter(Boolean).join(" · ");
   const text = `<span style="min-width:0"><div class="t">${esc(t.t)}</div>${sub ? `<div class="s">${esc(sub)}</div>` : ""}</span>`;
   let main;
   if (t.kind === "weight") {
@@ -1748,7 +1773,9 @@ const AICON = {
   note: '<path d="M14.5 2.5H6a2 2 0 00-2 2v15a2 2 0 002 2h12a2 2 0 002-2V8l-5.5-5.5z"/><path d="M14 2.5V8h6M8 13h8M8 17h5"/>',
   bolt: '<path d="M13 2L4.5 13.5H11L10 22l9.5-12.5H13L13 2z"/>',
 };
-// Sechseck-Plakette in Stufenfarbe
+const AEMO = { dumbbell: "💪", flame: "🔥", check: "✅", week: "📅", crown: "👑", trophy: "🏆", layers: "🧱", repeat: "🔁", plate: "🏋️", shoe: "👟", sunrise: "🌅", scale: "⚖️", book: "📚", speech: "🗣️", flask: "🧪", list: "📝" };
+const AINFO = { dumbbell: "Zählt jeden Tag, an dem du im Training etwas eingetragen hast – Übungen, einen Lauf oder eine Einheit wie Kickboxen.", flame: "Deine längste Serie am Stück, an der wirklich alle täglichen Aufgaben erledigt waren. Ein verpasster Tag beendet die Serie – der Rekord bleibt aber stehen.", check: "Alle Tage zusammengezählt, an denen deine komplette Tagesquote erfüllt war. Muss nicht am Stück sein.", week: "Eine Woche von Montag bis Sonntag, in der jeder einzelne Tag erfüllt war.", crown: "Der höchste Rang, den du je im Rangsystem erreicht hast. Fällst du wieder ab, bleibt dieser Meilenstein trotzdem.", trophy: "Jedes Mal, wenn du eine Übung besser machst als je zuvor (mehr Gewicht, Wiederholungen, Zeit oder Distanz) – höchstens einmal pro Übung und Tag.", layers: "Alle Sätze aus allen Trainings zusammengezählt, inklusive Ausdauer-Abschnitten.", repeat: "Alle Wiederholungen aus allen Sätzen zusammengezählt.", plate: "Gewicht × Wiederholungen aus allen Sätzen mit Gewicht, zusammengerechnet in Tonnen.", shoe: "Alle gelaufenen bzw. gefahrenen Kilometer – Lauftag und Ausdauer-Übungen vor dem Training zusammen.", sunrise: "Tage, an denen du die Aufgabe „1 km laufen“ (morgens) abgehakt hast.", scale: "Tage, an denen du morgens oder abends dein Gewicht eingetragen hast.", book: "Tage, an denen du „15 Minuten gelesen“ abgehakt hast.", speech: "Tage, an denen du Duolingo Englisch oder Spanisch abgehakt hast.", flask: "Wie viele verschiedene Übungen du schon mindestens einmal mit Werten eingetragen hast.", list: "Alle To-Dos, die du jemals abgehakt hast." };
+// Sechseck-Plakette in Stufenfarbe (nicht mehr benutzt)
 function badgeSVG(icon, lvl, uid) {
   const god = lvl === TIER.length, col = lvl ? TIER_COL[lvl - 1] : null;
   const hex = "M32 3l25 14.5v29L32 61 7 46.5v-29z";
@@ -1806,7 +1833,6 @@ function achievements(all) {
     { icon: "speech", n: "Sprachtage", v: doneDays(/^duo_(en|es)$/), u: "", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
     { icon: "flask", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
     { icon: "list", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
-    { icon: "note", n: "Notizen", v: (S.notes || []).length, u: "", goals: [1, 5, 10, 25, 50, 100, 250] },
   ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; const next = c.goals[lvl] ?? null, prev = c.goals[lvl - 1] ?? 0;
     return { ...c, lvl, next, prev, pct: next ? Math.min(1, (c.v - prev) / (next - prev)) : 1 }; })
   // Freigeschaltete oben (höchste Stufe zuerst, dann Fortschritt), Gesperrte unten nach Fortschritt
@@ -1836,7 +1862,7 @@ function renderAwards(all, part) {
       const god = c.lvl === TIER.length;
       return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
-          <div class="ach-badge">${badgeSVG(c.icon, c.lvl, ci)}</div>
+          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${AEMO[c.icon] || "🏅"}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
             <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `<span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
@@ -1844,8 +1870,15 @@ function renderAwards(all, part) {
           <div class="ach-v">${c.fmt ? `<span style="font-size:15px" class="${c.v === 10 ? "god-text" : ""}">${c.fmt(c.v)}</span>` : `${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small>`}</div>
         </div>
         <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : c.lvl ? `linear-gradient(90deg, ${col}, color-mix(in srgb, ${col} 55%, #fff))` : "var(--muted)"}"></i></div>
-        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${c.fmt ? c.fmt(c.next) : fmtN(c.next, 0) + c.u}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
+        <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0) + c.u}`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
+        <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
+          <div class="note" style="margin:6px 0 8px">${AINFO[c.icon] || ""}</div>
+          ${c.goals.map((g, i) => c.fmt
+            ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${RANKS[g].i}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
+            : `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="tier-dot" style="background:${TIER_COL[i]}"></span><b>${TIER[i]}</b>
+            <small>ab ${fmtN(g, 0) + c.u}</small><small>${i < c.lvl ? "✓" : ""}</small></div>`).slice().reverse().join("")}
+        </details>
       </div>`; }).join("")}</div>
 `;
   return html;
@@ -2124,7 +2157,7 @@ function openTaskMenu(key) {
       <b style="font-size:18px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(name)}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
     <div class="menu">
       ${t.training ? "" : `<button data-action="taskedit" data-key="${key}">${ICON.pen}<span>Bearbeiten<small>Name, Zusatz und Tage ändern</small></span></button>`}
-      <button data-action="taskbell" data-key="${key}">${ICON.bell.replace("<svg", '<svg width="18" height="18"')}<span>Erinnerung<small>${t.remind ? `🔔 ${t.remind} Uhr` : "Keine Uhrzeit eingestellt"}</small></span></button>
+      <button data-action="taskbell" data-key="${key}">${ICON.bell.replace("<svg", '<svg width="18" height="18"')}<span>Erinnerungen<small>${remindsOf(t).length ? `🔔 ${remindsOf(t).join(", ")} Uhr` : "Keine Uhrzeit eingestellt"}</small></span></button>
       <button class="danger" data-action="deltask" data-key="${key}">${ICON.trash}<span>Löschen<small>Aus den täglichen Aufgaben entfernen</small></span></button>
     </div>`;
   showSheet();
@@ -2145,10 +2178,10 @@ function openNewTask() {
         <button class="chip ${all ? "accent" : ""}" data-action="newdays" data-v="all">Jeden Tag</button>
         ${order.map(d => `<button class="chip ${!all && S.newDays.includes(d) ? "accent" : ""}" data-action="newdays" data-v="${d}">${WD[d]}</button>`).join("")}
       </div></div>
-    <div class="field"><label>Erinnerung</label>
+    ${edit ? `<p class="muted" style="font-size:13px;margin:12px 0 0">Erinnerungen änderst du über ⋯ → Erinnerungen.</p>` : `<div class="field"><label>Erinnerung</label>
       <div class="groups"><button class="chip ${S.newTaskR ? "" : "accent"}" data-action="newrem" data-v="">Keine</button>
         <button class="chip ${S.newTaskR ? "accent" : ""}" data-action="newrem" data-v="1">🔔 Mit Uhrzeit</button></div>
-      ${S.newTaskR ? `<div style="margin-top:10px">${timeWheel("newTaskR", S.newTaskR)}</div>` : ""}</div>
+      ${S.newTaskR ? `<div style="margin-top:10px">${timeWheel("newTaskR", S.newTaskR)}</div>` : ""}</div>`}
     <button class="btn primary block" style="margin-top:16px" data-action="savetask">${edit ? "Speichern" : "+ Hinzufügen"}</button>`;
   showSheet(!!S.newTaskR);
   if (!edit) $("#newTaskT").focus();
@@ -2160,9 +2193,10 @@ async function saveNewTask() {
   const editKey = S.editKey;
   const old = editKey ? (S.taskCfg || DEFAULT_TASKS).find(x => x.key === editKey) : null;
   const task = { ...(old || {}), key: editKey || "c_" + Date.now(), t };   // beim Bearbeiten bleibt der Schlüssel → Haken bleiben erhalten
-  delete task.s; delete task.remind; delete task.days;
+  delete task.s; delete task.days;
   if (s) task.s = s;
-  if (rem) task.remind = rem;
+  Object.assign(task, withReminds(task, editKey ? remindsOf(old) : rem ? [rem] : []));
+  if (!task.reminds) delete task.reminds; delete task.remind;
   if (S.newDays.length < 7) task.days = [...S.newDays].sort();
   const cfg = S.taskCfg || DEFAULT_TASKS;
   S.taskCfg = editKey ? cfg.map(x => x.key === editKey ? task : x) : [...cfg, task];
@@ -2443,7 +2477,7 @@ function permHint() {
   return `<button class="btn primary block" style="margin-top:12px" data-action="notif">Benachrichtigungen erlauben</button>`;
 }
 function openSettings() {
-  const withRemind = (S.taskCfg || DEFAULT_TASKS).filter(t => t.remind);
+  const withRemind = (S.taskCfg || DEFAULT_TASKS).filter(t => remindsOf(t).length);
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <b style="font-size:18px">Erinnerungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
@@ -2464,7 +2498,7 @@ function openSettings() {
     <h2>Pro Aufgabe</h2>
     <p class="muted" style="margin:0 0 10px;font-size:14px">Tipp auf der Startseite auf die kleine Glocke neben einer Aufgabe, um ihr eine eigene Uhrzeit zu geben. Die Erinnerung kommt nur, wenn die Aufgabe noch offen ist.</p>
     ${withRemind.length ? `<div class="tasks">${withRemind.map(t => `
-      <div class="todo"><span class="tap"><span style="min-width:0"><div class="t">${esc(t.training ? "Training" : t.t)}</div><div class="s">🔔 ${t.remind} Uhr</div></span></span>
+      <div class="todo"><span class="tap"><span style="min-width:0"><div class="t">${esc(t.training ? "Training" : t.t)}</div><div class="s">🔔 ${remindsOf(t).join(", ")} Uhr</div></span></span>
         <button class="mini" data-action="taskbell" data-key="${t.key}">${ICON.bell.replace("<svg", '<svg width="17" height="17"')}</button></div>`).join("")}</div>` : ""}
     ${permHint()}`;
   showSheet(true);
@@ -2476,26 +2510,26 @@ async function saveGeneralTimes() {
 }
 function openTaskBell(key) {
   const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key); if (!t) return;
+  const rs = remindsOf(t);
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <b style="font-size:18px">Erinnerung</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
-    <p class="muted" style="margin:0 0 14px;font-size:14px">„${esc(t.training ? "Training" : t.t)}“ – du bekommst eine Benachrichtigung, wenn die Aufgabe um diese Uhrzeit noch offen ist.</p>
-    ${timeWheel("taskTime", t.remind || "08:00")}
-    <button class="btn primary block" style="margin-top:14px" data-action="savebell" data-key="${key}">Speichern</button>
-    ${t.remind ? `<button class="btn block" style="margin-top:8px" data-action="savebell" data-key="${key}" data-off="1">Erinnerung ausschalten</button>` : ""}
+      <b style="font-size:18px">Erinnerungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <p class="muted" style="margin:0 0 12px;font-size:14px">„${esc(t.training ? "Training" : t.t)}“ – zu jeder Uhrzeit kommt eine Benachrichtigung, solange die Aufgabe noch offen ist.</p>
+    <div class="tasks">${rs.length ? rs.map(v => `<div class="todo"><span class="tap" style="font-size:20px;font-weight:800">🔔 ${v} Uhr</span>
+        <button class="mini" data-action="bellrm" data-key="${key}" data-v="${v}" title="Entfernen">${ICON.x}</button></div>`).join("")
+      : `<div class="card empty">Noch keine Erinnerung</div>`}</div>
+    <h2>${rs.length ? "Weitere Erinnerung hinzufügen" : "Erinnerung hinzufügen"}</h2>
+    <div class="card" style="padding:12px">${timeWheel("taskTime", rs.length ? "20:00" : "08:00")}
+      <button class="btn primary block" style="margin-top:12px" data-action="belladd" data-key="${key}">+ Uhrzeit hinzufügen</button></div>
+    <button class="btn block" style="margin-top:10px" data-action="closesheet">Fertig</button>
     ${permHint()}`;
   showSheet(true);
 }
-async function saveTaskBell(key, off) {
-  const v = twVal("taskTime");
-  S.taskCfg = (S.taskCfg || DEFAULT_TASKS).map(t => {
-    if (t.key !== key) return t;
-    const n = { ...t }; if (off || !v) delete n.remind; else n.remind = v; return n;
-  });
-  closeSheet();
+async function changeTaskReminds(key, fn, msg) {
+  S.taskCfg = (S.taskCfg || DEFAULT_TASKS).map(t => t.key === key ? withReminds(t, fn(remindsOf(t))) : t);
   await saveTaskCfg();
-  toast(off ? "Erinnerung ausgeschaltet" : `Erinnerung um ${v} Uhr`);
-  if (!off && "Notification" in window && Notification.permission === "default") enableNotifications();
+  openTaskBell(key);
+  toast(msg);
 }
 
 /* ===================== NAVIGATION & EVENTS ===================== */
@@ -2555,7 +2589,7 @@ document.addEventListener("click", async e => {
   else if (a === "taskmenu") openTaskMenu(el.dataset.key);
   else if (a === "taskedit") {
     const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === el.dataset.key); if (!t) return;
-    S.editKey = t.key; S.newTaskT = t.t || ""; S.newTaskS = t.s || ""; S.newTaskR = t.remind || ""; S.newDays = t.days ? [...t.days] : [0, 1, 2, 3, 4, 5, 6];
+    S.editKey = t.key; S.newTaskT = t.t || ""; S.newTaskS = t.s || ""; S.newTaskR = ""; S.newDays = t.days ? [...t.days] : [0, 1, 2, 3, 4, 5, 6];
     openNewTask();
   }
   else if (a === "savetask") saveNewTask();
@@ -2576,7 +2610,8 @@ document.addEventListener("click", async e => {
   else if (a === "taskbell") openTaskBell(el.dataset.key);
   else if (a === "pushon") enablePush();
   else if (a === "pushoff") disablePush();
-  else if (a === "savebell") saveTaskBell(el.dataset.key, !!el.dataset.off);
+  else if (a === "belladd") { const v = twVal("taskTime"); changeTaskReminds(el.dataset.key, l => [...l, v], `Erinnerung um ${v} Uhr hinzugefügt`); if ("Notification" in window && Notification.permission === "default") enableNotifications(); }
+  else if (a === "bellrm") { const v = el.dataset.v; changeTaskReminds(el.dataset.key, l => l.filter(x => x !== v), `Erinnerung ${v} Uhr entfernt`); }
   else if (a === "gotodo") setTab("todo");
   else if (a === "todoadd") addTodo();
   else if (a === "todotoggle") toggleTodo(el.dataset.id);
@@ -2741,7 +2776,7 @@ function reminderPlan() {
   const k = todayKey(), done = S.days[k]?.done || {};
   return {
     date: k, total: tasksFor(new Date()).length, general: REMIND_TIMES, items: openItemsToday(),
-    tasks: tasksFor(new Date()).filter(t => t.remind).map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, time: t.remind, done: !!done[t.key], kind: t.kind === "weight" ? "weight" : "task" })),
+    tasks: tasksFor(new Date()).flatMap(t => remindsOf(t).map(time => ({ id: "task-" + t.key, key: t.key, t: t.t, time, done: !!done[t.key], kind: t.kind === "weight" ? "weight" : "task" }))),
     pushOn: !!S.pushOn,
   };
 }
@@ -2806,7 +2841,7 @@ function writePushCfg() {
     const cfg = {
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Berlin",
       general: REMIND_TIMES, weekNames, restDays,
-      tasks: (S.taskCfg || DEFAULT_TASKS).map(t => ({ key: t.key, t: t.t || "Training", days: t.days || null, remind: t.remind || null, training: !!t.training, kind: t.kind || null })),
+      tasks: (S.taskCfg || DEFAULT_TASKS).map(t => ({ key: t.key, t: t.t || "Training", days: t.days || null, remind: remindsOf(t)[0] || null, reminds: remindsOf(t), training: !!t.training, kind: t.kind || null })),
     };
     setDoc(userRef(), { push: { enabled: true, cfg } }, { merge: true }).catch(() => {});
   }, 800);
