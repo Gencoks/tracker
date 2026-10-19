@@ -447,6 +447,11 @@
     background: linear-gradient(90deg, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D);
     background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important;
     animation: godshine 3s linear infinite; }
+  /* GOD-LEVEL-Farbpunkt: gleicher laufender Verlauf wie die Schrift, dazu ein Leuchten */
+  .god-dot { background: linear-gradient(90deg, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D) !important;
+    background-size: 200% 100% !important; animation: godshine 3s linear infinite, godglow 1.6s ease-in-out infinite alternate; }
+  @keyframes godglow { from { box-shadow: 0 0 4px 1px rgba(255,79,163,.55); } to { box-shadow: 0 0 10px 3px rgba(255,138,0,.8); } }
+  @media (prefers-reduced-motion: reduce) { .god-dot { animation: none; } }
   @keyframes godshine { from { background-position: 100% 0; } to { background-position: 0 0; } }
   @media (prefers-reduced-motion: reduce) { .god-text, .rl.godrow b, .rank-card.god .rank-n { animation: none; } }
   /* Uhrzeit: Zeiger-Uhr + Rad */
@@ -1830,22 +1835,22 @@ function achievements(all) {
     let ok = true; for (let j = 0; j < 7 && ok; j++) ok = dayInfo(keyOf(addDays(d, j))).complete; if (ok) perfectWeeks++; } }
   const peak = (typeof rankState === "function" && S.daysFull) ? rankState().peak : 0;
   const cats = [
-    { icon: "dumbbell", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500] },
+    { icon: "dumbbell", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000] },
     { icon: "flame", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
     { icon: "check", n: "Erfüllte Tage", v: fullDays, u: "", goals: [1, 7, 30, 100, 200, 365, 500, 730, 1000, 1500, 1825] },
-    { icon: "week", n: "Perfekte Wochen", v: perfectWeeks, u: "", goals: [1, 4, 12, 26, 52, 78, 104, 156, 208, 260] },
+    { icon: "week", n: "Perfekte Wochen", v: perfectWeeks, u: "", goals: [1, 4, 12, 26, 52, 78, 104, 156, 208, 260, 312] },
     { icon: "crown", n: "Höchster Rang", v: peak, u: "", fmt: v => RANKS[v]?.n || "Bronze", goals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
-    { icon: "trophy", n: "Bestleistungen", v: prCount, u: "", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750] },
-    { icon: "layers", n: "Sätze gesamt", v: sets, u: "", goals: [50, 250, 500, 1000, 2500, 5000, 10000, 20000, 35000, 50000] },
-    { icon: "repeat", n: "Wiederholungen", v: reps, u: "", goals: [500, 2500, 5000, 10000, 25000, 50000, 100000, 200000, 350000, 500000] },
-    { icon: "plate", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000] },
-    { icon: "shoe", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
-    { icon: "sunrise", n: "Morgenläufe", v: doneDays(/^lauf_morgen$/), u: "", goals: [5, 25, 50, 100, 200, 365, 500, 750, 1000] },
-    { icon: "scale", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
-    { icon: "book", n: "Lesetage", v: doneDays(/^lesen$/), u: "", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
-    { icon: "speech", n: "Sprachtage", v: doneDays(/^duo_(en|es)$/), u: "", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
-    { icon: "flask", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
-    { icon: "list", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
+    { icon: "trophy", n: "Bestleistungen", v: prCount, u: "", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750, 1000] },
+    { icon: "layers", n: "Sätze gesamt", v: sets, u: "", goals: [50, 250, 500, 1000, 2500, 5000, 10000, 20000, 35000, 50000, 75000] },
+    { icon: "repeat", n: "Wiederholungen", v: reps, u: "", goals: [500, 2500, 5000, 10000, 25000, 50000, 100000, 200000, 350000, 500000, 750000] },
+    { icon: "plate", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
+    { icon: "shoe", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000, 7500] },
+    { icon: "sunrise", n: "Morgenläufe", v: doneDays(/^lauf_morgen$/), u: "", goals: [5, 25, 50, 100, 200, 365, 500, 750, 1000, 1250, 1500] },
+    { icon: "scale", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
+    { icon: "book", n: "Lesetage", v: doneDays(/^lesen$/), u: "", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
+    { icon: "speech", n: "Sprachtage", v: doneDays(/^duo_(en|es)$/), u: "", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
+    { icon: "flask", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 15, 20, 30, 40, 50, 65, 80, 100, 125] },
+    { icon: "list", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 25, 50, 100, 250, 500, 1000, 1500, 2000, 3500, 5000] },
   ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; const next = c.goals[lvl] ?? null, prev = c.goals[lvl - 1] ?? 0;
     return { ...c, lvl, next, prev, pct: next ? Math.min(1, (c.v - prev) / (next - prev)) : 1 }; })
   // Freigeschaltete oben (höchste Stufe zuerst, dann Fortschritt), Gesperrte unten nach Fortschritt
@@ -1871,8 +1876,9 @@ function renderAwards(all, part) {
     <h2>Meilensteine · ${a.unlocked}/${a.total}</h2><div class="note" style="margin:-4px 0 10px">Diese Pokale bleiben für immer – im Gegensatz zum Rang.</div>
     <div class="tasks">${a.cats.map((c, ci) => {
       const pct = c.pct * 100;
-      const col = c.lvl ? TIER_COL[c.lvl - 1] : "var(--muted)";
-      const god = c.lvl === TIER.length;
+      const ti = c.lvl ? (c.fmt ? c.goals[c.lvl - 1] : c.lvl - 1) : -1;   // Index der erreichten Stufe in TIER
+      const col = c.lvl ? TIER_COL[ti] : "var(--muted)";
+      const god = ti === TIER.length - 1;
       return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
           <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${AEMO[c.icon] || "🏅"}</div>
@@ -1884,12 +1890,12 @@ function renderAwards(all, part) {
         </div>
         <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : c.lvl ? `linear-gradient(90deg, ${col}, color-mix(in srgb, ${col} 55%, #fff))` : "var(--muted)"}"></i></div>
         <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0) + c.u}`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
-          <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
+          <span class="ach-dots">${c.goals.map((g, i) => { const t = c.fmt ? g : i; return `<i class="${i < c.lvl && t === TIER.length - 1 ? "god-dot" : ""}" style="background:${i < c.lvl ? TIER_COL[t] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`; }).join("")}</span></div>
         <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
           <div class="note" style="margin:6px 0 8px">${AINFO[c.icon] || ""}</div>
           ${c.goals.map((g, i) => c.fmt
             ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${RANKS[g].i}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
-            : `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="tier-dot" style="background:${TIER_COL[i]}"></span><b>${TIER[i]}</b>
+            : `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="tier-dot ${TIER[i] === "GOD-LEVEL" ? "god-dot" : ""}" style="background:${TIER_COL[i]}"></span><b>${TIER[i]}</b>
             <small>ab ${fmtN(g, 0) + c.u}</small><small>${i < c.lvl ? "✓" : ""}</small></div>`).slice().reverse().join("")}
         </details>
       </div>`; }).join("")}</div>
