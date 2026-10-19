@@ -131,6 +131,13 @@
   .kg-in .num-in { width: 76px; padding: 8px; }
   .kg-in small { color: var(--muted); font-size: 12px; }
   .mini.on { color: var(--accent-text); }
+  .mini.more { width: 36px; height: 40px; }
+  .menu { display: flex; flex-direction: column; gap: 6px; }
+  .menu button { display: flex; align-items: center; gap: 14px; text-align: left; padding: 14px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; }
+  .menu button svg { flex: none; color: var(--accent-text); }
+  .menu button span { display: flex; flex-direction: column; gap: 2px; }
+  .menu button small { font-weight: 500; font-size: 12px; color: var(--muted); }
+  .menu button.danger, .menu button.danger svg { color: var(--danger); }
   .task .t { font-weight: 600; }
   .task .s { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .task.done { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
@@ -296,6 +303,14 @@
   .ach-f { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--muted); }
   .ach-dots { display: flex; gap: 3px; flex: none; }
   .ach-dots i { width: 7px; height: 7px; border-radius: 50%; }
+  .recs { display: flex; flex-direction: column; gap: 10px; }
+  .rec2 { display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
+  .rec2 .medal { font-size: 24px; flex: none; }
+  .rec2 .rb { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .rec2 .rn { font-weight: 700; font-size: 16px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rec2 .rl2 { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; line-height: 1.25; }
+  .rec2 .rl2 b { font-size: 15px; font-weight: 800; color: var(--accent-text); white-space: nowrap; }
+  .rec2 .rl2 span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
   .rec { gap: 10px; padding-right: 14px; }
   .rec .medal { font-size: 22px; }
   .rec .rv { font-size: 14px; text-align: right; max-width: 45%; }
@@ -410,31 +425,22 @@
     animation: godshine 3s linear infinite; }
   @keyframes godshine { from { background-position: 100% 0; } to { background-position: 0 0; } }
   @media (prefers-reduced-motion: reduce) { .god-text, .rl.godrow b, .rank-card.god .rank-n { animation: none; } }
-  /* Uhrzeit-Rad */
+  /* Uhrzeit: Zeiger-Uhr + Rad */
+  .tw-box { display: flex; flex-direction: column; align-items: stretch; }
+  .dial-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--surface-2); border-radius: 10px; padding: 3px; width: 220px; margin: 0 auto 10px; }
+  .dial-tabs button { padding: 6px; border-radius: 8px; font-size: 13px; font-weight: 700; color: var(--muted); }
+  .dial-tabs button.on { background: var(--accent); color: var(--accent-ink); }
+  .dial { width: 220px; height: 220px; margin: 0 auto 12px; display: block; touch-action: none; cursor: pointer; user-select: none; -webkit-user-select: none; }
   .tw { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 4px; }
-  .tw-col { height: 132px; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  .tw-col { height: 132px; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
     mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); position: relative; z-index: 1; }
-  .tw-col::-webkit-scrollbar { display: none; }
   .tw-pad { height: 44px; }
-  .tw-it { display: block; width: 100%; height: 44px; scroll-snap-align: center; font-size: 22px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .15s, font-size .15s; }
+  .tw-it { display: flex; align-items: center; justify-content: center; height: 44px; font-size: 22px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .12s, font-size .12s; }
   .tw-it.on { color: var(--accent-ink); font-size: 28px; font-weight: 900; }
   .tw-sep { font-size: 28px; font-weight: 900; color: var(--accent-ink); position: relative; z-index: 1; padding-bottom: 4px; }
   .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
-  .tw-quick { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .tw-quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
-  /* Farbwähler */
-  .cp-sv { position: relative; height: 210px; border-radius: 14px; margin-top: 6px; touch-action: none; cursor: crosshair; box-shadow: 0 0 0 1px var(--border) inset; }
-  .cp-dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; transform: translate(-50%, -50%); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 3px 10px rgba(0,0,0,.4); pointer-events: none; }
-  .cp-hue { position: relative; height: 26px; border-radius: 13px; margin: 16px 13px 0; touch-action: none; cursor: pointer;
-    background: linear-gradient(90deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); box-shadow: 0 0 0 1px var(--border) inset; }
-  .cp-thumb { position: absolute; top: 50%; width: 30px; height: 30px; border-radius: 50%; transform: translate(-50%, -50%); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 3px 10px rgba(0,0,0,.35); pointer-events: none; }
-  .cp-row { display: flex; gap: 12px; align-items: flex-end; margin-top: 18px; }
-  .cp-prev { display: flex; flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--border) inset; height: 46px; }
-  .cp-prev span { width: 38px; }
-  .cp-hex { display: flex; align-items: center; gap: 0; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding-left: 12px; }
-  .cp-hex b { color: var(--muted); font-size: 18px; }
-  .cp-hex .text-in { border: 0; background: none; font-size: 18px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; padding-left: 4px; }
-  .cp-rgb { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -602,6 +608,8 @@ const CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const ICON = {
   left: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`,
   right: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`,
+  dots: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>`,
+  pen: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>`,
   gear: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>`,
   bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg>`,
   out: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>`,
@@ -849,8 +857,7 @@ const taskHTML = (t, isDone, k, editable = false) => {
     main = `<button class="task-main" data-action="toggle" data-key="${t.key}" data-day="${k}"><span class="box-check">${CHECK}</span>${text}</button>`;
   }
   return `<div class="task ${isDone ? "done" : ""}">${main}${editable ? `
-    <button class="mini ${t.remind ? "on" : ""}" data-action="taskbell" data-key="${t.key}" title="Erinnerung für diese Aufgabe">${ICON.bell.replace("<svg", '<svg width="17" height="17"')}</button>
-    <button class="mini" data-action="deltask" data-key="${t.key}" title="Aufgabe löschen">${ICON.x}</button>` : ""}</div>`;
+    <button class="mini more" data-action="taskmenu" data-key="${t.key}" title="Bearbeiten">${ICON.dots}</button>` : ""}</div>`;
 };
 
 /* ===================== GESAMTÜBERBLICK (KALENDER) ===================== */
@@ -1720,10 +1727,12 @@ function recordsHTML(all) {
       <div class="kpi"><b>${rl.length}</b><span>Übungen mit Bestwert</span></div>
       <div class="kpi"><b>${prCount}</b><span>neue Bestleistungen</span></div></div>
     <div style="margin-top:12px"></div>`;
-  html += rl.length ? `<div class="tasks">${rl.map(r => `<div class="todo rec">
+  html += rl.length ? `<div class="recs">${rl.map(r => `<div class="rec2">
       <span class="medal">🏆</span>
-      <span class="tap" style="cursor:default"><span style="min-width:0"><div class="t">${esc(r.name)}</div><div class="s">${esc(unit(r))} · ${dShort(r.date)}</div></span></span>
-      <b class="rv">${esc(r.txt)}</b></div>`).join("")}</div>`
+      <div class="rb">
+        <div class="rn" title="${esc(r.name)}">${esc(r.name)}</div>
+        <div class="rl2"><b>${esc(r.txt)}</b><span>${esc(unit(r))} · ${dShort(r.date)}</span></div>
+      </div></div>`).join("")}</div>`
     : `<div class="card empty">Sobald du Übungen einträgst, erscheinen hier deine Bestwerte.</div>`;
   return html;
 }
@@ -1965,15 +1974,31 @@ async function deleteTask(key) {
   const name = t.training ? "Training (laut Wochenplan)" : t.t;
   if (!(await askYesNo(`Willst du „${name}“ wirklich aus deinen täglichen Aufgaben löschen?`))) return;
   S.taskCfg = cfg.filter(x => x.key !== key);
+  closeSheet();
   await saveTaskCfg();
   toast("Aufgabe gelöscht");
+}
+// Menü für eine tägliche Aufgabe: Bearbeiten · Erinnerung · Löschen
+function openTaskMenu(key) {
+  const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key); if (!t) return;
+  const name = t.training ? "Training (laut Wochenplan)" : t.t;
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px">
+      <b style="font-size:18px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(name)}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="menu">
+      ${t.training ? "" : `<button data-action="taskedit" data-key="${key}">${ICON.pen}<span>Bearbeiten<small>Name, Zusatz und Tage ändern</small></span></button>`}
+      <button data-action="taskbell" data-key="${key}">${ICON.bell.replace("<svg", '<svg width="18" height="18"')}<span>Erinnerung<small>${t.remind ? `🔔 ${t.remind} Uhr` : "Keine Uhrzeit eingestellt"}</small></span></button>
+      <button class="danger" data-action="deltask" data-key="${key}">${ICON.trash}<span>Löschen<small>Aus den täglichen Aufgaben entfernen</small></span></button>
+    </div>`;
+  showSheet();
 }
 function openNewTask() {
   const order = [1, 2, 3, 4, 5, 6, 0];
   const all = S.newDays.length === 7;
+  const edit = !!S.editKey;
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <b style="font-size:18px">Neue tägliche Aufgabe</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+      <b style="font-size:18px">${edit ? "Aufgabe bearbeiten" : "Neue tägliche Aufgabe"}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
     <div class="field" style="margin-top:0"><label>Was willst du abhaken?</label>
       <input class="text-in" id="newTaskT" placeholder="z. B. 2 Liter Wasser getrunken" value="${esc(S.newTaskT || "")}"></div>
     <div class="field"><label>Kleiner Zusatz (optional)</label>
@@ -1987,23 +2012,27 @@ function openNewTask() {
       <div class="groups"><button class="chip ${S.newTaskR ? "" : "accent"}" data-action="newrem" data-v="">Keine</button>
         <button class="chip ${S.newTaskR ? "accent" : ""}" data-action="newrem" data-v="1">🔔 Mit Uhrzeit</button></div>
       ${S.newTaskR ? `<div style="margin-top:10px">${timeWheel("newTaskR", S.newTaskR)}</div>` : ""}</div>
-    <button class="btn primary block" style="margin-top:16px" data-action="savetask">+ Hinzufügen</button>`;
-  showSheet();
-  $("#newTaskT").focus();
+    <button class="btn primary block" style="margin-top:16px" data-action="savetask">${edit ? "Speichern" : "+ Hinzufügen"}</button>`;
+  showSheet(!!S.newTaskR);
+  if (!edit) $("#newTaskT").focus();
 }
 async function saveNewTask() {
   const t = $("#newTaskT").value.trim(), s = $("#newTaskS").value.trim(), rem = S.newTaskR ? twVal("newTaskR") : "";
   if (!t) { $("#newTaskT").focus(); return; }
   if (!S.newDays.length) { toast("Wähl mindestens einen Tag aus"); return; }
-  const task = { key: "c_" + Date.now(), t };
+  const editKey = S.editKey;
+  const old = editKey ? (S.taskCfg || DEFAULT_TASKS).find(x => x.key === editKey) : null;
+  const task = { ...(old || {}), key: editKey || "c_" + Date.now(), t };   // beim Bearbeiten bleibt der Schlüssel → Haken bleiben erhalten
+  delete task.s; delete task.remind; delete task.days;
   if (s) task.s = s;
   if (rem) task.remind = rem;
   if (S.newDays.length < 7) task.days = [...S.newDays].sort();
-  S.taskCfg = [...(S.taskCfg || DEFAULT_TASKS), task];
-  S.newTaskT = S.newTaskS = S.newTaskR = ""; S.newDays = [0, 1, 2, 3, 4, 5, 6];
+  const cfg = S.taskCfg || DEFAULT_TASKS;
+  S.taskCfg = editKey ? cfg.map(x => x.key === editKey ? task : x) : [...cfg, task];
+  S.newTaskT = S.newTaskS = S.newTaskR = ""; S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.editKey = null;
   closeSheet();
   await saveTaskCfg();
-  toast(task.days && !task.days.includes(new Date().getDay()) ? `Gespeichert – erscheint an: ${daysTxt(task.days)}` : "Aufgabe hinzugefügt");
+  toast(task.days && !task.days.includes(new Date().getDay()) ? `Gespeichert – erscheint an: ${daysTxt(task.days)}` : editKey ? "Änderungen gespeichert" : "Aufgabe hinzugefügt");
 }
 
 /* ===================== EINSTELLUNGEN: DESIGN ===================== */
@@ -2054,48 +2083,140 @@ function openPrefs() {
   showSheet(true);
 }
 
-/* ===================== UHRZEIT-RAD (statt der Android-Uhr) ===================== */
-const TW_H = 44;   // Höhe einer Zeile
+/* ===================== UHRZEIT: ZEIGER-UHR + RAD (laufen zusammen) ===================== */
+const TW_H = 44;                    // Höhe einer Zeile im Rad
+const TW_SPEED = { h: 1, m: 2 };    // Minuten drehen doppelt so schnell
 function timeWheel(id, val = "08:00") {
   const [h, m] = val.split(":").map(Number);
-  const col = (part, n, cur) => `<div class="tw-col" data-part="${part}" data-tw="${id}">
-      <div class="tw-pad"></div>${[...Array(n)].map((_, i) => `<button class="tw-it ${i === cur ? "on" : ""}" data-i="${i}">${pad(i)}</button>`).join("")}<div class="tw-pad"></div></div>`;
-  return `<div class="tw" id="${id}" data-val="${pad(h)}:${pad(m)}">
-      <div class="tw-hl"></div>${col("h", 24, h)}<div class="tw-sep">:</div>${col("m", 60, m)}
-      <div class="tw-quick">${["07:00", "12:00", "18:00", "19:30", "21:00"].map(t => `<button class="chip" data-twq="${id}" data-v="${t}">${t}</button>`).join("")}</div></div>`;
+  const col = (part, n, cur) => `<div class="tw-col" data-part="${part}">
+      <div class="tw-pad"></div>${[...Array(n)].map((_, i) => `<div class="tw-it ${i === cur ? "on" : ""}" data-i="${i}">${pad(i)}</div>`).join("")}<div class="tw-pad"></div></div>`;
+  return `<div class="tw-box" id="${id}" data-val="${pad(h)}:${pad(m)}" data-dial="h">
+      <div class="dial-tabs"><button data-dialmode="h" class="on">Stunden</button><button data-dialmode="m">Minuten</button></div>
+      <svg class="dial" viewBox="0 0 240 240"></svg>
+      <div class="tw"><div class="tw-hl"></div>${col("h", 24, h)}<div class="tw-sep">:</div>${col("m", 60, m)}</div>
+      <div class="tw-quick">${["07:00", "12:00", "18:00", "19:30", "21:00"].map(t => `<button class="chip" data-twq="${id}" data-v="${t}">${t}</button>`).join("")}</div>
+    </div>`;
 }
 const twVal = id => $("#" + id)?.dataset.val || "";
+// --- Zeiger-Uhr zeichnen ---
+function drawDial(box) {
+  const svg = box.querySelector(".dial"), mode = box.dataset.dial, [h, m] = box.dataset.val.split(":").map(Number);
+  const pos = (ang, r) => [120 + r * Math.sin(ang * Math.PI / 180), 120 - r * Math.cos(ang * Math.PI / 180)];
+  let g = `<circle cx="120" cy="120" r="116" fill="var(--surface-2)"/>`;
+  let selAng, selR, selTxt;
+  if (mode === "h") {
+    const inner = h === 0 || h > 12;
+    selAng = (h % 12) * 30; selR = inner ? 62 : 94; selTxt = pad(h);
+    g += `<line x1="120" y1="120" x2="${pos(selAng, selR)[0]}" y2="${pos(selAng, selR)[1]}" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>`;
+    g += `<circle cx="${pos(selAng, selR)[0]}" cy="${pos(selAng, selR)[1]}" r="19" fill="var(--accent)"/>`;
+    for (let i = 0; i < 12; i++) {
+      const o = i === 0 ? 12 : i, n = i === 0 ? 0 : i + 12;
+      const [ox, oy] = pos(i * 30, 94), [ix, iy] = pos(i * 30, 62);
+      g += `<text x="${ox}" y="${oy + 5.5}" text-anchor="middle" font-size="16" font-weight="700" fill="${o === h ? "var(--accent-ink)" : "var(--text)"}">${o}</text>`;
+      g += `<text x="${ix}" y="${iy + 4.5}" text-anchor="middle" font-size="12.5" font-weight="600" fill="${n === h ? "var(--accent-ink)" : "var(--muted)"}">${pad(n)}</text>`;
+    }
+  } else {
+    selAng = m * 6; selR = 94;
+    g += `<line x1="120" y1="120" x2="${pos(selAng, selR)[0]}" y2="${pos(selAng, selR)[1]}" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>`;
+    g += `<circle cx="${pos(selAng, selR)[0]}" cy="${pos(selAng, selR)[1]}" r="19" fill="var(--accent)"/>`;
+    for (let i = 0; i < 60; i++) {
+      if (i % 5) { const [tx, ty] = pos(i * 6, 106), [tx2, ty2] = pos(i * 6, 101); g += `<line x1="${tx}" y1="${ty}" x2="${tx2}" y2="${ty2}" stroke="var(--muted)" stroke-width="1.5" opacity=".5"/>`; continue; }
+      const [x, y] = pos(i * 6, 94);
+      g += `<text x="${x}" y="${y + 5.5}" text-anchor="middle" font-size="16" font-weight="700" fill="${i === m ? "var(--accent-ink)" : "var(--text)"}">${pad(i)}</text>`;
+    }
+    if (m % 5) { const [x, y] = pos(selAng, selR); g += `<text x="${x}" y="${y + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="var(--accent-ink)">${pad(m)}</text>`; }
+  }
+  g += `<circle cx="120" cy="120" r="5" fill="var(--accent)"/>`;
+  svg.innerHTML = g;
+  box.querySelectorAll("[data-dialmode]").forEach(b => b.classList.toggle("on", b.dataset.dialmode === mode));
+}
+// --- Rad: eigene Wisch-Steuerung mit Schwung (Minuten ×2) ---
+function colIndex(c) { return Math.max(0, Math.min(c.dataset.part === "h" ? 23 : 59, Math.round(c.scrollTop / TW_H))); }
+function markWheel(c) { const i = colIndex(c); c.querySelectorAll(".tw-it").forEach(b => b.classList.toggle("on", +b.dataset.i === i)); return i; }
+function setPart(box, part, i) {
+  const [h, m] = box.dataset.val.split(":");
+  box.dataset.val = part === "h" ? `${pad(i)}:${m}` : `${h}:${pad(i)}`;
+  drawDial(box);
+}
+function snapCol(c) {
+  const i = markWheel(c);
+  c.scrollTo({ top: i * TW_H, behavior: "smooth" });
+  setPart(c.closest(".tw-box"), c.dataset.part, i);
+}
 function initWheels() {
-  document.querySelectorAll(".tw").forEach(tw => {
-    const [h, m] = tw.dataset.val.split(":").map(Number);
-    tw.querySelectorAll(".tw-col").forEach(c => {
+  document.querySelectorAll(".tw-box").forEach(box => {
+    if (box.dataset.ready) return; box.dataset.ready = 1;
+    const [h, m] = box.dataset.val.split(":").map(Number);
+    box.querySelectorAll(".tw-col").forEach(c => {
       c.scrollTop = (c.dataset.part === "h" ? h : m) * TW_H;
-      let t; c.onscroll = () => { clearTimeout(t); t = setTimeout(() => twSettle(c), 90); markWheel(c); };
+      const f = TW_SPEED[c.dataset.part];
+      let st = null, anim = null, wt;
+      c.addEventListener("pointerdown", e => {
+        cancelAnimationFrame(anim);
+        st = { y: e.clientY, top: c.scrollTop, moved: false, hist: [[e.timeStamp, e.clientY]], target: e.target };
+        c.setPointerCapture(e.pointerId);
+      });
+      c.addEventListener("pointermove", e => {
+        if (!st) return;
+        const dy = e.clientY - st.y;
+        if (Math.abs(dy) > 4) st.moved = true;
+        c.scrollTop = st.top - dy * f; markWheel(c);
+        st.hist.push([e.timeStamp, e.clientY]); if (st.hist.length > 6) st.hist.shift();
+      });
+      const up = e => {
+        if (!st) return;
+        const s0 = st; st = null;
+        if (!s0.moved) {   // Tippen auf eine Zahl
+          const it = document.elementFromPoint(e.clientX, e.clientY)?.closest(".tw-it");
+          if (it && c.contains(it)) { c.scrollTo({ top: +it.dataset.i * TW_H, behavior: "smooth" }); setPart(c.closest(".tw-box"), c.dataset.part, +it.dataset.i); }
+          return;
+        }
+        const [t0, y0] = s0.hist[0], [t1, y1] = s0.hist[s0.hist.length - 1];
+        let v = t1 > t0 ? -(y1 - y0) / (t1 - t0) * f : 0;   // px pro ms
+        let last = performance.now();
+        const step = now => {
+          const dt = now - last; last = now;
+          c.scrollTop += v * dt; v *= Math.pow(0.94, dt / 16); markWheel(c);
+          if (Math.abs(v) > 0.05) anim = requestAnimationFrame(step); else snapCol(c);
+        };
+        if (Math.abs(v) > 0.25) anim = requestAnimationFrame(step); else snapCol(c);
+      };
+      c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up);
+      c.addEventListener("wheel", e => { e.preventDefault(); c.scrollTop += e.deltaY * f; markWheel(c); clearTimeout(wt); wt = setTimeout(() => snapCol(c), 120); }, { passive: false });
     });
+    // Zeiger-Uhr bedienen
+    const svg = box.querySelector(".dial");
+    const pick = (e, release) => {
+      const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 240 - 120, y = (e.clientY - r.top) / r.height * 240 - 120;
+      const ang = (Math.atan2(x, -y) * 180 / Math.PI + 360) % 360, dist = Math.hypot(x, y);
+      if (box.dataset.dial === "h") {
+        const i = Math.round(ang / 30) % 12, inner = dist < 78;
+        const hv = inner ? (i === 0 ? 0 : i + 12) : (i === 0 ? 12 : i);
+        setWheelVal(box, `${pad(hv)}:${box.dataset.val.slice(3)}`);
+        if (release) { box.dataset.dial = "m"; drawDial(box); }
+      } else {
+        const mv = Math.round(ang / 6) % 60;
+        setWheelVal(box, `${box.dataset.val.slice(0, 2)}:${pad(mv)}`);
+      }
+    };
+    svg.onpointerdown = e => { e.preventDefault(); svg.setPointerCapture(e.pointerId); pick(e); svg.onpointermove = ev => pick(ev); };
+    svg.onpointerup = e => { svg.onpointermove = null; pick(e, true); };
+    svg.onpointercancel = () => { svg.onpointermove = null; };
+    drawDial(box);
   });
 }
-function markWheel(c) {
-  const i = Math.round(c.scrollTop / TW_H);
-  c.querySelectorAll(".tw-it").forEach(b => b.classList.toggle("on", +b.dataset.i === i));
-  return i;
-}
-function twSettle(c) {
-  const i = markWheel(c), tw = c.closest(".tw");
-  const [h, m] = tw.dataset.val.split(":");
-  tw.dataset.val = c.dataset.part === "h" ? `${pad(i)}:${m}` : `${h}:${pad(i)}`;
-  if (Math.abs(c.scrollTop - i * TW_H) > 1) c.scrollTo({ top: i * TW_H, behavior: "smooth" });
-}
-function setWheel(id, val) {
-  const tw = $("#" + id); if (!tw) return;
-  tw.dataset.val = val;
+function setWheelVal(box, val) {
+  box.dataset.val = val;
   const [h, m] = val.split(":").map(Number);
-  tw.querySelectorAll(".tw-col").forEach(c => c.scrollTo({ top: (c.dataset.part === "h" ? h : m) * TW_H, behavior: "smooth" }));
+  box.querySelectorAll(".tw-col").forEach(c => { const i = c.dataset.part === "h" ? h : m; c.scrollTo({ top: i * TW_H, behavior: "smooth" }); c.querySelectorAll(".tw-it").forEach(b => b.classList.toggle("on", +b.dataset.i === i)); });
+  drawDial(box);
 }
+function setWheel(id, val) { const box = $("#" + id); if (box) setWheelVal(box, val); }
 document.addEventListener("click", e => {
-  const it = e.target.closest(".tw-it");
-  if (it) { const c = it.closest(".tw-col"); c.scrollTo({ top: +it.dataset.i * TW_H, behavior: "smooth" }); return; }
   const q = e.target.closest("[data-twq]");
-  if (q) setWheel(q.dataset.twq, q.dataset.v);
+  if (q) { setWheel(q.dataset.twq, q.dataset.v); return; }
+  const dm = e.target.closest("[data-dialmode]");
+  if (dm) { const box = dm.closest(".tw-box"); box.dataset.dial = dm.dataset.dialmode; drawDial(box); }
 });
 
 /* ===================== FARBWÄHLER (eigene Farbe) ===================== */
@@ -2209,7 +2330,7 @@ function openSettings() {
       <div class="todo"><span class="tap"><span style="min-width:0"><div class="t">${esc(t.training ? "Training" : t.t)}</div><div class="s">🔔 ${t.remind} Uhr</div></span></span>
         <button class="mini" data-action="taskbell" data-key="${t.key}">${ICON.bell.replace("<svg", '<svg width="17" height="17"')}</button></div>`).join("")}</div>` : ""}
     ${permHint()}`;
-  showSheet();
+  showSheet(true);
 }
 async function saveGeneralTimes() {
   REMIND_TIMES = [...new Set(REMIND_TIMES)].sort();
@@ -2226,7 +2347,7 @@ function openTaskBell(key) {
     <button class="btn primary block" style="margin-top:14px" data-action="savebell" data-key="${key}">Speichern</button>
     ${t.remind ? `<button class="btn block" style="margin-top:8px" data-action="savebell" data-key="${key}" data-off="1">Erinnerung ausschalten</button>` : ""}
     ${permHint()}`;
-  showSheet();
+  showSheet(true);
 }
 async function saveTaskBell(key, off) {
   const v = twVal("taskTime");
@@ -2293,7 +2414,13 @@ document.addEventListener("click", async e => {
     S.taskCfg = DEFAULT_TASKS.map(t => ({ ...t })); await saveTaskCfg(); closeSheet(); toast("Zurückgesetzt");
   }
   else if (a === "deltask") deleteTask(el.dataset.key);
-  else if (a === "newtask") { S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.newTaskT = S.newTaskS = S.newTaskR = ""; openNewTask(); }
+  else if (a === "newtask") { S.editKey = null; S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.newTaskT = S.newTaskS = S.newTaskR = ""; openNewTask(); }
+  else if (a === "taskmenu") openTaskMenu(el.dataset.key);
+  else if (a === "taskedit") {
+    const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === el.dataset.key); if (!t) return;
+    S.editKey = t.key; S.newTaskT = t.t || ""; S.newTaskS = t.s || ""; S.newTaskR = t.remind || ""; S.newDays = t.days ? [...t.days] : [0, 1, 2, 3, 4, 5, 6];
+    openNewTask();
+  }
   else if (a === "savetask") saveNewTask();
   else if (a === "newrem") { S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value; S.newTaskR = el.dataset.v ? (S.newTaskR || "08:00") : ""; openNewTask(); }
   else if (a === "newdays") {
