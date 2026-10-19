@@ -1,5 +1,5 @@
 // Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um Benachrichtigungen
-const CACHE = "tracker-v8";
+const CACHE = "tracker-v9";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 const PROJECT = "fir-8213f";
 
@@ -33,7 +33,8 @@ self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request).then(r => {
+    // cache: "no-cache" fragt GitHub jedes Mal nach der neuesten Version (sonst hält der Browser Dateien bis zu 10 Min. fest)
+    fetch(e.request.url, { cache: "no-cache" }).then(r => {
       const copy = r.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return r;
