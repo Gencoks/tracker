@@ -120,8 +120,8 @@
   .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .cal-head b { font-size: 18px; }
   .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-  .cal .wd { text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 4px; }
-  .cal .c { aspect-ratio: 1; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); display: grid; place-items: center;
+  .cal .wd { height: 22px; text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 4px; }
+  .cal .c { height: 46px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); display: grid; place-items: center;
     font-size: 14px; font-weight: 600; position: relative; }
   .cal .c.empty { visibility: hidden; }
   .cal .c.full { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -298,6 +298,9 @@
     background: color-mix(in srgb, var(--accent) 8%, transparent); }
   body.drag-on { user-select: none; -webkit-user-select: none; cursor: grabbing; }
   .switch.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .switch.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .switch.four button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 16px; padding: 7px 2px; line-height: 1.1; }
+  .switch.four button span { font-size: 11px; }
   .switch.three button { font-size: 13px; padding: 10px 4px; }
   .tcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .ttext { text-align: left; width: 100%; word-break: break-word; }
@@ -307,7 +310,7 @@
   /* Kalender Monat */
   .tc-grid, .dp-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
   .tc-grid .wd, .dp-grid .wd { text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 4px; }
-  .tc-d { aspect-ratio: 1 / 1.05; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 2px solid transparent; }
+  .tc-d { height: 48px; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 2px solid transparent; }
   .tc-d.empty { visibility: hidden; }
   .tc-d .n { font-weight: 700; font-size: 14px; }
   .tc-d .dots { display: flex; gap: 2px; height: 6px; align-items: center; }
@@ -319,14 +322,14 @@
   .tc-d.sel { border-color: var(--accent); }
   /* Kalender Woche */
   .tc-week { display: flex; flex-direction: column; gap: 6px; }
-  .tc-row { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 10px; border-radius: 12px; background: var(--surface-2); border: 2px solid transparent; min-height: 54px; }
+  .tc-row { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); border: 2px solid transparent; height: 78px; overflow: hidden; }
   .tc-row.sel { border-color: var(--accent); }
   .tc-dl { width: 34px; flex: none; text-align: center; display: flex; flex-direction: column; }
   .tc-dl b { font-size: 11px; color: var(--muted); text-transform: uppercase; }
   .tc-dl span { font-size: 18px; font-weight: 800; }
   .tc-row.today .tc-dl span { color: var(--accent-text); }
-  .tc-items { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; padding-top: 2px; }
-  .tc-it { font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 6px; border-left: 3px solid var(--accent);
+  .tc-items { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; padding-top: 1px; }
+  .tc-it { font-size: 13px; font-weight: 600; padding: 3px 8px; border-radius: 6px; border-left: 3px solid var(--accent);
     background: color-mix(in srgb, var(--accent) 12%, transparent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tc-it.dn { border-left-color: var(--muted); background: transparent; color: var(--muted); text-decoration: line-through; }
   .tc-it.lt { border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
@@ -344,6 +347,31 @@
   .note-title { width: 100%; background: none; border: 0; font-size: 22px; font-weight: 800; padding: 10px 0 6px; outline: none; color: var(--text); }
   .note-text { width: 100%; min-height: 60dvh; background: none; border: 0; resize: none; font-size: 16px; line-height: 1.55; padding: 4px 0; outline: none; color: var(--text); }
   .note-text:focus, .note-title:focus { outline: none !important; }
+  .rank-card { margin-top: 12px; padding: 16px; border-color: color-mix(in srgb, var(--rc) 60%, var(--border));
+    background: linear-gradient(160deg, color-mix(in srgb, var(--rc) 12%, var(--surface)) 0%, var(--surface) 55%); }
+  .rank-card.god { border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(120deg, #FFD84D, #FF8A00, #FF4FA3, #9B5DE5, #3A86FF, #FFD84D) border-box; background-size: 100% 100%, 300% 300%; animation: godglow 5s linear infinite; }
+  @keyframes godglow { to { background-position: 0 0, 300% 0; } }
+  .rank-top { display: flex; align-items: center; gap: 14px; }
+  .rank-badge { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; font-size: 34px; flex: none;
+    background: color-mix(in srgb, var(--rc) 20%, transparent); box-shadow: 0 0 0 2px var(--rc) inset; }
+  .rank-card.god .rank-badge { box-shadow: 0 0 0 2px #FFD84D inset, 0 0 22px rgba(255,79,163,.55); }
+  .rank-n { font-size: 26px; font-weight: 900; letter-spacing: -.01em; line-height: 1.1; color: var(--text); }
+  .rank-card.god .rank-n { background: linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .rank-card .k { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .rank-card .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .rank-warn { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); padding: 8px 10px; border-radius: 10px; }
+  .rank-today { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+  .rank-today div { background: var(--surface-2); border-radius: 10px; padding: 8px 4px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+  .rank-today span { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-today b { font-size: 14px; font-weight: 800; }
+  .rank-today b.neg { color: var(--danger); }
+  .rank-ladder { margin-top: 10px; }
+  .rank-ladder summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent-text); padding: 6px 0; }
+  .rl { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 8px; align-items: center; padding: 7px 8px; border-radius: 10px; font-size: 14px; }
+  .rl small { color: var(--muted); font-size: 12px; }
+  .rl.on { background: color-mix(in srgb, var(--accent) 16%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .rl.godrow b { background: linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -613,6 +641,7 @@ onAuthStateChanged(auth, async user => {
     if (u.exists() && u.data().plan) { const pl = u.data().plan; if (Array.isArray(pl.types)) TYPES = pl.types; if (pl.week) WEEK = { ...DEFAULT_WEEK, ...pl.week }; }
     const ud = u.exists() ? u.data() : {};
     S.pushOn = !!ud.push?.enabled && (ud.push?.tokens || []).length > 0;
+    S.rankSeen = typeof ud.rankSeen === "number" ? ud.rankSeen : null;
     if (Array.isArray(ud.remindTimes)) REMIND_TIMES = ud.remindTimes;
     else if (ud.remindAt && /^\d\d:\d\d$/.test(ud.remindAt)) REMIND_TIMES = [ud.remindAt];
     // Gewicht-Aufgaben einmalig bei bestehender eigener Liste ergänzen
@@ -621,7 +650,7 @@ onAuthStateChanged(auth, async user => {
       setDoc(userRef(), { tasks: S.taskCfg, weightAdded: true }, { merge: true }).catch(() => {});
     }
   } catch {}
-  await loadRange(keyOf(addDays(new Date(), -120)), todayKey());
+  await loadRange("2000-01-01", todayKey()); S.daysFull = true;
   watchToday();
   watchTodos();
   watchNotes();
@@ -690,6 +719,7 @@ function streak() {
 
 /* ===================== START ===================== */
 function renderStart() {
+  setTimeout(checkRank, 0);
   const now = new Date(), k = todayKey();
   const tasks = tasksFor(now);
   const done = S.days[k]?.done || {};
@@ -732,6 +762,7 @@ function renderStart() {
           <div class="stats">
             <span class="chip">🔥 ${streak()} Tage Serie</span>
             <span class="chip accent">${esc(plan.name)}</span>
+            ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} ${r.n}</button>`; })() : ""}
             ${openTodos ? `<button class="chip" data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}
           </div>
         </div>
@@ -791,7 +822,7 @@ async function renderCal() {
         <b>${MONTHS[mo]} ${y}</b>
         <button class="icon-btn" data-action="calnext">${ICON.right}</button>
       </div>
-      <div class="cal">${cells}</div>
+      <div class="cal">${cells}${`<div class="c empty"></div>`.repeat(42 - offset - daysIn)}</div>
       <div class="legend"><span><i style="background:var(--accent);border-color:var(--accent)"></i>alles erledigt</span>
         <span><i style="border-color:var(--accent)"></i>teilweise</span><span><i></i>nichts</span></div>
     </div>
@@ -1062,6 +1093,7 @@ async function loadAllWo() {
     const q = query(collection(db, "users", S.uid, "workouts"), orderBy("date", "desc"), limit(3000));
     S.allWo = (await getDocs(q)).docs.map(d => ({ id: d.id, ...d.data() })).filter(w => w.date).sort((a, b) => a.date.localeCompare(b.date));
   } catch { S.allWo = S.allWo || []; }
+  if (S.tab === "start") renderStart();
 }
 async function loadPerf() {
   renderPerf();
@@ -1140,10 +1172,14 @@ function renderPerf() {
   const chip = (attr, val, cur, l) => `<button class="chip ${cur === val ? "accent" : ""}" data-action="${attr}" data-v="${esc(val)}">${esc(l)}</button>`;
   const rng = S.perfRange || "3m";
   const view = S.perfView || "stats";
-  let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>${view === "awards" ? "Deine Erfolge" : "Deine Entwicklung"}</h1></div></header>
-    <div class="switch"><button class="${view === "stats" ? "on" : ""}" data-action="pview" data-v="stats">📈 Auswertung</button><button class="${view === "awards" ? "on" : ""}" data-action="pview" data-v="awards">🏆 Erfolge</button></div>`;
+  const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Pokale", records: "Deine Bestwerte" };
+  const pb = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="pview" data-v="${v}">${l}</button>`;
+  let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>${TITLES[view] || TITLES.stats}</h1></div></header>
+    <div class="switch four">${pb("stats", "📈<span>Auswertung</span>")}${pb("rank", "⚡<span>Rang</span>")}${pb("awards", "🏅<span>Pokale</span>")}${pb("records", "🏆<span>Bestwerte</span>")}</div>`;
   if (!all) { v.innerHTML = html + `<div class="card empty perf-card">Lade Daten …</div>`; return; }
-  if (view === "awards") { v.innerHTML = html + renderAwards(all); return; }
+  if (view === "rank") { v.innerHTML = html + rankCard(); return; }
+  if (view === "awards") { v.innerHTML = html + renderAwards(all, "awards"); return; }
+  if (view === "records") { v.innerHTML = html + renderAwards(all, "records"); return; }
   html += `<div class="seg" style="margin-top:12px">${chip("prange", "4w", rng, "4 Wochen")}${chip("prange", "3m", rng, "3 Monate")}${chip("prange", "6m", rng, "6 Monate")}${chip("prange", "all", rng, "Alles")}</div>`;
 
   /* --- 1. Kraft-Index pro Trainingsart --- */
@@ -1429,6 +1465,91 @@ function checkPR(i) {
     saveWorkout();
   }
 }
+/* ---------- Rang mit Auf- und Abstieg ---------- */
+// Jeden Tag gibt es Rang-Punkte (RP) für deine Quote, dein Training und Bestleistungen.
+// Jeder Rang kostet pro Tag RP – je höher, desto teurer. Wer nicht dranbleibt, rutscht Stufe für Stufe ab.
+const RANKS = [
+  { n: "Bronze",      min: 0,    cost: 4,    c: "#CD7F32", i: "🥉" },
+  { n: "Silber",      min: 60,   cost: 6,    c: "#B8BCC6", i: "🥈" },
+  { n: "Gold",        min: 150,  cost: 8,    c: "#FFC400", i: "🥇" },
+  { n: "Platin",      min: 300,  cost: 9,    c: "#7FD1C7", i: "💠" },
+  { n: "Diamant",     min: 550,  cost: 10,   c: "#7EC8FF", i: "💎" },
+  { n: "Meister",     min: 900,  cost: 11,   c: "#C77DFF", i: "🎖️" },
+  { n: "Großmeister", min: 1400, cost: 11.5, c: "#FF5E57", i: "🏵️" },
+  { n: "Champion",    min: 2100, cost: 12,   c: "#FF8A00", i: "🏆" },
+  { n: "Legende",     min: 3000, cost: 12.5, c: "#FFD84D", i: "🌟" },
+  { n: "Mythos",      min: 4200, cost: 13,   c: "#FF4FA3", i: "🔮" },
+  { n: "GOD-LEVEL",   min: 6000, cost: 13.5, c: "#FFFFFF", i: "⚡", god: true },
+];
+const GAIN = { quota: 12, train: 5, pr: 3 };   // max. 20 RP pro Tag
+const rankOf = rp => { let t = 0; RANKS.forEach((r, i) => { if (rp >= r.min) t = i; }); return t; };
+function dayGain(k, woByDate) {
+  const inf = dayInfo(k), w = woByDate[k];
+  const quota = inf.total ? GAIN.quota * Math.min(1, inf.count / inf.total) : 0;
+  const rest = planFor(fromKey(k).getDay()).type === "rest";
+  const train = (w && hasContent(w)) || rest ? GAIN.train : 0;
+  const pr = w?.prs?.length ? GAIN.pr : 0;
+  return { quota, train, pr, rest, total: quota + train + pr };
+}
+function rankState() {
+  const all = S.allWo || [], woByDate = Object.fromEntries(all.map(w => [w.date, w]));
+  const tk = todayKey();
+  const firsts = [Object.keys(S.days).filter(k => (S.days[k]?.count || 0) > 0).sort()[0], all.find(w => hasContent(w))?.date].filter(Boolean).sort();
+  let rp = 0, peak = 0; const hist = [];
+  if (firsts.length) {
+    for (let d = fromKey(firsts[0]); keyOf(d) <= tk; d = addDays(d, 1)) {
+      const k = keyOf(d), tier = rankOf(rp), g = dayGain(k, woByDate);
+      rp += g.total;
+      if (k < tk) rp = Math.max(0, rp - RANKS[tier].cost);   // heutige Kosten erst um Mitternacht
+      peak = Math.max(peak, rankOf(rp));
+      hist.push({ x: k, y: rp });
+    }
+  }
+  const tier = rankOf(rp), today = dayGain(tk, woByDate);
+  return { rp, tier, peak, hist, today, cost: RANKS[tier].cost, next: RANKS[tier + 1] || null };
+}
+// Auf-/Abstieg erkennen und einmal melden
+function checkRank() {
+  if (!S.uid || !S.daysFull) return;
+  const st = rankState(), seen = S.rankSeen;
+  if (seen == null) { S.rankSeen = st.tier; setDoc(userRef(), { rankSeen: st.tier }, { merge: true }).catch(() => {}); return; }
+  if (st.tier === seen) return;
+  const r = RANKS[st.tier];
+  if (st.tier > seen) celebrate(r.god ? "GOD-LEVEL ERREICHT! ⚡" : `Aufstieg: ${r.n}! ${r.i}`, r.god ? "Ganz oben. Jetzt heißt es: halten." : `Neuer Rang – Tageskosten jetzt ${String(r.cost).replace(".", ",")} RP`);
+  else toast(`Abgestiegen auf ${r.i} ${r.n} – bleib dran, du holst dir das zurück!`);
+  S.rankSeen = st.tier;
+  setDoc(userRef(), { rankSeen: st.tier }, { merge: true }).catch(() => {});
+}
+function rankCard() {
+  const st = rankState(), r = RANKS[st.tier], nx = st.next;
+  const pct = nx ? Math.min(100, (st.rp - r.min) / (nx.min - r.min) * 100) : 100;
+  const buffer = st.rp - r.min, danger = st.tier > 0 && buffer < r.cost * 3;
+  const t = st.today, f1 = v => fmtN(v, 1);
+  const chartPts = st.hist.slice(-90);
+  return `<div class="card rank-card ${r.god ? "god" : ""}" style="--rc:${r.c}">
+    <div class="rank-top">
+      <div class="rank-badge">${r.i}</div>
+      <div style="min-width:0;flex:1"><div class="k">Dein Rang</div><div class="rank-n">${r.n}</div>
+        <div class="d">${fmtN(st.rp, 0)} RP${st.peak > st.tier ? ` · Bestwert: ${RANKS[st.peak].i} ${RANKS[st.peak].n}` : ""}</div></div>
+    </div>
+    <div class="ach-bar" style="margin-top:14px"><i style="width:${pct}%;background:${r.god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : "var(--accent)"}"></i></div>
+    <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${nx.i} ${nx.n}` : "⚡ Höchster Rang. Halte ihn!"}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
+    ${danger ? `<div class="rank-warn">⚠️ Abstiegsgefahr: nur noch ${fmtN(buffer, 0)} RP Puffer bis ${RANKS[st.tier - 1].n}</div>` : ""}
+    <div class="rank-today">
+      <div><span>Heute</span><b>+${f1(t.total)}</b></div>
+      <div><span>Quote</span><b>+${f1(t.quota)}</b></div>
+      <div><span>${t.rest ? "Ruhetag" : "Training"}</span><b>+${f1(t.train)}</b></div>
+      <div><span>Rekord</span><b>+${f1(t.pr)}</b></div>
+      <div><span>Kosten</span><b class="neg">−${f1(st.cost)}</b></div>
+    </div>
+    ${chartPts.length > 1 ? lineChart([{ color: "var(--accent)", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
+    <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
+      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote, ${GAIN.train} RP für Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
+      ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${x.i}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
+    </details>
+  </div>`;
+}
+
 // Animation: Pokal-Banner + Konfetti
 function celebrate(title, text) {
   document.querySelectorAll(".pr-banner, .confetti").forEach(x => x.remove());
@@ -1455,7 +1576,7 @@ function celebrate(title, text) {
   setTimeout(() => { b.remove(); box.remove(); }, 4400);
 }
 // Pokale: Meilensteine, die man freischaltet
-const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Unsterblich", "Mythos"];
+const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
 const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#C77DFF", "#FF5E57", "#FF8A00", "#FFD84D", "#2EE59D", "#FF4FA3"];
 function achievements(all) {
   const trainings = all.filter(w => hasContent(w)).length;
@@ -1472,8 +1593,6 @@ function achievements(all) {
   const tons = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + exVolume(e), 0), 0) / 1000;
   const exCount = new Set(all.flatMap(w => (w.exercises || []).filter(e => (e.sets || []).some(setFilled)).map(e => e.name))).size;
   const todosDone = S.todos.filter(t => t.done).length;
-  const firsts = [keys[0], all[0]?.date].filter(Boolean).sort();
-  const daysIn = firsts.length ? Math.floor((Date.now() - fromKey(firsts[0]).getTime()) / 864e5) + 1 : 0;
   const cats = [
     { i: "💪", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500] },
     { i: "🔥", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
@@ -1484,11 +1603,10 @@ function achievements(all) {
     { i: "⚖️", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
     { i: "🧪", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
     { i: "📝", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
-    { i: "📆", n: "Dabei seit", v: daysIn, u: " Tagen", goals: [7, 30, 100, 182, 365, 730, 1095, 1460, 1825, 2555, 3650] },
   ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; return { ...c, lvl, next: c.goals[lvl] ?? null, prev: c.goals[lvl - 1] ?? 0 }; });
   return { cats, trainings, km, longest, prCount, unlocked: cats.reduce((a, c) => a + c.lvl, 0), total: cats.reduce((a, c) => a + c.goals.length, 0) };
 }
-function renderAwards(all) {
+function renderAwards(all, part) {
   const a = achievements(all);
   // Rekorde pro Übung
   const recs = {};
@@ -1499,11 +1617,12 @@ function renderAwards(all) {
   }
   const rl = Object.values(recs).sort((x, y) => y.date.localeCompare(x.date));
   const unit = r => r.mode === "weight" && r.kg ? `≈ ${fmtN(r.v, 1)} kg max` : r.mode === "weight" ? "meiste Wdh." : r.mode === "time" ? "längste Zeit" : r.mode === "cardio" ? "weiteste Strecke" : "meiste Wdh.";
+  if (part === "records") return recordsHTML(all);
   let html = `<div class="kpis perf-card">
       <div class="kpi"><b>${a.trainings}</b><span>Trainings</span></div>
       <div class="kpi"><b>${a.longest}</b><span>längste Serie</span></div>
       <div class="kpi"><b>${a.prCount}</b><span>Bestleistungen</span></div></div>
-    <h2>Pokale · ${a.unlocked}/${a.total} freigeschaltet</h2>
+    <h2>Meilensteine · ${a.unlocked}/${a.total}</h2><div class="note" style="margin:-4px 0 10px">Diese Pokale bleiben für immer – im Gegensatz zum Rang.</div>
     <div class="tasks">${a.cats.map(c => {
       const pct = c.next ? Math.min(100, (c.v - c.prev) / (c.next - c.prev) * 100) : 100;
       const col = c.lvl ? TIER_COL[c.lvl - 1] : "var(--muted)";
@@ -1520,7 +1639,23 @@ function renderAwards(all) {
         <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b>${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0)}${c.u}` : "🏅 Alle Stufen geschafft – Respekt!"}</span>
           <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
       </div>`; }).join("")}</div>
-    <h2>Deine Bestwerte</h2>`;
+`;
+  return html;
+}
+function recordsHTML(all) {
+  const recs = {};
+  for (const w of all) for (const e of w.exercises || []) {
+    const v = prValue(e); if (!(v > 0)) continue;
+    const key = e.name + "|" + exMode(e);
+    if (!recs[key] || v > recs[key].v) recs[key] = { name: e.name, mode: exMode(e), v, txt: prText(e), date: w.date, group: e.group, kg: exWeighted(e) };
+  }
+  const rl = Object.values(recs).sort((x, y) => y.date.localeCompare(x.date));
+  const unit = r => r.mode === "weight" && r.kg ? `≈ ${fmtN(r.v, 1)} kg max` : r.mode === "weight" ? "meiste Wdh." : r.mode === "time" ? "längste Zeit" : r.mode === "cardio" ? "weiteste Strecke" : "meiste Wdh.";
+  const prCount = all.reduce((a, w) => a + (w.prs || []).length, 0);
+  let html = `<div class="kpis perf-card" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <div class="kpi"><b>${rl.length}</b><span>Übungen mit Bestwert</span></div>
+      <div class="kpi"><b>${prCount}</b><span>neue Bestleistungen</span></div></div>
+    <div style="margin-top:12px"></div>`;
   html += rl.length ? `<div class="tasks">${rl.map(r => `<div class="todo rec">
       <span class="medal">🏆</span>
       <span class="tap" style="cursor:default"><span style="min-width:0"><div class="t">${esc(r.name)}</div><div class="s">${esc(unit(r))} · ${dShort(r.date)}</div></span></span>
@@ -1613,6 +1748,7 @@ function renderTodoCal() {
         <span class="n">${d}</span>
         <span class="dots">${list.slice(0, 3).map(t => `<i class="${t.done ? "dn" : late ? "lt" : ""}"></i>`).join("")}${list.length > 3 ? "<b>+</b>" : ""}</span></button>`;
     }
+    cells += `<div class="tc-d empty"></div>`.repeat(42 - off - daysIn);   // immer 6 Reihen
     body = `<div class="tc-grid">${cells}</div>`;
   } else {
     const mon = addDays(base, -((base.getDay() + 6) % 7)), sun = addDays(mon, 6);
@@ -1621,8 +1757,8 @@ function renderTodoCal() {
       const d = addDays(mon, i), k = keyOf(d), list = todosOn(k);
       return `<button class="tc-row ${k === tk ? "today" : ""} ${k === S.tcSel ? "sel" : ""}" data-action="tcday" data-day="${k}">
         <span class="tc-dl"><b>${WD[d.getDay()]}</b><span>${d.getDate()}</span></span>
-        <span class="tc-items">${list.length ? list.slice(0, 3).map(t => `<span class="tc-it ${t.done ? "dn" : !t.done && k < tk ? "lt" : ""}">${esc(t.text)}</span>`).join("")
-          + (list.length > 3 ? `<span class="muted" style="font-size:12px">+ ${list.length - 3} weitere</span>` : "") : `<span class="muted" style="font-size:13px">–</span>`}</span></button>`;
+        <span class="tc-items">${list.length ? list.slice(0, 2).map(t => `<span class="tc-it ${t.done ? "dn" : !t.done && k < tk ? "lt" : ""}">${esc(t.text)}</span>`).join("")
+          + (list.length > 2 ? `<span class="muted" style="font-size:11px;line-height:1">+ ${list.length - 2} weitere</span>` : "") : `<span class="muted" style="font-size:13px">–</span>`}</span></button>`;
     }).join("")}</div>`;
   }
   const sel = todosOn(S.tcSel);
@@ -1635,7 +1771,7 @@ function renderTodoCal() {
       ${body}
     </div>
     <h2>${fmtDate(fromKey(S.tcSel))}</h2>
-    <div class="tasks">${sel.length ? sel.map(todoHTML).join("") : `<div class="card empty">Nichts geplant.</div>`}</div>
+    <div class="tasks" style="min-height:150px">${sel.length ? sel.map(todoHTML).join("") : `<div class="card empty">Nichts geplant.</div>`}</div>
     <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent-text)" data-action="tcadd">+ Aufgabe am ${fromKey(S.tcSel).getDate()}.${fromKey(S.tcSel).getMonth() + 1}. hinzufügen</button>`;
 }
 
@@ -1658,7 +1794,7 @@ function renderDatePicker() {
     <div class="seg" style="margin:6px 0 14px">${q(0, "Heute")}${q(1, "Morgen")}${q(2, "Übermorgen")}${q(7, "In 1 Woche")}${q(14, "In 2 Wochen")}</div>
     <div class="cal-head"><button class="icon-btn" data-action="dpnav" data-v="-1">${ICON.left}</button><b>${MONTHS[mo]} ${y}</b>
       <button class="icon-btn" data-action="dpnav" data-v="1">${ICON.right}</button></div>
-    <div class="dp-grid">${cells}</div>`;
+    <div class="dp-grid">${cells}${`<div class="dp-d" style="visibility:hidden">0</div>`.repeat(42 - off - daysIn)}</div>`;
   showSheet();
 }
 
@@ -1912,6 +2048,14 @@ async function saveTaskBell(key, off) {
 
 /* ===================== NAVIGATION & EVENTS ===================== */
 try { matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => { if (curTheme().mode === "system") window.applyTheme(curTheme()); }); } catch {}
+// Neu zeichnen, ohne dass die Seite springt
+function keepScroll(fn) {
+  const y = window.scrollY, app = $("#app");
+  app.style.minHeight = app.offsetHeight + "px";   // Höhe kurz festhalten
+  const r = fn();
+  const restore = () => { window.scrollTo(0, y); requestAnimationFrame(() => { window.scrollTo(0, y); app.style.minHeight = ""; }); };
+  if (r && typeof r.then === "function") r.then(restore); else restore();
+}
 function setTab(t) {
   S.tab = t;
   ["start", "cal", "train", "perf", "todo"].forEach(x => $("#view-" + x).classList.toggle("hidden", x !== t));
@@ -1984,14 +2128,14 @@ document.addEventListener("click", async e => {
   }
   else if (a === "dppick") { const f = S.dp.onPick; closeSheet(); f(el.dataset.day); }
   else if (a === "dpnav") { const b = fromKey(S.dp.ref); S.dp.ref = keyOf(new Date(b.getFullYear(), b.getMonth() + +el.dataset.v, 1)); renderDatePicker(); }
-  else if (a === "calmode") { S.calMode = el.dataset.v; S.tcRef = S.tcSel; renderTodo(); }
+  else if (a === "calmode") { S.calMode = el.dataset.v; S.tcRef = S.tcSel; keepScroll(renderTodo); }
   else if (a === "tcnav") {
     const b = fromKey(S.tcRef || todayKey()), v = +el.dataset.v;
     S.tcRef = keyOf((S.calMode || "month") === "month" ? new Date(b.getFullYear(), b.getMonth() + v, 1) : addDays(b, v * 7));
-    renderTodo();
+    keepScroll(renderTodo);
   }
-  else if (a === "tctoday") { S.tcRef = S.tcSel = todayKey(); renderTodo(); }
-  else if (a === "tcday") { S.tcSel = el.dataset.day; S.todoDue = el.dataset.day < todayKey() ? todayKey() : el.dataset.day; S.todoDraft = $("#todoIn")?.value || ""; renderTodo(); }
+  else if (a === "tctoday") { S.tcRef = S.tcSel = todayKey(); keepScroll(renderTodo); }
+  else if (a === "tcday") { S.tcSel = el.dataset.day; S.todoDue = el.dataset.day < todayKey() ? todayKey() : el.dataset.day; S.todoDraft = $("#todoIn")?.value || ""; keepScroll(renderTodo); }
   else if (a === "tcadd") { S.todoDue = S.tcSel < todayKey() ? todayKey() : S.tcSel; window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => $("#todoIn")?.focus(), 250); renderTodo(); }
   else if (a === "notenew") newNote();
   else if (a === "noteopen") openNote(el.dataset.id);
@@ -2003,6 +2147,7 @@ document.addEventListener("click", async e => {
     toast("Notiz gelöscht");
   }
   else if (a === "repeat") copyPrevious();
+  else if (a === "gorank") { S.perfView = "rank"; setTab("perf"); }
   else if (a === "plansel") { S.workout.plan = el.dataset.v; findPrevSame(); saveWorkout(true); }
   else if (a === "planedit") { S.planForm = null; openPlanEditor(); }
   else if (a === "wkset") { WEEK[el.dataset.d] = el.dataset.v; savePlan(); openPlanEditor(); }
@@ -2025,9 +2170,9 @@ document.addEventListener("click", async e => {
     try { await setDoc(userRef(), { custom: S.custom, hidden: S.hidden }, { merge: true }); } catch {}
     S.keepListScroll = true; openSheet(); toast("Übung gelöscht");
   }
-  else if (a === "calprev") changeMonth(-1);
-  else if (a === "calnext") changeMonth(1);
-  else if (a === "calday") { S.calSel = el.dataset.day; renderCal(); }
+  else if (a === "calprev") keepScroll(() => changeMonth(-1));
+  else if (a === "calnext") keepScroll(() => changeMonth(1));
+  else if (a === "calday") { S.calSel = el.dataset.day; keepScroll(renderCal); }
   else if (a === "tprev") loadWorkout(keyOf(addDays(fromKey(S.trainDate), -1)));
   else if (a === "tnext") loadWorkout(keyOf(addDays(fromKey(S.trainDate), 1)));
   else if (a === "addex") openSheet();
