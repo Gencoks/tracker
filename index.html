@@ -465,16 +465,8 @@
   .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
   .tw-quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
-  /* animierte Flamme: die Zungen züngeln, der Fuß bleibt stehen */
-  .flame-svg { width: 15px; height: 19px; flex: none; overflow: visible; filter: drop-shadow(0 0 3px rgba(255,110,0,.55)); }
-  .flame-svg .fl { transform-box: fill-box; transform-origin: 50% 100%; }
-  .flame-svg .fl-o { animation: lickO 1.9s ease-in-out infinite; }
-  .flame-svg .fl-m { animation: lickM 1.3s ease-in-out infinite; }
-  .flame-svg .fl-i { animation: lickI .9s ease-in-out infinite; }
-  @keyframes lickO { 0%, 100% { transform: skewX(0) scaleY(1); } 25% { transform: skewX(4deg) scaleY(1.04); } 50% { transform: skewX(-2deg) scaleY(.97); } 75% { transform: skewX(-5deg) scaleY(1.05); } }
-  @keyframes lickM { 0%, 100% { transform: skewX(0) scale(1, 1); } 30% { transform: skewX(-6deg) scale(.97, 1.08); } 60% { transform: skewX(5deg) scale(1.02, .95); } }
-  @keyframes lickI { 0%, 100% { transform: skewX(0) scaleY(1); opacity: 1; } 40% { transform: skewX(7deg) scaleY(1.12); opacity: .9; } 70% { transform: skewX(-6deg) scaleY(.92); } }
-  @media (prefers-reduced-motion: reduce) { .flame-svg .fl { animation: none; } }
+  /* animierte Flamme im Stil des 🔥-Emojis: die Zacken wandern langsam (Form-Morphing), der Fuß bleibt stehen */
+  .flame-svg { width: 16px; height: 20px; flex: none; overflow: visible; filter: drop-shadow(0 0 3px rgba(255,70,20,.5)); }
   .streak-chip { gap: 5px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
@@ -663,15 +655,36 @@ function askYesNo(text, yes = "Ja, löschen") {
     $("#dlgBg").onclick = () => done(false);
   });
 }
-// Animierte Flamme (drei Flammenzungen, die unabhängig voneinander züngeln)
-const FLAME = `<svg class="flame-svg" viewBox="0 0 32 40" aria-hidden="true">
-  <defs><linearGradient id="flO" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF3D00"/><stop offset=".55" stop-color="#FF7A00"/><stop offset="1" stop-color="#FFB300"/></linearGradient>
-    <linearGradient id="flM" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8F00"/><stop offset="1" stop-color="#FFD54F"/></linearGradient>
-    <linearGradient id="flI" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFE082"/><stop offset="1" stop-color="#FFFDE7"/></linearGradient></defs>
-  <path class="fl fl-o" fill="url(#flO)" d="M16 39c-7.5 0-12-5-12-11.5 0-6 4.2-9.3 6.4-14.2.6 3.4 2.3 5.3 4 5.9C14.6 13.6 16.2 7 21.3 1c-.2 6.4 3.3 9.8 5.2 14.2 1.3 3 1.5 5.6 1.5 7.7C28 33.6 23.5 39 16 39z"/>
-  <path class="fl fl-m" fill="url(#flM)" d="M16 39c-5 0-8-3.4-8-7.9 0-4.4 2.9-6.6 4.4-10 .4 2.4 1.6 3.6 2.8 4 .5-3.9 1.8-7.4 5-10.6 0 4.4 2.4 6.8 3.6 9.6.9 2 1.2 3.7 1.2 5.2C25 35.5 21.2 39 16 39z"/>
-  <path class="fl fl-i" fill="url(#flI)" d="M16 39c-2.9 0-4.7-2-4.7-4.6 0-2.6 1.7-4 2.6-6 .3 1.3.9 2 1.6 2.2.3-2.2 1.1-4.2 2.9-6 0 2.5 1.3 3.9 2 5.5.5 1.1.7 2.1.7 3 0 3.6-2.2 5.9-5.1 5.9z"/>
+// Animierte Flamme im Stil des 🔥-Emojis: rot-orange außen, gelb innen.
+// Die Eck- und Kontrollpunkte verschieben sich langsam, sodass Zacken mal spitz, mal flach werden.
+const FLAME = (() => {
+  const OUT = [16,39, 8.5,39, 3.5,34, 3.5,27.5, 3.5,22, 5.5,18.5, 6.5,12.5, 8,15.5, 9.6,17, 11,17.5, 10.6,11, 12.6,6, 16.5,0.8,
+    16.6,6, 18.6,9, 20.6,11, 21.6,9, 22.8,7.4, 24,5, 25.4,10, 28.5,15, 28.5,23, 28.5,32.5, 23.5,39, 16,39];
+  const INN = [16,39, 11,39, 8.6,35.5, 8.6,31.5, 8.6,27.5, 11,25, 12.2,21, 13.3,23.3, 14.3,24.4, 15.3,24.8, 15.3,20.5, 17,17, 19.6,14,
+    19.7,18.5, 21.6,21, 22.6,23.5, 23.3,25.2, 23.5,27, 23.5,28.8, 23.5,35, 20.5,39, 16,39];
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647 - .5;
+  const frame = (pts, amp) => pts.map((v, i) => {
+    if (i % 2 === 0) return v;                                      // x wird unten mit y zusammen verschoben
+    const y = v, k = Math.max(0, 1 - y / 36), x = pts[i - 1];       // oben viel Bewegung, unten keine
+    return [x + rnd() * amp * 1.4 * k, y + rnd() * amp * k];
+  }).filter(v => Array.isArray(v));
+  const path = xy => { const f = n => n.toFixed(2); let d = `M${f(xy[0][0])} ${f(xy[0][1])}`;
+    for (let i = 1; i < xy.length; i += 3) d += `C${xy.slice(i, i + 3).map(q => f(q[0]) + " " + f(q[1])).join(" ")}`; return d + "Z"; };
+  const anim = (pts, amp, n, dur) => {
+    const base = path(frame(pts, 0)), fr = [base];
+    for (let i = 1; i < n; i++) fr.push(path(frame(pts, amp)));
+    fr.push(base);
+    const kt = fr.map((_, i) => (i / (fr.length - 1)).toFixed(3)).join(";");
+    const ks = fr.slice(1).map(() => ".45 0 .55 1").join(";");
+    return `d="${base}"><animate attributeName="d" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" keySplines="${ks}" values="${fr.join(";")}"/>`;
+  };
+  return `<svg class="flame-svg" viewBox="0 0 32 40" aria-hidden="true">
+  <defs><radialGradient id="flO" cx=".5" cy=".9" r=".85"><stop offset="0" stop-color="#FF9100"/><stop offset=".55" stop-color="#FF5722"/><stop offset="1" stop-color="#E53935"/></radialGradient>
+    <radialGradient id="flI" cx=".5" cy=".95" r=".8"><stop offset="0" stop-color="#FFF59D"/><stop offset=".6" stop-color="#FFCA28"/><stop offset="1" stop-color="#FFA000"/></radialGradient></defs>
+  <path fill="url(#flO)" ${anim(OUT, 2.6, 5, 4.2)}</path>
+  <path fill="url(#flI)" ${anim(INN, 2.2, 4, 3.1)}</path>
 </svg>`;
+})();
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.add("hidden"), 2600); }
 
