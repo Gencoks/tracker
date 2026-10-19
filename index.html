@@ -357,7 +357,6 @@
     background: color-mix(in srgb, var(--rc) 20%, transparent); box-shadow: 0 0 0 2px var(--rc) inset; }
   .rank-card.god .rank-badge { box-shadow: 0 0 0 2px #FFD84D inset, 0 0 22px rgba(255,79,163,.55); }
   .rank-n { font-size: 26px; font-weight: 900; letter-spacing: -.01em; line-height: 1.1; color: var(--text); }
-  .rank-card.god .rank-n { background: linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .rank-card .k { font-size: 12px; color: var(--muted); font-weight: 600; }
   .rank-card .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .rank-warn { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); padding: 8px 10px; border-radius: 10px; }
@@ -371,7 +370,13 @@
   .rl { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 8px; align-items: center; padding: 7px 8px; border-radius: 10px; font-size: 14px; }
   .rl small { color: var(--muted); font-size: 12px; }
   .rl.on { background: color-mix(in srgb, var(--accent) 16%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
-  .rl.godrow b { background: linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  /* Animierte GOD-LEVEL-Schrift: Gelb → Orange → Pink läuft von links nach rechts durch */
+  .god-text, .rl.godrow b, .rank-card.god .rank-n {
+    background: linear-gradient(90deg, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D);
+    background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important;
+    animation: godshine 3s linear infinite; }
+  @keyframes godshine { from { background-position: 100% 0; } to { background-position: 0 0; } }
+  @media (prefers-reduced-motion: reduce) { .god-text, .rl.godrow b, .rank-card.god .rank-n { animation: none; } }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -762,7 +767,7 @@ function renderStart() {
           <div class="stats">
             <span class="chip">🔥 ${streak()} Tage Serie</span>
             <span class="chip accent">${esc(plan.name)}</span>
-            ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} ${r.n}</button>`; })() : ""}
+            ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span></button>`; })() : ""}
             ${openTodos ? `<button class="chip" data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}
           </div>
         </div>
@@ -1533,7 +1538,7 @@ function rankCard() {
         <div class="d">${fmtN(st.rp, 0)} RP${st.peak > st.tier ? ` · Bestwert: ${RANKS[st.peak].i} ${RANKS[st.peak].n}` : ""}</div></div>
     </div>
     <div class="ach-bar" style="margin-top:14px"><i style="width:${pct}%;background:${r.god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : "var(--accent)"}"></i></div>
-    <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${nx.i} ${nx.n}` : "⚡ Höchster Rang. Halte ihn!"}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
+    <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${nx.i} <span class="${nx.god ? "god-text" : ""}" style="font-weight:700">${nx.n}</span>` : `⚡ <span class="god-text" style="font-weight:800">Höchster Rang. Halte ihn!</span>`}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
     ${danger ? `<div class="rank-warn">⚠️ Abstiegsgefahr: nur noch ${fmtN(buffer, 0)} RP Puffer bis ${RANKS[st.tier - 1].n}</div>` : ""}
     <div class="rank-today">
       <div><span>Heute</span><b>+${f1(t.total)}</b></div>
@@ -1631,12 +1636,12 @@ function renderAwards(all, part) {
           <div class="ach-ico ${c.lvl ? "" : "off"}" style="--tc:${col}">${c.i}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
-            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? `${TIER[c.lvl - 1]} · Stufe ${c.lvl}/${c.goals.length}` : "Noch keine Stufe"}</div>
+            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? `<span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}` : "Noch keine Stufe"}</div>
           </div>
           <div class="ach-v">${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small></div>
         </div>
         <div class="ach-bar"><i style="width:${pct}%;background:${c.next ? "var(--accent)" : col}"></i></div>
-        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b>${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0)}${c.u}` : "🏅 Alle Stufen geschafft – Respekt!"}</span>
+        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0)}${c.u}` : "🏅 Alle Stufen geschafft – Respekt!"}</span>
           <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
       </div>`; }).join("")}</div>
 `;
