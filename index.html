@@ -422,6 +422,19 @@
   .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
   .tw-quick { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
+  /* Farbwähler */
+  .cp-sv { position: relative; height: 210px; border-radius: 14px; margin-top: 6px; touch-action: none; cursor: crosshair; box-shadow: 0 0 0 1px var(--border) inset; }
+  .cp-dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; transform: translate(-50%, -50%); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 3px 10px rgba(0,0,0,.4); pointer-events: none; }
+  .cp-hue { position: relative; height: 26px; border-radius: 13px; margin: 16px 13px 0; touch-action: none; cursor: pointer;
+    background: linear-gradient(90deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); box-shadow: 0 0 0 1px var(--border) inset; }
+  .cp-thumb { position: absolute; top: 50%; width: 30px; height: 30px; border-radius: 50%; transform: translate(-50%, -50%); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 3px 10px rgba(0,0,0,.35); pointer-events: none; }
+  .cp-row { display: flex; gap: 12px; align-items: flex-end; margin-top: 18px; }
+  .cp-prev { display: flex; flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--border) inset; height: 46px; }
+  .cp-prev span { width: 38px; }
+  .cp-hex { display: flex; align-items: center; gap: 0; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding-left: 12px; }
+  .cp-hex b { color: var(--muted); font-size: 18px; }
+  .cp-hex .text-in { border: 0; background: none; font-size: 18px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; padding-left: 4px; }
+  .cp-rgb { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -1104,7 +1117,7 @@ function showSheet(tall = false) {
   $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
   requestAnimationFrame(initWheels);
 }
-function closeSheet() { if (S.noteOpen) closeNote(); $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
+function closeSheet() { if (S.cp) { window.applyTheme(curTheme()); S.cp = null; } if (S.noteOpen) closeNote(); $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
 async function pickExercise(name) {
   const mode = defaultMode(S.sheetGroup, name);
   const n = mode === "cardio" ? 1 : 3;
@@ -2026,10 +2039,11 @@ function openPrefs() {
     ${COLOR_GROUPS.map(([g, cols]) => `<div class="sw-group">${g}</div><div class="swatches">${cols.map(([c, n]) => `
       <button class="sw ${th.accent.toLowerCase() === c.toLowerCase() ? "on" : ""}" style="--c:${c}" data-action="accent" data-v="${c}" title="${n}"><span></span><small>${n}</small></button>`).join("")}</div>`).join("")}
     <div class="sw-group">Eigene Farbe</div>
-    <label class="btn block" style="justify-content:flex-start;gap:12px;position:relative">
+    ${(th.recent || []).length ? `<div class="swatches" style="margin-bottom:10px">${th.recent.map(c => `
+      <button class="sw ${th.accent.toLowerCase() === c.toLowerCase() ? "on" : ""}" style="--c:${c}" data-action="accent" data-v="${c}"><span></span><small>${c.toUpperCase()}</small></button>`).join("")}</div>` : ""}
+    <button class="btn block" style="justify-content:flex-start;gap:12px" data-action="cpopen">
       <span style="width:28px;height:28px;border-radius:8px;flex:none;background:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"};box-shadow:0 0 0 1px var(--border) inset"></span>
-      ${custom ? `Eigene Farbe <b style="margin-left:auto;font-variant-numeric:tabular-nums">${th.accent.toUpperCase()}</b>` : "Beliebige Farbe auswählen …"}
-      <input type="color" id="accentPick" value="${th.accent}" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer"></label>
+      <span style="flex:1;text-align:left">${custom ? "Eigene Farbe bearbeiten" : "Farbe mischen oder Farbcode eingeben …"}</span>${custom ? `<b style="font-variant-numeric:tabular-nums">${th.accent.toUpperCase()}</b>` : ""}</button>
     <h2>Erinnerung</h2>
     <button class="btn block" style="justify-content:space-between" data-action="settings"><span>${ICON.bell.replace("<svg", '<svg width="18" height="18"')} Erinnerungen</span><b>${remindTxt()}</b></button>
     <h2>Tägliche Aufgaben</h2>
@@ -2083,6 +2097,84 @@ document.addEventListener("click", e => {
   const q = e.target.closest("[data-twq]");
   if (q) setWheel(q.dataset.twq, q.dataset.v);
 });
+
+/* ===================== FARBWÄHLER (eigene Farbe) ===================== */
+const hexOk = h => /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(h.trim());
+const normHex = h => { h = h.trim().replace("#", ""); if (h.length === 3) h = h.split("").map(c => c + c).join(""); return "#" + h.toUpperCase(); };
+const hex2rgb = h => { h = normHex(h).slice(1); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); };
+const rgb2hex = (r, g, b) => "#" + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("").toUpperCase();
+function rgb2hsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  let h = 0;
+  if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, mx ? d / mx : 0, mx];
+}
+function hsv2rgb(h, s, v) {
+  const f = n => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); };
+  return [f(5) * 255, f(3) * 255, f(1) * 255];
+}
+function openColorPicker() {
+  const th = curTheme();
+  const [r, g, b] = hex2rgb(th.accent || "#FFC400");
+  S.cp = { orig: th.accent || "#FFC400", hsv: rgb2hsv(r, g, b) };
+  $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
+      <button class="mini" data-action="cpcancel" title="Zurück">${ICON.left}</button><b style="font-size:18px">Eigene Farbe</b>
+      <button class="mini" data-action="cpcancel" title="Schließen">${ICON.x}</button></div></div>
+    <div class="cp-sv" id="cpSV"><div class="cp-dot" id="cpDot"></div></div>
+    <div class="cp-hue" id="cpHue"><div class="cp-thumb" id="cpThumb"></div></div>
+    <div class="cp-row">
+      <div class="cp-prev"><span style="background:${S.cp.orig}" title="Vorher"></span><span id="cpNew"></span></div>
+      <div class="field" style="margin:0;flex:1"><label>Farbcode</label>
+        <div class="cp-hex"><b>#</b><input class="text-in" id="cpHex" maxlength="7" autocomplete="off" spellcheck="false"></div></div>
+    </div>
+    <div class="cp-rgb">${["R", "G", "B"].map((l, i) => `<div class="field" style="margin:0"><label>${l}</label><input class="num-in" id="cp${l}" inputmode="numeric" maxlength="3"></div>`).join("")}</div>
+    <div class="two" style="margin-top:16px"><button class="btn" data-action="cpcancel">Abbrechen</button><button class="btn primary" data-action="cpsave">Übernehmen</button></div>`;
+  showSheet(true);
+  cpRender(true);
+  const drag = (el, fn) => {
+    el.onpointerdown = e => { e.preventDefault(); el.setPointerCapture(e.pointerId); fn(e); el.onpointermove = fn; };
+    el.onpointerup = el.onpointercancel = () => { el.onpointermove = null; };
+  };
+  drag($("#cpSV"), e => { const r = $("#cpSV").getBoundingClientRect();
+    S.cp.hsv[1] = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); S.cp.hsv[2] = 1 - Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)); cpRender(true); });
+  drag($("#cpHue"), e => { const r = $("#cpHue").getBoundingClientRect();
+    S.cp.hsv[0] = Math.max(0, Math.min(359.9, (e.clientX - r.left) / r.width * 360)); cpRender(true); });
+}
+// Anzeige aktualisieren; fields=false lässt das gerade bearbeitete Feld in Ruhe
+function cpRender(fields, skip) {
+  const [h, sat, v] = S.cp.hsv, rgb = hsv2rgb(h, sat, v), hex = rgb2hex(...rgb);
+  S.cp.hex = hex;
+  $("#cpSV").style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${h}, 100%, 50%))`;
+  Object.assign($("#cpDot").style, { left: sat * 100 + "%", top: (1 - v) * 100 + "%", background: hex });
+  Object.assign($("#cpThumb").style, { left: h / 360 * 100 + "%", background: `hsl(${h}, 100%, 50%)` });
+  $("#cpNew").style.background = hex;
+  if (fields !== false) {
+    if (skip !== "hex") $("#cpHex").value = hex.slice(1);
+    rgb.forEach((c, i) => { const id = "cp" + "RGB"[i]; if (skip !== id) $("#" + id).value = Math.round(c); });
+  }
+  window.applyTheme({ ...curTheme(), accent: hex });   // Live-Vorschau in der ganzen App
+}
+function cpFromInput(t) {
+  if (t.id === "cpHex") {
+    t.value = t.value.replace(/[^0-9a-f#]/gi, "");
+    if (hexOk(t.value) && t.value.replace("#", "").length !== 4 && t.value.replace("#", "").length !== 5) { S.cp.hsv = rgb2hsv(...hex2rgb(t.value)); cpRender(true, "hex"); }
+  } else {
+    t.value = t.value.replace(/\D/g, "").slice(0, 3);
+    const rgb = ["R", "G", "B"].map(l => Math.min(255, +($("#cp" + l).value || 0)));
+    S.cp.hsv = rgb2hsv(...rgb); cpRender(true, t.id);
+  }
+}
+function cpClose(save) {
+  if (save) {
+    const th = curTheme(), hex = S.cp.hex;
+    const recent = [hex, ...(th.recent || []).filter(c => c.toUpperCase() !== hex && !COLORS.some(x => x[0].toUpperCase() === c.toUpperCase()))].filter(c => !COLORS.some(x => x[0].toUpperCase() === c.toUpperCase())).slice(0, 5);
+    setTheme({ accent: hex, recent });
+  } else window.applyTheme(curTheme());
+  S.cp = null;
+  openPrefs();
+  setTimeout(() => { const el = $("#sheetInner [data-action=cpopen]"); if (el) $("#sheetInner").scrollTop = el.offsetTop - 200; }, 30);
+}
 
 /* ===================== EINSTELLUNGEN: ERINNERUNGEN ===================== */
 function permHint() {
@@ -2191,6 +2283,9 @@ document.addEventListener("click", async e => {
   else if (a === "notif") enableNotifications();
   else if (a === "settings") openSettings();
   else if (a === "prefs") openPrefs();
+  else if (a === "cpopen") openColorPicker();
+  else if (a === "cpsave") cpClose(true);
+  else if (a === "cpcancel") cpClose(false);
   else if (a === "mode") { const y = $("#sheetInner").scrollTop; setTheme({ mode: el.dataset.v }); openPrefs(); $("#sheetInner").scrollTop = y; }
   else if (a === "accent") { const y = $("#sheetInner").scrollTop; setTheme({ accent: el.dataset.v }); openPrefs(); $("#sheetInner").scrollTop = y; }
   else if (a === "resettasks") {
@@ -2314,7 +2409,6 @@ document.addEventListener("change", e => {
   }
   if (e.target.dataset.set) checkPR(+e.target.dataset.set.split(".")[0]);
   if (e.target.dataset.weight) setWeight(e.target.dataset.day, e.target.dataset.key, e.target.dataset.weight, e.target.value);
-  if (e.target.id === "accentPick") { const y = $("#sheetInner").scrollTop; setTheme({ accent: e.target.value }); openPrefs(); $("#sheetInner").scrollTop = y; }
 });
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter") return;
@@ -2325,7 +2419,7 @@ document.addEventListener("keydown", e => {
 document.addEventListener("input", e => {
   const t = e.target;
   if (t.dataset.dur !== undefined && !e.isNormalise) { const f = fmtDurTyping(t.value); if (f !== t.value) t.value = f; }
-  if (t.id === "accentPick") { window.applyTheme({ ...curTheme(), accent: t.value }); return; }
+  if (t.id === "cpHex" || t.id === "cpR" || t.id === "cpG" || t.id === "cpB") { cpFromInput(t); return; }
   if (t.id === "noteTitle" || t.id === "noteText") { saveNoteSoon(); return; }
   if (t.id === "noteQ") { S.noteQ = t.value; const pos = t.selectionStart; renderTodo(); const q = $("#noteQ"); q.focus(); q.setSelectionRange(pos, pos); return; }
   if (t.id === "todoIn") { S.todoDraft = t.value; }
