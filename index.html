@@ -15,14 +15,20 @@
   window.applyTheme = function (t) {
     t = t || {};
     var mode = t.mode || "dark", accent = t.accent || "#FFC400", r = document.documentElement;
-    var light = mode === "light" || (mode === "system" && window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches);
-    r.dataset.theme = light ? "light" : "dark";
+    if (mode === "system") mode = window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    var light = mode === "light" || mode === "white";
+    r.dataset.theme = mode;   // dark | black | light | white
     r.style.setProperty("--accent", accent);
     var h = accent.replace("#", ""), R = parseInt(h.substr(0, 2), 16) / 255, G = parseInt(h.substr(2, 2), 16) / 255, B = parseInt(h.substr(4, 2), 16) / 255;
     var lin = function (c) { return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
     var L = 0.2126 * lin(R) + 0.7152 * lin(G) + 0.0722 * lin(B);
     r.style.setProperty("--accent-ink", L > 0.36 ? "#111111" : "#ffffff");
-    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = light ? "#f3f3f5" : "#0e0e0f";
+    // Akzent als Schrift immer lesbar halten (z. B. Schwarz auf dunklem oder Weiß auf hellem Hintergrund)
+    r.style.setProperty("--accent-text", light ? (L > 0.45 ? "color-mix(in srgb, " + accent + " 45%, #000)" : accent) : (L < 0.06 ? "#d6d6dc" : accent));
+    // Sehr dunkler Akzent im Dunkelmodus / sehr heller im Hellmodus: dünner Rand, damit Kästchen & Balken sichtbar bleiben
+    r.style.setProperty("--accent-edge", (!light && L < 0.06) ? "#5a5a63" : (light && L > 0.8) ? "#b9b9c2" : accent);
+    var bg = { dark: "#0e0e0f", black: "#000000", light: "#f3f3f5", white: "#ffffff" }[mode];
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = bg;
   };
   try { applyTheme(JSON.parse(localStorage.getItem("tracker-theme") || "{}")); } catch (e) { applyTheme({}); }
 </script>
@@ -50,9 +56,27 @@
     --border: #dcdce2;
     --text: #141416;
     --muted: #6c6c75;
-    --accent-text: color-mix(in srgb, var(--accent) 62%, #000);
     --shade: rgba(20,20,25,.35);
     color-scheme: light;
+  }
+  :root[data-theme="white"] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f2f2f4;
+    --border: #e2e2e8;
+    --text: #0b0b0c;
+    --muted: #6c6c75;
+    --shade: rgba(20,20,25,.3);
+    color-scheme: light;
+  }
+  :root[data-theme="black"] {
+    --bg: #000000;
+    --surface: #0d0d0e;
+    --surface-2: #19191b;
+    --border: #262629;
+    --text: #f4f4f5;
+    --muted: #8b8b93;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
@@ -73,10 +97,10 @@
   .icon-btn svg { width: 20px; height: 20px; }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px;
     background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; font-weight: 600; }
-  .chip.accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .chip.accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent-edge, var(--accent)); }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border-radius: 12px;
     background: var(--surface-2); border: 1px solid var(--border); font-weight: 600; }
-  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent-edge, var(--accent)); }
   .btn.block { width: 100%; }
   .muted { color: var(--muted); }
 
@@ -113,7 +137,7 @@
   .task.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--muted); }
   .box-check { flex: none; width: 28px; height: 28px; border-radius: 8px; border: 2px solid var(--muted); display: grid; place-items: center; transition: all .15s; }
   .box-check svg { width: 18px; height: 18px; opacity: 0; transform: scale(.6); transition: all .15s; }
-  .done .box-check { background: var(--accent); border-color: var(--accent); }
+  .done .box-check { background: var(--accent); border-color: var(--accent-edge, var(--accent)); }
   .done .box-check svg { opacity: 1; transform: scale(1); }
 
   /* Kalender */
@@ -215,8 +239,17 @@
   .todo.done .box-check { background: var(--accent); border-color: var(--accent); }
   .todo.done .box-check svg { opacity: 1; transform: scale(1); }
   .swatches { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 6px; }
+  .sw-group { font-size: 12px; font-weight: 700; color: var(--muted); margin: 14px 0 8px; }
+  .modes-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .mode-b { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px 2px; border-radius: 12px; border: 2px solid transparent; }
+  .mode-b.on { border-color: var(--accent-edge, var(--accent)); background: var(--surface-2); }
+  .mode-b small { font-size: 11px; font-weight: 600; color: var(--muted); text-align: center; line-height: 1.2; }
+  .mode-b.on small { color: var(--text); font-weight: 800; }
+  .mode-prev { position: relative; width: 100%; max-width: 54px; aspect-ratio: 3 / 4; border-radius: 10px; box-shadow: 0 0 0 1px var(--border) inset; overflow: hidden; }
+  .mode-prev i { position: absolute; left: 6px; right: 6px; top: 8px; height: 40%; border-radius: 5px; box-shadow: 0 0 0 1px rgba(128,128,128,.25) inset; }
+  .mode-prev b { position: absolute; left: 6px; right: 6px; bottom: 7px; height: 14%; border-radius: 4px; box-shadow: 0 0 0 1px rgba(128,128,128,.35) inset; }
   .sw { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; min-width: 0; }
-  .sw span { width: 40px; height: 40px; border-radius: 12px; background: var(--c); border: 2px solid transparent; box-shadow: 0 0 0 1px var(--border) inset; }
+  .sw span { width: 40px; height: 40px; border-radius: 12px; background: var(--c); border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(128,128,128,.35) inset; }
   .sw small { font-size: 11px; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sw.on span { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
   .sw.on small { color: var(--text); font-weight: 700; }
@@ -239,7 +272,7 @@
   .seg .chip { flex: none; }
   .switch { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 4px; }
   .switch button { padding: 10px; border-radius: 9px; font-weight: 700; font-size: 14px; color: var(--muted); }
-  .switch button.on { background: var(--accent); color: var(--accent-ink); }
+  .switch button.on { background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 1px var(--accent-edge, var(--accent)) inset; }
   .badges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .badge { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 8px; text-align: center; }
   .badge .bi { font-size: 28px; filter: grayscale(1); opacity: .35; }
@@ -377,6 +410,18 @@
     animation: godshine 3s linear infinite; }
   @keyframes godshine { from { background-position: 100% 0; } to { background-position: 0 0; } }
   @media (prefers-reduced-motion: reduce) { .god-text, .rl.godrow b, .rank-card.god .rank-n { animation: none; } }
+  /* Uhrzeit-Rad */
+  .tw { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 4px; }
+  .tw-col { height: 132px; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); position: relative; z-index: 1; }
+  .tw-col::-webkit-scrollbar { display: none; }
+  .tw-pad { height: 44px; }
+  .tw-it { display: block; width: 100%; height: 44px; scroll-snap-align: center; font-size: 22px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .15s, font-size .15s; }
+  .tw-it.on { color: var(--accent-ink); font-size: 28px; font-weight: 900; }
+  .tw-sep { font-size: 28px; font-weight: 900; color: var(--accent-ink); position: relative; z-index: 1; padding-bottom: 4px; }
+  .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
+  .tw-quick { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -1057,6 +1102,7 @@ function openSheet() {
 function showSheet(tall = false) {
   $("#sheet").classList.toggle("tall", tall);
   $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
+  requestAnimationFrame(initWheels);
 }
 function closeSheet() { if (S.noteOpen) closeNote(); $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
 async function pickExercise(name) {
@@ -1176,11 +1222,11 @@ function renderPerf() {
   const all = S.allWo, from = rangeStart();
   const chip = (attr, val, cur, l) => `<button class="chip ${cur === val ? "accent" : ""}" data-action="${attr}" data-v="${esc(val)}">${esc(l)}</button>`;
   const rng = S.perfRange || "3m";
-  const view = S.perfView || "stats";
-  const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Pokale", records: "Deine Bestwerte" };
+  const view = S.perfView || "rank";
+  const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Erfolge", records: "Deine Bestwerte" };
   const pb = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="pview" data-v="${v}">${l}</button>`;
   let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>${TITLES[view] || TITLES.stats}</h1></div></header>
-    <div class="switch four">${pb("stats", "📈<span>Auswertung</span>")}${pb("rank", "⚡<span>Rang</span>")}${pb("awards", "🏅<span>Pokale</span>")}${pb("records", "🏆<span>Bestwerte</span>")}</div>`;
+    <div class="switch four">${pb("rank", "⚡<span>Rang</span>")}${pb("stats", "📈<span>Auswertung</span>")}${pb("awards", "🏅<span>Erfolge</span>")}${pb("records", "🏆<span>Bestwerte</span>")}</div>`;
   if (!all) { v.innerHTML = html + `<div class="card empty perf-card">Lade Daten …</div>`; return; }
   if (view === "rank") { v.innerHTML = html + rankCard(); return; }
   if (view === "awards") { v.innerHTML = html + renderAwards(all, "awards"); return; }
@@ -1924,14 +1970,16 @@ function openNewTask() {
         <button class="chip ${all ? "accent" : ""}" data-action="newdays" data-v="all">Jeden Tag</button>
         ${order.map(d => `<button class="chip ${!all && S.newDays.includes(d) ? "accent" : ""}" data-action="newdays" data-v="${d}">${WD[d]}</button>`).join("")}
       </div></div>
-    <div class="field"><label>Erinnerung (optional)</label>
-      <input type="time" class="text-in" id="newTaskR" value="${esc(S.newTaskR || "")}"></div>
+    <div class="field"><label>Erinnerung</label>
+      <div class="groups"><button class="chip ${S.newTaskR ? "" : "accent"}" data-action="newrem" data-v="">Keine</button>
+        <button class="chip ${S.newTaskR ? "accent" : ""}" data-action="newrem" data-v="1">🔔 Mit Uhrzeit</button></div>
+      ${S.newTaskR ? `<div style="margin-top:10px">${timeWheel("newTaskR", S.newTaskR)}</div>` : ""}</div>
     <button class="btn primary block" style="margin-top:16px" data-action="savetask">+ Hinzufügen</button>`;
   showSheet();
   $("#newTaskT").focus();
 }
 async function saveNewTask() {
-  const t = $("#newTaskT").value.trim(), s = $("#newTaskS").value.trim(), rem = $("#newTaskR").value;
+  const t = $("#newTaskT").value.trim(), s = $("#newTaskS").value.trim(), rem = S.newTaskR ? twVal("newTaskR") : "";
   if (!t) { $("#newTaskT").focus(); return; }
   if (!S.newDays.length) { toast("Wähl mindestens einen Tag aus"); return; }
   const task = { key: "c_" + Date.now(), t };
@@ -1946,13 +1994,16 @@ async function saveNewTask() {
 }
 
 /* ===================== EINSTELLUNGEN: DESIGN ===================== */
-const COLORS = [
-  ["#FFC400", "Gelb"], ["#FFD84D", "Zitrone"], ["#D4A017", "Gold"], ["#FF8A00", "Orange"], ["#FF5E57", "Koralle"],
-  ["#E5383B", "Rot"], ["#C1121F", "Weinrot"], ["#FF4FA3", "Pink"], ["#F28FD0", "Rosa"], ["#C77DFF", "Flieder"],
-  ["#9B5DE5", "Lila"], ["#6C63FF", "Violett"], ["#3A86FF", "Blau"], ["#1F4FD8", "Royal"], ["#4CC9F0", "Himmelblau"],
-  ["#00B4D8", "Ozean"], ["#00C2A8", "Türkis"], ["#2EE59D", "Mint"], ["#38B000", "Grün"], ["#B5E61D", "Limette"],
-  ["#6B8E23", "Oliv"], ["#E0B783", "Sand"], ["#A47148", "Bronze"], ["#B8BCC6", "Silber"],
+const COLOR_GROUPS = [
+  ["Neutral", [["#FFFFFF", "Weiß"], ["#F2F2F2", "Schnee"], ["#D9D9DE", "Hellgrau"], ["#B8BCC6", "Silber"], ["#8E9099", "Grau"], ["#5C5F68", "Schiefer"], ["#3A3B40", "Graphit"], ["#1E1F22", "Anthrazit"], ["#000000", "Schwarz"], ["#E8DCCB", "Creme"]]],
+  ["Gelb & Orange", [["#FFF176", "Vanille"], ["#FFE14D", "Zitrone"], ["#FFC400", "Gelb"], ["#FFB300", "Bernstein"], ["#D4A017", "Gold"], ["#FFA726", "Mango"], ["#FF8A00", "Orange"], ["#FF6D00", "Kürbis"], ["#E65100", "Rost"], ["#FFCC80", "Pfirsich"]]],
+  ["Rot & Pink", [["#FF8A80", "Lachs"], ["#FF5E57", "Koralle"], ["#FF1744", "Signalrot"], ["#E5383B", "Rot"], ["#C1121F", "Weinrot"], ["#7B1E2B", "Bordeaux"], ["#FF4FA3", "Pink"], ["#F50057", "Magenta"], ["#F28FD0", "Rosa"], ["#FFC1E3", "Babyrosa"]]],
+  ["Lila & Blau", [["#E1BEE7", "Lavendel"], ["#C77DFF", "Flieder"], ["#9B5DE5", "Lila"], ["#7B2CBF", "Violett"], ["#4A148C", "Aubergine"], ["#6C63FF", "Indigo"], ["#3A86FF", "Blau"], ["#1F4FD8", "Royal"], ["#0D2B6B", "Navy"], ["#4CC9F0", "Himmelblau"]]],
+  ["Grün & Türkis", [["#80DEEA", "Eisblau"], ["#00B4D8", "Ozean"], ["#00C2A8", "Türkis"], ["#00897B", "Petrol"], ["#2EE59D", "Mint"], ["#69F0AE", "Neongrün"], ["#B5E61D", "Limette"], ["#38B000", "Grün"], ["#1B5E20", "Tanne"], ["#6B8E23", "Oliv"]]],
+  ["Erdtöne & Metall", [["#E0B783", "Sand"], ["#C8A27C", "Karamell"], ["#A47148", "Bronze"], ["#8D6E63", "Mokka"], ["#5D4037", "Schoko"], ["#B87333", "Kupfer"], ["#CFB53B", "Messing"], ["#B76E79", "Roségold"], ["#9E9E7E", "Khaki"], ["#708090", "Stahl"]]],
 ];
+const COLORS = COLOR_GROUPS.flatMap(g => g[1]);
+
 const curTheme = () => { try { return JSON.parse(localStorage.getItem("tracker-theme") || "{}"); } catch { return S.theme || {}; } };
 function setTheme(t, save = true) {
   const th = { mode: "dark", accent: "#FFC400", ...curTheme(), ...t };
@@ -1963,29 +2014,75 @@ function setTheme(t, save = true) {
 }
 function openPrefs() {
   const th = { mode: "dark", accent: "#FFC400", ...curTheme() };
-  const modeBtn = (v, l) => `<button class="chip ${th.mode === v ? "accent" : ""}" style="flex:1;justify-content:center;padding:10px" data-action="mode" data-v="${v}">${l}</button>`;
+  const modeBtn = (v, l, bg, card) => `<button class="mode-b ${th.mode === v ? "on" : ""}" data-action="mode" data-v="${v}">
+      <span class="mode-prev" style="background:${bg}"><i style="background:${card}"></i><b style="background:${th.accent}"></b></span><small>${l}</small></button>`;
   const custom = !COLORS.some(c => c[0].toLowerCase() === th.accent.toLowerCase());
   $("#sheetInner").innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <b style="font-size:18px">Einstellungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
-    <h2 style="margin-top:12px">Darstellung</h2>
-    <div style="display:flex;gap:8px">${modeBtn("dark", "🌙 Dunkel")}${modeBtn("light", "☀️ Hell")}${modeBtn("system", "📱 Wie Handy")}</div>
+    <h2 style="margin-top:12px">Grundfarbe</h2>
+    <div class="modes-grid">${modeBtn("dark", "🌙 Dunkel", "#0e0e0f", "#18181a")}${modeBtn("black", "⚫ Schwarz", "#000", "#0d0d0e")}${modeBtn("light", "☀️ Hell", "#f3f3f5", "#fff")}${modeBtn("white", "⚪ Weiß", "#fff", "#f2f2f4")}${modeBtn("system", "📱 Wie Handy", "linear-gradient(135deg,#0e0e0f 50%,#f3f3f5 50%)", "transparent")}</div>
     <h2>Akzentfarbe</h2>
-    <div class="swatches">${COLORS.map(([c, n]) => `
-      <button class="sw ${th.accent.toLowerCase() === c.toLowerCase() ? "on" : ""}" style="--c:${c}" data-action="accent" data-v="${c}" title="${n}"><span></span><small>${n}</small></button>`).join("")}
-      <label class="sw ${custom ? "on" : ""}" title="Eigene Farbe" style="--c:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"}">
-        <span style="background:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"}"></span><small>Eigene</small>
-        <input type="color" id="accentPick" value="${th.accent}" style="position:absolute;opacity:0;width:0;height:0"></label>
-    </div>
+    ${COLOR_GROUPS.map(([g, cols]) => `<div class="sw-group">${g}</div><div class="swatches">${cols.map(([c, n]) => `
+      <button class="sw ${th.accent.toLowerCase() === c.toLowerCase() ? "on" : ""}" style="--c:${c}" data-action="accent" data-v="${c}" title="${n}"><span></span><small>${n}</small></button>`).join("")}</div>`).join("")}
+    <div class="sw-group">Eigene Farbe</div>
+    <label class="btn block" style="justify-content:flex-start;gap:12px;position:relative">
+      <span style="width:28px;height:28px;border-radius:8px;flex:none;background:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"};box-shadow:0 0 0 1px var(--border) inset"></span>
+      ${custom ? `Eigene Farbe <b style="margin-left:auto;font-variant-numeric:tabular-nums">${th.accent.toUpperCase()}</b>` : "Beliebige Farbe auswählen …"}
+      <input type="color" id="accentPick" value="${th.accent}" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer"></label>
     <h2>Erinnerung</h2>
     <button class="btn block" style="justify-content:space-between" data-action="settings"><span>${ICON.bell.replace("<svg", '<svg width="18" height="18"')} Erinnerungen</span><b>${remindTxt()}</b></button>
     <h2>Tägliche Aufgaben</h2>
     <button class="btn block" data-action="resettasks">Auf Standard-Aufgaben zurücksetzen</button>
     <h2>Konto</h2>
     <button class="btn block" data-action="logout">${ICON.out.replace("<svg", '<svg width="18" height="18"')} Abmelden</button>
-    <p class="muted" style="font-size:12px;text-align:center;margin:18px 0 4px">Tracker · Version 3</p>`;
-  showSheet();
+    <p class="muted" style="font-size:12px;text-align:center;margin:18px 0 4px">Tracker</p>`;
+  showSheet(true);
 }
+
+/* ===================== UHRZEIT-RAD (statt der Android-Uhr) ===================== */
+const TW_H = 44;   // Höhe einer Zeile
+function timeWheel(id, val = "08:00") {
+  const [h, m] = val.split(":").map(Number);
+  const col = (part, n, cur) => `<div class="tw-col" data-part="${part}" data-tw="${id}">
+      <div class="tw-pad"></div>${[...Array(n)].map((_, i) => `<button class="tw-it ${i === cur ? "on" : ""}" data-i="${i}">${pad(i)}</button>`).join("")}<div class="tw-pad"></div></div>`;
+  return `<div class="tw" id="${id}" data-val="${pad(h)}:${pad(m)}">
+      <div class="tw-hl"></div>${col("h", 24, h)}<div class="tw-sep">:</div>${col("m", 60, m)}
+      <div class="tw-quick">${["07:00", "12:00", "18:00", "19:30", "21:00"].map(t => `<button class="chip" data-twq="${id}" data-v="${t}">${t}</button>`).join("")}</div></div>`;
+}
+const twVal = id => $("#" + id)?.dataset.val || "";
+function initWheels() {
+  document.querySelectorAll(".tw").forEach(tw => {
+    const [h, m] = tw.dataset.val.split(":").map(Number);
+    tw.querySelectorAll(".tw-col").forEach(c => {
+      c.scrollTop = (c.dataset.part === "h" ? h : m) * TW_H;
+      let t; c.onscroll = () => { clearTimeout(t); t = setTimeout(() => twSettle(c), 90); markWheel(c); };
+    });
+  });
+}
+function markWheel(c) {
+  const i = Math.round(c.scrollTop / TW_H);
+  c.querySelectorAll(".tw-it").forEach(b => b.classList.toggle("on", +b.dataset.i === i));
+  return i;
+}
+function twSettle(c) {
+  const i = markWheel(c), tw = c.closest(".tw");
+  const [h, m] = tw.dataset.val.split(":");
+  tw.dataset.val = c.dataset.part === "h" ? `${pad(i)}:${m}` : `${h}:${pad(i)}`;
+  if (Math.abs(c.scrollTop - i * TW_H) > 1) c.scrollTo({ top: i * TW_H, behavior: "smooth" });
+}
+function setWheel(id, val) {
+  const tw = $("#" + id); if (!tw) return;
+  tw.dataset.val = val;
+  const [h, m] = val.split(":").map(Number);
+  tw.querySelectorAll(".tw-col").forEach(c => c.scrollTo({ top: (c.dataset.part === "h" ? h : m) * TW_H, behavior: "smooth" }));
+}
+document.addEventListener("click", e => {
+  const it = e.target.closest(".tw-it");
+  if (it) { const c = it.closest(".tw-col"); c.scrollTo({ top: +it.dataset.i * TW_H, behavior: "smooth" }); return; }
+  const q = e.target.closest("[data-twq]");
+  if (q) setWheel(q.dataset.twq, q.dataset.v);
+});
 
 /* ===================== EINSTELLUNGEN: ERINNERUNGEN ===================== */
 function permHint() {
@@ -2012,8 +2109,8 @@ function openSettings() {
       <div class="todo"><span class="tap" style="font-size:20px;font-weight:800">${t} Uhr</span>
         <button class="mini" data-action="delgen" data-v="${t}" title="Entfernen">${ICON.x}</button></div>`).join("")
       : `<div class="card empty">Keine allgemeine Erinnerung</div>`}</div>
-    <div class="add-row" style="margin-top:10px"><input type="time" id="genIn" class="text-in" value="12:00">
-      <button class="btn primary plus" data-action="addgen" title="Hinzufügen">+</button></div>
+    <div class="card" style="margin-top:10px;padding:12px">${timeWheel("genIn", "12:00")}
+      <button class="btn primary block" style="margin-top:10px" data-action="addgen">+ Uhrzeit hinzufügen</button></div>
     <h2>Pro Aufgabe</h2>
     <p class="muted" style="margin:0 0 10px;font-size:14px">Tipp auf der Startseite auf die kleine Glocke neben einer Aufgabe, um ihr eine eigene Uhrzeit zu geben. Die Erinnerung kommt nur, wenn die Aufgabe noch offen ist.</p>
     ${withRemind.length ? `<div class="tasks">${withRemind.map(t => `
@@ -2033,14 +2130,14 @@ function openTaskBell(key) {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <b style="font-size:18px">Erinnerung</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
     <p class="muted" style="margin:0 0 14px;font-size:14px">„${esc(t.training ? "Training" : t.t)}“ – du bekommst eine Benachrichtigung, wenn die Aufgabe um diese Uhrzeit noch offen ist.</p>
-    <input type="time" id="taskTime" class="text-in" value="${t.remind || "08:00"}" style="font-size:22px;font-weight:700;text-align:center">
+    ${timeWheel("taskTime", t.remind || "08:00")}
     <button class="btn primary block" style="margin-top:14px" data-action="savebell" data-key="${key}">Speichern</button>
     ${t.remind ? `<button class="btn block" style="margin-top:8px" data-action="savebell" data-key="${key}" data-off="1">Erinnerung ausschalten</button>` : ""}
     ${permHint()}`;
   showSheet();
 }
 async function saveTaskBell(key, off) {
-  const v = $("#taskTime").value;
+  const v = twVal("taskTime");
   S.taskCfg = (S.taskCfg || DEFAULT_TASKS).map(t => {
     if (t.key !== key) return t;
     const n = { ...t }; if (off || !v) delete n.remind; else n.remind = v; return n;
@@ -2073,7 +2170,7 @@ function setTab(t) {
 }
 function renderAll() { renderStart(); renderCal(); renderTrain(); }
 
-document.querySelectorAll("nav.bottom button").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+document.querySelectorAll("nav.bottom button").forEach(b => b.onclick = () => { if (b.dataset.tab === "perf") S.perfView = "rank"; setTab(b.dataset.tab); });
 $("#sheetBg").onclick = closeSheet;
 
 document.addEventListener("click", e => {
@@ -2094,8 +2191,8 @@ document.addEventListener("click", async e => {
   else if (a === "notif") enableNotifications();
   else if (a === "settings") openSettings();
   else if (a === "prefs") openPrefs();
-  else if (a === "mode") { setTheme({ mode: el.dataset.v }); openPrefs(); }
-  else if (a === "accent") { setTheme({ accent: el.dataset.v }); openPrefs(); }
+  else if (a === "mode") { const y = $("#sheetInner").scrollTop; setTheme({ mode: el.dataset.v }); openPrefs(); $("#sheetInner").scrollTop = y; }
+  else if (a === "accent") { const y = $("#sheetInner").scrollTop; setTheme({ accent: el.dataset.v }); openPrefs(); $("#sheetInner").scrollTop = y; }
   else if (a === "resettasks") {
     if (!(await askYesNo("Alle täglichen Aufgaben auf die Standard-Liste zurücksetzen? Eigene Aufgaben gehen dabei verloren.", "Ja, zurücksetzen"))) return;
     S.taskCfg = DEFAULT_TASKS.map(t => ({ ...t })); await saveTaskCfg(); closeSheet(); toast("Zurückgesetzt");
@@ -2103,8 +2200,9 @@ document.addEventListener("click", async e => {
   else if (a === "deltask") deleteTask(el.dataset.key);
   else if (a === "newtask") { S.newDays = [0, 1, 2, 3, 4, 5, 6]; S.newTaskT = S.newTaskS = S.newTaskR = ""; openNewTask(); }
   else if (a === "savetask") saveNewTask();
+  else if (a === "newrem") { S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value; S.newTaskR = el.dataset.v ? (S.newTaskR || "08:00") : ""; openNewTask(); }
   else if (a === "newdays") {
-    S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value; S.newTaskR = $("#newTaskR").value;
+    S.newTaskT = $("#newTaskT").value; S.newTaskS = $("#newTaskS").value; if (S.newTaskR) S.newTaskR = twVal("newTaskR");
     const v = el.dataset.v;
     if (v === "all") S.newDays = [0, 1, 2, 3, 4, 5, 6];
     else {
@@ -2114,7 +2212,7 @@ document.addEventListener("click", async e => {
     }
     openNewTask();
   }
-  else if (a === "addgen") { const v = $("#genIn").value; if (v) { REMIND_TIMES.push(v); saveGeneralTimes(); if ("Notification" in window && Notification.permission === "default") enableNotifications(); } }
+  else if (a === "addgen") { const v = twVal("genIn"); if (v) { REMIND_TIMES.push(v); saveGeneralTimes(); if ("Notification" in window && Notification.permission === "default") enableNotifications(); } }
   else if (a === "delgen") { REMIND_TIMES = REMIND_TIMES.filter(x => x !== el.dataset.v); saveGeneralTimes(); }
   else if (a === "taskbell") openTaskBell(el.dataset.key);
   else if (a === "pushon") enablePush();
@@ -2216,7 +2314,7 @@ document.addEventListener("change", e => {
   }
   if (e.target.dataset.set) checkPR(+e.target.dataset.set.split(".")[0]);
   if (e.target.dataset.weight) setWeight(e.target.dataset.day, e.target.dataset.key, e.target.dataset.weight, e.target.value);
-  if (e.target.id === "accentPick") { setTheme({ accent: e.target.value }); openPrefs(); }
+  if (e.target.id === "accentPick") { const y = $("#sheetInner").scrollTop; setTheme({ accent: e.target.value }); openPrefs(); $("#sheetInner").scrollTop = y; }
 });
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter") return;
