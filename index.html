@@ -424,6 +424,31 @@
   .rank-card.god { border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(120deg, #FFD84D, #FF8A00, #FF4FA3, #9B5DE5, #3A86FF, #FFD84D) border-box; background-size: 100% 100%, 300% 300%; animation: godglow 5s linear infinite; }
   @keyframes godglow { to { background-position: 0 0, 300% 0; } }
+  /* Legende & Mythos: Hintergrund schimmert leicht (heller/dunkler + sanfter Lichtstreifen) */
+  .shine { position: relative; overflow: hidden; isolation: isolate; }
+  .shine::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(130% 90% at 0% 0%, color-mix(in srgb, var(--tc) 26%, transparent), transparent 65%);
+    animation: shinePulse 3.2s ease-in-out infinite alternate; }
+  .shine::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, color-mix(in srgb, var(--tc) 13%, transparent) 50%, transparent 58%);
+    background-size: 260% 100%; animation: shineSweep 7s ease-in-out infinite; }
+  @keyframes shinePulse { from { opacity: .3; } to { opacity: 1; } }
+  @keyframes shineSweep { 0% { background-position: 160% 0; } 55%, 100% { background-position: -60% 0; } }
+  .ico-shine { animation: icoPulse 3.2s ease-in-out infinite alternate; }
+  @keyframes icoPulse { from { filter: brightness(1); } to { filter: brightness(1.18); box-shadow: 0 0 0 2px var(--tc) inset, 0 0 12px color-mix(in srgb, var(--tc) 55%, transparent); } }
+  /* GOD-LEVEL: deutlich stärker – bunter, wandernder Hintergrund, kräftiger Lichtstreifen, pulsierendes Leuchten */
+  .shine.god-shine::before { background: radial-gradient(90% 70% at 15% 10%, rgba(255,216,77,.30), transparent 60%),
+      radial-gradient(90% 80% at 90% 90%, rgba(255,79,163,.30), transparent 60%), radial-gradient(70% 60% at 70% 20%, rgba(155,93,229,.25), transparent 60%);
+    animation: godBg 6s linear infinite; }
+  .shine.god-shine::after { background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.16) 47%, rgba(255,216,77,.22) 50%, rgba(255,79,163,.16) 53%, transparent 62%);
+    background-size: 240% 100%; animation: shineSweep 3.6s ease-in-out infinite; }
+  .shine.god-shine { box-shadow: 0 0 18px rgba(255,79,163,.35); animation: godglow 5s linear infinite, godPulse 2.4s ease-in-out infinite alternate; }
+  @keyframes godBg { 0% { filter: hue-rotate(0deg); opacity: .75; } 50% { opacity: 1; } 100% { filter: hue-rotate(360deg); opacity: .75; } }
+  @keyframes godPulse { from { box-shadow: 0 0 10px rgba(255,79,163,.25); } to { box-shadow: 0 0 26px rgba(255,138,0,.5), 0 0 6px rgba(255,216,77,.5); } }
+  .ico-god { animation: icoGod 2.4s ease-in-out infinite alternate; }
+  @keyframes icoGod { from { box-shadow: 0 0 0 2px #FFD84D inset, 0 0 10px rgba(255,79,163,.45); transform: scale(1); }
+    to { box-shadow: 0 0 0 2px #FF4FA3 inset, 0 0 26px rgba(255,138,0,.75); transform: scale(1.04); } }
+  @media (prefers-reduced-motion: reduce) { .shine::before, .shine::after, .shine.god-shine, .ico-shine, .ico-god { animation: none; } }
   .rank-top { display: flex; align-items: center; gap: 14px; }
   .rank-badge { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; font-size: 34px; flex: none;
     background: color-mix(in srgb, var(--rc) 20%, transparent); box-shadow: 0 0 0 2px var(--rc) inset; }
@@ -440,6 +465,8 @@
   .rank-ladder { margin-top: 10px; }
   .rank-ladder summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--accent-text); padding: 6px 0; }
   .rl { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 8px; align-items: center; padding: 7px 8px; border-radius: 10px; font-size: 14px; }
+  .rl.rl5 { grid-template-columns: 14px 22px 1fr auto auto; }
+  .rl-emo { font-size: 16px; text-align: center; line-height: 1; }
   .rl small { color: var(--muted); font-size: 12px; }
   .rl.on { background: color-mix(in srgb, var(--accent) 16%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
   /* Animierte GOD-LEVEL-Schrift: Gelb → Orange → Pink läuft von links nach rechts durch */
@@ -449,8 +476,8 @@
     animation: godshine 3s linear infinite; }
   /* GOD-LEVEL-Farbpunkt: gleicher laufender Verlauf wie die Schrift, dazu ein Leuchten */
   .god-dot { background: linear-gradient(90deg, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D, #FF8A00, #FF4FA3, #FF8A00, #FFD84D) !important;
-    background-size: 200% 100% !important; animation: godshine 3s linear infinite, godglow 1.6s ease-in-out infinite alternate; }
-  @keyframes godglow { from { box-shadow: 0 0 4px 1px rgba(255,79,163,.55); } to { box-shadow: 0 0 10px 3px rgba(255,138,0,.8); } }
+    background-size: 200% 100% !important; animation: godshine 3s linear infinite, goddot 1.6s ease-in-out infinite alternate; }
+  @keyframes goddot { from { box-shadow: 0 0 4px 1px rgba(255,79,163,.55); } to { box-shadow: 0 0 10px 3px rgba(255,138,0,.8); } }
   @media (prefers-reduced-motion: reduce) { .god-dot { animation: none; } }
   @keyframes godshine { from { background-position: 100% 0; } to { background-position: 0 0; } }
   @media (prefers-reduced-motion: reduce) { .god-text, .rl.godrow b, .rank-card.god .rank-n { animation: none; } }
@@ -1668,11 +1695,11 @@ const RANKS = [
   { n: "Gold",        min: 150,  cost: 8,    c: "#FFC400", i: "🥇" },
   { n: "Platin",      min: 300,  cost: 9,    c: "#7FD1C7", i: "💠" },
   { n: "Diamant",     min: 550,  cost: 10,   c: "#7EC8FF", i: "💎" },
-  { n: "Meister",     min: 900,  cost: 11,   c: "#C77DFF", i: "🎖️" },
+  { n: "Meister",     min: 900,  cost: 11,   c: "#2EE59D", i: "🎖️" },
   { n: "Großmeister", min: 1400, cost: 11.5, c: "#FF5E57", i: "🏵️" },
   { n: "Champion",    min: 2100, cost: 12,   c: "#FF8A00", i: "🏆" },
   { n: "Legende",     min: 3000, cost: 12.5, c: "#FFD84D", i: "🌟" },
-  { n: "Mythos",      min: 4200, cost: 13,   c: "#FF4FA3", i: "🔮" },
+  { n: "Mythos",      min: 4200, cost: 13,   c: "#C04DFF", i: "🔮" },
   { n: "GOD-LEVEL",   min: 6000, cost: 13.5, c: "#FFFFFF", i: "⚡", god: true },
 ];
 const GAIN = { quota: 12, train: 5, pr: 3 };   // max. 20 RP pro Tag
@@ -1720,9 +1747,9 @@ function rankCard() {
   const buffer = st.rp - r.min, danger = st.tier > 0 && buffer < r.cost * 3;
   const t = st.today, f1 = v => fmtN(v, 1);
   const chartPts = st.hist.slice(-90);
-  return `<div class="card rank-card ${r.god ? "god" : ""}" style="--rc:${r.c}">
+  return `<div class="card rank-card ${r.god ? "god shine god-shine" : st.tier >= 8 ? "shine" : ""}" style="--rc:${r.c};--tc:${r.c}">
     <div class="rank-top">
-      <div class="rank-badge">${r.i}</div>
+      <div class="rank-badge ${r.god ? "ico-god" : st.tier >= 8 ? "ico-shine" : ""}">${r.i}</div>
       <div style="min-width:0;flex:1"><div class="k">Dein Rang</div><div class="rank-n">${r.n}</div>
         <div class="d">${fmtN(st.rp, 0)} RP${st.peak > st.tier ? ` · Bestwert: ${RANKS[st.peak].i} ${RANKS[st.peak].n}` : ""}</div></div>
     </div>
@@ -1810,7 +1837,7 @@ function badgeSVG(icon, lvl, uid) {
   </svg>`;
 }
 const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
-const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#C77DFF", "#FF5E57", "#FF8A00", "#FFD84D", "#2EE59D", "#FF4FA3"];
+const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#2EE59D", "#FF5E57", "#FF8A00", "#FFD84D", "#C04DFF", "#FF4FA3"];
 function achievements(all) {
   const trainings = all.filter(w => hasContent(w)).length;
   const km = cardioEntries(all).reduce((a, r) => a + r.km, 0);
@@ -1879,23 +1906,24 @@ function renderAwards(all, part) {
       const ti = c.lvl ? (c.fmt ? c.goals[c.lvl - 1] : c.lvl - 1) : -1;   // Index der erreichten Stufe in TIER
       const col = c.lvl ? TIER_COL[ti] : "var(--muted)";
       const god = ti === TIER.length - 1;
-      return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "transparent"}">
+      const sh = god ? "shine god-shine" : ti >= 8 ? "shine" : "";   // ab Legende schimmert der Hintergrund
+      return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""} ${sh}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
-          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${AEMO[c.icon] || "🏅"}</div>
+          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${AEMO[c.icon] || "🏅"}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
-            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `<span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
+            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `${RANKS[c.lvl - 1].i} <span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
           </div>
           <div class="ach-v">${c.fmt ? `<span style="font-size:15px" class="${c.v === 10 ? "god-text" : ""}">${c.fmt(c.v)}</span>` : `${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small>`}</div>
         </div>
         <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : c.lvl ? `linear-gradient(90deg, ${col}, color-mix(in srgb, ${col} 55%, #fff))` : "var(--muted)"}"></i></div>
-        <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0) + c.u}`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
+        <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: ${RANKS[c.lvl].i} <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei <span style="white-space:nowrap">${fmtN(c.next, 0) + c.u}</span>`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => { const t = c.fmt ? g : i; return `<i class="${i < c.lvl && t === TIER.length - 1 ? "god-dot" : ""}" style="background:${i < c.lvl ? TIER_COL[t] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`; }).join("")}</span></div>
         <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
           <div class="note" style="margin:6px 0 8px">${AINFO[c.icon] || ""}</div>
           ${c.goals.map((g, i) => c.fmt
             ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${RANKS[g].i}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
-            : `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="tier-dot ${TIER[i] === "GOD-LEVEL" ? "god-dot" : ""}" style="background:${TIER_COL[i]}"></span><b>${TIER[i]}</b>
+            : `<div class="rl rl5 ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="tier-dot ${TIER[i] === "GOD-LEVEL" ? "god-dot" : ""}" style="background:${TIER_COL[i]}"></span><span class="rl-emo">${RANKS[i].i}</span><b>${TIER[i]}</b>
             <small>ab ${fmtN(g, 0) + c.u}</small><small>${i < c.lvl ? "✓" : ""}</small></div>`).slice().reverse().join("")}
         </details>
       </div>`; }).join("")}</div>
