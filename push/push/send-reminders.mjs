@@ -52,11 +52,14 @@ async function handleUser(userDoc) {
   const gen = general.filter(recent).filter(t => !fired.includes("g" + t)).pop();
   if (gen) add([...openTasks, ...openTodos]);
   general.filter(t => toMin(t) <= now.min).forEach(t => fired.includes("g" + t) || fired.push("g" + t));
-  for (const t of tasks.filter(t => t.remind)) {
-    const id = "t" + t.key + t.remind;
-    if (fired.includes(id) || toMin(t.remind) > now.min) continue;
-    if (!done[t.key] && recent(t.remind)) add(openTasks.filter(o => o.key === t.key));
-    fired.push(id);
+  for (const t of tasks) {
+    const times = Array.isArray(t.reminds) && t.reminds.length ? t.reminds : t.remind ? [t.remind] : [];   // mehrere Uhrzeiten pro Aufgabe
+    for (const time of times) {
+      const id = "t" + t.key + time;
+      if (fired.includes(id) || toMin(time) > now.min) continue;
+      if (!done[t.key] && recent(time)) add(openTasks.filter(o => o.key === t.key));
+      fired.push(id);
+    }
   }
   await stateRef.set({ date: now.date, fired });
   if (!items.length) return;
