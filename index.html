@@ -1916,7 +1916,7 @@ function renderAwards(all, part) {
           </div>
           <div class="ach-v">${c.fmt ? `<span style="font-size:15px" class="${c.v === 10 ? "god-text" : ""}">${c.fmt(c.v)}</span>` : `${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small>`}</div>
         </div>
-        <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : c.lvl ? `linear-gradient(90deg, ${col}, color-mix(in srgb, ${col} 55%, #fff))` : "var(--muted)"}"></i></div>
+        <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : "var(--accent)"}"></i></div>
         <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: ${RANKS[c.lvl].i} <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei <span style="white-space:nowrap">${fmtN(c.next, 0) + c.u}</span>`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => { const t = c.fmt ? g : i; return `<i class="${i < c.lvl && t === TIER.length - 1 ? "god-dot" : ""}" style="background:${i < c.lvl ? TIER_COL[t] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`; }).join("")}</span></div>
         <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
