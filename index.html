@@ -1926,14 +1926,13 @@ function recordsHTML(all) {
   }
   const rl = Object.values(recs).sort((x, y) => y.date.localeCompare(x.date));
   const unit = r => r.mode === "weight" && r.kg ? `≈ ${fmtN(r.v, 0)} kg max` : r.mode === "time" ? "Zeit" : r.mode === "cardio" ? "Strecke" : "Wdh.";
-  const REMO = { weight: "🏋️", band: "🟡", reps: "💪", time: "⏱️", cardio: "👟" };
   const prCount = all.reduce((a, w) => a + (w.prs || []).length, 0);
   let html = `<div class="kpis perf-card" style="grid-template-columns:repeat(2,minmax(0,1fr))">
       <div class="kpi"><b>${rl.length}</b><span>Übungen mit Bestwert</span></div>
       <div class="kpi"><b>${prCount}</b><span>neue Bestleistungen</span></div></div>
     <div style="margin-top:12px"></div>`;
   html += rl.length ? `<div class="recs">${rl.map(r => `<div class="rec2">
-      <span class="medal">${r.mode === "weight" && !r.kg ? "💪" : REMO[r.mode] || "🏆"}</span>
+      <span class="medal">🏆</span>
       <div class="rn">${esc(r.name)}</div>
       <div class="rv"><b>${esc(r.txt)}</b><span>${esc(unit(r))} · ${dShort(r.date)}</span></div></div>`).join("")}</div>`
     : `<div class="card empty">Sobald du Übungen einträgst, erscheinen hier deine Bestwerte.</div>`;
