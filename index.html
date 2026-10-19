@@ -1824,6 +1824,98 @@ function badgeSVG(icon, lvl, uid) {
 }
 const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
 const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#2EE59D", "#FF5E57", "#FF8A00", "#FFD84D", "#C04DFF", "#FF4FA3"];
+// Weitere Erfolge, die sich automatisch aus deinen Einträgen ergeben
+const DAY_GOALS = [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825];
+function taskEmoji(name) {
+  const n = name.toLowerCase();
+  const M = [[/lese|lesen|buch/, "📚"], [/schach|chess/, "♟️"], [/duolingo|englisch|spanisch|sprach|vokabel/, "🗣️"], [/kreatin|creatin/, "🥛"],
+    [/protein|eiweiß/, "🥩"], [/wasser|trinken/, "💧"], [/medit|atem/, "🧘"], [/lauf|joggen|km/, "👟"], [/schlaf/, "😴"], [/dehn|stretch|mobil/, "🤸"],
+    [/vitamin|supplement|tablette/, "💊"], [/zähne|zahn/, "🪥"], [/lern|uni|studi/, "🎓"], [/kochen|essen|mahlzeit/, "🥗"]];
+  return (M.find(([re]) => re.test(n)) || [0, "✅"])[1];
+}
+function typeEmoji(name, type) {
+  const n = name.toLowerCase();
+  if (type === "run" || /lauf|run/.test(n)) return "🏃";
+  if (/kick|box|mma|kampf/.test(n)) return "🥊";
+  if (/calisth|street/.test(n)) return "🤸";
+  if (/pull|zieh|rücken/.test(n)) return "🧗";
+  if (/push|drück|brust/.test(n)) return "🏋️";
+  if (/bein|leg/.test(n)) return "🦵";
+  if (/ergänz|zusatz/.test(n)) return "🧩";
+  return type === "session" ? "⏱️" : "🏅";
+}
+function moreAchievements(all, keys) {
+  const out = [], wos = all.filter(w => hasContent(w));
+  // 1) Jede aktuelle Tagesaufgabe bekommt ihren eigenen Erfolg (passt sich an, wenn du Aufgaben änderst)
+  for (const t of (S.taskCfg || DEFAULT_TASKS)) {
+    if (t.training || t.kind === "weight" || !t.key) continue;
+    const v = keys.filter(k => S.days[k]?.done?.[t.key]).length;
+    out.push({ icon: "task_" + t.key, emo: taskEmoji(t.t || ""), n: t.t, v, u: " Tage", goals: DAY_GOALS,
+      info: `Tage, an denen du „${esc(t.t)}“ auf der Startseite abgehakt hast.` });
+  }
+  // 2) Jede Trainingsart aus deinem Wochenplan
+  for (const ty of TYPES) {
+    if (ty.type === "rest" || ty.type === "run") continue;   // Läufe zählt ein eigener Erfolg
+    const v = wos.filter(w => w.plan === ty.name).length;
+    out.push({ icon: "type_" + ty.name, emo: typeEmoji(ty.name, ty.type), n: `${ty.name}-Einheiten`, v, u: "",
+      goals: [1, 5, 10, 25, 50, 75, 100, 150, 200, 300, 500], info: `Trainings, die du als „${esc(ty.name)}“ eingetragen hast.` });
+  }
+  // 3) Ausdauer
+  const runs = cardioEntries(all);
+  out.push({ icon: "runs", emo: "🏃", n: "Läufe", v: runs.length, u: "", goals: [1, 5, 10, 25, 50, 100, 150, 250, 400, 600, 1000],
+    info: "Jeder eingetragene Lauf bzw. jede Ausdauer-Einheit mit Distanz – egal ob am Lauftag oder vor dem Training." });
+  out.push({ icon: "longrun", emo: "🛣️", n: "Längster Lauf", v: Math.max(0, ...runs.map(r => r.km)), u: " km", dec: 1,
+    goals: [1, 2, 3, 5, 7.5, 10, 12, 15, 21.1, 30, 42.2], info: "Die längste Strecke, die du an einem Stück eingetragen hast. 21,1 km = Halbmarathon, 42,2 km = Marathon." });
+  // Trainingszeit (Läufe, Ausdauer, Einheiten wie Kickboxen)
+  const mins = runs.reduce((a, r) => a + (r.min || 0), 0) + wos.reduce((a, w) => a + numv(w.session?.minutes), 0);
+  out.push({ icon: "clock", emo: "⏳", n: "Trainingszeit", v: Math.floor(mins / 60), u: " h", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750, 1000],
+    info: "Eingetragene Minuten aus Läufen, Ausdauer-Übungen und Einheiten wie Kickboxen, zusammengezählt in Stunden." });
+  // 4) Kraft – Einzelleistungen
+  const allSets = all.flatMap(w => (w.exercises || []).flatMap(e => (e.sets || []).map(x => ({ x, m: exMode(e) }))));
+  const maxKg = Math.max(0, ...allSets.filter(o => o.m === "weight" && numv(o.x.reps) > 0).map(o => numv(o.x.kg)));
+  out.push({ icon: "heavy", emo: "🦍", n: "Schwerstes Gewicht", v: maxKg, u: " kg", dec: 1, goals: [10, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200],
+    info: "Das höchste Gewicht, das du in einem einzelnen Satz (mit mindestens 1 Wiederholung) bewegt hast." });
+  const maxReps = Math.max(0, ...allSets.map(o => numv(o.x.reps)));
+  out.push({ icon: "manyreps", emo: "💥", n: "Meiste Wdh. in einem Satz", v: maxReps, u: "", goals: [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 100],
+    info: "Die meisten Wiederholungen, die du in einem einzigen Satz geschafft hast – egal bei welcher Übung." });
+  const maxSec = Math.max(0, ...allSets.filter(o => o.m === "time").map(o => numv(o.x.sec)));
+  out.push({ icon: "hold", emo: "⏱️", n: "Längste Haltezeit", v: maxSec, u: " s", goals: [15, 30, 45, 60, 90, 120, 180, 240, 300, 420, 600],
+    info: "Deine längste Zeit in einem Satz bei Zeit-Übungen wie Plank, Handstand oder L-Sit." });
+  // 5) Pro Training
+  const woSets = wos.map(w => (w.exercises || []).reduce((a, e) => a + exSets(e), 0));
+  out.push({ icon: "bigday", emo: "📦", n: "Sätze in einem Training", v: Math.max(0, ...woSets), u: "", goals: [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 75],
+    info: "Die meisten Sätze, die du an einem einzigen Trainingstag eingetragen hast." });
+  const woTons = wos.map(w => (w.exercises || []).reduce((a, e) => a + exVolume(e), 0) / 1000);
+  out.push({ icon: "bigvol", emo: "🏗️", n: "Volumen in einem Training", v: Math.max(0, ...woTons), u: " t", dec: 1, goals: [0.5, 1, 2, 3, 5, 7.5, 10, 12.5, 15, 20, 25],
+    info: "Das meiste bewegte Gewicht (kg × Wdh.) an einem einzigen Trainingstag, in Tonnen." });
+  const prDay = Math.max(0, ...all.map(w => (w.prs || []).length));
+  out.push({ icon: "prday", emo: "🎯", n: "Bestleistungen an einem Tag", v: prDay, u: "", goals: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
+    info: "Die meisten neuen Bestleistungen, die du in einem einzigen Training aufgestellt hast." });
+  // 6) Regelmäßigkeit
+  const weekCount = {};
+  for (const w of wos) { const d = fromKey(w.date), mon = keyOf(addDays(d, -((d.getDay() + 6) % 7))); weekCount[mon] = (weekCount[mon] || 0) + 1; }
+  const strongWeeks = Object.values(weekCount).filter(n => n >= 4).length;
+  out.push({ icon: "strongweek", emo: "📈", n: "Starke Trainingswochen", v: strongWeeks, u: "", goals: [1, 4, 8, 12, 26, 52, 78, 104, 156, 208, 260],
+    info: "Wochen (Montag bis Sonntag) mit mindestens 4 eingetragenen Trainings." });
+  const wk = Object.keys(weekCount).sort(); let wStreak = 0, wCur = 0, prevW = null;
+  for (const m of wk) { wCur = prevW && keyOf(addDays(fromKey(prevW), 7)) === m ? wCur + 1 : 1; wStreak = Math.max(wStreak, wCur); prevW = m; }
+  out.push({ icon: "weekstreak", emo: "🗓️", n: "Trainingswochen am Stück", v: wStreak, u: "", goals: [2, 4, 8, 12, 26, 52, 78, 104, 156, 208, 260],
+    info: "Wie viele Wochen hintereinander du mindestens ein Training eingetragen hast." });
+  // Erfüllte Monate (jeder Tag des Monats erfüllt)
+  let fullMonths = 0;
+  if (keys.length) { const f = fromKey(keys[0]);
+    for (let d = new Date(f.getFullYear(), f.getMonth(), 1); keyOf(new Date(d.getFullYear(), d.getMonth() + 1, 0)) <= todayKey(); d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) {
+      const n = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); let ok = true;
+      for (let i = 1; i <= n && ok; i++) ok = dayInfo(keyOf(new Date(d.getFullYear(), d.getMonth(), i))).complete;
+      if (ok) fullMonths++; } }
+  out.push({ icon: "month", emo: "🌕", n: "Perfekte Monate", v: fullMonths, u: "", goals: [1, 2, 3, 4, 6, 9, 12, 18, 24, 36, 60],
+    info: "Kalendermonate, in denen wirklich jeder einzelne Tag erfüllt war." });
+  // Gewicht morgens UND abends am selben Tag
+  const both = keys.filter(k => { const wt = S.days[k]?.weight; return wt && wt.am && wt.pm; }).length;
+  out.push({ icon: "scale2", emo: "🌗", n: "Gewicht morgens & abends", v: both, u: " Tage", goals: DAY_GOALS,
+    info: "Tage, an denen du sowohl morgens als auch abends dein Gewicht eingetragen hast." });
+  return out;
+}
 function achievements(all) {
   const trainings = all.filter(w => hasContent(w)).length;
   const km = cardioEntries(all).reduce((a, r) => a + r.km, 0);
@@ -1847,6 +1939,7 @@ function achievements(all) {
   if (keys.length) { for (let d = addDays(fromKey(keys[0]), -((fromKey(keys[0]).getDay() + 6) % 7)); keyOf(addDays(d, 6)) <= todayKey(); d = addDays(d, 7)) {
     let ok = true; for (let j = 0; j < 7 && ok; j++) ok = dayInfo(keyOf(addDays(d, j))).complete; if (ok) perfectWeeks++; } }
   const peak = (typeof rankState === "function" && S.daysFull) ? rankState().peak : 0;
+  const extraCats = moreAchievements(all, keys);
   const cats = [
     { icon: "dumbbell", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000] },
     { icon: "flame", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
@@ -1858,12 +1951,10 @@ function achievements(all) {
     { icon: "repeat", n: "Wiederholungen", v: reps, u: "", goals: [500, 2500, 5000, 10000, 25000, 50000, 100000, 200000, 350000, 500000, 750000] },
     { icon: "plate", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
     { icon: "shoe", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000, 7500] },
-    { icon: "sunrise", n: "Morgenläufe", v: doneDays(/^lauf_morgen$/), u: "", goals: [5, 25, 50, 100, 200, 365, 500, 750, 1000, 1250, 1500] },
     { icon: "scale", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
-    { icon: "book", n: "Lesetage", v: doneDays(/^lesen$/), u: "", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
-    { icon: "speech", n: "Sprachtage", v: doneDays(/^duo_(en|es)$/), u: "", goals: [7, 30, 60, 100, 200, 365, 500, 730, 1095, 1460, 1825] },
     { icon: "flask", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 15, 20, 30, 40, 50, 65, 80, 100, 125] },
     { icon: "list", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 25, 50, 100, 250, 500, 1000, 1500, 2000, 3500, 5000] },
+    ...extraCats,
   ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; const next = c.goals[lvl] ?? null, prev = c.goals[lvl - 1] ?? 0;
     return { ...c, lvl, next, prev, pct: next ? Math.min(1, (c.v - prev) / (next - prev)) : 1 }; })
   // Freigeschaltete oben (höchste Stufe zuerst, dann Fortschritt), Gesperrte unten nach Fortschritt
@@ -1895,7 +1986,7 @@ function renderAwards(all, part) {
       const sh = god ? "shine god-shine" : ti >= 8 ? "shine" : "";   // ab Legende schimmert der Hintergrund
       return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""} ${sh}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
-          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${AEMO[c.icon] || "🏅"}</div>
+          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${c.emo || AEMO[c.icon] || "🏅"}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
             <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `${RANKS[c.lvl - 1].i} <span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
@@ -1906,7 +1997,7 @@ function renderAwards(all, part) {
         <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: ${RANKS[c.lvl].i} <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei <span style="white-space:nowrap">${fmtN(c.next, 0) + c.u}</span>`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => { const t = c.fmt ? g : i; return `<i class="${i < c.lvl && t === TIER.length - 1 ? "god-dot" : ""}" style="background:${i < c.lvl ? TIER_COL[t] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`; }).join("")}</span></div>
         <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
-          <div class="note" style="margin:6px 0 8px">${AINFO[c.icon] || ""}</div>
+          <div class="note" style="margin:6px 0 8px">${c.info || AINFO[c.icon] || ""}</div>
           ${c.goals.map((g, i) => c.fmt
             ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${RANKS[g].i}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
             : `<div class="rl rl5 ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="rl-emo">${RANKS[i].i}</span><b>${TIER[i]}</b>
