@@ -132,6 +132,11 @@
   .kg-in small { color: var(--muted); font-size: 12px; }
   .mini.on { color: var(--accent-text); }
   .mini.more { width: 36px; height: 40px; }
+  .check-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin-top: 12px; padding: 12px; border-radius: 12px; background: var(--surface-2); font-weight: 600; font-size: 14px; }
+  .check-row span:last-child { display: flex; flex-direction: column; gap: 2px; }
+  .check-row small { font-weight: 500; font-size: 12px; color: var(--muted); }
+  .check-row.on .box-check { background: var(--accent); border-color: var(--accent-edge, var(--accent)); }
+  .check-row.on .box-check svg { opacity: 1; transform: scale(1); }
   .menu { display: flex; flex-direction: column; gap: 6px; }
   .menu button { display: flex; align-items: center; gap: 14px; text-align: left; padding: 14px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; }
   .menu button svg { flex: none; color: var(--accent-text); }
@@ -290,6 +295,14 @@
   .badge .bar { height: 4px; border-radius: 4px; background: var(--surface-2); margin: 6px 6px 0; overflow: hidden; }
   .badge .bar i { display: block; height: 100%; background: var(--accent); }
   .ach { padding: 14px; }
+  .ach.unl { border-color: color-mix(in srgb, var(--tc) 55%, var(--border));
+    background: linear-gradient(160deg, color-mix(in srgb, var(--tc) 12%, var(--surface)) 0%, var(--surface) 55%); }
+  .ach.lock { opacity: .78; }
+  .ach.god { border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(120deg, #FFD84D, #FF8A00, #FF4FA3, #9B5DE5, #3A86FF, #FFD84D) border-box; background-size: 100% 100%, 300% 300%; animation: godglow 5s linear infinite; }
+  .ach-badge { width: 54px; height: 54px; flex: none; }
+  .badge-svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,.25)); }
+  .badge-svg.god { filter: drop-shadow(0 0 8px rgba(255,79,163,.45)); }
   .ach-top { display: flex; align-items: center; gap: 12px; }
   .ach-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex: none;
     background: color-mix(in srgb, var(--tc) 18%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--tc) 70%, transparent) inset; }
@@ -388,10 +401,10 @@
   .dp-d.sel { background: var(--accent); color: var(--accent-ink); opacity: 1; }
   /* Notizen */
   .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
-  .note { text-align: left; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 120px; }
-  .note .nt { font-weight: 800; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .note .np { font-size: 13px; color: var(--muted); line-height: 1.4; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-line; word-break: break-word; }
-  .note .nd { font-size: 11px; color: var(--muted); }
+  .note-card { text-align: left; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 120px; }
+  .note-card .nt { font-weight: 800; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note-card .np { font-size: 13px; color: var(--muted); line-height: 1.4; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-line; word-break: break-word; }
+  .note-card .nd { font-size: 11px; color: var(--muted); }
   .note-title { width: 100%; background: none; border: 0; font-size: 22px; font-weight: 800; padding: 10px 0 6px; outline: none; color: var(--text); }
   .note-text { width: 100%; min-height: 60dvh; background: none; border: 0; resize: none; font-size: 16px; line-height: 1.55; padding: 4px 0; outline: none; color: var(--text); }
   .note-text:focus, .note-title:focus { outline: none !important; }
@@ -441,6 +454,16 @@
   .tw-hl { position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: 12px; background: var(--accent); z-index: 0; }
   .tw-quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
+  /* animierte Flamme */
+  .flame { display: inline-block; transform-origin: 50% 90%; animation: flicker 1.6s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(255,120,0,.55)); }
+  @keyframes flicker {
+    0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 3px rgba(255,120,0,.45)); }
+    20% { transform: scale(1.08, 1.14) rotate(3deg) translateY(-.5px); filter: drop-shadow(0 0 6px rgba(255,150,0,.7)); }
+    40% { transform: scale(.96, 1.02) rotate(-3deg); }
+    60% { transform: scale(1.06, 1.12) rotate(2deg) translateY(-.5px); filter: drop-shadow(0 0 7px rgba(255,90,0,.7)); }
+    80% { transform: scale(.98, 1.05) rotate(-1deg); }
+  }
+  @media (prefers-reduced-motion: reduce) { .flame { animation: none; } }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -831,7 +854,7 @@ function renderStart() {
         <div class="hero-text">
           <div class="big">${cnt === tasks.length ? "Quote erfüllt 🔥" : `Noch ${tasks.length - cnt} offen`}</div>
           <div class="stats">
-            <span class="chip">🔥 ${streak()} Tage Serie</span>
+            <span class="chip streak-chip"><span class="flame">🔥</span> ${streak()} Tage Serie</span>
             <span class="chip accent">${esc(plan.name)}</span>
             ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span></button>`; })() : ""}
             ${openTodos ? `<button class="chip" data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}
@@ -999,7 +1022,7 @@ function renderTrain() {
   }
   if (plan.type === "gym") {
     body += w.exercises.length ? `<div id="exList">${w.exercises.map((e, i) => exHTML(e, i)).join("")}</div>
-      ${w.exercises.length > 1 ? `<div class="note" style="text-align:center">Tipp: Übung ca. 1,5 Sek. gedrückt halten oder direkt am ⠿ ziehen, um die Reihenfolge zu ändern.</div>` : ""}` :
+      ${w.exercises.length > 1 ? `<div class="note" style="text-align:center">Tipp: Übung ca. 1,5 Sek. gedrückt halten und ziehen – oder über ⋯ nach oben/unten schieben.</div>` : ""}` :
       `<div class="card muted" style="text-align:center;padding:26px 16px">Noch keine Übung eingetragen.<br>Wähl unten Übungen für ${esc(plan.name)} aus.</div>`;
     body += `<button class="btn primary block" style="margin-top:12px" data-action="addex">+ Übung hinzufügen</button>
       <h2>Sonstiges</h2>
@@ -1054,8 +1077,7 @@ const exHTML = (e, i) => {
   <div class="card ex" data-ex="${i}">
     <div class="ex-head">
       <div style="min-width:0;flex:1"><div class="n">${esc(e.name)}</div><div class="last">${esc(e.group)}${lastCache[e.name] ? " · " + esc(lastCache[e.name]) : ""}</div></div>
-      <button class="mini grip" title="Ziehen zum Verschieben" aria-label="Verschieben">⠿</button>
-      <button class="mini" data-action="delex" data-i="${i}" title="Übung entfernen">${ICON.trash}</button>
+      <button class="mini more" data-action="exmenu" data-i="${i}" title="Bearbeiten">${ICON.dots}</button>
     </div>
     <div class="seg modes">${Object.entries(MODES).map(([k, l]) => `<button class="chip ${k === mode ? "accent" : ""}" data-action="exmode" data-i="${i}" data-v="${k}">${MODE_SHORT[k]}</button>`).join("")}</div>
     <div class="sets" ${mode === "band" ? 'style="grid-template-columns:32px minmax(0,1.7fr) minmax(0,1fr) 32px"' : ""}>${head}${e.sets.map(row).join("")}</div>
@@ -1246,7 +1268,7 @@ function renderPerf() {
   const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Erfolge", records: "Deine Bestwerte" };
   const pb = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="pview" data-v="${v}">${l}</button>`;
   let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>${TITLES[view] || TITLES.stats}</h1></div></header>
-    <div class="switch four">${pb("rank", "⚡<span>Rang</span>")}${pb("stats", "📈<span>Auswertung</span>")}${pb("awards", "🏅<span>Erfolge</span>")}${pb("records", "🏆<span>Bestwerte</span>")}</div>`;
+    <div class="switch four">${pb("rank", "⚡<span>Rang</span>")}${pb("awards", "🏅<span>Erfolge</span>")}${pb("records", "🏆<span>Bestwerte</span>")}${pb("stats", "📈<span>Auswertung</span>")}</div>`;
   if (!all) { v.innerHTML = html + `<div class="card empty perf-card">Lade Daten …</div>`; return; }
   if (view === "rank") { v.innerHTML = html + rankCard(); return; }
   if (view === "awards") { v.innerHTML = html + renderAwards(all, "awards"); return; }
@@ -1440,9 +1462,7 @@ async function deleteType(i) {
 let pend = null, drag = null;
 document.addEventListener("pointerdown", e => {
   const card = e.target.closest("#exList .ex[data-ex]"); if (!card || drag) return;
-  const onGrip = !!e.target.closest(".grip");
-  if (!onGrip && e.target.closest("input, textarea, button, select")) return;
-  if (onGrip) { e.preventDefault(); startDrag(card, e.clientY); return; }
+  if (e.target.closest("input, textarea, button, select")) return;
   const HOLD = 1500;   // so lange gedrückt halten (ms), bis die Übung verschoben werden kann
   pend = { card, x: e.clientX, y: e.clientY,
     h: setTimeout(() => card.classList.add("holding"), 250),
@@ -1500,6 +1520,66 @@ function endDrag() {
   const old = S.workout.exercises, changed = order.some((v, i) => v !== i);
   if (changed) { S.workout.exercises = order.map(i => old[i]); saveWorkout(true); }
   else renderTrain();
+}
+
+/* ===================== ÜBUNG: MENÜ & UMBENENNEN ===================== */
+function openExMenu(i) {
+  const w = S.workout, e = w.exercises[i]; if (!e) return;
+  const n = w.exercises.length;
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px">
+      <b style="font-size:18px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.name)}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="menu">
+      <button data-action="exrename" data-i="${i}">${ICON.pen}<span>Umbenennen<small>Ändert den Namen auch in der Übungsauswahl</small></span></button>
+      ${i > 0 ? `<button data-action="exmove" data-i="${i}" data-v="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span>Nach oben<small>Eine Position nach oben</small></span></button>` : ""}
+      ${i < n - 1 ? `<button data-action="exmove" data-i="${i}" data-v="1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg><span>Nach unten<small>Eine Position nach unten</small></span></button>` : ""}
+      <button class="danger" data-action="delex" data-i="${i}">${ICON.trash}<span>Entfernen<small>Aus dem heutigen Training nehmen</small></span></button>
+    </div>`;
+  showSheet();
+}
+function openExRename(i) {
+  const e = S.workout.exercises[i]; if (!e) return;
+  const past = (S.allWo || []).filter(w => w.date !== S.trainDate && (w.exercises || []).some(x => x.name === e.name)).length;
+  S.renHist = past > 0;
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <button class="mini" data-action="exmenu" data-i="${i}">${ICON.left}</button><b style="font-size:18px">Übung umbenennen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="field" style="margin-top:0"><label>Neuer Name</label><input class="text-in" id="exNewName" value="${esc(e.name)}"></div>
+    ${past ? `<button class="check-row ${S.renHist ? "on" : ""}" data-action="renhist"><span class="box-check">${CHECK}</span>
+      <span>Auch in ${past} früheren Training${past > 1 ? "s" : ""} umbenennen<small>Damit Verlauf und Bestwerte zusammenbleiben</small></span></button>` : ""}
+    <button class="btn primary block" style="margin-top:16px" data-action="exrensave" data-i="${i}">Speichern</button>`;
+  showSheet();
+  setTimeout(() => { const el = $("#exNewName"); el.focus(); el.select(); }, 60);
+}
+async function renameExercise(i) {
+  const e = S.workout.exercises[i]; if (!e) return;
+  const oldN = e.name, newN = $("#exNewName").value.trim(), g = e.group;
+  if (!newN || newN === oldN) { closeSheet(); return; }
+  // 1) heutiges Training
+  e.name = newN;
+  // 2) Übungsauswahl (Vorschläge): eigene Übung ersetzen bzw. Standard-Übung aus-/neue einblenden
+  let found = false;
+  for (const grp of new Set([...Object.keys(LIB), ...Object.keys(S.custom)])) {   // in jeder Gruppe, in der die Übung vorkommt
+    if ((S.custom[grp] || []).includes(oldN)) { S.custom[grp] = S.custom[grp].map(x => x === oldN ? newN : x); found = true; }
+    else if ((LIB[grp] || []).includes(oldN) && !(S.hidden[grp] || []).includes(oldN)) {
+      (S.hidden[grp] ||= []).push(oldN); (S.custom[grp] ||= []).includes(newN) || S.custom[grp].push(newN); found = true; }
+  }
+  if (!found) { const grp = LIB[g] ? g : "Sonstiges"; (S.custom[grp] ||= []).includes(newN) || S.custom[grp].push(newN); }
+  if (S.exModes?.[oldN]) { S.exModes[newN] = S.exModes[oldN]; delete S.exModes[oldN]; }
+  try { await setDoc(userRef(), { custom: S.custom, hidden: S.hidden, exModes: S.exModes || {} }, { merge: true }); } catch {}
+  // 3) optional frühere Trainings
+  if (S.renHist) {
+    for (const w of (S.allWo || []).filter(w => w.date !== S.trainDate && (w.exercises || []).some(x => x.name === oldN))) {
+      w.exercises = w.exercises.map(x => x.name === oldN ? { ...x, name: newN } : x);
+      w.prs = (w.prs || []).map(t => t.startsWith(oldN + "|") ? newN + t.slice(oldN.length) : t);
+      try { await setDoc(woRef(w.date), Object.fromEntries(Object.entries(w).filter(([k]) => k !== "id"))); } catch {}
+    }
+    prevFor = null; for (const n in lastCache) delete lastCache[n];
+    await loadPrevious(S.trainDate);
+  }
+  delete lastCache[oldN]; await loadLastFor([newN]);
+  closeSheet(); saveWorkout(true);
+  toast(`Umbenannt in „${newN}“`);
 }
 
 /* ===================== ERFOLGE / REKORDE ===================== */
@@ -1647,6 +1727,43 @@ function celebrate(title, text) {
   setTimeout(() => { b.remove(); box.remove(); }, 4400);
 }
 // Pokale: Meilensteine, die man freischaltet
+// Gezeichnete Symbole für die Erfolgs-Abzeichen (24×24, Linie)
+const AICON = {
+  dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
+  flame: '<path d="M12 22c4 0 7-2.8 7-7 0-3.5-2.2-5.6-3.6-7.6-.4 2-1.4 3.2-2.6 3.6C13.4 7.6 12 4.6 9.5 2c.3 3.4-1.4 5.6-2.9 7.4C5.4 10.9 5 12.6 5 15c0 4.2 3 7 7 7z"/><path d="M12 22c-1.7 0-3-1.3-3-3.2 0-1.6 1.1-2.7 1.9-3.6.3 1 .9 1.6 1.6 1.8.2-1.3.8-2.4 1.8-3.3.2 1.6 1.7 2.9 1.7 5.1 0 1.9-1.4 3.2-4 3.2z"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16.5 9.5"/>',
+  trophy: '<path d="M8 4h8v5a4 4 0 01-8 0V4z"/><path d="M8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4"/>',
+  shoe: '<path d="M3 15.5V9.5l3.5-1 2 2.5 3-1.2 2.5 3.2 6.5 1.5c1 .3 1.5 1 1.5 2v1.5H3z"/><path d="M3 18h18M9 13.5l1-.5M12 15l1-.5"/>',
+  plate: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/>',
+  scale: '<rect x="3.5" y="4" width="17" height="16" rx="4"/><path d="M8.5 10a5 5 0 017 0M12 10.5l1.4-2.2"/>',
+  flask: '<path d="M9.5 3h5M10 3v6.2L5 18a2 2 0 001.8 3h10.4A2 2 0 0019 18l-5-8.8V3"/><path d="M7.4 14.5h9.2"/>',
+  list: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M3.8 6.5l1.2 1.2 2-2.2M3.8 12l1.2 1.2 2-2.2M3.8 17.5l1.2 1.2 2-2.2"/>',
+  layers: '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12.5l9 5 9-5M3 16.5l9 5 9-5"/>',
+  repeat: '<path d="M17 2.5l3 3-3 3"/><path d="M4 11.5v-2a4 4 0 014-4h12M7 21.5l-3-3 3-3"/><path d="M20 12.5v2a4 4 0 01-4 4H4"/>',
+  week: '<rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M12 12.2l1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/>',
+  crown: '<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8z"/><path d="M5 19h14"/>',
+  book: '<path d="M4 4.5A2.5 2.5 0 016.5 2H20v17H6.5A2.5 2.5 0 004 21.5v-17z"/><path d="M4 19.5A2.5 2.5 0 016.5 17H20M8.5 7h7"/>',
+  speech: '<path d="M4 5h11a2 2 0 012 2v6a2 2 0 01-2 2H9l-4 3.5V15H4a2 2 0 01-2-2V7a2 2 0 012-2z"/><path d="M19 9h1a2 2 0 012 2v5a2 2 0 01-2 2h-1v2.5L16 18h-3"/>',
+  sunrise: '<path d="M4 18h16M2 21.5h20M7 18a5 5 0 0110 0M12 3v4M5 9.5l1.6 1.6M19 9.5l-1.6 1.6M2 14h2M20 14h2"/>',
+  note: '<path d="M14.5 2.5H6a2 2 0 00-2 2v15a2 2 0 002 2h12a2 2 0 002-2V8l-5.5-5.5z"/><path d="M14 2.5V8h6M8 13h8M8 17h5"/>',
+  bolt: '<path d="M13 2L4.5 13.5H11L10 22l9.5-12.5H13L13 2z"/>',
+};
+// Sechseck-Plakette in Stufenfarbe
+function badgeSVG(icon, lvl, uid) {
+  const god = lvl === TIER.length, col = lvl ? TIER_COL[lvl - 1] : null;
+  const hex = "M32 3l25 14.5v29L32 61 7 46.5v-29z";
+  const stroke = !lvl ? "var(--border)" : `url(#bg${uid})`;
+  return `<svg class="badge-svg ${god ? "god" : ""} ${lvl ? "" : "locked"}" viewBox="0 0 64 64">
+    <defs><linearGradient id="bg${uid}" x1="0" y1="0" x2="1" y2="1">${god
+      ? `<stop offset="0" stop-color="#FFD84D"><animate attributeName="stop-color" values="#FFD84D;#FF8A00;#FF4FA3;#9B5DE5;#FFD84D" dur="4s" repeatCount="indefinite"/></stop><stop offset="1" stop-color="#FF4FA3"><animate attributeName="stop-color" values="#FF4FA3;#9B5DE5;#FFD84D;#FF8A00;#FF4FA3" dur="4s" repeatCount="indefinite"/></stop>`
+      : `<stop offset="0" stop-color="${col || "#666"}"/><stop offset="1" stop-color="${col ? `color-mix(in srgb, ${col} 55%, #fff)` : "#999"}"/>`}</linearGradient>
+      <linearGradient id="bf${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col || "#888"}" stop-opacity="${lvl ? .32 : .06}"/><stop offset="1" stop-color="${col || "#888"}" stop-opacity="${lvl ? .08 : .02}"/></linearGradient></defs>
+    <path d="${hex}" fill="url(#bf${uid})" stroke="${stroke}" stroke-width="${lvl ? 3 : 2}" stroke-linejoin="round" ${lvl ? "" : 'stroke-dasharray="4 4"'}/>
+    ${lvl ? `<path d="M32 9.5l19.5 11.3v22.4L32 54.5 12.5 43.2V20.8z" fill="none" stroke="${god ? "#FFD84D" : col}" stroke-opacity=".28" stroke-width="1"/>` : ""}
+    <g transform="translate(20 20)" fill="none" stroke="${lvl ? (god ? `url(#bg${uid})` : col) : "var(--muted)"}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="scale(1)">${AICON[icon] || AICON.trophy}</g></g>
+  </svg>`;
+}
 const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
 const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#C77DFF", "#FF5E57", "#FF8A00", "#FFD84D", "#2EE59D", "#FF4FA3"];
 function achievements(all) {
@@ -1664,17 +1781,36 @@ function achievements(all) {
   const tons = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + exVolume(e), 0), 0) / 1000;
   const exCount = new Set(all.flatMap(w => (w.exercises || []).filter(e => (e.sets || []).some(setFilled)).map(e => e.name))).size;
   const todosDone = S.todos.filter(t => t.done).length;
+  const doneDays = re => keys.filter(k => Object.entries(S.days[k]?.done || {}).some(([key, v]) => v && re.test(key))).length;
+  const sets = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + exSets(e), 0), 0);
+  const reps = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + (e.sets || []).reduce((c, x) => c + numv(x.reps), 0), 0), 0);
+  // perfekte Wochen (Mo–So alle Tage erfüllt)
+  let perfectWeeks = 0;
+  if (keys.length) { for (let d = addDays(fromKey(keys[0]), -((fromKey(keys[0]).getDay() + 6) % 7)); keyOf(addDays(d, 6)) <= todayKey(); d = addDays(d, 7)) {
+    let ok = true; for (let j = 0; j < 7 && ok; j++) ok = dayInfo(keyOf(addDays(d, j))).complete; if (ok) perfectWeeks++; } }
+  const peak = (typeof rankState === "function" && S.daysFull) ? rankState().peak : 0;
   const cats = [
-    { i: "💪", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500] },
-    { i: "🔥", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
-    { i: "✅", n: "Erfüllte Tage", v: fullDays, u: "", goals: [1, 7, 30, 100, 200, 365, 500, 730, 1000, 1500, 1825] },
-    { i: "🏆", n: "Bestleistungen", v: prCount, u: "", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750] },
-    { i: "🏃", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
-    { i: "🏋️", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000] },
-    { i: "⚖️", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
-    { i: "🧪", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
-    { i: "📝", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
-  ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; return { ...c, lvl, next: c.goals[lvl] ?? null, prev: c.goals[lvl - 1] ?? 0 }; });
+    { icon: "dumbbell", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500] },
+    { icon: "flame", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
+    { icon: "check", n: "Erfüllte Tage", v: fullDays, u: "", goals: [1, 7, 30, 100, 200, 365, 500, 730, 1000, 1500, 1825] },
+    { icon: "week", n: "Perfekte Wochen", v: perfectWeeks, u: "", goals: [1, 4, 12, 26, 52, 78, 104, 156, 208, 260] },
+    { icon: "crown", n: "Höchster Rang", v: peak, u: "", fmt: v => RANKS[v]?.n || "Bronze", goals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+    { icon: "trophy", n: "Bestleistungen", v: prCount, u: "", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750] },
+    { icon: "layers", n: "Sätze gesamt", v: sets, u: "", goals: [50, 250, 500, 1000, 2500, 5000, 10000, 20000, 35000, 50000] },
+    { icon: "repeat", n: "Wiederholungen", v: reps, u: "", goals: [500, 2500, 5000, 10000, 25000, 50000, 100000, 200000, 350000, 500000] },
+    { icon: "plate", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000] },
+    { icon: "shoe", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
+    { icon: "sunrise", n: "Morgenläufe", v: doneDays(/^lauf_morgen$/), u: "", goals: [5, 25, 50, 100, 200, 365, 500, 750, 1000] },
+    { icon: "scale", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
+    { icon: "book", n: "Lesetage", v: doneDays(/^lesen$/), u: "", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
+    { icon: "speech", n: "Sprachtage", v: doneDays(/^duo_(en|es)$/), u: "", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
+    { icon: "flask", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
+    { icon: "list", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
+    { icon: "note", n: "Notizen", v: (S.notes || []).length, u: "", goals: [1, 5, 10, 25, 50, 100, 250] },
+  ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; const next = c.goals[lvl] ?? null, prev = c.goals[lvl - 1] ?? 0;
+    return { ...c, lvl, next, prev, pct: next ? Math.min(1, (c.v - prev) / (next - prev)) : 1 }; })
+  // Freigeschaltete oben (höchste Stufe zuerst, dann Fortschritt), Gesperrte unten nach Fortschritt
+  .sort((a, b) => (b.lvl > 0) - (a.lvl > 0) || b.lvl - a.lvl || b.pct - a.pct);
   return { cats, trainings, km, longest, prCount, unlocked: cats.reduce((a, c) => a + c.lvl, 0), total: cats.reduce((a, c) => a + c.goals.length, 0) };
 }
 function renderAwards(all, part) {
@@ -1694,20 +1830,21 @@ function renderAwards(all, part) {
       <div class="kpi"><b>${a.longest}</b><span>längste Serie</span></div>
       <div class="kpi"><b>${a.prCount}</b><span>Bestleistungen</span></div></div>
     <h2>Meilensteine · ${a.unlocked}/${a.total}</h2><div class="note" style="margin:-4px 0 10px">Diese Pokale bleiben für immer – im Gegensatz zum Rang.</div>
-    <div class="tasks">${a.cats.map(c => {
-      const pct = c.next ? Math.min(100, (c.v - c.prev) / (c.next - c.prev) * 100) : 100;
+    <div class="tasks">${a.cats.map((c, ci) => {
+      const pct = c.pct * 100;
       const col = c.lvl ? TIER_COL[c.lvl - 1] : "var(--muted)";
-      return `<div class="card ach">
+      const god = c.lvl === TIER.length;
+      return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
-          <div class="ach-ico ${c.lvl ? "" : "off"}" style="--tc:${col}">${c.i}</div>
+          <div class="ach-badge">${badgeSVG(c.icon, c.lvl, ci)}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
-            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? `<span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}` : "Noch keine Stufe"}</div>
+            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `<span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
           </div>
-          <div class="ach-v">${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small></div>
+          <div class="ach-v">${c.fmt ? `<span style="font-size:15px" class="${c.v === 10 ? "god-text" : ""}">${c.fmt(c.v)}</span>` : `${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small>`}</div>
         </div>
-        <div class="ach-bar"><i style="width:${pct}%;background:${c.next ? "var(--accent)" : col}"></i></div>
-        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0)}${c.u}` : "🏅 Alle Stufen geschafft – Respekt!"}</span>
+        <div class="ach-bar"><i style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#9B5DE5)" : c.lvl ? `linear-gradient(90deg, ${col}, color-mix(in srgb, ${col} 55%, #fff))` : "var(--muted)"}"></i></div>
+        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei ${c.fmt ? c.fmt(c.next) : fmtN(c.next, 0) + c.u}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
       </div>`; }).join("")}</div>
 `;
@@ -1887,7 +2024,7 @@ function renderNotes() {
   return `<div class="add-row" style="margin-top:12px">
       <input class="text-in" id="noteQ" placeholder="🔍 Notizen durchsuchen …" value="${esc(S.noteQ || "")}">
       <button class="btn primary plus" data-action="notenew" title="Neue Notiz">+</button></div>
-    ${list.length ? `<div class="notes">${list.map(n => `<button class="card note" data-action="noteopen" data-id="${n.id}">
+    ${list.length ? `<div class="notes">${list.map(n => `<button class="card note-card" data-action="noteopen" data-id="${n.id}">
         <div class="nt">${n.pinned ? "📌 " : ""}${esc(n.title || "Ohne Titel")}</div>
         <div class="np">${esc((n.text || "").slice(0, 160)) || "<span class='muted'>Leer</span>"}</div>
         <div class="nd">${ago(n.updated)}</div></button>`).join("")}</div>`
@@ -2512,7 +2649,12 @@ document.addEventListener("click", async e => {
     try { await setDoc(userRef(), { custom: S.custom, hidden: S.hidden }, { merge: true }); } catch {}
     pickExercise(v);
   }
-  else if (a === "delex") { if (await askYesNo(`„${w.exercises[el.dataset.i].name}“ aus dem heutigen Training entfernen?`)) { w.exercises.splice(el.dataset.i, 1); saveWorkout(true); } }
+  else if (a === "exmenu") openExMenu(+el.dataset.i);
+  else if (a === "exrename") openExRename(+el.dataset.i);
+  else if (a === "renhist") { S.renHist = !S.renHist; el.classList.toggle("on", S.renHist); }
+  else if (a === "exrensave") renameExercise(+el.dataset.i);
+  else if (a === "exmove") { const i = +el.dataset.i, j = i + +el.dataset.v, ex = w.exercises; [ex[i], ex[j]] = [ex[j], ex[i]]; closeSheet(); saveWorkout(true); }
+  else if (a === "delex") { closeSheet(); if (await askYesNo(`„${w.exercises[el.dataset.i].name}“ aus dem heutigen Training entfernen?`)) { w.exercises.splice(el.dataset.i, 1); saveWorkout(true); } }
   else if (a === "addset") {
     const ex = w.exercises[el.dataset.i], mode = exMode(ex), last = ex.sets[ex.sets.length - 1] || {}, ns = emptySet(mode);
     if (mode === "weight") ns.kg = last.kg || ""; if (mode === "band") ns.band = last.band || "";
