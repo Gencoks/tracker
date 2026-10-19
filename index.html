@@ -249,6 +249,20 @@
   .badge .bs { font-size: 11px; color: var(--muted); margin-top: 3px; }
   .badge .bar { height: 4px; border-radius: 4px; background: var(--surface-2); margin: 6px 6px 0; overflow: hidden; }
   .badge .bar i { display: block; height: 100%; background: var(--accent); }
+  .ach { padding: 14px; }
+  .ach-top { display: flex; align-items: center; gap: 12px; }
+  .ach-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex: none;
+    background: color-mix(in srgb, var(--tc) 18%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--tc) 70%, transparent) inset; }
+  .ach-ico.off { filter: grayscale(1); opacity: .45; }
+  .ach-n { font-weight: 700; }
+  .ach-l { font-size: 12px; font-weight: 700; margin-top: 2px; }
+  .ach-v { font-size: 20px; font-weight: 800; text-align: right; white-space: nowrap; }
+  .ach-v small { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .ach-bar { height: 6px; border-radius: 6px; background: var(--surface-2); margin-top: 12px; overflow: hidden; }
+  .ach-bar i { display: block; height: 100%; border-radius: 6px; }
+  .ach-f { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .ach-dots { display: flex; gap: 3px; flex: none; }
+  .ach-dots i { width: 7px; height: 7px; border-radius: 50%; }
   .rec { gap: 10px; padding-right: 14px; }
   .rec .medal { font-size: 22px; }
   .rec .rv { font-size: 14px; text-align: right; max-width: 45%; }
@@ -275,9 +289,61 @@
     border-color: var(--accent); transition: transform .12s; }
   #exList.compact .modes, #exList.compact .sets, #exList.compact .row-btns, #exList.compact .last, #exList.compact .mini:not(.grip) { display: none; }
   #exList.compact .ex { padding: 14px 16px; }
+  #exList .ex { transition: transform .2s, border-color .2s; }
+  #exList .ex.holding { transform: scale(.975); border-color: var(--accent); transition: transform 1.25s linear, border-color .3s;
+    background-image: linear-gradient(90deg, color-mix(in srgb, var(--accent) 14%, transparent) 0 0); background-repeat: no-repeat;
+    background-size: 0 100%; animation: holdfill 1.25s linear forwards; }
+  @keyframes holdfill { to { background-size: 100% 100%; } }
   .ex-ph { border: 2px dashed color-mix(in srgb, var(--accent) 70%, var(--border)); border-radius: var(--radius); margin-top: 10px;
     background: color-mix(in srgb, var(--accent) 8%, transparent); }
   body.drag-on { user-select: none; -webkit-user-select: none; cursor: grabbing; }
+  .switch.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .switch.three button { font-size: 13px; padding: 10px 4px; }
+  .tcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ttext { text-align: left; width: 100%; word-break: break-word; }
+  .due { font-size: 12px; font-weight: 600; color: var(--muted); padding: 3px 8px; border-radius: 7px; background: var(--surface-2); white-space: nowrap; }
+  .due.late { color: var(--accent-text); }
+  .todo .tap .t { word-break: break-word; }
+  /* Kalender Monat */
+  .tc-grid, .dp-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .tc-grid .wd, .dp-grid .wd { text-align: center; font-size: 12px; color: var(--muted); padding-bottom: 4px; }
+  .tc-d { aspect-ratio: 1 / 1.05; border-radius: 10px; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 2px solid transparent; }
+  .tc-d.empty { visibility: hidden; }
+  .tc-d .n { font-weight: 700; font-size: 14px; }
+  .tc-d .dots { display: flex; gap: 2px; height: 6px; align-items: center; }
+  .tc-d .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .tc-d .dots i.dn { background: var(--muted); opacity: .6; }
+  .tc-d .dots i.lt { background: var(--danger); }
+  .tc-d .dots b { font-size: 9px; color: var(--muted); line-height: 1; }
+  .tc-d.today .n { color: var(--accent-text); }
+  .tc-d.sel { border-color: var(--accent); }
+  /* Kalender Woche */
+  .tc-week { display: flex; flex-direction: column; gap: 6px; }
+  .tc-row { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 10px; border-radius: 12px; background: var(--surface-2); border: 2px solid transparent; min-height: 54px; }
+  .tc-row.sel { border-color: var(--accent); }
+  .tc-dl { width: 34px; flex: none; text-align: center; display: flex; flex-direction: column; }
+  .tc-dl b { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+  .tc-dl span { font-size: 18px; font-weight: 800; }
+  .tc-row.today .tc-dl span { color: var(--accent-text); }
+  .tc-items { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; padding-top: 2px; }
+  .tc-it { font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 6px; border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tc-it.dn { border-left-color: var(--muted); background: transparent; color: var(--muted); text-decoration: line-through; }
+  .tc-it.lt { border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+  /* Datumsauswahl */
+  .dp-d { aspect-ratio: 1; border-radius: 50%; font-weight: 700; font-size: 15px; display: grid; place-items: center; }
+  .dp-d.past { color: var(--muted); opacity: .55; }
+  .dp-d.today { box-shadow: 0 0 0 2px var(--accent) inset; }
+  .dp-d.sel { background: var(--accent); color: var(--accent-ink); opacity: 1; }
+  /* Notizen */
+  .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .note { text-align: left; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 120px; }
+  .note .nt { font-weight: 800; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note .np { font-size: 13px; color: var(--muted); line-height: 1.4; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-line; word-break: break-word; }
+  .note .nd { font-size: 11px; color: var(--muted); }
+  .note-title { width: 100%; background: none; border: 0; font-size: 22px; font-weight: 800; padding: 10px 0 6px; outline: none; color: var(--text); }
+  .note-text { width: 100%; min-height: 60dvh; background: none; border: 0; resize: none; font-size: 16px; line-height: 1.55; padding: 4px 0; outline: none; color: var(--text); }
+  .note-text:focus, .note-title:focus { outline: none !important; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
   .dialog p { margin: 0 0 18px; font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -414,8 +480,18 @@ const exMode = e => e.mode || (e.group === "Ausdauer" ? "cardio" : "weight");
 const emptySet = mode => mode === "cardio" ? { km: "", min: "" } : mode === "band" ? { band: "", reps: "" } : mode === "reps" ? { reps: "" } : mode === "time" ? { sec: "" } : { kg: "", reps: "" };
 const fmtSec = v => { const n = parseFloat(String(v ?? "").replace(",", ".")); if (!n) return "–"; return n >= 60 ? `${Math.floor(n / 60)}:${String(Math.round(n % 60)).padStart(2, "0")} min` : `${Math.round(n)} s`; };
 const setFilled = st => ["kg", "reps", "band", "km", "min", "sec"].some(f => st[f] !== undefined && String(st[f]).trim() !== "");
-const paceOf = (km, min) => { const k = parseFloat(String(km || "").replace(",", ".")), m = parseFloat(String(min || "").replace(",", ".")); if (!k || !m) return ""; const p = m / k, mm = Math.floor(p), ss = Math.round((p - mm) * 60); return `${ss === 60 ? mm + 1 : mm}:${String(ss === 60 ? 0 : ss).padStart(2, "0")}`; };
-const setTxt = (st, mode) => mode === "cardio" ? `${st.km || "–"} km${st.min ? ` in ${st.min} min` : ""}${paceOf(st.km, st.min) ? ` (${paceOf(st.km, st.min)}/km)` : ""}`
+// Dauer lesen: "25:30" = 25,5 min, "1:05:00" = 65 min, "7,5" = 7,5 min
+const parseDur = v => {
+  const t = String(v ?? "").trim().replace(",", "."); if (!t) return 0;
+  if (t.includes(":")) { const p = t.split(":").map(x => parseFloat(x) || 0); return p.length === 3 ? p[0] * 60 + p[1] + p[2] / 60 : p[0] + p[1] / 60; }
+  const n = parseFloat(t); return isNaN(n) ? 0 : n;
+};
+// Beim Tippen automatisch Doppelpunkte setzen: 2530 → 25:30, 10500 → 1:05:00
+const fmtDurTyping = raw => { const d = String(raw).replace(/\D/g, "").slice(0, 6); if (d.length <= 2) return d;
+  return d.length <= 4 ? `${d.slice(0, -2)}:${d.slice(-2)}` : `${d.slice(0, -4)}:${d.slice(-4, -2)}:${d.slice(-2)}`; };
+const durTxt = v => { const t = String(v ?? "").trim(); return !t ? "" : t.includes(":") ? t : `${t} min`; };
+const paceOf = (km, min) => { const k = parseFloat(String(km || "").replace(",", ".")), m = parseDur(min); if (!k || !m) return ""; const p = m / k, mm = Math.floor(p), ss = Math.round((p - mm) * 60); return `${ss === 60 ? mm + 1 : mm}:${String(ss === 60 ? 0 : ss).padStart(2, "0")}`; };
+const setTxt = (st, mode) => mode === "cardio" ? `${st.km || "–"} km${st.min ? ` in ${durTxt(st.min)}` : ""}${paceOf(st.km, st.min) ? ` (${paceOf(st.km, st.min)}/km)` : ""}`
   : mode === "band" ? `${st.band ? st.band + " × " : ""}${st.reps || "–"}` : mode === "reps" ? `${st.reps || "–"} Wdh.` : mode === "time" ? fmtSec(st.sec)
   : `${st.kg ? st.kg + " kg × " : ""}${st.reps || "–"}`;
 
@@ -495,7 +571,7 @@ const S = {
   sheetGroup: null,
   unsubToday: null, curToday: todayKey(),
   prevSame: null,           // letztes gleiches Training (für „Wie letzten Montag“)
-  todos: [], unsubTodos: null, todoWhen: "heute",
+  todos: [], unsubTodos: null, notes: [], unsubNotes: null,
 };
 const userRef = () => doc(db, "users", S.uid);
 const dayRef = k => doc(db, "users", S.uid, "days", k);
@@ -521,6 +597,7 @@ onAuthStateChanged(auth, async user => {
     S.uid = null;
     if (S.unsubToday) S.unsubToday();
     if (S.unsubTodos) S.unsubTodos();
+    if (S.unsubNotes) S.unsubNotes();
     $("#login").classList.remove("hidden"); $("#app").classList.add("hidden"); $("#nav").classList.add("hidden");
     return;
   }
@@ -547,6 +624,7 @@ onAuthStateChanged(auth, async user => {
   await loadRange(keyOf(addDays(new Date(), -120)), todayKey());
   watchToday();
   watchTodos();
+  watchNotes();
   loadAllWo();
   applyPending();
   writePushCfg();
@@ -820,7 +898,7 @@ function renderTrain() {
   }
   if (plan.type === "gym") {
     body += w.exercises.length ? `<div id="exList">${w.exercises.map((e, i) => exHTML(e, i)).join("")}</div>
-      ${w.exercises.length > 1 ? `<div class="note" style="text-align:center">Tipp: Übung gedrückt halten oder am ⠿ ziehen, um die Reihenfolge zu ändern.</div>` : ""}` :
+      ${w.exercises.length > 1 ? `<div class="note" style="text-align:center">Tipp: Übung ca. 1,5 Sek. gedrückt halten oder direkt am ⠿ ziehen, um die Reihenfolge zu ändern.</div>` : ""}` :
       `<div class="card muted" style="text-align:center;padding:26px 16px">Noch keine Übung eingetragen.<br>Wähl unten Übungen für ${esc(plan.name)} aus.</div>`;
     body += `<button class="btn primary block" style="margin-top:12px" data-action="addex">+ Übung hinzufügen</button>
       <h2>Sonstiges</h2>
@@ -833,7 +911,7 @@ function renderTrain() {
     const pace = paceTxt(w.run);
     body += `<div class="card"><div class="two">
       <div class="field" style="margin-top:0"><label>Distanz (km)</label><input class="text-in" inputmode="decimal" data-in="run.km" value="${esc(w.run?.km)}"></div>
-      <div class="field" style="margin-top:0"><label>Zeit (Minuten)</label><input class="text-in" inputmode="decimal" data-in="run.minutes" value="${esc(w.run?.minutes)}"></div></div>
+      <div class="field" style="margin-top:0"><label>Zeit (mm:ss)</label><input class="text-in" inputmode="numeric" placeholder="mm:ss" data-dur data-in="run.minutes" value="${esc(w.run?.minutes)}"></div></div>
       <div class="field"><label>Pace</label><div id="pace" style="font-weight:700;font-size:18px">${pace}</div></div>
       <div class="field"><label>Notiz</label><textarea data-in="run.note">${esc(w.run?.note)}</textarea></div></div>`;
   } else {
@@ -856,14 +934,14 @@ function renderTrain() {
 }
 const exHTML = (e, i) => {
   const mode = exMode(e);
-  const head = mode === "cardio" ? `<div class="h">Satz</div><div class="h">Distanz (km)</div><div class="h">Zeit (min)</div><div></div>`
+  const head = mode === "cardio" ? `<div class="h">Satz</div><div class="h">Distanz (km)</div><div class="h">Zeit (mm:ss)</div><div></div>`
     : mode === "band" ? `<div class="h">Satz</div><div class="h">Band / Stufe</div><div class="h">Wdh.</div><div></div>`
     : mode === "reps" ? `<div class="h">Satz</div><div class="h" style="grid-column:span 2">Wiederholungen</div><div></div>`
     : mode === "time" ? `<div class="h">Satz</div><div class="h" style="grid-column:span 2">Zeit (Sekunden)</div><div></div>`
     : `<div class="h">Satz</div><div class="h">Gewicht (kg)</div><div class="h">Wdh.</div><div></div>`;
   const row = (st, j) => {
     const f = (field, im, ph = "–", extra = "") => `<input class="num-in" ${im ? `inputmode="${im}"` : ""} placeholder="${ph}" data-set="${i}.${j}.${field}" value="${esc(st[field])}" ${extra}>`;
-    const cells = mode === "cardio" ? f("km", "decimal") + f("min", "decimal")
+    const cells = mode === "cardio" ? f("km", "decimal") + f("min", "numeric", "mm:ss", "data-dur")
       : mode === "band" ? f("band", "", "z. B. Grün", 'style="text-align:left;padding-left:10px"') + f("reps", "numeric")
       : mode === "reps" ? f("reps", "numeric", "–", 'style="grid-column:span 2"')
       : mode === "time" ? f("sec", "numeric", "z. B. 60", 'style="grid-column:span 2"')
@@ -884,7 +962,7 @@ const exHTML = (e, i) => {
   </div>`;
 };
 function paceTxt(r) {
-  const km = parseFloat(String(r?.km || "").replace(",", ".")), min = parseFloat(String(r?.minutes || "").replace(",", "."));
+  const km = parseFloat(String(r?.km || "").replace(",", ".")), min = parseDur(r?.minutes);
   if (!km || !min) return "–";
   const p = min / km, mm = Math.floor(p), ss = Math.round((p - mm) * 60);
   return `${mm}:${pad(ss === 60 ? 0 : ss)} min/km`;
@@ -944,7 +1022,7 @@ function showSheet(tall = false) {
   $("#sheet").classList.toggle("tall", tall);
   $("#sheet").classList.remove("hidden"); $("#sheetBg").classList.remove("hidden");
 }
-function closeSheet() { $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
+function closeSheet() { if (S.noteOpen) closeNote(); $("#sheet").classList.add("hidden"); $("#sheetBg").classList.add("hidden"); $("#sheet").classList.remove("tall"); }
 async function pickExercise(name) {
   const mode = defaultMode(S.sheetGroup, name);
   const n = mode === "cardio" ? 1 : 3;
@@ -970,9 +1048,9 @@ const exSets = e => (e.sets || []).filter(x => numv(x.reps) > 0 || numv(x.km) > 
 function cardioEntries(all) {
   const out = [];
   for (const w of all) {
-    if (numv(w.run?.km) > 0) out.push({ date: w.date, name: "Laufen", km: numv(w.run.km), min: numv(w.run.minutes) });
+    if (numv(w.run?.km) > 0) out.push({ date: w.date, name: "Laufen", km: numv(w.run.km), min: parseDur(w.run.minutes) });
     for (const e of w.exercises || []) if (exMode(e) === "cardio") {
-      const km = (e.sets || []).reduce((a, x) => a + numv(x.km), 0), min = (e.sets || []).reduce((a, x) => a + numv(x.min), 0);
+      const km = (e.sets || []).reduce((a, x) => a + numv(x.km), 0), min = (e.sets || []).reduce((a, x) => a + parseDur(x.min), 0);
       if (km > 0) out.push({ date: w.date, name: e.name, km, min });
     }
   }
@@ -981,14 +1059,14 @@ function cardioEntries(all) {
 
 async function loadAllWo() {
   try {
-    const q = query(collection(db, "users", S.uid, "workouts"), orderBy("date", "desc"), limit(500));
+    const q = query(collection(db, "users", S.uid, "workouts"), orderBy("date", "desc"), limit(3000));
     S.allWo = (await getDocs(q)).docs.map(d => ({ id: d.id, ...d.data() })).filter(w => w.date).sort((a, b) => a.date.localeCompare(b.date));
   } catch { S.allWo = S.allWo || []; }
 }
 async function loadPerf() {
   renderPerf();
   await loadAllWo();
-  const from = keyOf(addDays(new Date(), -400));
+  const from = "2000-01-01";
   if (!S.daysFull) { try { await loadRange(from, todayKey()); S.daysFull = true; } catch {} }
   renderPerf();
 }
@@ -1173,7 +1251,7 @@ function renderPerf() {
     html += `<div class="card perf-card"><div class="perf-head"><div><div class="k">Ausdauer</div><div class="v">${fmtN(km, 1)} km</div><div class="d">${runs.length} Einheiten im Zeitraum</div></div>
       <div style="text-align:right"><div class="k">Beste Pace</div><div class="v" style="font-size:20px">${bestPace ? pf(bestPace) : "–"}</div><div class="d">min/km</div></div></div>
       ${barChart(days.map(([k, d]) => ({ label: dShort(k), y: d.km, showVal: true,
-        tip: `${dShort(k)}: ${fmtN(d.km, 1)} km${d.min ? ` in ${fmtN(d.min, 0)} min (${pf(d.min / d.km)} min/km)` : ""} · ${[...new Set(d.names)].join(", ")}` })), { dec: 1 })}</div>`;
+        tip: `${dShort(k)}: ${fmtN(d.km, 1)} km${d.min ? ` in ${paceOf(1, d.min)} min (${pf(d.min / d.km)} min/km)` : ""} · ${[...new Set(d.names)].join(", ")}` })), { dec: 1 })}</div>`;
   }
 
   /* --- 6. Konsistenz: Quote pro Woche --- */
@@ -1258,13 +1336,17 @@ document.addEventListener("pointerdown", e => {
   const onGrip = !!e.target.closest(".grip");
   if (!onGrip && e.target.closest("input, textarea, button, select")) return;
   if (onGrip) { e.preventDefault(); startDrag(card, e.clientY); return; }
-  pend = { card, x: e.clientX, y: e.clientY, t: setTimeout(() => { if (pend) { const p = pend; pend = null; startDrag(p.card, p.y); } }, 380) };
+  const HOLD = 1500;   // so lange gedrückt halten (ms), bis die Übung verschoben werden kann
+  pend = { card, x: e.clientX, y: e.clientY,
+    h: setTimeout(() => card.classList.add("holding"), 250),
+    t: setTimeout(() => { if (pend) { const p = pend; pend = null; p.card.classList.remove("holding"); startDrag(p.card, p.y); } }, HOLD) };
 });
 document.addEventListener("pointermove", e => {
-  if (pend && Math.hypot(e.clientX - pend.x, e.clientY - pend.y) > 8) { clearTimeout(pend.t); pend = null; }
+  if (pend && Math.hypot(e.clientX - pend.x, e.clientY - pend.y) > 10) cancelPend();
   if (drag) moveDrag(e.clientY);
 });
-const endPointer = () => { if (pend) { clearTimeout(pend.t); pend = null; } if (drag) endDrag(); };
+function cancelPend() { if (!pend) return; clearTimeout(pend.t); clearTimeout(pend.h); pend.card.classList.remove("holding"); pend = null; }
+const endPointer = () => { cancelPend(); if (drag) endDrag(); };
 document.addEventListener("pointerup", endPointer);
 document.addEventListener("pointercancel", endPointer);
 document.addEventListener("touchmove", e => { if (drag) e.preventDefault(); }, { passive: false });
@@ -1373,25 +1455,38 @@ function celebrate(title, text) {
   setTimeout(() => { b.remove(); box.remove(); }, 4400);
 }
 // Pokale: Meilensteine, die man freischaltet
+const TIER = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Unsterblich", "Mythos"];
+const TIER_COL = ["#CD7F32", "#B8BCC6", "#FFC400", "#7FD1C7", "#7EC8FF", "#C77DFF", "#FF5E57", "#FF8A00", "#FFD84D", "#2EE59D", "#FF4FA3"];
 function achievements(all) {
   const trainings = all.filter(w => hasContent(w)).length;
   const km = cardioEntries(all).reduce((a, r) => a + r.km, 0);
-  let longest = 0, cur = 0;
+  let longest = 0, cur = 0, prevK = null, fullDays = 0, weightDays = 0;
   const keys = Object.keys(S.days).sort();
-  let prevK = null;
   for (const k of keys) {
-    const ok = dayInfo(k).complete;
+    const ok = dayInfo(k).complete; if (ok) fullDays++;
+    const wt = S.days[k]?.weight; if (wt && (wt.am || wt.pm)) weightDays++;
     if (ok && prevK && keyOf(addDays(fromKey(prevK), 1)) === k && cur > 0) cur++; else cur = ok ? 1 : 0;
     longest = Math.max(longest, cur); prevK = k;
   }
   const prCount = all.reduce((a, w) => a + (w.prs || []).length, 0);
-  const list = [
-    ["🎯", "Erstes Training", trainings, 1], ["💪", "10 Trainings", trainings, 10], ["🔥", "50 Trainings", trainings, 50], ["👑", "100 Trainings", trainings, 100],
-    ["📅", "7 Tage Serie", longest, 7], ["🗓️", "30 Tage Serie", longest, 30], ["🌟", "100 Tage Serie", longest, 100],
-    ["👟", "10 km gelaufen", km, 10], ["🏃", "50 km gelaufen", km, 50], ["🚀", "100 km gelaufen", km, 100],
-    ["🏆", "Erste Bestleistung", prCount, 1], ["🥇", "10 Bestleistungen", prCount, 10], ["💎", "25 Bestleistungen", prCount, 25],
-  ];
-  return { list: list.map(([i, n, v, goal]) => ({ i, n, v, goal, done: v >= goal })), trainings, km, longest, prCount };
+  const tons = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + exVolume(e), 0), 0) / 1000;
+  const exCount = new Set(all.flatMap(w => (w.exercises || []).filter(e => (e.sets || []).some(setFilled)).map(e => e.name))).size;
+  const todosDone = S.todos.filter(t => t.done).length;
+  const firsts = [keys[0], all[0]?.date].filter(Boolean).sort();
+  const daysIn = firsts.length ? Math.floor((Date.now() - fromKey(firsts[0]).getTime()) / 864e5) + 1 : 0;
+  const cats = [
+    { i: "💪", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500] },
+    { i: "🔥", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
+    { i: "✅", n: "Erfüllte Tage", v: fullDays, u: "", goals: [1, 7, 30, 100, 200, 365, 500, 730, 1000, 1500, 1825] },
+    { i: "🏆", n: "Bestleistungen", v: prCount, u: "", goals: [1, 5, 10, 25, 50, 100, 200, 350, 500, 750] },
+    { i: "🏃", n: "Ausdauer", v: km, u: " km", dec: 1, goals: [10, 25, 50, 100, 250, 500, 1000, 2000, 3000, 5000] },
+    { i: "🏋️", n: "Bewegtes Gewicht", v: tons, u: " t", dec: 1, goals: [1, 10, 25, 50, 100, 250, 500, 1000, 2000, 3000] },
+    { i: "⚖️", n: "Gewicht eingetragen", v: weightDays, u: " Tage", goals: [7, 30, 100, 200, 365, 730, 1095, 1460, 1825] },
+    { i: "🧪", n: "Übungen ausprobiert", v: exCount, u: "", goals: [5, 10, 20, 35, 50, 75, 100] },
+    { i: "📝", n: "To-Dos erledigt", v: todosDone, u: "", goals: [10, 50, 100, 250, 500, 1000, 2000, 3500, 5000] },
+    { i: "📆", n: "Dabei seit", v: daysIn, u: " Tagen", goals: [7, 30, 100, 182, 365, 730, 1095, 1460, 1825, 2555, 3650] },
+  ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; return { ...c, lvl, next: c.goals[lvl] ?? null, prev: c.goals[lvl - 1] ?? 0 }; });
+  return { cats, trainings, km, longest, prCount, unlocked: cats.reduce((a, c) => a + c.lvl, 0), total: cats.reduce((a, c) => a + c.goals.length, 0) };
 }
 function renderAwards(all) {
   const a = achievements(all);
@@ -1408,11 +1503,23 @@ function renderAwards(all) {
       <div class="kpi"><b>${a.trainings}</b><span>Trainings</span></div>
       <div class="kpi"><b>${a.longest}</b><span>längste Serie</span></div>
       <div class="kpi"><b>${a.prCount}</b><span>Bestleistungen</span></div></div>
-    <h2>Pokale · ${a.list.filter(x => x.done).length}/${a.list.length}</h2>
-    <div class="badges">${a.list.map(b => `<div class="badge ${b.done ? "on" : ""}">
-        <div class="bi">${b.i}</div><div class="bn">${esc(b.n)}</div>
-        ${b.done ? `<div class="bs">geschafft</div>` : `<div class="bar"><i style="width:${Math.min(100, b.v / b.goal * 100)}%"></i></div><div class="bs">${fmtN(Math.min(b.v, b.goal), b.n.includes("km") ? 1 : 0)} / ${b.goal}</div>`}
-      </div>`).join("")}</div>
+    <h2>Pokale · ${a.unlocked}/${a.total} freigeschaltet</h2>
+    <div class="tasks">${a.cats.map(c => {
+      const pct = c.next ? Math.min(100, (c.v - c.prev) / (c.next - c.prev) * 100) : 100;
+      const col = c.lvl ? TIER_COL[c.lvl - 1] : "var(--muted)";
+      return `<div class="card ach">
+        <div class="ach-top">
+          <div class="ach-ico ${c.lvl ? "" : "off"}" style="--tc:${col}">${c.i}</div>
+          <div style="min-width:0;flex:1">
+            <div class="ach-n">${esc(c.n)}</div>
+            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? `${TIER[c.lvl - 1]} · Stufe ${c.lvl}/${c.goals.length}` : "Noch keine Stufe"}</div>
+          </div>
+          <div class="ach-v">${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small></div>
+        </div>
+        <div class="ach-bar"><i style="width:${pct}%;background:${c.next ? "var(--accent)" : col}"></i></div>
+        <div class="ach-f"><span>${c.next ? `Nächste Stufe: <b>${TIER[c.lvl]}</b> bei ${fmtN(c.next, 0)}${c.u}` : "🏅 Alle Stufen geschafft – Respekt!"}</span>
+          <span class="ach-dots">${c.goals.map((g, i) => `<i style="background:${i < c.lvl ? TIER_COL[i] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`).join("")}</span></div>
+      </div>`; }).join("")}</div>
     <h2>Deine Bestwerte</h2>`;
   html += rl.length ? `<div class="tasks">${rl.map(r => `<div class="todo rec">
       <span class="medal">🏆</span>
@@ -1429,7 +1536,8 @@ function watchTodos() {
   S.unsubTodos = onSnapshot(todoCol(), snap => {
     S.todos = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.created || "").localeCompare(b.created || ""));
     updateTodoBadge();
-    if (S.tab === "todo") renderTodo();
+    if (S.tab === "todo" && !S.noteOpen && document.activeElement?.id !== "todoIn") renderTodo();
+    else if (S.tab === "todo" && !S.noteOpen) { const v = $("#todoIn").value; renderTodo(); const i = $("#todoIn"); i.value = v; i.focus(); }
     if (S.tab === "start") renderStart();
     saveReminderState();
   });
@@ -1443,46 +1551,191 @@ function updateTodoBadge() {
   const n = todosForToday().filter(t => !t.done).length, b = $("#todoBadge");
   b.textContent = n; b.classList.toggle("hidden", !n);
 }
+const fmtDue = k => { const tk = todayKey(); if (k === tk) return "Heute"; if (k === keyOf(addDays(new Date(), 1))) return "Morgen";
+  const d = fromKey(k); return `${WD[d.getDay()]}, ${d.getDate()}. ${MONTHS[d.getMonth()].slice(0, 3)}.`; };
 const todoHTML = t => {
   const tk = todayKey();
-  let sub = "";
-  if (!t.done && t.due && t.due < tk) { const d = fromKey(t.due); sub = `<div class="s late">seit ${WD[d.getDay()]}, ${d.getDate()}.${d.getMonth() + 1}. offen</div>`; }
-  else if (!t.done && t.due && t.due > tk) { const d = fromKey(t.due); sub = `<div class="s">${t.due === keyOf(addDays(new Date(), 1)) ? "morgen" : `${WD[d.getDay()]}, ${d.getDate()}.${d.getMonth() + 1}.`}</div>`; }
+  const late = !t.done && t.due && t.due < tk;
+  const sub = t.due ? `<button class="due ${late ? "late" : ""}" data-action="tododate" data-id="${t.id}">📅 ${late ? `seit ${fmtDue(t.due)} offen` : fmtDue(t.due)}</button>` : "";
   return `<div class="todo ${t.done ? "done" : ""}">
-    <button class="tap" data-action="todotoggle" data-id="${t.id}"><span class="box-check">${CHECK}</span>
-      <span style="min-width:0"><div class="t">${esc(t.text)}</div>${sub}</span></button>
+    <button class="tap" style="flex:none" data-action="todotoggle" data-id="${t.id}"><span class="box-check">${CHECK}</span></button>
+    <div class="tcol"><button class="t ttext" data-action="todotoggle" data-id="${t.id}">${esc(t.text)}</button>${sub}</div>
     <button class="mini" data-action="tododel" data-id="${t.id}" title="Löschen">${ICON.trash}</button></div>`;
 };
 function renderTodo() {
+  const view = S.todoView || "list";
+  const sw = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="todoview" data-v="${v}">${l}</button>`;
+  let html = `<header class="top"><div><div class="eyebrow">To-Do</div><h1>${view === "notes" ? "Notizen" : view === "cal" ? "Kalender" : "Was noch ansteht"}</h1></div></header>
+    <div class="switch three">${sw("list", "☑️ Aufgaben")}${sw("cal", "📅 Kalender")}${sw("notes", "📝 Notizen")}</div>`;
+  if (view === "notes") html += renderNotes();
+  else {
+    if (!S.todoDue) S.todoDue = todayKey();
+    html += `<div class="card" style="margin-top:12px">
+      <div class="add-row">
+        <input class="text-in" id="todoIn" placeholder="Neue Aufgabe …" enterkeyhint="done" value="${esc(S.todoDraft || "")}">
+        <button class="btn primary plus" data-action="todoadd" title="Hinzufügen">+</button>
+      </div>
+      <div class="when">
+        <button class="chip ${S.todoDue === todayKey() ? "accent" : ""}" data-action="duequick" data-v="0">Heute</button>
+        <button class="chip ${S.todoDue === keyOf(addDays(new Date(), 1)) ? "accent" : ""}" data-action="duequick" data-v="1">Morgen</button>
+        <button class="chip ${S.todoDue > keyOf(addDays(new Date(), 1)) ? "accent" : ""}" data-action="duepick">📅 ${S.todoDue > keyOf(addDays(new Date(), 1)) ? fmtDue(S.todoDue) : "Datum …"}</button>
+      </div></div>`;
+    html += view === "cal" ? renderTodoCal() : renderTodoList();
+  }
+  $("#view-todo").innerHTML = html;
+}
+function renderTodoList() {
   const tk = todayKey();
   const today = todosForToday();
   const open = today.filter(t => !t.done), doneToday = today.filter(t => t.done);
   const later = S.todos.filter(t => !t.done && t.due && t.due > tk).sort((a, b) => a.due.localeCompare(b.due));
-  const whenChip = (v, l) => `<button class="chip ${S.todoWhen === v ? "accent" : ""}" data-action="todowhen" data-v="${v}">${l}</button>`;
-  $("#view-todo").innerHTML = `
-    <header class="top"><div><div class="eyebrow">To-Do</div><h1>Was noch ansteht</h1></div></header>
-    <div class="card">
-      <div class="add-row">
-        <input class="text-in" id="todoIn" placeholder="Neue Aufgabe …" enterkeyhint="done">
-        <button class="btn primary plus" data-action="todoadd" title="Hinzufügen">+</button>
-      </div>
-      <div class="when">${whenChip("heute", "Heute")}${whenChip("morgen", "Morgen")}${whenChip("datum", "Datum …")}
-        <input type="date" id="todoDate" class="text-in ${S.todoWhen === "datum" ? "" : "hidden"}" style="padding:6px 10px;width:auto" value="${S.todoDate || keyOf(addDays(new Date(), 2))}"></div>
-    </div>
-    <h2>Heute · ${open.length} offen</h2>
+  return `<h2>Heute · ${open.length} offen</h2>
     <div class="tasks">${open.length ? open.map(todoHTML).join("") : `<div class="card empty">Nichts offen – stark! 💪</div>`}</div>
     ${later.length ? `<h2>Demnächst</h2><div class="tasks">${later.map(todoHTML).join("")}</div>` : ""}
     ${doneToday.length ? `<h2>Heute erledigt</h2><div class="tasks">${doneToday.map(todoHTML).join("")}</div>` : ""}`;
 }
+
+/* ---- Kalender für To-Dos (Woche / Monat) ---- */
+const todosOn = k => S.todos.filter(t => t.due === k).sort((a, b) => (a.done - b.done) || (a.created || "").localeCompare(b.created || ""));
+function renderTodoCal() {
+  const mode = S.calMode || "month", tk = todayKey();
+  if (!S.tcSel) S.tcSel = tk;
+  const base = fromKey(S.tcRef || tk);
+  let head, body;
+  if (mode === "month") {
+    const y = base.getFullYear(), mo = base.getMonth(), daysIn = new Date(y, mo + 1, 0).getDate(), off = (new Date(y, mo, 1).getDay() + 6) % 7;
+    head = `${MONTHS[mo]} ${y}`;
+    let cells = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map(w => `<div class="wd">${w}</div>`).join("") + `<div class="tc-d empty"></div>`.repeat(off);
+    for (let d = 1; d <= daysIn; d++) {
+      const k = `${y}-${pad(mo + 1)}-${pad(d)}`, list = todosOn(k), openN = list.filter(t => !t.done).length;
+      const late = openN && k < tk;
+      cells += `<button class="tc-d ${k === tk ? "today" : ""} ${k === S.tcSel ? "sel" : ""}" data-action="tcday" data-day="${k}">
+        <span class="n">${d}</span>
+        <span class="dots">${list.slice(0, 3).map(t => `<i class="${t.done ? "dn" : late ? "lt" : ""}"></i>`).join("")}${list.length > 3 ? "<b>+</b>" : ""}</span></button>`;
+    }
+    body = `<div class="tc-grid">${cells}</div>`;
+  } else {
+    const mon = addDays(base, -((base.getDay() + 6) % 7)), sun = addDays(mon, 6);
+    head = `${mon.getDate()}. ${MONTHS[mon.getMonth()].slice(0, 3)}. – ${sun.getDate()}. ${MONTHS[sun.getMonth()].slice(0, 3)}. ${sun.getFullYear()}`;
+    body = `<div class="tc-week">${[...Array(7)].map((_, i) => {
+      const d = addDays(mon, i), k = keyOf(d), list = todosOn(k);
+      return `<button class="tc-row ${k === tk ? "today" : ""} ${k === S.tcSel ? "sel" : ""}" data-action="tcday" data-day="${k}">
+        <span class="tc-dl"><b>${WD[d.getDay()]}</b><span>${d.getDate()}</span></span>
+        <span class="tc-items">${list.length ? list.slice(0, 3).map(t => `<span class="tc-it ${t.done ? "dn" : !t.done && k < tk ? "lt" : ""}">${esc(t.text)}</span>`).join("")
+          + (list.length > 3 ? `<span class="muted" style="font-size:12px">+ ${list.length - 3} weitere</span>` : "") : `<span class="muted" style="font-size:13px">–</span>`}</span></button>`;
+    }).join("")}</div>`;
+  }
+  const sel = todosOn(S.tcSel);
+  return `<div class="card" style="margin-top:12px">
+      <div class="seg" style="margin-bottom:12px"><button class="chip ${mode === "week" ? "accent" : ""}" data-action="calmode" data-v="week">Woche</button>
+        <button class="chip ${mode === "month" ? "accent" : ""}" data-action="calmode" data-v="month">Monat</button>
+        <button class="chip" data-action="tctoday" style="margin-left:auto">Heute</button></div>
+      <div class="cal-head"><button class="icon-btn" data-action="tcnav" data-v="-1">${ICON.left}</button><b>${head}</b>
+        <button class="icon-btn" data-action="tcnav" data-v="1">${ICON.right}</button></div>
+      ${body}
+    </div>
+    <h2>${fmtDate(fromKey(S.tcSel))}</h2>
+    <div class="tasks">${sel.length ? sel.map(todoHTML).join("") : `<div class="card empty">Nichts geplant.</div>`}</div>
+    <button class="btn block" style="margin-top:10px;border-style:dashed;color:var(--accent-text)" data-action="tcadd">+ Aufgabe am ${fromKey(S.tcSel).getDate()}.${fromKey(S.tcSel).getMonth() + 1}. hinzufügen</button>`;
+}
+
+/* ---- Eigene Datumsauswahl (passt immer auf den Bildschirm) ---- */
+function openDatePicker(cur, onPick, title = "Datum wählen") {
+  S.dp = { cur: cur || todayKey(), ref: (cur || todayKey()).slice(0, 7) + "-01", onPick, title };
+  renderDatePicker();
+}
+function renderDatePicker() {
+  const dp = S.dp, base = fromKey(dp.ref), y = base.getFullYear(), mo = base.getMonth(), tk = todayKey();
+  const daysIn = new Date(y, mo + 1, 0).getDate(), off = (new Date(y, mo, 1).getDay() + 6) % 7;
+  let cells = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map(w => `<div class="wd">${w}</div>`).join("") + `<div></div>`.repeat(off);
+  for (let d = 1; d <= daysIn; d++) {
+    const k = `${y}-${pad(mo + 1)}-${pad(d)}`;
+    cells += `<button class="dp-d ${k === tk ? "today" : ""} ${k === dp.cur ? "sel" : ""} ${k < tk ? "past" : ""}" data-action="dppick" data-day="${k}">${d}</button>`;
+  }
+  const q = (n, l) => `<button class="chip" data-action="dppick" data-day="${keyOf(addDays(new Date(), n))}">${l}</button>`;
+  $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-size:18px">${esc(dp.title)}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div></div>
+    <div class="seg" style="margin:6px 0 14px">${q(0, "Heute")}${q(1, "Morgen")}${q(2, "Übermorgen")}${q(7, "In 1 Woche")}${q(14, "In 2 Wochen")}</div>
+    <div class="cal-head"><button class="icon-btn" data-action="dpnav" data-v="-1">${ICON.left}</button><b>${MONTHS[mo]} ${y}</b>
+      <button class="icon-btn" data-action="dpnav" data-v="1">${ICON.right}</button></div>
+    <div class="dp-grid">${cells}</div>`;
+  showSheet();
+}
+
+/* ---- Notizen ---- */
+const noteCol = () => collection(db, "users", S.uid, "notes");
+function watchNotes() {
+  if (S.unsubNotes) S.unsubNotes();
+  S.unsubNotes = onSnapshot(noteCol(), snap => {
+    S.notes = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.updated || "").localeCompare(a.updated || ""));
+    if (S.tab === "todo" && S.todoView === "notes" && !S.noteOpen) renderTodo();
+  });
+}
+function renderNotes() {
+  const q = (S.noteQ || "").toLowerCase();
+  const list = (S.notes || []).filter(n => !q || (n.title + " " + n.text).toLowerCase().includes(q));
+  const ago = iso => { if (!iso) return ""; const d = new Date(iso), k = keyOf(d); return (k === todayKey() ? "Heute" : `${d.getDate()}.${d.getMonth() + 1}.${String(d.getFullYear()).slice(2)}`) + `, ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+  return `<div class="add-row" style="margin-top:12px">
+      <input class="text-in" id="noteQ" placeholder="🔍 Notizen durchsuchen …" value="${esc(S.noteQ || "")}">
+      <button class="btn primary plus" data-action="notenew" title="Neue Notiz">+</button></div>
+    ${list.length ? `<div class="notes">${list.map(n => `<button class="card note" data-action="noteopen" data-id="${n.id}">
+        <div class="nt">${n.pinned ? "📌 " : ""}${esc(n.title || "Ohne Titel")}</div>
+        <div class="np">${esc((n.text || "").slice(0, 160)) || "<span class='muted'>Leer</span>"}</div>
+        <div class="nd">${ago(n.updated)}</div></button>`).join("")}</div>`
+      : `<div class="card empty" style="margin-top:12px">${q ? "Nichts gefunden." : "Noch keine Notizen.<br>Tipp auf + für deine erste Notiz."}</div>`}`;
+}
+async function newNote() {
+  try { const r = await addDoc(noteCol(), { title: "", text: "", updated: new Date().toISOString() }); openNote(r.id, true); }
+  catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+}
+function openNote(id, fresh = false) {
+  const n = (S.notes || []).find(x => x.id === id) || { id, title: "", text: "" };
+  S.noteOpen = id;
+  $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
+      <button class="mini" data-action="closesheet" title="Fertig">${ICON.left}</button>
+      <span class="muted" id="noteSaved" style="font-size:12px;flex:1">Gespeichert</span>
+      <button class="mini ${n.pinned ? "on" : ""}" data-action="notepin" data-id="${id}" title="Anheften">📌</button>
+      <button class="mini" data-action="notedel" data-id="${id}" title="Löschen">${ICON.trash}</button></div></div>
+    <input class="note-title" id="noteTitle" placeholder="Titel" value="${esc(n.title)}">
+    <textarea class="note-text" id="noteText" placeholder="Schreib los …">${esc(n.text)}</textarea>`;
+  showSheet(true);
+  setTimeout(() => (fresh ? $("#noteTitle") : $("#noteText")).focus(), 60);
+}
+let noteT;
+function saveNoteSoon() {
+  const id = S.noteOpen; if (!id) return;
+  $("#noteSaved").textContent = "Speichert …";
+  clearTimeout(noteT);
+  noteT = setTimeout(async () => {
+    const data = { title: $("#noteTitle")?.value ?? "", text: $("#noteText")?.value ?? "", updated: new Date().toISOString() };
+    try { await updateDoc(doc(db, "users", S.uid, "notes", id), data); const e = $("#noteSaved"); if (e) e.textContent = "Gespeichert ✓"; }
+    catch { const e = $("#noteSaved"); if (e) e.textContent = "Nicht gespeichert – offline?"; }
+  }, 500);
+}
+async function closeNote() {
+  const id = S.noteOpen; if (!id) return;
+  clearTimeout(noteT);
+  const title = $("#noteTitle")?.value ?? "", text = $("#noteText")?.value ?? "";
+  S.noteOpen = null;
+  try {
+    const empty = !title.trim() && !text.trim(), updated = new Date().toISOString();
+    S.notesAll = S.notes || [];
+    S.notes = S.notesAll.filter(n => n.id !== id);
+    const old = (S.notesAll || []).find(n => n.id === id);
+    if (!empty) { S.notes.unshift({ ...(old || {}), id, title, text, updated }); S.notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)); }
+    if (empty) await deleteDoc(doc(db, "users", S.uid, "notes", id));   // leere Notiz verwerfen
+    else await updateDoc(doc(db, "users", S.uid, "notes", id), { title, text, updated });
+  } catch {}
+  renderTodo();
+}
 async function addTodo() {
   const inp = $("#todoIn"), text = inp.value.trim();
   if (!text) { inp.focus(); return; }
-  let due = todayKey();
-  if (S.todoWhen === "morgen") due = keyOf(addDays(new Date(), 1));
-  if (S.todoWhen === "datum") due = $("#todoDate").value || due;
-  inp.value = "";
+  const due = S.todoDue || todayKey();
+  inp.value = ""; S.todoDraft = "";
   try { await addDoc(todoCol(), { text, due, done: false, created: new Date().toISOString() }); }
   catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+  if (due !== todayKey() && S.todoView !== "cal") toast(`Geplant für ${fmtDue(due)}`);
   $("#todoIn")?.focus();
 }
 async function toggleTodo(id) {
@@ -1722,7 +1975,33 @@ document.addEventListener("click", async e => {
   else if (a === "todoadd") addTodo();
   else if (a === "todotoggle") toggleTodo(el.dataset.id);
   else if (a === "tododel") deleteTodo(el.dataset.id);
-  else if (a === "todowhen") { S.todoDate = $("#todoDate")?.value; const keep = $("#todoIn")?.value; S.todoWhen = el.dataset.v; renderTodo(); $("#todoIn").value = keep || ""; }
+  else if (a === "todoview") { S.todoView = el.dataset.v; renderTodo(); window.scrollTo(0, 0); }
+  else if (a === "duequick") { S.todoDraft = $("#todoIn")?.value || ""; S.todoDue = keyOf(addDays(new Date(), +el.dataset.v)); renderTodo(); }
+  else if (a === "duepick") { S.todoDraft = $("#todoIn")?.value || ""; openDatePicker(S.todoDue, k => { S.todoDue = k; renderTodo(); $("#todoIn")?.focus(); }, "Wann fällig?"); }
+  else if (a === "tododate") {
+    const t = S.todos.find(x => x.id === el.dataset.id); if (!t) return;
+    openDatePicker(t.due, async k => { try { await updateDoc(doc(db, "users", S.uid, "todos", t.id), { due: k }); toast(`Verschoben auf ${fmtDue(k)}`); } catch {} }, "Verschieben auf …");
+  }
+  else if (a === "dppick") { const f = S.dp.onPick; closeSheet(); f(el.dataset.day); }
+  else if (a === "dpnav") { const b = fromKey(S.dp.ref); S.dp.ref = keyOf(new Date(b.getFullYear(), b.getMonth() + +el.dataset.v, 1)); renderDatePicker(); }
+  else if (a === "calmode") { S.calMode = el.dataset.v; S.tcRef = S.tcSel; renderTodo(); }
+  else if (a === "tcnav") {
+    const b = fromKey(S.tcRef || todayKey()), v = +el.dataset.v;
+    S.tcRef = keyOf((S.calMode || "month") === "month" ? new Date(b.getFullYear(), b.getMonth() + v, 1) : addDays(b, v * 7));
+    renderTodo();
+  }
+  else if (a === "tctoday") { S.tcRef = S.tcSel = todayKey(); renderTodo(); }
+  else if (a === "tcday") { S.tcSel = el.dataset.day; S.todoDue = el.dataset.day < todayKey() ? todayKey() : el.dataset.day; S.todoDraft = $("#todoIn")?.value || ""; renderTodo(); }
+  else if (a === "tcadd") { S.todoDue = S.tcSel < todayKey() ? todayKey() : S.tcSel; window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => $("#todoIn")?.focus(), 250); renderTodo(); }
+  else if (a === "notenew") newNote();
+  else if (a === "noteopen") openNote(el.dataset.id);
+  else if (a === "notepin") { const n = S.notes.find(x => x.id === el.dataset.id); try { await updateDoc(doc(db, "users", S.uid, "notes", el.dataset.id), { pinned: !n?.pinned }); } catch {} el.classList.toggle("on"); }
+  else if (a === "notedel") {
+    if (!(await askYesNo("Diese Notiz wirklich löschen?"))) return;
+    const id = el.dataset.id; S.noteOpen = null; closeSheet();
+    try { await deleteDoc(doc(db, "users", S.uid, "notes", id)); } catch {}
+    toast("Notiz gelöscht");
+  }
   else if (a === "repeat") copyPrevious();
   else if (a === "plansel") { S.workout.plan = el.dataset.v; findPrevSame(); saveWorkout(true); }
   else if (a === "planedit") { S.planForm = null; openPlanEditor(); }
@@ -1782,7 +2061,9 @@ document.addEventListener("click", async e => {
 document.addEventListener("change", e => {
   if (e.target.dataset.action === "pex") { S.perfEx = e.target.value; renderPerf(); }
 
-  if (e.target.id === "todoDate") S.todoDate = e.target.value;
+  if (e.target.dataset.dur !== undefined && /^\d{1,2}$/.test(e.target.value)) {   // „25“ → „25:00“
+    e.target.value += ":00"; const ev = new Event("input", { bubbles: true }); ev.isNormalise = true; e.target.dispatchEvent(ev);
+  }
   if (e.target.dataset.set) checkPR(+e.target.dataset.set.split(".")[0]);
   if (e.target.dataset.weight) setWeight(e.target.dataset.day, e.target.dataset.key, e.target.dataset.weight, e.target.value);
   if (e.target.id === "accentPick") { setTheme({ accent: e.target.value }); openPrefs(); }
@@ -1795,7 +2076,11 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("input", e => {
   const t = e.target;
+  if (t.dataset.dur !== undefined && !e.isNormalise) { const f = fmtDurTyping(t.value); if (f !== t.value) t.value = f; }
   if (t.id === "accentPick") { window.applyTheme({ ...curTheme(), accent: t.value }); return; }
+  if (t.id === "noteTitle" || t.id === "noteText") { saveNoteSoon(); return; }
+  if (t.id === "noteQ") { S.noteQ = t.value; const pos = t.selectionStart; renderTodo(); const q = $("#noteQ"); q.focus(); q.setSelectionRange(pos, pos); return; }
+  if (t.id === "todoIn") { S.todoDraft = t.value; }
   if (t.dataset.set) {
     const [i, j, f] = t.dataset.set.split("."), st = S.workout.exercises[i].sets[j]; st[f] = t.value;
     const pr = $(`#pace-${i}-${j}`);
