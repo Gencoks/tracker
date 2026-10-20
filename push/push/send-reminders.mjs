@@ -36,9 +36,8 @@ async function handleUser(userDoc) {
   const openTasks = tasks.filter(t => !done[t.key])
     .map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, kind: t.kind === "weight" ? "weight" : "task" }));
   const todoSnap = await ref.collection("todos").where("done", "==", false).get();
-  const openTodos = todoSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-    .filter(t => !t.due || t.due <= now.date)
-    .map(t => ({ id: "todo-" + t.id, todoId: t.id, t: t.text, kind: "todo" }));
+  const dueTodos = todoSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(t => !t.due || t.due <= now.date);
+  const openTodos = dueTodos.map(t => ({ id: "todo-" + t.id, todoId: t.id, t: t.text, kind: "todo" }));
 
   // Was wurde heute schon geschickt?
   const stateRef = ref.collection("meta").doc("push");
@@ -60,6 +59,14 @@ async function handleUser(userDoc) {
       if (!done[t.key] && recent(time)) add(openTasks.filter(o => o.key === t.key));
       fired.push(id);
     }
+  }
+  // To-Dos mit eigener Erinnerungs-Uhrzeit
+  for (const t of dueTodos) {
+    if (!t.remind) continue;
+    const id = "d" + t.id + t.remind;
+    if (fired.includes(id) || toMin(t.remind) > now.min) continue;
+    if (recent(t.remind)) add(openTodos.filter(o => o.todoId === t.id));
+    fired.push(id);
   }
   await stateRef.set({ date: now.date, fired });
   if (!items.length) return;
