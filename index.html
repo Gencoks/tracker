@@ -27,6 +27,17 @@
     r.style.setProperty("--accent-text", light ? (L > 0.45 ? "color-mix(in srgb, " + accent + " 45%, #000)" : accent) : (L < 0.06 ? "#d6d6dc" : accent));
     // Sehr dunkler Akzent im Dunkelmodus / sehr heller im Hellmodus: dünner Rand, damit Kästchen & Balken sichtbar bleiben
     r.style.setProperty("--accent-edge", (!light && L < 0.06) ? "#5a5a63" : (light && L > 0.8) ? "#b9b9c2" : accent);
+    // Rang-Designs (Legende: Ranken, Mythos: Farbfluss, GOD-LEVEL: Galaxie) – Vorschau überschreibt gespeicherte Wahl
+    var c = Object.assign({}, t.cosm || {}, window.__cosmPreview || {});
+    r.classList.toggle("cosm-vines", !!c.vines);
+    r.classList.toggle("cosm-galaxy", !!c.galaxy);
+    var cols = (c.mythColors && c.mythColors.length > 1) ? c.mythColors : ["#C04DFF", "#FF4FA3", "#4CC9F0"];
+    r.classList.toggle("cosm-myth", !!c.myth);
+    var st = document.getElementById("mythStyle");
+    if (!st) { st = document.createElement("style"); st.id = "mythStyle"; document.head.appendChild(st); }
+    st.textContent = c.myth ? "@keyframes mythCycle{" + cols.concat([cols[0]]).map(function (col, i, a) { return (i / (a.length - 1) * 100).toFixed(1) + "%{--accent:" + col + "}"; }).join("") + "}"
+      + ":root.cosm-myth{--myth-grad:linear-gradient(90deg," + cols.concat([cols[0]]).join(",") + ")}" : "";
+    if (window.__onCosm) window.__onCosm(c);
     var bg = { dark: "#0e0e0f", black: "#000000", light: "#f3f3f5", white: "#ffffff" }[mode];
     var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = bg;
   };
@@ -86,6 +97,39 @@
   input, select, textarea { font: inherit; color: var(--text); }
   .hidden { display: none !important; }
 
+  /* ===== Rang-Designs ===== */
+  @property --accent { syntax: "<color>"; inherits: true; initial-value: #FFC400; }
+  /* Mythos: Akzentfarbe fließt langsam durch die gewählten Farben */
+  :root.cosm-myth { animation: mythCycle 14s linear infinite; --accent-text: var(--accent) !important; --accent-edge: var(--accent) !important; }
+  :root.cosm-myth .btn.primary, :root.cosm-myth .chip.accent { background: var(--myth-grad) 0 0 / 300% 100%; animation: mythSlide 6s linear infinite; border-color: transparent; }
+  @keyframes mythSlide { to { background-position: 300% 0; } }
+  /* Legende: Ranken mit Blättern an den Ecken der Karten, die sich im Wind bewegen */
+  :root.cosm-vines .card:not(.shine) { position: relative; }
+  :root.cosm-vines .card:not(.shine)::before, :root.cosm-vines .card:not(.shine)::after { content: ""; position: absolute; width: 92px; height: 92px; pointer-events: none;
+    background: var(--vine) no-repeat 0 0 / contain; z-index: 2; }
+  :root.cosm-vines .card:not(.shine)::before { left: -5px; top: -5px; animation: vineSway 6s ease-in-out infinite; transform-origin: 0 0; }
+  :root.cosm-vines .card:not(.shine)::after { right: -5px; bottom: -5px; width: 64px; height: 64px; transform: rotate(180deg); transform-origin: 50% 50%; animation: vineSway2 7s ease-in-out infinite; }
+  @keyframes vineSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.6deg) skewX(-1deg); } }
+  @keyframes vineSway2 { 0%, 100% { transform: rotate(180deg); } 50% { transform: rotate(181.6deg) skewX(1deg); } }
+  :root.cosm-vines .note-card::after, :root.cosm-vines .kpis .card::after { display: none; }
+  /* GOD-LEVEL: animierte Galaxie im Hintergrund */
+  #galaxy { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: none; }
+  :root.cosm-galaxy #galaxy { display: block; }
+  :root.cosm-galaxy, :root.cosm-galaxy body { background: #05040a; }
+  :root.cosm-galaxy .app { position: relative; z-index: 1; }
+  :root.cosm-galaxy .card, :root.cosm-galaxy .task, :root.cosm-galaxy .todo, :root.cosm-galaxy .rec2, :root.cosm-galaxy .kpi { background-color: color-mix(in srgb, var(--surface) 58%, transparent); border-color: rgba(255,255,255,.12); }
+  :root.cosm-galaxy nav.bottom { background: rgba(5,4,10,.72); }
+  /* Einstellungen: Rang-Designs */
+  .cosm-row { display: flex; gap: 12px; align-items: center; padding: 12px; }
+  .cosm-row .ci { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex: none; background: var(--surface-2); }
+  .cosm-row .cb { flex: 1; min-width: 0; }
+  .cosm-row .cb b { display: block; font-size: 15px; }
+  .cosm-row .cb small { color: var(--muted); font-size: 12px; line-height: 1.35; display: block; }
+  .cosm-cols { display: flex; gap: 8px; align-items: center; padding: 0 12px 12px; flex-wrap: wrap; }
+  .cosm-cols input[type=color] { width: 36px; height: 36px; border: 0; padding: 0; border-radius: 10px; background: none; }
+  .cosm-cols input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+  .cosm-cols input[type=color]::-webkit-color-swatch { border: 2px solid var(--border); border-radius: 10px; }
+
   /* Layout */
   .app { max-width: 640px; margin: 0 auto; padding: 16px 16px calc(96px + env(safe-area-inset-bottom)); }
   header.top { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 18px; }
@@ -117,8 +161,9 @@
   /* Wochenleiste */
   .week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
   .week .d { text-align: center; font-size: 11px; color: var(--muted); }
-  .week .box { margin: 4px auto 0; width: 100%; aspect-ratio: 1; max-width: 40px; border-radius: 9px; border: 2px solid var(--border); background: var(--surface); }
-  .week .box.full { background: var(--accent); border-color: var(--accent); }
+  .week .box { margin: 4px auto 0; width: 100%; aspect-ratio: 1; max-width: 40px; border-radius: 9px; border: 2px solid var(--border); background: var(--surface);
+    display: grid; place-items: center; font-size: 14px; font-weight: 700; color: var(--text); }
+  .week .box.full { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .week .box.part { border-color: var(--accent); }
   .week .box.today { outline: 2px solid var(--text); outline-offset: 2px; }
 
@@ -239,8 +284,8 @@
   .add-row { display: flex; gap: 8px; }
   .add-row .text-in { flex: 1; }
   .add-row .plus { width: 48px; flex: none; padding: 0; font-size: 24px; }
-  .when { display: flex; gap: 8px; margin-top: 10px; }
-  .when .chip { cursor: pointer; }
+  .when { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .when .chip { cursor: pointer; white-space: nowrap; padding: 6px 11px; }
   .todo { display: flex; align-items: center; gap: 12px; padding: 12px 8px 12px 14px; border-radius: var(--radius);
     background: var(--surface); border: 1px solid var(--border); }
   .todo .tap { display: flex; align-items: center; gap: 14px; flex: 1; text-align: left; min-width: 0; }
@@ -415,8 +460,21 @@
   .dp-d.sel { background: var(--accent); color: var(--accent-ink); opacity: 1; }
   /* Notizen */
   .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
-  .note-card { text-align: left; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 120px; }
-  .note-card .nt { font-weight: 800; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note-card { text-align: left; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; min-height: 84px; }
+  .note-card .nt { font-weight: 800; font-size: 15px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+  .note-card .nd { display: flex; justify-content: space-between; gap: 6px; }
+  /* Checkliste in Notizen (wie bei Android-Notizen) */
+  .ck-list { margin-top: 4px; }
+  .ck-row { display: flex; align-items: center; gap: 10px; padding: 3px 0; }
+  .ck-box { width: 22px; height: 22px; flex: none; border-radius: 6px; border: 2px solid var(--muted); background: none; display: grid; place-items: center; padding: 0; color: var(--accent-ink, #111); cursor: pointer; }
+  .ck-box.on { background: var(--accent); border-color: var(--accent); }
+  .ck-box svg { width: 14px; height: 14px; }
+  .ck-in { flex: 1; min-width: 0; background: none; border: 0; outline: none; font-size: 16px; color: var(--text); padding: 6px 0; }
+  .ck-row.done .ck-in { text-decoration: line-through; color: var(--muted); }
+  .ck-x { background: none; border: 0; color: var(--muted); font-size: 18px; padding: 4px 6px; opacity: .7; }
+  .ck-add { display: flex; align-items: center; gap: 10px; color: var(--muted); background: none; border: 0; font-size: 15px; padding: 8px 0; }
+  .ck-add b { width: 22px; text-align: center; font-size: 20px; font-weight: 400; }
+  .ck-sep { font-size: 12px; color: var(--muted); font-weight: 700; margin: 14px 0 4px; border-top: 1px solid var(--border); padding-top: 10px; }
   .note-card .np { font-size: 13px; color: var(--muted); line-height: 1.4; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-line; word-break: break-word; }
   .note-card .nd { font-size: 11px; color: var(--muted); }
   .note-title { width: 100%; background: none; border: 0; font-size: 22px; font-weight: 800; padding: 10px 0 6px; outline: none; color: var(--text); }
@@ -505,15 +563,16 @@
   .tw-quick { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
   .tw-quick .chip { font-size: 12px; padding: 4px 10px; }
   /* hüpfende Flamme: Fuß bleibt mittig, Sprung gerade nach oben mit Stauchen/Strecken */
-  .flame-hop { display: inline-block; transform-origin: 50% 100%; animation: flameHop 1.5s cubic-bezier(.3,0,.3,1) infinite; filter: drop-shadow(0 0 3px rgba(255,90,0,.45)); }
+  .flame-hop { display: inline-block; transform-origin: 50% 100%; animation: flameHop 1.5s cubic-bezier(.3,0,.3,1) infinite, flameGlow 1.5s ease-in-out infinite; }
   @keyframes flameHop {
     0%, 100% { transform: translateY(0) scale(1, 1); }
-    12% { transform: translateY(0) scale(1.15, .82); }
-    32% { transform: translateY(-5px) scale(.9, 1.14); }
-    48% { transform: translateY(-6px) scale(1, 1); }
-    66% { transform: translateY(0) scale(1.12, .86); }
-    78% { transform: translateY(0) scale(.97, 1.04); }
+    12% { transform: translateY(0) scale(1.08, .9); }
+    32% { transform: translateY(-2.5px) scale(.95, 1.07); }
+    48% { transform: translateY(-3px) scale(1, 1); }
+    66% { transform: translateY(0) scale(1.06, .93); }
+    78% { transform: translateY(0) scale(.98, 1.02); }
     88% { transform: translateY(0) scale(1, 1); } }
+  @keyframes flameGlow { 0%, 100% { filter: drop-shadow(0 0 2px rgba(255,120,0,.55)); } 45% { filter: drop-shadow(0 0 6px rgba(255,80,0,.95)) drop-shadow(0 0 2px rgba(255,200,0,.8)); } }
   @media (prefers-reduced-motion: reduce) { .flame-hop { animation: none; } }
   .streak-chip { gap: 5px; }
   .dialog { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(340px, calc(100vw - 32px));
@@ -546,6 +605,7 @@
   </div>
 </div>
 
+<canvas id="galaxy" aria-hidden="true"></canvas>
 <div id="app" class="app hidden">
   <section id="view-start"></section>
   <section id="view-cal" class="hidden"></section>
@@ -834,11 +894,38 @@ async function toggleTask(k, key) {
   const done = { ...(cur.done || {}) };
   done[key] = !done[key];
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length };
+  const data = { date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: false };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) toast("Quote erfüllt! 🔥");
   try { await setDoc(dayRef(k), data); } catch (e) { toast("Speichern fehlgeschlagen – bist du offline?"); }
+}
+// Training komplett? = alles eingetragen, was geplant war
+const trainKey = () => (S.taskCfg || DEFAULT_TASKS).find(t => t.training)?.key || "training";
+function woComplete(w) {
+  if (!w) return false;
+  const pl = planByName(w.plan), type = pl?.type || ((w.exercises || []).length ? "gym" : null);
+  if (type === "run") return numv(w.run?.km) > 0 && parseDur(w.run?.minutes) > 0;
+  if (type === "session") return numv(w.session?.minutes) > 0;
+  const ex = (w.exercises || []).filter(e => exMode(e) !== "cardio" || (e.sets || []).length);
+  return ex.length > 0 && ex.every(e => (e.sets || []).length > 0 && e.sets.every(setFilled));
+}
+// Hakt die Trainings-Aufgabe automatisch ab, sobald das Training vollständig eingetragen ist
+async function syncTrainTask(k, w) {
+  const key = trainKey(), tasks = tasksFor(fromKey(k));
+  if (!tasks.some(t => t.key === key)) return;
+  if (!S.days[k]) { try { const d = await getDoc(dayRef(k)); if (d.exists()) S.days[k] = d.data(); } catch { return; } }
+  const cur = S.days[k] || { done: {} }, full = woComplete(w), isDone = !!cur.done?.[key];
+  let val = null;
+  if (full && !isDone) val = true;
+  else if (!full && isDone && cur.autoTrain) val = false;   // nur zurücknehmen, wenn es automatisch gesetzt wurde
+  if (val === null) return;
+  const done = { ...(cur.done || {}), [key]: val }, count = tasks.filter(t => done[t.key]).length;
+  const data = { ...cur, date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: val };
+  S.days[k] = data;
+  if (val) toast("Training vollständig – Aufgabe abgehakt ✓");
+  if (S.tab === "start") renderStart();
+  try { await setDoc(dayRef(k), data); } catch {}
 }
 async function setWeight(k, key, slot, raw) {
   const v = String(raw).trim().replace(",", ".");
@@ -882,7 +969,7 @@ function renderStart() {
   const week = [...Array(7)].map((_, i) => {
     const d = addDays(monday, i), dk = keyOf(d), inf = dayInfo(dk);
     const cls = inf.complete ? "full" : inf.count > 0 ? "part" : "";
-    return `<div class="d">${WD[d.getDay()]}<div class="box ${cls} ${dk === k ? "today" : ""}"></div></div>`;
+    return `<div class="d">${WD[d.getDay()]}<div class="box ${cls} ${dk === k ? "today" : ""}">${d.getDate()}</div></div>`;
   }).join("");
   const notifOk = "Notification" in window && Notification.permission === "granted";
   const notifBanner = ("Notification" in window && !notifOk) ? `
@@ -1154,6 +1241,7 @@ function saveWorkout(rerender = false) {
   saveT = setTimeout(async () => {
     try {
       await setDoc(woRef(S.trainDate), S.workout); const e = $("#saved"); if (e) e.textContent = "Gespeichert ✓";
+      syncTrainTask(S.trainDate, S.workout);
       if (S.allWo) { const copy = JSON.parse(JSON.stringify({ id: S.trainDate, ...S.workout })); const ix = S.allWo.findIndex(w => w.date === S.trainDate);
         if (ix >= 0) S.allWo[ix] = copy; else { S.allWo.push(copy); S.allWo.sort((a, b) => a.date.localeCompare(b.date)); } }
     }
@@ -1694,7 +1782,7 @@ function dayGain(k, woByDate) {
   const inf = dayInfo(k), w = woByDate[k];
   const quota = inf.total ? GAIN.quota * Math.min(1, inf.count / inf.total) : 0;
   const rest = planFor(fromKey(k).getDay()).type === "rest";
-  const train = (w && hasContent(w)) || rest ? GAIN.train : 0;
+  const train = rest || S.days[k]?.done?.[trainKey()] || woComplete(w) ? GAIN.train : 0;   // nur vollständige Trainings zählen
   const pr = w?.prs?.length ? GAIN.pr : 0;
   return { quota, train, pr, rest, total: quota + train + pr };
 }
@@ -1751,7 +1839,7 @@ function rankCard() {
     </div>
     ${chartPts.length > 1 ? lineChart([{ color: "var(--accent)", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
     <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
-      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote, ${GAIN.train} RP für Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
+      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote, ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
       ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${x.i}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
     </details>
   </div>`;
@@ -2056,12 +2144,34 @@ const fmtDue = k => { const tk = todayKey(); if (k === tk) return "Heute"; if (k
 const todoHTML = t => {
   const tk = todayKey();
   const late = !t.done && t.due && t.due < tk;
-  const sub = t.due ? `<button class="due ${late ? "late" : ""}" data-action="tododate" data-id="${t.id}">📅 ${late ? `seit ${fmtDue(t.due)} offen` : fmtDue(t.due)}</button>` : "";
+  const sub = (t.due ? `<button class="due ${late ? "late" : ""}" data-action="tododate" data-id="${t.id}">📅 ${late ? `seit ${fmtDue(t.due)} offen` : fmtDue(t.due)}</button>` : "")
+    + (t.remind ? `<button class="due" data-action="todobell" data-id="${t.id}">🔔 ${t.remind}</button>` : "");
   return `<div class="todo ${t.done ? "done" : ""}">
     <button class="tap" style="flex:none" data-action="todotoggle" data-id="${t.id}"><span class="box-check">${CHECK}</span></button>
     <div class="tcol"><button class="t ttext" data-action="todotoggle" data-id="${t.id}">${esc(t.text)}</button>${sub}</div>
+    ${!t.done && !t.remind ? `<button class="mini" data-action="todobell" data-id="${t.id}" title="Erinnerung" style="opacity:.6">${ICON.bell}</button>` : ""}
     <button class="mini" data-action="tododel" data-id="${t.id}" title="Löschen">${ICON.trash}</button></div>`;
 };
+// Erinnerung für ein To-Do (id = null: für das neue To-Do, das gerade eingegeben wird)
+function openTodoBell(id) {
+  const t = id ? S.todos.find(x => x.id === id) : null, cur = t ? t.remind : S.todoRemind;
+  S.todoBellId = id;
+  $("#sheetInner").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <b style="font-size:18px">Erinnerung</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <p class="muted" style="margin:0 0 12px;font-size:14px">${t ? `„${esc(t.text)}“ – ` : ""}Du bekommst zu dieser Uhrzeit eine Benachrichtigung, sobald das To-Do fällig ist und solange es noch offen ist.</p>
+    <div class="card" style="padding:12px">${timeWheel("todoTime", cur || "18:00")}
+      <button class="btn primary block" style="margin-top:12px" data-action="todobellset">🔔 Erinnerung speichern</button></div>
+    ${cur ? `<button class="btn block" style="margin-top:10px" data-action="todobellrm">Erinnerung entfernen</button>` : ""}
+    ${permHint()}`;
+  showSheet(true);
+}
+async function setTodoRemind(v) {
+  const id = S.todoBellId; closeSheet();
+  if (!id) { S.todoRemind = v; renderTodo(); $("#todoIn")?.focus(); return; }
+  try { await updateDoc(doc(db, "users", S.uid, "todos", id), { remind: v }); toast(v ? `Erinnerung um ${v} Uhr` : "Erinnerung entfernt"); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+  if (v && "Notification" in window && Notification.permission === "default") enableNotifications();
+}
 function renderTodo() {
   const view = S.todoView || "list";
   const sw = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="todoview" data-v="${v}">${l}</button>`;
@@ -2079,6 +2189,7 @@ function renderTodo() {
         <button class="chip ${S.todoDue === todayKey() ? "accent" : ""}" data-action="duequick" data-v="0">Heute</button>
         <button class="chip ${S.todoDue === keyOf(addDays(new Date(), 1)) ? "accent" : ""}" data-action="duequick" data-v="1">Morgen</button>
         <button class="chip ${S.todoDue > keyOf(addDays(new Date(), 1)) ? "accent" : ""}" data-action="duepick">📅 ${S.todoDue > keyOf(addDays(new Date(), 1)) ? fmtDue(S.todoDue) : "Datum …"}</button>
+        <button class="chip ${S.todoRemind ? "accent" : ""}" data-action="todobellnew">🔔 ${S.todoRemind || "Erinnerung"}</button>
       </div></div>`;
     html += view === "cal" ? renderTodoCal() : renderTodoList();
   }
@@ -2180,9 +2291,8 @@ function renderNotes() {
       <input class="text-in" id="noteQ" placeholder="🔍 Notizen durchsuchen …" value="${esc(S.noteQ || "")}">
       <button class="btn primary plus" data-action="notenew" title="Neue Notiz">+</button></div>
     ${list.length ? `<div class="notes">${list.map(n => `<button class="card note-card" data-action="noteopen" data-id="${n.id}">
-        <div class="nt">${n.pinned ? "📌 " : ""}${esc(n.title || "Ohne Titel")}</div>
-        <div class="np">${esc((n.text || "").slice(0, 160)) || "<span class='muted'>Leer</span>"}</div>
-        <div class="nd">${ago(n.updated)}</div></button>`).join("")}</div>`
+        <div class="nt">${n.pinned ? "📌 " : ""}${esc(n.title || (n.text || "").split("\n").find(l => l.trim()) || "Ohne Titel")}</div>
+        <div class="nd"><span>${ago(n.updated)}</span>${n.list && (n.items || []).length ? `<span>☑ ${(n.items || []).filter(i => i.d).length}/${(n.items || []).length}</span>` : ""}</div></button>`).join("")}</div>`
       : `<div class="card empty" style="margin-top:12px">${q ? "Nichts gefunden." : "Noch keine Notizen.<br>Tipp auf + für deine erste Notiz."}</div>`}`;
 }
 async function newNote() {
@@ -2192,15 +2302,49 @@ async function newNote() {
 function openNote(id, fresh = false) {
   const n = (S.notes || []).find(x => x.id === id) || { id, title: "", text: "" };
   S.noteOpen = id;
+  S.noteList = !!n.list; S.noteItems = (n.items || []).map(i => ({ t: i.t || "", d: !!i.d }));
   $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
       <button class="mini" data-action="closesheet" title="Fertig">${ICON.left}</button>
       <span class="muted" id="noteSaved" style="font-size:12px;flex:1">Gespeichert</span>
+      <button class="mini ${n.list ? "on" : ""}" id="ckToggle" data-action="cktoggle" title="Kästchen ein/aus">☑</button>
       <button class="mini ${n.pinned ? "on" : ""}" data-action="notepin" data-id="${id}" title="Anheften">📌</button>
       <button class="mini" data-action="notedel" data-id="${id}" title="Löschen">${ICON.trash}</button></div></div>
     <input class="note-title" id="noteTitle" placeholder="Titel" value="${esc(n.title)}">
-    <textarea class="note-text" id="noteText" placeholder="Schreib los …">${esc(n.text)}</textarea>`;
+    <textarea class="note-text ${n.list ? "hidden" : ""}" id="noteText" placeholder="Schreib los …">${esc(n.text)}</textarea>
+    <div id="ckWrap" class="${n.list ? "" : "hidden"}"></div>`;
+  if (S.noteList) renderCk();
   showSheet(true);
-  setTimeout(() => (fresh ? $("#noteTitle") : $("#noteText")).focus(), 60);
+  setTimeout(() => (fresh ? $("#noteTitle") : S.noteList ? null : $("#noteText"))?.focus(), 60);
+}
+// Checkliste: offene Punkte oben, erledigte unten (durchgestrichen)
+const CK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function renderCk(focusIdx, caret) {
+  const w = $("#ckWrap"); if (!w) return;
+  const row = (it, i) => `<div class="ck-row ${it.d ? "done" : ""}"><button class="ck-box ${it.d ? "on" : ""}" data-action="ckt" data-i="${i}">${it.d ? CK_SVG : ""}</button>
+    <input class="ck-in" data-ck="${i}" value="${esc(it.t)}" enterkeyhint="next"><button class="ck-x" data-action="ckdel" data-i="${i}" title="Entfernen">×</button></div>`;
+  const open = S.noteItems.map((it, i) => [it, i]).filter(([it]) => !it.d), done = S.noteItems.map((it, i) => [it, i]).filter(([it]) => it.d);
+  w.innerHTML = `<div class="ck-list">${open.map(([it, i]) => row(it, i)).join("")}
+    <button class="ck-add" data-action="ckadd"><b>+</b> Eintrag hinzufügen</button>
+    ${done.length ? `<div class="ck-sep">${done.length} erledigt</div>${done.map(([it, i]) => row(it, i)).join("")}` : ""}</div>`;
+  if (focusIdx != null) { const el = w.querySelector(`[data-ck="${focusIdx}"]`); if (el) { el.focus(); const p = caret ?? el.value.length; el.setSelectionRange(p, p); } }
+}
+function noteData() {
+  const title = $("#noteTitle")?.value ?? "";
+  if (S.noteList) { const items = S.noteItems.filter(i => i.t.trim() || S.noteItems.length === 1); return { title, list: true, items, text: items.map(i => (i.d ? "✓ " : "") + i.t).join("\n") }; }
+  return { title, list: false, text: $("#noteText")?.value ?? "" };
+}
+function toggleCk() {
+  if (S.noteList) {   // Kästchen aus: Punkte werden wieder normaler Text
+    $("#noteText").value = S.noteItems.map(i => i.t).filter(t => t.trim()).join("\n");
+    S.noteList = false; $("#noteText").classList.remove("hidden"); $("#ckWrap").classList.add("hidden"); $("#noteText").focus();
+  } else {             // Kästchen an: jede Zeile wird ein Punkt
+    const lines = ($("#noteText").value || "").split("\n").map(l => l.replace(/^\s*([-*•]|\[ ?\]|☐)\s*/, "")).filter(l => l.trim());
+    S.noteItems = lines.length ? lines.map(t => ({ t, d: false })) : [{ t: "", d: false }];
+    S.noteList = true; $("#noteText").classList.add("hidden"); $("#ckWrap").classList.remove("hidden");
+    renderCk(lines.length ? null : 0);
+  }
+  $("#ckToggle")?.classList.toggle("on", S.noteList);
+  saveNoteSoon();
 }
 let noteT;
 function saveNoteSoon() {
@@ -2208,7 +2352,7 @@ function saveNoteSoon() {
   $("#noteSaved").textContent = "Speichert …";
   clearTimeout(noteT);
   noteT = setTimeout(async () => {
-    const data = { title: $("#noteTitle")?.value ?? "", text: $("#noteText")?.value ?? "", updated: new Date().toISOString() };
+    const data = { ...noteData(), updated: new Date().toISOString() };
     try { await updateDoc(doc(db, "users", S.uid, "notes", id), data); const e = $("#noteSaved"); if (e) e.textContent = "Gespeichert ✓"; }
     catch { const e = $("#noteSaved"); if (e) e.textContent = "Nicht gespeichert – offline?"; }
   }, 500);
@@ -2216,16 +2360,16 @@ function saveNoteSoon() {
 async function closeNote() {
   const id = S.noteOpen; if (!id) return;
   clearTimeout(noteT);
-  const title = $("#noteTitle")?.value ?? "", text = $("#noteText")?.value ?? "";
+  const nd = noteData(), title = nd.title, text = nd.text;
   S.noteOpen = null;
   try {
     const empty = !title.trim() && !text.trim(), updated = new Date().toISOString();
     S.notesAll = S.notes || [];
     S.notes = S.notesAll.filter(n => n.id !== id);
     const old = (S.notesAll || []).find(n => n.id === id);
-    if (!empty) { S.notes.unshift({ ...(old || {}), id, title, text, updated }); S.notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)); }
+    if (!empty) { S.notes.unshift({ ...(old || {}), id, ...nd, updated }); S.notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)); }
     if (empty) await deleteDoc(doc(db, "users", S.uid, "notes", id));   // leere Notiz verwerfen
-    else await updateDoc(doc(db, "users", S.uid, "notes", id), { title, text, updated });
+    else await updateDoc(doc(db, "users", S.uid, "notes", id), { ...nd, updated });
   } catch {}
   renderTodo();
 }
@@ -2234,7 +2378,8 @@ async function addTodo() {
   if (!text) { inp.focus(); return; }
   const due = S.todoDue || todayKey();
   inp.value = ""; S.todoDraft = "";
-  try { await addDoc(todoCol(), { text, due, done: false, created: new Date().toISOString() }); }
+  const remind = S.todoRemind || null; S.todoRemind = null;
+  try { await addDoc(todoCol(), { text, due, done: false, created: new Date().toISOString(), ...(remind ? { remind } : {}) }); if (remind) renderTodo(); }
   catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
   if (due !== todayKey() && S.todoView !== "cal") toast(`Geplant für ${fmtDue(due)}`);
   $("#todoIn")?.focus();
@@ -2347,6 +2492,156 @@ function setTheme(t, save = true) {
   try { localStorage.setItem("tracker-theme", JSON.stringify(th)); } catch {}
   if (save && S.uid) setDoc(userRef(), { theme: th }, { merge: true }).catch(() => {});
 }
+/* ===================== RANG-DESIGNS ===================== */
+const VINE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150"><path d="M150 6 C110 3 60 10 34 8 C14 7 6 16 7 36 C8 70 4 100 7 150" fill="none" stroke="#2F7A35" stroke-width="2.4" stroke-linecap="round"/><path d="M60 9c-6 6-6 12-2 16M7 90c7 2 11 7 10 13" fill="none" stroke="#2F7A35" stroke-width="1.4" stroke-linecap="round"/><g transform="translate(135.2 5.3) rotate(-124)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#3FA34D" transform="scale(0.84)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.84)"/><animateTransform attributeName="transform" type="rotate" values="0;9;0;-4;0" dur="3.8s" begin="-0.2s" repeatCount="indefinite"/></g></g><g transform="translate(105.8 5.7) rotate(123)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(0.76)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.76)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-5;0" dur="3.9s" begin="-0.4s" repeatCount="indefinite"/></g></g><g transform="translate(74.5 7.3) rotate(232)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(0.96)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.96)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-5;0" dur="3.8s" begin="-0.5s" repeatCount="indefinite"/></g></g><g transform="translate(47.2 8.4) rotate(125)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#3FA34D" transform="scale(1.13)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(1.13)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-5;0" dur="3.9s" begin="-1.6s" repeatCount="indefinite"/></g></g><g transform="translate(27.3 8.1) rotate(230)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(0.83)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.83)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-6;0" dur="3.1s" begin="-1.9s" repeatCount="indefinite"/></g></g><g transform="translate(17.3 10.7) rotate(98)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(1.09)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(1.09)"/><animateTransform attributeName="transform" type="rotate" values="0;10;0;-5;0" dur="2.7s" begin="-1.3s" repeatCount="indefinite"/></g></g><g transform="translate(10.3 17.2) rotate(175)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#2E8B3E" transform="scale(0.95)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.95)"/><animateTransform attributeName="transform" type="rotate" values="0;8;0;-4;0" dur="3.0s" begin="-1.9s" repeatCount="indefinite"/></g></g><g transform="translate(7.2 27.7) rotate(41)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(1.08)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(1.08)"/><animateTransform attributeName="transform" type="rotate" values="0;8;0;-4;0" dur="2.6s" begin="-1.4s" repeatCount="indefinite"/></g></g><g transform="translate(7.2 48.1) rotate(145)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#2E8B3E" transform="scale(0.83)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.83)"/><animateTransform attributeName="transform" type="rotate" values="0;10;0;-5;0" dur="3.3s" begin="-0.9s" repeatCount="indefinite"/></g></g><g transform="translate(6.7 71.3) rotate(37)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(0.77)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.77)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-5;0" dur="3.0s" begin="-0.2s" repeatCount="indefinite"/></g></g><g transform="translate(6.0 98.1) rotate(146)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#4CB860" transform="scale(0.89)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.89)"/><animateTransform attributeName="transform" type="rotate" values="0;10;0;-5;0" dur="3.4s" begin="-1.4s" repeatCount="indefinite"/></g></g><g transform="translate(6.1 128.8) rotate(33)"><g><path d="M0 0C4-5.5 12-6 18 0C12 6 4 5.5 0 0Z" fill="#2E8B3E" transform="scale(0.77)"/><path d="M1 0H15" stroke="#1F6B2C" stroke-width=".7" transform="scale(0.77)"/><animateTransform attributeName="transform" type="rotate" values="0;11;0;-6;0" dur="2.7s" begin="-1.3s" repeatCount="indefinite"/></g></g><g transform="translate(30 9)"><g><circle cx="3.20" cy="0.00" r="2.6" fill="#FF8FB8"/><circle cx="0.99" cy="3.04" r="2.6" fill="#FF8FB8"/><circle cx="-2.59" cy="1.88" r="2.6" fill="#FF8FB8"/><circle cx="-2.59" cy="-1.88" r="2.6" fill="#FF8FB8"/><circle cx="0.99" cy="-3.04" r="2.6" fill="#FF8FB8"/><circle r="1.8" fill="#FFB300"/><animateTransform attributeName="transform" type="rotate" values="0;14;0;-10;0" dur="5s" repeatCount="indefinite"/></g></g><g transform="translate(8 58)"><g><circle cx="3.20" cy="0.00" r="2.6" fill="#FFFFFF"/><circle cx="0.99" cy="3.04" r="2.6" fill="#FFFFFF"/><circle cx="-2.59" cy="1.88" r="2.6" fill="#FFFFFF"/><circle cx="-2.59" cy="-1.88" r="2.6" fill="#FFFFFF"/><circle cx="0.99" cy="-3.04" r="2.6" fill="#FFFFFF"/><circle r="1.8" fill="#FFB300"/><animateTransform attributeName="transform" type="rotate" values="0;14;0;-10;0" dur="5s" repeatCount="indefinite"/></g></g><g transform="translate(95 6)"><g><circle cx="3.20" cy="0.00" r="2.6" fill="#FFD84D"/><circle cx="0.99" cy="3.04" r="2.6" fill="#FFD84D"/><circle cx="-2.59" cy="1.88" r="2.6" fill="#FFD84D"/><circle cx="-2.59" cy="-1.88" r="2.6" fill="#FFD84D"/><circle cx="0.99" cy="-3.04" r="2.6" fill="#FFD84D"/><circle r="1.8" fill="#FFB300"/><animateTransform attributeName="transform" type="rotate" values="0;14;0;-10;0" dur="5s" repeatCount="indefinite"/></g></g></svg>`;
+document.documentElement.style.setProperty("--vine", `url("data:image/svg+xml,${encodeURIComponent(VINE_SVG)}")`);
+const COSM = [
+  { k: "vines", tier: 8, emo: "🌿", n: "Ranken", d: "Ranken mit Blättern und Blüten wachsen an den Ecken deiner Karten und bewegen sich leicht im Wind." },
+  { k: "myth", tier: 9, emo: "🌈", n: "Farbfluss", d: "Deine Akzentfarbe fließt langsam durch mehrere Farben, die du selbst auswählst." },
+  { k: "galaxy", tier: 10, emo: "🌌", n: "Galaxie", d: "Animierter Weltraum-Hintergrund mit schwarzem Loch. Ganz selten zieht ein Planet mit Fähnchen vorbei und wird hineingezogen." },
+];
+const MYTH_PRESETS = [["#C04DFF", "#FF4FA3", "#4CC9F0"], ["#FF8A00", "#FF4FA3", "#C04DFF"], ["#00C2A8", "#4CC9F0", "#6C63FF"], ["#2EE59D", "#FFD84D", "#FF8A00"], ["#FF1744", "#FF8A00", "#FFD84D"]];
+const peakTier = () => (S.allWo && S.daysFull && typeof rankState === "function") ? rankState().peak : 0;
+function cosmPrefsHTML(th) {
+  const c = th.cosm || {}, pv = window.__cosmPreview || {}, peak = peakTier();
+  const cols = (c.mythColors && c.mythColors.length > 1) ? c.mythColors : MYTH_PRESETS[0];
+  return `<h2>Rang-Designs</h2>
+    <div class="note" style="margin:-4px 0 10px">Werden mit deinem höchsten erreichten Rang freigeschaltet. Gesperrte kannst du dir als Vorschau ansehen.</div>
+    <div class="card" style="padding:0">${COSM.map((x, i) => {
+      const open = peak >= x.tier, on = !!c[x.k], prev = !!pv[x.k], r = RANKS[x.tier];
+      return `${i ? '<div style="border-top:1px solid var(--border)"></div>' : ""}<div class="cosm-row">
+        <span class="ci">${x.emo}</span>
+        <div class="cb"><b>${x.n} <small style="display:inline;color:${r.god ? "#FF8A00" : r.c}">${r.i} ${r.n}</small></b><small>${x.d}</small></div>
+        ${open ? `<button class="chip ${on ? "accent" : ""}" data-action="cosmset" data-k="${x.k}">${on ? "An" : "Aus"}</button>`
+          : `<button class="chip ${prev ? "accent" : ""}" data-action="cosmprev" data-k="${x.k}">${prev ? "Vorschau an" : "🔒 Vorschau"}</button>`}</div>
+        ${x.k === "myth" && (on || prev) ? `<div class="cosm-cols">${cols.map((col, j) => `<input type="color" value="${col}" data-mythcol="${j}" title="Farbe ${j + 1}">`).join("")}
+          ${cols.length < 5 ? `<button class="chip" data-action="mythadd">+</button>` : ""}${cols.length > 2 ? `<button class="chip" data-action="mythrm">−</button>` : ""}
+          <span style="flex-basis:100%;height:0"></span>${MYTH_PRESETS.map((pr, j) => `<button class="chip" data-action="mythpre" data-v="${j}" style="background:linear-gradient(90deg,${pr.join(",")});width:44px;height:26px;border:0"></button>`).join("")}</div>` : ""}`;
+    }).join("")}</div>`;
+}
+function setCosm(patch, save = true) {
+  const th = { mode: "dark", accent: "#FFC400", ...curTheme() };
+  setTheme({ cosm: { ...(th.cosm || {}), ...patch } }, save);
+}
+document.addEventListener("change", e => { if (e.target.dataset?.mythcol !== undefined) setCosm({ mythColors: mythColorsNow() }); });
+function mythColorsNow() { const c = curTheme().cosm || {}; return (c.mythColors && c.mythColors.length > 1) ? [...c.mythColors] : [...MYTH_PRESETS[0]]; }
+function reopenPrefs() { const y = $("#sheetInner")?.scrollTop || 0; openPrefs(); const el = $("#sheetInner"); if (el) el.scrollTop = y; }
+
+/* ----- Galaxie-Hintergrund (Canvas) ----- */
+const GAL = { on: false, raf: 0 };
+const PLANETS = [
+  { n: "Merkur", r: 7, c: ["#C9C3BA", "#7D766E"] }, { n: "Venus", r: 10, c: ["#F3D9A4", "#C0884A"] }, { n: "Erde", r: 11, c: ["#5BB6FF", "#1F5FB0"], land: true },
+  { n: "Mars", r: 9, c: ["#FF8A5B", "#A8391D"] }, { n: "Jupiter", r: 20, c: ["#F1D3A6", "#B5793F"], bands: true }, { n: "Saturn", r: 16, c: ["#F6E2A8", "#C59A4E"], ring: true },
+  { n: "Uranus", r: 13, c: ["#B9F3F6", "#4FB7C4"], ring: "thin" }, { n: "Neptun", r: 13, c: ["#7FA8FF", "#2B48C8"] }, { n: "Pluto", r: 6, c: ["#E9D6C3", "#9C7E66"] },
+];
+function galaxyInit() {
+  const cv = $("#galaxy"); if (!cv) return;
+  const ctx = cv.getContext("2d"), dpr = Math.min(2, window.devicePixelRatio || 1);
+  let W = 0, H = 0, stars = [], disk = [], neb = null, last = 0, planet = null, nextPlanet = 0, shoot = null, nextShoot = 0, t0 = performance.now();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const bh = () => ({ x: W * 0.7, y: H * 0.34, r: Math.max(18, Math.min(W, H) * 0.065) });
+  function resize() {
+    W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [...Array(Math.round(W * H / 2600))].map(() => ({ x: Math.random() * W, y: Math.random() * H, z: Math.random() ** 2, tw: Math.random() * 6.28, sp: .5 + Math.random() * 2 }));
+    const b = bh();
+    disk = [...Array(260)].map(() => newDisk(b, true));
+    neb = document.createElement("canvas"); neb.width = W; neb.height = H; const n = neb.getContext("2d");
+    const blob = (x, y, r, col) => { const g = n.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, col); g.addColorStop(1, "transparent"); n.fillStyle = g; n.fillRect(0, 0, W, H); };
+    blob(W * .2, H * .7, Math.max(W, H) * .6, "rgba(110,40,170,.42)"); blob(W * .8, H * .3, Math.max(W, H) * .45, "rgba(255,79,163,.24)");
+    blob(W * .55, H * .95, Math.max(W, H) * .4, "rgba(255,138,0,.12)"); blob(W * .1, H * .15, Math.max(W, H) * .35, "rgba(60,90,220,.16)");
+  }
+  function newDisk(b, init) { return { a: Math.random() * 6.28, d: b.r * (init ? 1.3 + Math.random() * 2.6 : 3.6 + Math.random() * .4), s: .5 + Math.random() * .8, w: .6 + Math.random() * 1.6, h: Math.random() }; }
+  function spawnPlanet(now) {
+    const p = PLANETS[Math.floor(Math.random() * PLANETS.length)], fromLeft = Math.random() < .5, b = bh();
+    planet = { ...p, t: 0, dur: 26000, x0: fromLeft ? -40 : W + 40, y0: H * (.45 + Math.random() * .4), b, start: now, rot: Math.random() * 6.28 };
+  }
+  function drawPlanet(p, now) {
+    const k = Math.min(1, (now - p.start) / p.dur), e = k * k * (3 - 2 * k);
+    // Weg: erst gemütlich hineinfliegen, dann Spirale ins schwarze Loch
+    const ang0 = Math.atan2(p.y0 - p.b.y, p.x0 - p.b.x), d0 = Math.hypot(p.x0 - p.b.x, p.y0 - p.b.y);
+    const ang = ang0 + e * 3.4 * (p.x0 < 0 ? -1 : 1), d = d0 * (1 - e) ** 1.4 + p.b.r * .6 * e;
+    const x = p.b.x + Math.cos(ang) * d, y = p.b.y + Math.sin(ang) * d * .8, sc = Math.max(.05, 1 - e ** 3), r = p.r * sc;
+    ctx.save(); ctx.globalAlpha = Math.min(1, k * 8) * (1 - Math.max(0, (k - .9) * 10));
+    if (p.ring) { ctx.strokeStyle = "rgba(240,220,170,.75)"; ctx.lineWidth = p.ring === "thin" ? 1.2 * sc : 3 * sc; ctx.beginPath(); ctx.ellipse(x, y, r * 1.9, r * .55, -.35, 0, 6.28); ctx.stroke(); }
+    const g = ctx.createRadialGradient(x - r * .4, y - r * .4, r * .1, x, y, r); g.addColorStop(0, p.c[0]); g.addColorStop(1, p.c[1]);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.28); ctx.fill();
+    if (p.bands) { ctx.save(); ctx.clip(); ctx.fillStyle = "rgba(150,90,40,.35)"; for (let i = -2; i <= 2; i++) ctx.fillRect(x - r, y + i * r * .32, r * 2, r * .12); ctx.restore(); }
+    if (p.land) { ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 6.28); ctx.clip(); ctx.fillStyle = "rgba(70,170,90,.9)"; ctx.beginPath(); ctx.ellipse(x - r * .3, y - r * .1, r * .45, r * .3, .6, 0, 6.28); ctx.ellipse(x + r * .4, y + r * .35, r * .3, r * .2, -.4, 0, 6.28); ctx.fill(); ctx.restore(); }
+    // Fähnchen mit Namen (weht)
+    if (sc > .35) {
+      const px = x + r * .2, py = y - r, ph = 22 * sc + 8, fw = (ctx.font = `700 ${Math.max(8, 11 * sc)}px Inter, sans-serif`, ctx.measureText(p.n).width + 10), fh = Math.max(10, 15 * sc);
+      ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py - ph); ctx.stroke();
+      const wave = i => Math.sin(now / 260 + i * .9) * 2.2 * sc;
+      ctx.fillStyle = "rgba(255,255,255,.92)"; ctx.beginPath(); ctx.moveTo(px, py - ph);
+      for (let i = 1; i <= 6; i++) ctx.lineTo(px + fw * i / 6, py - ph + wave(i));
+      for (let i = 6; i >= 0; i--) ctx.lineTo(px + fw * i / 6, py - ph + fh + wave(i));
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#1a1030"; ctx.fillText(p.n, px + 5, py - ph + fh * .72 + wave(3));
+    }
+    ctx.restore();
+    if (k >= 1) planet = null;
+  }
+  function frame(now) {
+    if (!GAL.on) return;
+    GAL.raf = requestAnimationFrame(frame);
+    if (now - last < 33) return; last = now;   // ~30 Bilder pro Sekunde reichen
+    const t = (now - t0) / 1000, b = bh();
+    ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = "#05040a"; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(neb, 0, 0, W, H);
+    // Sterne (drehen sich ganz langsam ums schwarze Loch)
+    const rot = t * .004;
+    for (const s of stars) {
+      const dx = s.x - b.x, dy = s.y - b.y, ca = Math.cos(rot * (1 - s.z * .5)), sa = Math.sin(rot * (1 - s.z * .5));
+      let x = b.x + dx * ca - dy * sa, y = b.y + dx * sa + dy * ca;
+      x = ((x % W) + W) % W; y = ((y % H) + H) % H;
+      const a = .35 + .65 * (0.5 + 0.5 * Math.sin(t * s.sp + s.tw)), sz = .4 + (1 - s.z) * 1.3;
+      ctx.fillStyle = `rgba(255,255,255,${a * (1 - s.z * .6)})`; ctx.fillRect(x, y, sz, sz);
+    }
+    // Sternschnuppe ab und zu
+    if (!shoot && now > nextShoot) { shoot = { x: Math.random() * W, y: Math.random() * H * .5, vx: -(6 + Math.random() * 4), vy: 3 + Math.random() * 2, l: 1 }; nextShoot = now + 7000 + Math.random() * 9000; }
+    if (shoot) { const g = ctx.createLinearGradient(shoot.x, shoot.y, shoot.x - shoot.vx * 10, shoot.y - shoot.vy * 10); g.addColorStop(0, `rgba(255,255,255,${shoot.l})`); g.addColorStop(1, "transparent");
+      ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(shoot.x, shoot.y); ctx.lineTo(shoot.x - shoot.vx * 10, shoot.y - shoot.vy * 10); ctx.stroke();
+      shoot.x += shoot.vx; shoot.y += shoot.vy; shoot.l -= .02; if (shoot.l <= 0) shoot = null; }
+    // Akkretionsscheibe: Teilchen kreisen und werden langsam eingesaugt
+    ctx.globalCompositeOperation = "lighter";
+    const glow = ctx.createRadialGradient(b.x, b.y, b.r * .8, b.x, b.y, b.r * 4.5); glow.addColorStop(0, "rgba(255,150,60,.35)"); glow.addColorStop(.4, "rgba(255,79,163,.12)"); glow.addColorStop(1, "transparent");
+    ctx.fillStyle = glow; ctx.fillRect(b.x - b.r * 5, b.y - b.r * 5, b.r * 10, b.r * 10);
+    // weicher Scheibenkörper (dreht sich über die Teilchen)
+    for (const [rr2, lw, col] of [[2.2, b.r * .9, "rgba(255,120,60,.10)"], [1.7, b.r * .45, "rgba(255,190,110,.16)"], [1.35, b.r * .18, "rgba(255,235,190,.35)"]]) {
+      ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath(); ctx.ellipse(b.x, b.y, b.r * rr2, b.r * rr2 * .32, 0, 0, 6.28); ctx.stroke(); }
+    for (let i = 0; i < disk.length; i++) {
+      const p = disk[i];
+      p.a += p.s * (b.r * 1.6 / p.d) ** 1.5 * .09; p.d -= .045 * p.s * (b.r * 2 / p.d);
+      if (p.d < b.r * 1.05) { disk[i] = newDisk(b, false); continue; }
+      const x = b.x + Math.cos(p.a) * p.d, y = b.y + Math.sin(p.a) * p.d * .32, heat = 1 - (p.d - b.r) / (b.r * 3);
+      ctx.fillStyle = heat > .7 ? `rgba(255,240,200,${.5 + heat * .4})` : heat > .4 ? `rgba(255,170,70,${.35 + heat * .4})` : `rgba(255,79,163,${.25 + heat * .4})`;
+      ctx.beginPath(); ctx.arc(x, y, p.w * (.6 + heat * .6), 0, 6.28); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+    // Ereignishorizont + Photonenring
+    ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 6.28); ctx.fill();
+    ctx.strokeStyle = "rgba(255,210,140,.85)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 1.04, 0, 6.28); ctx.stroke();
+    // vordere Scheibenhälfte über dem Loch
+    ctx.globalCompositeOperation = "lighter";
+    for (const p of disk) { const s = Math.sin(p.a); if (s < 0 || p.d > b.r * 2.2) continue; const x = b.x + Math.cos(p.a) * p.d, y = b.y + s * p.d * .32;
+      ctx.fillStyle = "rgba(255,200,120,.5)"; ctx.beginPath(); ctx.arc(x, y, p.w * .8, 0, 6.28); ctx.fill(); }
+    ctx.globalCompositeOperation = "source-over";
+    // Seltener Planet
+    if (!planet && now > nextPlanet) { if (nextPlanet) spawnPlanet(now); nextPlanet = now + 45000 + Math.random() * 75000; }
+    if (planet) drawPlanet(planet, now);
+    if (reduce) { GAL.on = false; }
+  }
+  GAL.start = () => { if (GAL.on) return; GAL.on = true; resize(); nextPlanet = performance.now() + 15000 + Math.random() * 30000; GAL.raf = requestAnimationFrame(frame); };
+  GAL.stop = () => { GAL.on = false; cancelAnimationFrame(GAL.raf); };
+  GAL.planetNow = () => { spawnPlanet(performance.now()); };
+  window.__galPlanet = GAL.planetNow;
+  addEventListener("resize", () => { if (GAL.on) resize(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) GAL.stop(); else if (document.documentElement.classList.contains("cosm-galaxy")) GAL.start(); });
+}
+galaxyInit();
+window.__onCosm = c => { if (c.galaxy) GAL.start?.(); else GAL.stop?.(); };
+window.__onCosm({ ...(curTheme().cosm || {}) });
+
 function openPrefs() {
   const th = { mode: "dark", accent: "#FFC400", ...curTheme() };
   const modeBtn = (v, l, bg, card) => `<button class="mode-b ${th.mode === v ? "on" : ""}" data-action="mode" data-v="${v}">
@@ -2366,6 +2661,7 @@ function openPrefs() {
     <button class="btn block" style="justify-content:flex-start;gap:12px" data-action="cpopen">
       <span style="width:28px;height:28px;border-radius:8px;flex:none;background:${custom ? th.accent : "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)"};box-shadow:0 0 0 1px var(--border) inset"></span>
       <span style="flex:1;text-align:left">${custom ? "Eigene Farbe bearbeiten" : "Farbe mischen oder Farbcode eingeben …"}</span>${custom ? `<b style="font-variant-numeric:tabular-nums">${th.accent.toUpperCase()}</b>` : ""}</button>
+    ${cosmPrefsHTML(th)}
     <h2>Erinnerung</h2>
     <button class="btn block" style="justify-content:space-between" data-action="settings"><span>${ICON.bell.replace("<svg", '<svg width="18" height="18"')} Erinnerungen</span><b>${remindTxt()}</b></button>
     <h2>Tägliche Aufgaben</h2>
@@ -2757,6 +3053,20 @@ document.addEventListener("click", async e => {
   else if (a === "tcday") { S.tcSel = el.dataset.day; S.todoDue = el.dataset.day < todayKey() ? todayKey() : el.dataset.day; S.todoDraft = $("#todoIn")?.value || ""; keepScroll(renderTodo); }
   else if (a === "tcadd") { S.todoDue = S.tcSel < todayKey() ? todayKey() : S.tcSel; window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => $("#todoIn")?.focus(), 250); renderTodo(); }
   else if (a === "notenew") newNote();
+  else if (a === "cosmset") { const k = el.dataset.k; setCosm({ [k]: !(curTheme().cosm || {})[k] }); reopenPrefs(); }
+  else if (a === "cosmprev") { const k = el.dataset.k; window.__cosmPreview = { ...(window.__cosmPreview || {}), [k]: !(window.__cosmPreview || {})[k] }; window.applyTheme(curTheme()); reopenPrefs();
+    if (window.__cosmPreview[k]) toast(k === "galaxy" ? "Vorschau an – schließ die Einstellungen, um den Hintergrund zu sehen" : "Vorschau an – nur bis zum Neuladen"); }
+  else if (a === "mythadd") { const c = mythColorsNow(); c.push(["#FFD84D", "#2EE59D", "#FF8A00", "#4CC9F0"][c.length % 4]); setCosm({ mythColors: c }); reopenPrefs(); }
+  else if (a === "mythrm") { const c = mythColorsNow(); c.pop(); setCosm({ mythColors: c }); reopenPrefs(); }
+  else if (a === "mythpre") { setCosm({ mythColors: [...MYTH_PRESETS[+el.dataset.v]] }); reopenPrefs(); }
+  else if (a === "todobellnew") { S.todoDraft = $("#todoIn")?.value || ""; openTodoBell(null); }
+  else if (a === "todobell") openTodoBell(el.dataset.id);
+  else if (a === "todobellset") setTodoRemind(twVal("todoTime"));
+  else if (a === "todobellrm") setTodoRemind(null);
+  else if (a === "cktoggle") toggleCk();
+  else if (a === "ckt") { const it = S.noteItems[+el.dataset.i]; it.d = !it.d; renderCk(); saveNoteSoon(); }
+  else if (a === "ckdel") { S.noteItems.splice(+el.dataset.i, 1); if (!S.noteItems.length) S.noteItems.push({ t: "", d: false }); renderCk(); saveNoteSoon(); }
+  else if (a === "ckadd") { const pos = S.noteItems.filter(i => !i.d).length ? S.noteItems.lastIndexOf(S.noteItems.filter(i => !i.d).pop()) + 1 : 0; S.noteItems.splice(pos, 0, { t: "", d: false }); renderCk(pos); }
   else if (a === "noteopen") openNote(el.dataset.id);
   else if (a === "notepin") { const n = S.notes.find(x => x.id === el.dataset.id); try { await updateDoc(doc(db, "users", S.uid, "notes", el.dataset.id), { pinned: !n?.pinned }); } catch {} el.classList.toggle("on"); }
   else if (a === "notedel") {
@@ -2837,7 +3147,14 @@ document.addEventListener("change", e => {
   if (e.target.dataset.weight) setWeight(e.target.dataset.day, e.target.dataset.key, e.target.dataset.weight, e.target.value);
 });
 document.addEventListener("keydown", e => {
+  const ck = e.target.dataset?.ck;
+  if (ck !== undefined && e.key === "Backspace" && e.target.value === "" && S.noteItems.length > 1) {   // leeren Punkt löschen
+    e.preventDefault(); const i = +ck; S.noteItems.splice(i, 1); const prev = Math.max(0, i - 1); renderCk(S.noteItems[prev] ? prev : null); saveNoteSoon(); return; }
   if (e.key !== "Enter") return;
+  if (ck !== undefined) {   // Enter: neuer Punkt darunter (Text hinter dem Cursor wandert mit)
+    e.preventDefault(); const i = +ck, el = e.target, p = el.selectionStart ?? el.value.length;
+    const rest = el.value.slice(p); S.noteItems[i].t = el.value.slice(0, p);
+    S.noteItems.splice(i + 1, 0, { t: rest, d: S.noteItems[i].d }); renderCk(i + 1, 0); saveNoteSoon(); return; }
   if (e.target.id === "todoIn") { e.preventDefault(); addTodo(); }
   if (e.target.id === "customEx") { e.preventDefault(); document.querySelector('[data-action="addcustom"]')?.click(); }
   if (e.target.dataset.weight) { e.preventDefault(); e.target.blur(); }
@@ -2847,6 +3164,8 @@ document.addEventListener("input", e => {
   if (t.dataset.dur !== undefined && !e.isNormalise) { const f = fmtDurTyping(t.value); if (f !== t.value) t.value = f; }
   if (t.id === "cpHex" || t.id === "cpR" || t.id === "cpG" || t.id === "cpB") { cpFromInput(t); return; }
   if (t.id === "noteTitle" || t.id === "noteText") { saveNoteSoon(); return; }
+  if (t.dataset.mythcol !== undefined) { const c = mythColorsNow(); c[+t.dataset.mythcol] = t.value; setCosm({ mythColors: c }, false); return; }
+  if (t.dataset.ck !== undefined) { S.noteItems[+t.dataset.ck].t = t.value; saveNoteSoon(); return; }
   if (t.id === "noteQ") { S.noteQ = t.value; const pos = t.selectionStart; renderTodo(); const q = $("#noteQ"); q.focus(); q.setSelectionRange(pos, pos); return; }
   if (t.id === "todoIn") { S.todoDraft = t.value; }
   if (t.dataset.set) {
@@ -2898,7 +3217,8 @@ function reminderPlan() {
   const k = todayKey(), done = S.days[k]?.done || {};
   return {
     date: k, total: tasksFor(new Date()).length, general: REMIND_TIMES, items: openItemsToday(),
-    tasks: tasksFor(new Date()).flatMap(t => remindsOf(t).map(time => ({ id: "task-" + t.key, key: t.key, t: t.t, time, done: !!done[t.key], kind: t.kind === "weight" ? "weight" : "task" }))),
+    tasks: [...tasksFor(new Date()).flatMap(t => remindsOf(t).map(time => ({ id: "task-" + t.key, key: t.key, t: t.t, time, done: !!done[t.key], kind: t.kind === "weight" ? "weight" : "task" }))),
+      ...S.todos.filter(t => !t.done && t.remind && (!t.due || t.due <= k)).map(t => ({ id: "todo-" + t.id, key: "todo" + t.id, todoId: t.id, t: t.text, time: t.remind, done: false, kind: "todo" }))],
     pushOn: !!S.pushOn,
   };
 }
@@ -2907,7 +3227,8 @@ async function readState() {
   return { c, st: await c.match("state").then(r => r ? r.json() : {}).catch(() => ({})) };
 }
 async function saveReminderState() {
-  try { const { c, st } = await readState(); await c.put("state", new Response(JSON.stringify({ ...st, plan: reminderPlan() }))); } catch {}
+  try { const { c, st } = await readState(); const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || st.accent;
+    await c.put("state", new Response(JSON.stringify({ ...st, plan: reminderPlan(), accent }))); } catch {}
   writePushCfg();
 }
 // Fällige Erinnerungen → Pakete mit Einträgen (höchstens 90 Minuten alt)

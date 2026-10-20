@@ -1,6 +1,6 @@
 // Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um Benachrichtigungen
-const CACHE = "tracker-v9";
-const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const CACHE = "tracker-v10";
+const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./badge-96.png"];
 const PROJECT = "fir-8213f";
 
 // Firebase-Anmeldung auch im Hintergrund nutzen (für „✓ Erledigt“ direkt aus der Benachrichtigung)
@@ -52,20 +52,58 @@ async function readState() {
   return { c, st: r ? await r.json() : {} };
 }
 
+// ---------- Bild für die Benachrichtigung: sieht aus wie die App (Fortschrittsring + offene Punkte) ----------
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+async function cardImage(p, cur, accent) {
+  if (typeof OffscreenCanvas === "undefined") return null;
+  const W = 720, H = 360, c = new OffscreenCanvas(W, H), x = c.getContext("2d");
+  const items = p.items || [], open = items.filter(i => i.kind !== "todo").length, total = p.total || open, done = Math.max(0, total - open);
+  x.fillStyle = "#0e0e0f"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#18181b"; rr(x, 16, 16, W - 32, H - 32, 28); x.fill();
+  // Ring
+  const cx = 130, cy = H / 2, R = 78;
+  x.lineWidth = 18; x.strokeStyle = "#2a2a2e"; x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.stroke();
+  x.strokeStyle = accent; x.lineCap = "round"; x.beginPath(); x.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (total ? done / total : 0)); x.stroke();
+  x.fillStyle = "#fff"; x.textAlign = "center"; x.font = "800 40px sans-serif"; x.fillText(`${done}/${total}`, cx, cy + 8);
+  x.fillStyle = "#9a9aa2"; x.font = "500 20px sans-serif"; x.fillText("erledigt", cx, cy + 36);
+  // Liste
+  x.textAlign = "left"; const lx = 250;
+  x.fillStyle = "#9a9aa2"; x.font = "700 20px sans-serif"; x.fillText(open ? `NOCH ${items.length} OFFEN` : "OFFEN", lx, 72);
+  const list = [cur, ...items.filter(i => i.id !== cur.id)].slice(0, 4);
+  list.forEach((it, i) => {
+    const y = 100 + i * 62, hi = i === 0;
+    x.fillStyle = hi ? "#232327" : "transparent"; if (hi) { rr(x, lx - 12, y - 4, W - lx - 22, 54, 14); x.fill(); x.strokeStyle = accent; x.lineWidth = 2; x.stroke(); }
+    x.strokeStyle = hi ? accent : "#55555c"; x.lineWidth = 3; rr(x, lx, y + 9, 28, 28, 8); x.stroke();
+    x.fillStyle = hi ? "#fff" : "#c9c9cf"; x.font = `${hi ? 700 : 500} ${hi ? 26 : 23}px sans-serif`;
+    let t = (it.kind === "todo" ? "📝 " : "") + (it.t || ""); while (x.measureText(t).width > W - lx - 90 && t.length > 4) t = t.slice(0, -2) + "…";
+    x.fillText(t, lx + 44, y + 33);
+  });
+  const blob = await c.convertToBlob({ type: "image/png" });
+  const bytes = new Uint8Array(await blob.arrayBuffer()); let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return "data:image/png;base64," + btoa(bin);
+}
+
 // ---------- Benachrichtigungen anzeigen: jeder offene Punkt einzeln, mit „✓ Erledigt“ ----------
 async function showItems(p) {
   const items = (p.items || []).slice(0, 8);
+  let accent = "#FFC400";
+  try { const { st } = await readState(); if (st.accent) accent = st.accent; } catch {}
+  const open = (p.items || []).filter(i => i.kind !== "todo").length, total = p.total || 0;
   for (const it of items) {
     const weight = it.kind === "weight";
-    await self.registration.showNotification(it.t, {
-      body: it.kind === "todo" ? "To-Do – noch offen" : weight ? "Noch nicht eingetragen" : "Noch offen",
-      tag: it.id, renotify: true, icon: "./icon-192.png", badge: "./icon-192.png",
+    let image = null;
+    try { image = await cardImage(p, it, accent); } catch (e) { image = null; }
+    const progress = total ? ` · ${Math.max(0, total - open)}/${total} erledigt` : "";
+    await self.registration.showNotification((it.kind === "todo" ? "📝 " : weight ? "⚖️ " : "☐ ") + it.t, {
+      body: (it.kind === "todo" ? "To-Do – noch offen" : weight ? "Noch nicht eingetragen" : "Noch offen") + progress,
+      tag: it.id, renotify: true, icon: "./icon-192.png", badge: "./badge-96.png", ...(image ? { image } : {}),
       data: { ...it, date: p.date, total: p.total },
       actions: weight ? [{ action: "open", title: "Eintragen" }] : [{ action: "done", title: "✓ Erledigt" }],
     });
   }
   const rest = (p.items || []).length - items.length;
-  if (rest > 0) await self.registration.showNotification(`… und ${rest} weitere offen`, { tag: "more", icon: "./icon-192.png", badge: "./icon-192.png", data: {} });
+  if (rest > 0) await self.registration.showNotification(`… und ${rest} weitere offen`, { tag: "more", icon: "./icon-192.png", badge: "./badge-96.png", data: {} });
 }
 
 // Push vom Server (kommt auch, wenn die App geschlossen ist)
@@ -77,7 +115,7 @@ self.addEventListener("push", e => {
     p = raw ? (typeof raw === "string" ? JSON.parse(raw) : raw) : j;
   } catch (err) { p = {}; }
   e.waitUntil((p.items && p.items.length) ? showItems(p)
-    : self.registration.showNotification("Tracker", { body: "Schau mal in deine Aufgaben.", icon: "./icon-192.png", badge: "./icon-192.png", tag: "tracker" }));
+    : self.registration.showNotification("Tracker", { body: "Schau mal in deine Aufgaben.", icon: "./icon-192.png", badge: "./badge-96.png", tag: "tracker" }));
 });
 
 // Lokale Erinnerung aus der geöffneten App
