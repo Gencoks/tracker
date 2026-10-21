@@ -564,6 +564,19 @@
   .switch.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .switch.four button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 16px; padding: 7px 2px; line-height: 1.1; }
   .switch.four button span { font-size: 11px; }
+  .switch.four.five { grid-template-columns: repeat(5, minmax(0, 1fr)); } .switch.four.five button span { font-size: 10px; }
+  .clan-card { margin-top: 12px; padding: 16px; position: relative; overflow: hidden; }
+  .clan-soon { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 800; padding: 4px 9px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+  .clan-hero { display: flex; gap: 12px; align-items: center; padding-right: 96px; } .clan-hero b { display: block; font-size: 17px; } .clan-hero small { color: var(--muted); font-size: 13px; line-height: 1.4; display: block; margin-top: 2px; }
+  .clan-shield { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; flex: none; background: color-mix(in srgb, var(--accent) 18%, transparent); box-shadow: 0 0 0 2px var(--accent) inset; }
+  .clan-feat { display: grid; gap: 8px; margin-top: 14px; } .clan-feat div { display: grid; grid-template-columns: 28px 1fr; column-gap: 8px; background: var(--surface-2); border-radius: 12px; padding: 10px; }
+  .clan-feat span { grid-row: span 2; font-size: 20px; align-self: center; } .clan-feat b { font-size: 14px; } .clan-feat small { color: var(--muted); font-size: 12px; }
+  .clan-board { margin-top: 14px; border-radius: 14px; background: var(--surface-2); padding: 8px; position: relative; }
+  .clan-bh { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 4px 6px 8px; }
+  .clan-row { display: grid; grid-template-columns: 22px 28px 1fr auto; gap: 8px; align-items: center; padding: 8px 6px; border-radius: 10px; filter: blur(.6px); opacity: .7; }
+  .clan-row.me { filter: none; opacity: 1; box-shadow: 0 0 0 1px var(--accent) inset; margin-top: 4px; } .clan-pos { font-weight: 900; color: var(--muted); text-align: center; } .clan-ico { font-size: 20px; text-align: center; }
+  .clan-n { font-weight: 700; font-size: 14px; } .clan-n small { display: block; color: var(--muted); font-size: 11px; font-weight: 600; } .clan-r { font-size: 12px; font-weight: 700; color: var(--muted); }
+
   .switch.three button { font-size: 13px; padding: 10px 4px; }
   .tcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .ttext { text-align: left; width: 100%; word-break: break-word; }
@@ -1042,6 +1055,76 @@
   .diver.look .dvhead { animation: dvLook 2s ease-in-out 1; } @keyframes dvLook { 30% { transform: rotate(-12deg); } 70% { transform: rotate(10deg); } }
   .diver.shock .dvarm.f { transform: rotate(-150deg); } .diver.shock .dvarm.b { transform: rotate(-130deg); } .diver.shock .dvhead { transform: rotate(-10deg) translateY(-1px); } .diver.shock .dvsv { animation: dvJump .5s ease-out 1; } @keyframes dvJump { 40% { transform: translateY(-10px); } }
   .diver.flail .dvarm.f { animation: dvFlail .25s ease-in-out infinite alternate; } .diver.flail .dvarm.b { animation: dvFlail .25s -.12s ease-in-out infinite alternate; } @keyframes dvFlail { from { transform: rotate(-160deg); } to { transform: rotate(-100deg); } }
+  /* ===== v34: Tiere laufen wie der Jäger knapp über der Leiste (vor dem Gras) ===== */
+  #meadow .actor:not(.fish):not(.jelly):not(.turtle):not(.shark):not(.octopus):not(.eagle):not(.ufo):not(.bigufo) { z-index: 5; }
+  .bunny, .fox, .lizard, .frog, .crab, .marmot, .penguin, .ermine, .astro, .alien2, .cow, .diver, .heron, .gator { bottom: -3px; } .deer { bottom: -4px; } .deer.camel, .deer.goat { bottom: -4px; }
+  /* Weltall: Mondboden mit leichtem Farbschimmer */
+  #meadow[data-biome=space]::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background: linear-gradient(90deg, rgba(120,80,255,.26), rgba(60,200,255,.22), rgba(255,80,200,.24), rgba(120,80,255,.26)); background-size: 300% 100%;
+    -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.6) 30%, transparent 75%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.6) 30%, transparent 75%); animation: spaceShim 14s linear infinite; }
+  @keyframes spaceShim { to { background-position: 300% 0; } } :root.pw-saver #meadow[data-biome=space]::before { animation: none; }
+  /* Aliens, Kuh, großes UFO, Laser, Traktorstrahl */
+  .all { transform-box: view-box; } .alien2.walk .l1 { animation: legSwing .32s ease-in-out infinite alternate; } .alien2.walk .l2 { animation: legSwing .32s ease-in-out infinite alternate-reverse; }
+  .alien2.walk .alsv { animation: alBob .32s ease-in-out infinite alternate; } @keyframes alBob { to { transform: translateY(-2px); } }
+  .alarm { transform-box: view-box; transition: transform .1s; } .alien2.shoot .alarm { transform: rotate(-14deg) translateX(-1px); }
+  .alien2.dance .alsv { animation: alDance .4s ease-in-out infinite alternate; transform-origin: 50% 100%; } @keyframes alDance { from { transform: rotate(-10deg) translateY(0); } to { transform: rotate(10deg) translateY(-6px); } }
+  .alhead { transform-box: view-box; } .alien2:not(.walk) .alhead { animation: alHead 1.4s ease-in-out infinite alternate; } @keyframes alHead { to { transform: rotate(8deg); } }
+  .laser { position: absolute; left: 0; bottom: 0; width: 18px; height: 3px; border-radius: 2px; z-index: 6; transform-origin: 0 50%; }
+  .cwl { transform-box: view-box; } .cow.walk .l1, .cow.walk .l4 { animation: legSwing .45s ease-in-out infinite alternate; } .cow.walk .l2, .cow.walk .l3 { animation: legSwing .45s ease-in-out infinite alternate-reverse; }
+  .cwhead { transform-box: view-box; transition: transform .4s; } .cow.graze .cwhead { transform: rotate(30deg); } .cow.alert .cwhead { transform: rotate(-14deg); }
+  .cow.lift .cwsv { animation: cowWig .3s ease-in-out infinite alternate; } @keyframes cowWig { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
+  .cow.lift .cwl { animation: legSwing .18s linear infinite alternate !important; }
+  .bigufo { z-index: 6; } .bigufo .bufsv { animation: wBob 2.4s ease-in-out infinite; } .bufglow { animation: wBlink 1s ease-in-out infinite; }
+  .ufobeam { position: absolute; bottom: 0; z-index: 4; pointer-events: none; background: linear-gradient(to top, rgba(154,255,200,.55), rgba(154,255,200,.12)); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); animation: beamIn .4s ease-out; }
+  .ufobeam.flicker { animation: beamFl .12s linear infinite; } @keyframes beamIn { from { opacity: 0; transform: scaleY(.2); transform-origin: 50% 0; } } @keyframes beamFl { 50% { opacity: .1; } }
+  /* ===== v35: leichtes Glimmern über jeder Landschaft ===== */
+  #meadow::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3; opacity: .85;
+    background-image: radial-gradient(circle, var(--gl, #fff) 0 1.1px, transparent 1.8px), radial-gradient(circle, var(--gl, #fff) 0 .8px, transparent 1.4px), radial-gradient(circle, #fff 0 .6px, transparent 1.2px);
+    background-size: 97px 116px, 143px 116px, 61px 116px; background-position: 13px 0, 57px 41px, 29px 77px;
+    -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.7) 40%, transparent 92%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.7) 40%, transparent 92%);
+    animation: glimUp 11s linear infinite, glimTw 2.6s ease-in-out infinite alternate; }
+  @keyframes glimUp { to { background-position: 13px -116px, 57px -191px, 29px -39px; } } @keyframes glimTw { from { opacity: .35; } to { opacity: .95; } }
+  #meadow[data-biome=forest] { --gl: #fff3a0; } #meadow[data-biome=desert] { --gl: #ffd890; } #meadow[data-biome=ocean] { --gl: #c8f4ff; } #meadow[data-biome=swamp] { --gl: #e8ff8a; }
+  #meadow[data-biome=alps] { --gl: #ffffff; } #meadow[data-biome=snow] { --gl: #ffffff; } #meadow[data-biome=space] { --gl: #d0c0ff; }
+  #meadow[data-biome=forest]::before, #meadow[data-biome=desert]::before, #meadow[data-biome=swamp]::before, #meadow[data-biome=alps]::before, #meadow[data-biome=snow]::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-size: 300% 100%; animation: spaceShim 16s linear infinite;
+    -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.55) 35%, transparent 80%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.55) 35%, transparent 80%); }
+  #meadow[data-biome=forest]::before { background-image: linear-gradient(90deg, rgba(190,255,140,.10), rgba(255,240,150,.14), rgba(140,230,170,.10), rgba(190,255,140,.10)); }
+  #meadow[data-biome=desert]::before { background-image: linear-gradient(90deg, rgba(255,170,80,.26), rgba(255,210,120,.2), rgba(255,120,70,.24), rgba(255,170,80,.26)); }
+  #meadow[data-biome=swamp]::before { background-image: linear-gradient(90deg, rgba(120,200,140,.12), rgba(200,240,120,.10), rgba(90,170,160,.12), rgba(120,200,140,.12)); }
+  #meadow[data-biome=alps]::before { background-image: linear-gradient(90deg, rgba(200,230,255,.16), rgba(255,255,255,.12), rgba(170,220,190,.14), rgba(200,230,255,.16)); }
+  #meadow[data-biome=snow]::before { background-image: radial-gradient(60% 70% at 20% 100%, rgba(255,255,255,.38), transparent 70%), radial-gradient(50% 60% at 70% 100%, rgba(220,235,255,.34), transparent 70%), radial-gradient(40% 50% at 45% 100%, rgba(255,255,255,.3), transparent 70%);
+    background-size: 160% 100%; animation: snowFog 18s ease-in-out infinite alternate; -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.6) 45%, transparent 95%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.6) 45%, transparent 95%); }
+  @keyframes snowFog { from { background-position: 0 0; } to { background-position: 100% 0; } }
+  :root.pw-saver #meadow::after, :root.pw-saver #meadow::before { animation: none !important; }
+  /* Krabbe v35: acht Beine trippeln seitwärts, Scheren wippen */
+  .crl { transform-box: view-box; } .crab .crlegs { animation: none; }
+  .crab.walk .crl.l.a, .crab.walk .crl.r.b { animation: crStepL .16s ease-in-out infinite alternate; } .crab.walk .crl.l.b, .crab.walk .crl.r.a { animation: crStepR .16s ease-in-out infinite alternate; }
+  @keyframes crStepL { from { transform: rotate(-16deg) translateY(-1px); } to { transform: rotate(10deg); } } @keyframes crStepR { from { transform: rotate(14deg) translateY(-1px); } to { transform: rotate(-10deg); } }
+  .crab.walk .crsv { animation: crWob .16s ease-in-out infinite alternate; } @keyframes crWob { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-1.4px) rotate(2deg); } }
+  .crab:not(.walk) .crl { animation: crIdle 1.6s ease-in-out infinite alternate; } @keyframes crIdle { to { transform: rotate(4deg); } }
+  /* Krake v35: schwimmt mit dem Kopf voran, Rückstoß-Pulse, Arme ziehen nach */
+  .octopus .ocsv { transform-origin: 50% 45%; transition: filter 1s, transform .6s ease-out; }
+  .octopus.swim .ocsv { animation: ocSwim2 1s ease-in-out infinite; }
+  @keyframes ocSwim2 { 0% { transform: rotate(88deg) translateY(0) scale(1, 1); } 30% { transform: rotate(90deg) translateY(-6px) scale(.84, 1.12); } 60% { transform: rotate(92deg) translateY(-3px) scale(1.06, .94); } 100% { transform: rotate(88deg) translateY(0) scale(1, 1); } }
+  .octopus.swim .octa { animation: ocTrail2 1s ease-in-out infinite; } @keyframes ocTrail2 { 0%, 100% { transform: rotate(0) scaleY(1); } 30% { transform: rotate(0) scaleY(1.35) scaleX(.7); } 65% { transform: rotate(6deg) scaleY(.95); } }
+  /* ===== v35: neue Tiere ===== */
+  .scorp { bottom: -3px; } .scl, .sctail, .scclaw { transform-box: view-box; transition: transform .2s; }
+  .scorp.walk .scl.a { animation: scStep .14s linear infinite alternate; } .scorp.walk .scl.b { animation: scStep .14s linear infinite alternate-reverse; } @keyframes scStep { from { transform: rotate(-18deg); } to { transform: rotate(16deg); } }
+  .scorp.walk .scsv { animation: wBirdBob .14s linear infinite alternate; } .scorp .sctail { animation: scTail 1.6s ease-in-out infinite alternate; } @keyframes scTail { to { transform: rotate(-6deg); } }
+  .scorp.sting .sctail { animation: scSting .5s ease-in-out infinite; } @keyframes scSting { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-16deg) translateX(-2px); } 60% { transform: rotate(14deg) translate(3px, 1px); } }
+  .scorp.sting .scclaw { animation: scClaw .2s ease-in-out infinite alternate; } @keyframes scClaw { to { transform: rotate(-12deg) scale(1.06); } }
+  .scorp.dig .scsv { animation: shake .1s linear infinite; }
+  .dragonfly { z-index: 6; } .dfw { transform-box: fill-box; transform-origin: 30% 80%; animation: dfFl .045s linear infinite alternate; } .dfw.b { animation-delay: -.02s; } @keyframes dfFl { to { transform: scaleY(.25); } }
+  .dragonfly .dfsv { animation: wBirdBob .4s ease-in-out infinite alternate; }
+  .deer.bear .dhead { transform-origin: 60px 24px; } .deer.bear.graze .dhead { transform: rotate(26deg); animation: dNib .5s .6s ease-in-out infinite alternate; }
+  .deer.bear .dsv { transition: transform .4s ease-out; } .deer.bear.stand .dsv { transform: rotate(-58deg); transform-origin: 26% 96%; } .deer.bear.stand .dhead { transform: rotate(40deg); }
+  .deer.bear.stand .leg.lf1, .deer.bear.stand .leg.lf2 { transform: rotate(-40deg); } .deer.bear.stand .lf1 .shin, .deer.bear.stand .lf2 .shin { transform: rotate(60deg); }
+  .deer.bear.slide .dsv { transform: translateY(6px) scaleY(.78); } .deer.bear.slide .leg.lf1, .deer.bear.slide .leg.lf2 { transform: rotate(-80deg); } .deer.bear.slide .leg.lb1, .deer.bear.slide .leg.lb2 { transform: rotate(80deg); }
+  .deer.bear.walk .dsv { animation: brRoll .55s ease-in-out infinite alternate; } @keyframes brRoll { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg) translateY(-1px); } }
+  .deer.robo .rbtail { transform-box: view-box; animation: rbWag .5s ease-in-out infinite alternate; } .deer.robo.wag .rbtail { animation-duration: .12s; } @keyframes rbWag { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+  .deer.robo .rbeyes { animation: rbBlink 3s steps(1) infinite; } @keyframes rbBlink { 0%, 92% { opacity: 1; } 93%, 97% { opacity: .1; } }
+  .deer.robo.wag .dhead { animation: rbHead .25s ease-in-out infinite alternate; } @keyframes rbHead { to { transform: rotate(-8deg); } }
   #rankup .ru-stack { position: relative; width: min(340px, calc(100vw - 32px)); margin-top: 236px; }
   #rankup .ru-rays { position: absolute; width: 520px; height: 520px; left: 50%; top: -70px; margin: -260px 0 0 -260px; opacity: 0; pointer-events: none;
     background: radial-gradient(circle at 38% 42%, rgba(255,210,90,.34), transparent 34%), radial-gradient(circle at 63% 58%, rgba(150,80,255,.30), transparent 38%), radial-gradient(circle at 55% 35%, rgba(255,120,200,.18), transparent 30%); filter: blur(18px); animation: raysIn .6s 1.15s forwards, spin 40s linear infinite; border-radius: 50%;
@@ -1095,6 +1178,12 @@
   .trophy-svg .tstar { transform-box: fill-box; transform-origin: 50% 50%; animation: tStar 3s ease-in-out infinite; } @keyframes tStar { 0%, 100% { opacity: .15; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.3); } }
   .trophy-svg .tgal { animation: tSpin 16s linear infinite; } .trophy-svg .tgal.rev { animation: tSpinR 10s linear infinite; }
   .trophy-svg .tsheen { transform-box: fill-box; transform-origin: 50% 50%; animation: tSheen 4s ease-in-out infinite; } @keyframes tSheen { 0% { transform: translateX(-40px) skewX(-15deg); opacity: 0; } 30% { opacity: .5; } 60%, 100% { transform: translateX(40px) skewX(-15deg); opacity: 0; } }
+  #rankup:not(.hi) .ru-rays { display: none; } #rankup:not(.hi) .ru-trophy { filter: drop-shadow(0 6px 10px rgba(0,0,0,.55)); }
+  .trophy-svg .twave { animation: tWave 4.4s ease-out infinite; } .trophy-svg .twave.star { animation: tWaveS 4.5s ease-out infinite; }
+  @keyframes tWave { 0% { transform: scale(.2); opacity: 0; } 15% { opacity: .9; } 100% { transform: scale(2.1); opacity: 0; } }
+  @keyframes tWaveS { 0% { transform: scale(.3) rotate(0); opacity: 0; } 20% { opacity: .7; } 100% { transform: scale(2.4) rotate(60deg); opacity: 0; } }
+  .trophy-svg .thue { animation: tHue 8s linear infinite; } @keyframes tHue { 0%, 100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(50deg); } }
+  .trophy-svg .thue.neg { animation: tHueN 8s linear infinite; } @keyframes tHueN { 0%, 100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(-40deg); } }
   /* Einstellungen: Bereiche zum Aufklappen */
   .psec { border: 1px solid var(--border); border-radius: 14px; margin: 0 0 8px; background: var(--surface-2); overflow: hidden; }
   .psec > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-weight: 750; }
@@ -1113,6 +1202,7 @@
   .glass-row { display: flex; align-items: center; gap: 10px; margin: 8px 0 12px; padding: 10px 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); }
   .glass-row { flex-wrap: wrap; } .glass-row > div { flex-basis: 100%; } .glass-row b { display: block; font-size: 13.5px; } .glass-row small { color: var(--muted); font-size: 11px; }
   .glass-row input { flex: 1; min-width: 0; accent-color: var(--accent); } .glass-row span { width: 40px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .opt .oe.prop { border-radius: 12px; overflow: hidden; } .opt .oe.thumb { border-radius: 12px; }
 </style>
 </head>
 <body>
@@ -1935,12 +2025,13 @@ function renderPerf() {
   const chip = (attr, val, cur, l) => `<button class="chip ${cur === val ? "accent" : ""}" data-action="${attr}" data-v="${esc(val)}">${esc(l)}</button>`;
   const rng = S.perfRange || "3m";
   const view = S.perfView || "rank";
-  const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Erfolge", records: "Deine Bestwerte" };
+  const TITLES = { stats: "Deine Entwicklung", rank: "Dein Rang", awards: "Deine Erfolge", records: "Deine Bestwerte", clans: "Clans & Ranglisten" };
   const pb = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="pview" data-v="${v}">${l}</button>`;
   let html = `<header class="top"><div><div class="eyebrow">Leistung</div><h1>${TITLES[view] || TITLES.stats}</h1></div></header>
-    <div class="switch four">${pb("rank", "⚡<span>Rang</span>")}${pb("awards", "🏅<span>Erfolge</span>")}${pb("records", "🏆<span>Bestwerte</span>")}${pb("stats", "📈<span>Auswertung</span>")}</div>`;
+    <div class="switch four five">${pb("rank", "⚡<span>Rang</span>")}${pb("awards", "🏅<span>Erfolge</span>")}${pb("records", "🏆<span>Bestwerte</span>")}${pb("stats", "📈<span>Auswertung</span>")}${pb("clans", "🛡️<span>Clans</span>")}</div>`;
   if (!all) { v.innerHTML = html + `<div class="card empty perf-card">Lade Daten …</div>`; return; }
   if (view === "rank") { v.innerHTML = html + rankCard(); return; }
+  if (view === "clans") { v.innerHTML = html + clansCard(); return; }
   if (view === "awards") { v.innerHTML = html + renderAwards(all, "awards"); return; }
   if (view === "records") { v.innerHTML = html + renderAwards(all, "records"); return; }
   html += `<div class="seg" style="margin-top:12px">${chip("prange", "4w", rng, "4 Wochen")}${chip("prange", "3m", rng, "3 Monate")}${chip("prange", "6m", rng, "6 Monate")}${chip("prange", "all", rng, "Alles")}</div>`;
@@ -2353,6 +2444,18 @@ function checkRank() {
   S.rankSeen = st.tier;
   setDoc(userRef(), { rankSeen: st.tier }, { merge: true }).catch(() => {});
 }
+function clansCard() {
+  const st = rankState(), me = RANKS[st.tier];
+  const demo = [["🔥", "Iron Wolves", 12, 9], ["⚡", "Night Runners", 8, 8], ["🌙", "Gym Ghosts", 15, 7], ["🦅", "Peak Squad", 6, 6], ["🌊", "Deep Divers", 10, 5]];
+  return `<div class="card clan-card"><div class="clan-soon">Bald verfügbar</div>
+    <div class="clan-hero"><div class="clan-shield">🛡️</div><div><b>Clans & Ranglisten</b><small>Tritt einem Clan bei, sammelt gemeinsam RP und vergleicht euch mit anderen Spielern.</small></div></div>
+    <div class="clan-feat">${[["🛡️", "Clans gründen", "Mit Freunden ein Team bilden, eigenes Wappen und Clan-Rang"], ["🏆", "Ranglisten", "Wöchentliche und ewige Bestenlisten – weltweit und unter Freunden"], ["👀", "Spieler verfolgen", "Sieh, welchen Rang andere haben und in welchem Clan sie sind"]].map(([i, t, d]) => `<div><span>${i}</span><b>${t}</b><small>${d}</small></div>`).join("")}</div>
+    <div class="clan-board"><div class="clan-bh"><span>Vorschau</span><span>Clan-Rangliste</span></div>
+      ${demo.map(([e, n, m, t], i) => `<div class="clan-row"><span class="clan-pos">${i + 1}</span><span class="clan-ico">${e}</span><span class="clan-n">${n}<small>${m} Mitglieder</small></span><span class="clan-r">${RANKS[t].i} ${RANKS[t].n}</span></div>`).join("")}
+      <div class="clan-row me"><span class="clan-pos">–</span><span class="clan-ico">🙂</span><span class="clan-n">Du<small>noch in keinem Clan</small></span><span class="clan-r">${me.i} ${me.n}</span></div></div>
+    <button class="btn block" disabled style="margin-top:12px;opacity:.6">Clan beitreten – kommt bald</button></div>`;
+}
+
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
   const pct = nx ? Math.min(100, (st.rp - r.min) / (nx.min - r.min) * 100) : 100;
@@ -3728,7 +3831,7 @@ WLD.space = () => {
   layers.push(L(0, 800, 400, 60, `<path d="M0 20Q100 8 200 16T400 12V60H0Z" fill="#9a9aa6"/><path d="M0 40Q120 32 240 38T400 36V60H0Z" fill="#a8a8b4"/>`));
   // schwebender Staub
   for (let i = 0; i < 14; i++) layers.push(L(r(0, 400), r(660, 840), 4, 4, `<circle cx="2" cy="2" r="${f(r(.4, 1))}" fill="#e0e0f0" opacity=".6"/>`, { cls: "mote", dur: r(12, 20), del: -r(0, 20) }));
-  return { key: "space", layers, mount: el => spaceEntity(el), sky: "radial-gradient(120% 60% at 30% 20%, #1a0f3a 0%, #0a0620 45%, #03020c 80%, #000 100%)" };
+  return { key: "space", layers, sky: "radial-gradient(120% 60% at 30% 20%, #1a0f3a 0%, #0a0620 45%, #03020c 80%, #000 100%)" };
 };
 // Das dunkle Wesen: ganz selten greift eine schwarze Hand vom Rand herein, dann schaut es mit weißen Augen kurz ins Bild
 function spaceEntity(world) {
@@ -3767,19 +3870,24 @@ WLD.strip = key => { const { seed, r, pick, f, blade, blob } = WLD; seed(90 + ke
   if (key === "forest") { s += `<path d="M0 30V18Q45 12 90 17T180 18V30Z" fill="#356B28"/><path d="M0 30V23Q45 20 90 23T180 23V30Z" fill="#3E7D2E"/>`;
     for (let i = 0; i < 70; i++) { const x = r(0, 180); s += `<path d="${blade(x, 30, r(8, 22), r(-4, 4), r(.8, 1.4))}" fill="${pick(["#4E9137", "#5FA640", "#3E7D2E", "#6DB548", "#356B28"])}"/>`; }
     for (let i = 0; i < 9; i++) { const x = r(4, 176), top = r(6, 16); s += `<path d="M${f(x)} 30V${f(top)}" stroke="#3f6a2a" stroke-width=".8"/>${WLD.flower(x, top, r(2, 2.8), pick(["daisy", "daisy", "poppy", "butter", "bell", "lav"]))}`; } }
-  else if (key === "alps") { s += `<path d="M0 30V18Q45 12 90 17T180 18V30Z" fill="#4E9137"/><path d="M0 30V23Q45 20 90 23T180 23V30Z" fill="#5a9a40"/>`;
-    for (let i = 0; i < 60; i++) s += `<path d="${blade(r(0, 180), 30, r(6, 18), r(-4, 4), r(.8, 1.3))}" fill="${pick(["#5FA640", "#6DB548", "#4E9137", "#7aae52"])}"/>`;
-    for (let i = 0; i < 3; i++) s += WLD.rock(r(10, 170), r(26, 30), r(8, 14), r(5, 8), "#8a909a", "#6f7580", "#b4bac2");
-    for (let i = 0; i < 9; i++) { const x = r(4, 176), top = r(8, 18); s += `<path d="M${f(x)} 30V${f(top)}" stroke="#3f6a2a" stroke-width=".8"/>${WLD.flower(x, top, r(1.8, 2.6), pick(["daisy", "bell", "lav", "butter"]))}`; } }
-  else if (key === "space") { s += `<path d="M0 30V17Q45 11 90 16T180 17V30Z" fill="#8a8a96"/><path d="M0 30V23Q45 20 90 23T180 23V30Z" fill="#9a9aa6"/>`;
-    for (let i = 0; i < 4; i++) { const x = r(10, 170), w = r(6, 14); s += `<ellipse cx="${f(x)}" cy="${f(r(22, 27))}" rx="${f(w)}" ry="${f(w * .3)}" fill="#55555f"/><path d="M${f(x - w)} 25A${f(w)} ${f(w * .3)} 0 0 0 ${f(x + w)} 25" stroke="#b8b8c4" stroke-width=".8" fill="none"/>`; }
-    for (let i = 0; i < 30; i++) s += `<circle cx="${f(r(0, 180))}" cy="${f(r(18, 29))}" r="${f(r(.3, 1))}" fill="${pick(["#6a6a76", "#b8b8c4"])}"/>`;
-    for (let i = 0; i < 3; i++) s += WLD.rock(r(10, 170), r(24, 29), r(5, 9), r(3, 5), "#7a7a86", "#5a5a64", "#a8a8b4"); }
-  else if (key === "snow") { s += `<path d="M0 30V16Q22 8 45 14T90 13T135 15T180 14V30Z" fill="#e6eefb"/><path d="M0 30V22Q30 16 60 21T120 20T180 22V30Z" fill="#f6f9ff"/>`;
-    for (let i = 0; i < 9; i++) { const x = r(0, 180); s += `<path d="M${f(x - 10)} ${f(r(18, 24))}q10 -5 20 0" stroke="#b9cbe8" stroke-width="1" fill="none"/>`; }
-    for (let i = 0; i < 10; i++) { const x = r(0, 180); s += `<path d="${blade(x, 20, r(4, 9), r(-2, 2), .6)}" fill="${pick(["#8a9a6a", "#a6b07a"])}"/>`; }
-    for (let i = 0; i < 3; i++) { const x = r(10, 170); s += `<path d="${blob(x, 24, 5, 3.2, 7, .2)}" fill="#7c879f"/><path d="${blob(x, 22, 4, 1.4, 6, .2)}" fill="#fff"/>`; }
-    for (let i = 0; i < 6; i++) s += `<circle cx="${f(r(0, 180))}" cy="${f(r(16, 28))}" r=".8" fill="#fff"/>`; }
+  else if (key === "alps") {   // kein durchgehender Grünstreifen: nur Gras, viele Steine und Kies
+    const rk = (x, y, w, h) => `<path d="${blob(x, y - h * .45, w * .5, h * .5, 8, .16)}" fill="${pick(["#8a909c", "#7a808c", "#9aa0aa"])}" stroke="#3e434c" stroke-width=".5"/><path d="${blob(x - w * .12, y - h * .7, w * .22, h * .12, 6, .2)}" fill="#e4e8ee" opacity=".55"/><path d="${blob(x + w * .1, y - h * .25, w * .3, h * .18, 6, .2)}" fill="#4f5560" opacity=".45"/>`;
+    for (let i = 0; i < 40; i++) s += `<circle cx="${f(r(0, 180))}" cy="${f(r(25, 30))}" r="${f(r(.5, 1.3))}" fill="${pick(["#7a808a", "#a0a6ae", "#5a606a"])}"/>`;
+    for (let i = 0; i < 9; i++) s += rk(r(6, 174), r(28, 31), r(6, 15), r(4, 9));
+    for (let i = 0; i < 64; i++) s += `<path d="${blade(r(0, 180), 30, r(5, 17), r(-4, 4), r(.7, 1.2))}" fill="${pick(["#5FA640", "#6DB548", "#4E9137", "#7aae52", "#3E7D2E"])}"/>`;
+    for (let i = 0; i < 6; i++) s += rk(r(6, 174), r(29, 31), r(4, 9), r(3, 5));
+    for (let i = 0; i < 7; i++) { const x = r(4, 176), top = r(10, 20); s += `<path d="M${f(x)} 30V${f(top)}" stroke="#3f6a2a" stroke-width=".7"/>${WLD.flower(x, top, r(1.6, 2.3), pick(["daisy", "bell", "lav", "butter"]))}`; } }
+  else if (key === "space") { s += `<path d="M0 30V17Q45 11 90 16T180 17V30Z" fill="#4e4e5c"/><path d="M0 30V23Q45 20 90 23T180 23V30Z" fill="#5c5c6a"/>`;
+    for (let i = 0; i < 4; i++) { const x = r(10, 170), w = r(6, 14); s += `<ellipse cx="${f(x)}" cy="${f(r(22, 27))}" rx="${f(w)}" ry="${f(w * .3)}" fill="#33333e"/><path d="M${f(x - w)} 25A${f(w)} ${f(w * .3)} 0 0 0 ${f(x + w)} 25" stroke="#7a7a8a" stroke-width=".8" fill="none"/>`; }
+    for (let i = 0; i < 30; i++) s += `<circle cx="${f(r(0, 180))}" cy="${f(r(18, 29))}" r="${f(r(.3, 1))}" fill="${pick(["#3e3e4a", "#7a7a8a", "#a8a0ff"])}"/>`;
+    for (let i = 0; i < 3; i++) s += WLD.rock(r(10, 170), r(24, 29), r(5, 9), r(3, 5), "#4a4a58", "#34343e", "#6a6a7a"); }
+  else if (key === "snow") {   // weiche Schneewehen mit blauen Schatten, Eiskristalle, gefrorene Halme
+    s += `<defs><linearGradient id="snS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#e6eefb"/><stop offset="1" stop-color="#c9d8f0"/></linearGradient></defs>`;
+    s += `<path d="M0 30V19Q15 12 32 17T66 15T100 18T140 14T180 19V30Z" fill="#cdd9ee"/><path d="M0 30V22Q22 15 46 20T92 19T136 21T180 22V30Z" fill="url(#snS)"/>`;
+    for (let i = 0; i < 8; i++) { const x = r(0, 180); s += `<path d="M${f(x - 12)} ${f(r(21, 26))}q12 -5 24 0" stroke="#a8bce0" stroke-width=".9" fill="none" opacity=".8"/>`; }
+    for (let i = 0; i < 8; i++) { const x = r(0, 180); s += `<path d="${blade(x, 23, r(4, 9), r(-2, 2), .55)}" fill="${pick(["#8a9a7a", "#b0b8a0"])}"/><path d="M${f(x - .3)} ${f(r(15, 19))}h.6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>`; }
+    for (let i = 0; i < 3; i++) { const x = r(10, 170); s += `<path d="${blob(x, 25, 5, 3, 7, .2)}" fill="#8a96b0"/><path d="${blob(x - 1, 22.6, 4.4, 1.6, 6, .2)}" fill="#fff"/>`; }
+    for (let i = 0; i < 10; i++) { const x = r(0, 180), y = r(18, 29); s += `<path d="M${f(x)} ${f(y - 1.4)}V${f(y + 1.4)}M${f(x - 1.4)} ${f(y)}H${f(x + 1.4)}" stroke="#fff" stroke-width=".6"/>`; } }
   else if (key === "desert") { s += `<path d="M0 30V17Q30 10 60 16T120 14T180 17V30Z" fill="#e3a465"/><path d="M0 30V22Q45 18 90 22T180 22V30Z" fill="#eab06e"/>`;
     for (let i = 0; i < 12; i++) { const x = r(0, 170); s += `<path d="M${f(x)} ${f(r(19, 28))}q6 -2 12 0" stroke="#c98a52" stroke-width=".8" fill="none"/>`; }
     for (let i = 0; i < 6; i++) s += WLD.rock(r(5, 175), r(24, 29), r(4, 8), r(2.5, 4));
@@ -3870,7 +3978,8 @@ WLD.cardDeco = key => { const { seed, r, pick, f, blob, leaf, blade, ch } = WLD;
 
 // hintere, höhere Pflanzenreihe für den Streifen (wiegt sich im Wind)
 WLD.stripBack = key => { const { seed, r, pick, f, blade, leaf, flower } = WLD; seed(300 + key.length); let s = "";
-  if (key === "forest") { for (let i = 0; i < 40; i++) { const x = r(0, 240); s += `<path d="${blade(x, 56, r(22, 46), r(-8, 8), r(1.2, 2.2))}" fill="${pick(["#3E7D2E", "#356B28", "#2f6226", "#4E9137"])}"/>`; }
+  if (key === "forest") return "";
+  if (key === "forestOld") { for (let i = 0; i < 40; i++) { const x = r(0, 240); s += `<path d="${blade(x, 56, r(22, 46), r(-8, 8), r(1.2, 2.2))}" fill="${pick(["#3E7D2E", "#356B28", "#2f6226", "#4E9137"])}"/>`; }
     for (let i = 0; i < 4; i++) { const x = r(10, 230), c = r(30, 50); for (let k = 0; k < 7; k++) { const a = (-60 + k * 20) * Math.PI / 180, ex = x + Math.sin(a) * c * .7, ey = 56 - Math.cos(a) * c; s += `<path d="M${f(x)} 56Q${f(x + Math.sin(a) * c * .3)} ${f(56 - c * .6)} ${f(ex)} ${f(ey)}" stroke="#2f5f24" stroke-width="1" fill="none"/>`; for (let q = 1; q < 7; q++) { const t = q / 7, px = x + (ex - x) * t, py = 56 + (ey - 56) * t; s += `<path d="${leaf(px, py, (1 - t) * 6 + 2, (a * 180 / Math.PI) - 160, .4)}" fill="#3d7a30"/><path d="${leaf(px, py, (1 - t) * 6 + 2, (a * 180 / Math.PI) - 20, .4)}" fill="#3d7a30"/>`; } } }
     for (let i = 0; i < 7; i++) { const x = r(5, 235), top = r(12, 30); s += `<path d="M${f(x)} 56V${f(top)}" stroke="#2f5a24" stroke-width=".9"/>${flower(x, top, r(2.4, 3.4), pick(["daisy", "poppy", "bell", "lav", "butter"]))}`; } }
   else if (key === "ocean") { for (let i = 0; i < 6; i++) { const x = r(10, 230), h = r(30, 54); let d = `M${f(x)} 56`; for (let k = 1; k < 6; k++) d += `Q${f(x + (k % 2 ? 6 : -6))} ${f(56 - h * (k - .5) / 5)} ${f(x)} ${f(56 - h * k / 5)}`; s += `<path d="${d}" stroke="${pick(["#2f8a5a", "#3a9a64", "#24704a"])}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>`; } }
@@ -3928,6 +4037,66 @@ Object.assign(WLD.PROPS, (() => { const { r, f, pick, blob, leaf, blade } = WLD;
     station: { w: "space", n: "Messstation", svg: () => sv(`<rect x="22" y="34" width="40" height="22" rx="3" fill="#d8d8e0"/><rect x="26" y="38" width="14" height="8" fill="#2a3a5a"/><circle cx="52" cy="42" r="3" fill="#7fe0a0"/><path d="M8 40H22M62 40H78" stroke="#9a9aa6" stroke-width="2"/><rect x="0" y="34" width="10" height="14" fill="#3a5a9a"/><rect x="76" y="34" width="10" height="14" fill="#3a5a9a"/><path d="M30 56L26 62M54 56L58 62" stroke="#9a9aa6" stroke-width="2"/>` + ground("#9a9aa6")) },
     crater: { w: "space", n: "Krater", svg: () => sv(`<ellipse cx="43" cy="54" rx="40" ry="9" fill="#6a6a76"/><ellipse cx="45" cy="55" rx="32" ry="6" fill="#4a4a54"/><path d="M3 54A40 9 0 0 1 83 54" stroke="#c8c8d4" stroke-width="2" fill="none"/><path d="M8 50l-3 -6l6 3zM74 48l4 -6l1 7z" fill="#8a8a96"/>` + ground("#9a9aa6")) },
   }; })());
+
+// ----- überarbeitete Deko (v35): Wüste, Sumpf, Berge – runde Hügel statt kantiger Bodenstreifen -----
+Object.assign(WLD.PROPS, (() => { const { r, f, pick, blob, leaf, blade, uid } = WLD; const sv = b => `<svg viewBox="0 0 86 62" style="overflow:visible">${b}</svg>`;
+  const mound = (c1, c2, w = 40, h = 7) => `<ellipse cx="43" cy="61" rx="${w}" ry="${h}" fill="${c1}"/><ellipse cx="40" cy="${61 - h * .35}" rx="${w * .72}" ry="${h * .45}" fill="${c2}" opacity=".7"/>`;
+  const sand = (w = 40) => mound("#d99a5c", "#f0c080", w) + [...Array(7)].map(() => `<circle cx="${f(r(10, 76))}" cy="${f(r(57, 61))}" r="${f(r(.6, 1.4))}" fill="${pick(["#b8743e", "#a0603a", "#f4d2a0"])}"/>`).join("");
+  const pebble = (x, y, w, c = "#b0703e") => `<path d="${blob(x, y - w * .35, w, w * .55, 7, .2)}" fill="${c}"/><path d="${blob(x - w * .2, y - w * .55, w * .5, w * .2, 6, .2)}" fill="#fff" opacity=".25"/>`;
+  const dryTuft = (x, y, s = 1) => [...Array(9)].map(() => `<path d="${blade(x + r(-4, 4) * s, y, r(6, 13) * s, r(-6, 6) * s, .8 * s)}" fill="${pick(["#c9a65a", "#b08a44", "#d8bc72"])}"/>`).join("");
+  const mud = (w = 40) => mound("#2f3f2a", "#41583a", w) + `<ellipse cx="${f(r(26, 60))}" cy="60" rx="14" ry="2.4" fill="#3a6a6a" opacity=".7"/><path d="M14 60h10M56 61h12" stroke="#9ac8c0" stroke-width=".8" opacity=".6"/>`;
+  const rockG = (x, y, w, h, id) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="#c8ccd4"/><stop offset=".5" stop-color="#8a909c"/><stop offset="1" stop-color="#4f5560"/></linearGradient></defs>
+    <path d="${blob(x, y - h * .45, w * .5, h * .5, 8, .16)}" fill="url(#${id})" stroke="#3a3e46" stroke-width=".7"/><path d="${blob(x - w * .14, y - h * .72, w * .22, h * .12, 6, .2)}" fill="#fff" opacity=".35"/><path d="M${f(x - w * .1)} ${f(y - h * .7)}l${f(w * .08)} ${f(h * .3)}l${f(-w * .04)} ${f(h * .2)}" stroke="#3a3e46" stroke-width=".7" fill="none" opacity=".6"/>`;
+  return {
+    // ---------- Wüste ----------
+    saguaro: { w: "desert", n: "Saguaro mit Blüten", svg: () => { WLD.seed(201); return sv(sand() + `<g transform="translate(26 4)">${WLD.saguaro(34, 56, { flower: "#ff6f91" })}</g>` + `<g transform="translate(58 42) scale(.42)">${WLD.barrel(40, 44, { fl: "#ffd23a" })}</g>` + pebble(16, 60, 5) + dryTuft(70, 61, .8)); } },
+    prickly: { w: "desert", n: "Feigenkaktus", svg: () => { WLD.seed(202); return sv(sand() + `<g transform="translate(18 6)">${WLD.prickly(50, 56, { fl: "#ff5e8a" })}</g>` + pebble(70, 60, 6) + pebble(14, 61, 4) + dryTuft(76, 61, .7)); } },
+    skull: { w: "desert", n: "Rinderschädel", svg: () => { WLD.seed(203); const id = uid("sk");
+      return sv(sand() + rockG(30, 60, 40, 26, id).replace(/#c8ccd4/, "#e8a070").replace(/#8a909c/, "#b8603e").replace(/#4f5560/, "#7a3a24").replace(/#3a3e46/g, "#5a2a18")
+        + `<g transform="translate(46 34)"><path d="M2 8Q-10 4 -16 -6Q-8 0 0 2Z" fill="#efe4cc" stroke="#8a7a5a" stroke-width=".6"/><path d="M26 8Q38 4 44 -6Q36 0 28 2Z" fill="#efe4cc" stroke="#8a7a5a" stroke-width=".6"/>
+          <path d="M2 4Q14 -2 28 4L26 18Q22 28 15 28Q8 28 4 18Z" fill="#f6efdc" stroke="#8a7a5a" stroke-width=".7"/><path d="M6 10Q9 7 12 10Q11 14 8 14Z M24 10Q21 7 18 10Q19 14 22 14Z" fill="#3a2a1a"/><path d="M13 20l2 3l2 -3" stroke="#8a7a5a" stroke-width=".8" fill="none"/><path d="M8 5q7 -3 14 0" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/></g>` + dryTuft(14, 61, .9) + dryTuft(78, 61, .7)); } },
+    agave: { w: "desert", n: "Agave mit Blütenstand", svg: () => { WLD.seed(204); const id = uid("ag"); let s = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8d4c4"/><stop offset="1" stop-color="#3f7a6a"/></linearGradient></defs>` + sand();
+        s += `<path d="M44 46Q46 24 50 4" stroke="#7a6a3a" stroke-width="1.6" fill="none"/>${[[49, 6], [48, 12], [47.4, 18], [46.6, 24]].map(([x, y], i) => `<path d="M${x} ${y}q${i % 2 ? 6 : -6} -2 ${i % 2 ? 9 : -9} 1" stroke="#7a6a3a" stroke-width=".8" fill="none"/><circle cx="${x + (i % 2 ? 9 : -9)}" cy="${y + 1}" r="2.6" fill="#ffd23a"/><circle cx="${x + (i % 2 ? 9 : -9)}" cy="${y + 1}" r="1.2" fill="#ff9a2a"/>`).join("")}`;
+        for (let i = 0; i < 11; i++) { const a = -80 + i * 16; s += `<path d="${leaf(43, 58, r(16, 24) * (1 - Math.abs(a) / 160), a - 90, .22)}" fill="url(#${id})" stroke="#2f5a4e" stroke-width=".5"/>`; }
+        return sv(s + pebble(16, 61, 4)); } },
+    barrel: { w: "desert", n: "Kugelkakteen", svg: () => { WLD.seed(205); return sv(sand() + `<g transform="translate(14 22)">${WLD.barrel(34, 38, { fl: "#ffd23a" })}</g><g transform="translate(44 32)">${WLD.barrel(26, 28, { fl: "#ff5e8a" })}</g><g transform="translate(64 44) scale(.6)">${WLD.barrel(24, 26, { fl: "#ffb347" })}</g>` + pebble(10, 61, 4) + pebble(76, 61, 5)); } },
+    ocotillo: { w: "desert", n: "Ocotillo", svg: () => { WLD.seed(206); let s = sand(); for (let i = 0; i < 9; i++) { const a = (-50 + i * 12.5) * Math.PI / 180, l = r(38, 52), ex = 43 + Math.sin(a) * l, ey = 58 - Math.cos(a) * l;
+        s += `<path d="M43 58Q${f(43 + Math.sin(a) * l * .5)} ${f(58 - Math.cos(a) * l * .55)} ${f(ex)} ${f(ey)}" stroke="#6a5030" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; for (let k = 2; k < 7; k++) { const t = k / 7; s += `<path d="${leaf(43 + (ex - 43) * t, 58 + (ey - 58) * t, 2.6, a * 57 + (k % 2 ? 60 : -60), .4)}" fill="#7aa04a"/>`; }
+        s += `<path d="M${f(ex)} ${f(ey)}l-1.6 -5l1.6 1.4l1.6 -1.4z" fill="#ff4f3a"/><circle cx="${f(ex)}" cy="${f(ey - 4)}" r="1.4" fill="#ff7a3a"/>`; }
+      return sv(s + dryTuft(18, 61) + pebble(70, 61, 5)); } },
+    arch: { w: "desert", n: "Sandsteinbogen", svg: () => { WLD.seed(207); const id = uid("ar"); let s = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a0502e"/><stop offset=".4" stop-color="#d9824e"/><stop offset="1" stop-color="#8a4024"/></linearGradient></defs>` + sand(42);
+        s += `<path d="M10 60V30Q12 8 43 6Q74 8 76 30V60H62V36Q60 22 43 22Q26 22 24 36V60Z" fill="url(#${id})" stroke="#5a2a14" stroke-width=".8"/>${[16, 24, 32, 40, 48].map(y => `<path d="M11 ${y}Q43 ${y - 18} 75 ${y}" stroke="#f0a070" stroke-width=".7" fill="none" opacity=".55" clip-path="none"/>`).join("")}<path d="M14 26Q20 10 43 9" stroke="#ffc090" stroke-width="1.6" fill="none" opacity=".7"/>`;
+        return sv(s + dryTuft(30, 61, .8) + pebble(68, 61, 4)); } },
+    pots: { w: "desert", n: "Tonkrüge", svg: () => { WLD.seed(208); const id = uid("tk");
+      const pot = (x, y, w, h) => `<path d="M${x - w * .3} ${y - h}H${x + w * .3}L${x + w * .25} ${y - h * .88}Q${x + w * .55} ${y - h * .6} ${x + w * .4} ${y - h * .15}Q${x + w * .2} ${y} ${x} ${y}Q${x - w * .2} ${y} ${x - w * .4} ${y - h * .15}Q${x - w * .55} ${y - h * .6} ${x - w * .25} ${y - h * .88}Z" fill="url(#${id})" stroke="#6a2a14" stroke-width=".7"/><path d="M${x - w * .45} ${y - h * .55}Q${x} ${y - h * .45} ${x + w * .45} ${y - h * .55}" stroke="#f4d2a0" stroke-width="1.4" fill="none"/><path d="M${x - w * .44} ${y - h * .48}Q${x} ${y - h * .38} ${x + w * .44} ${y - h * .48}" stroke="#2a6a8a" stroke-width="1" fill="none"/>`;
+      return sv(`<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a3a1a"/><stop offset=".45" stop-color="#d8784a"/><stop offset="1" stop-color="#7a301a"/></linearGradient></defs>` + sand() + pot(30, 60, 34, 40) + pot(58, 61, 26, 28) + `<g transform="translate(20 4) scale(.5)">${WLD.prickly(40, 42, { fl: "#ffd23a" })}</g>` + pebble(76, 61, 4)); } },
+    // ---------- Sumpf ----------
+    reeds: { w: "swamp", n: "Rohrkolben am Wasser", svg: () => { WLD.seed(211); let s = mud(); for (let i = 0; i < 9; i++) { const x = r(14, 72), h = r(30, 54), a = r(-5, 5);
+        s += `<path d="M${f(x)} 60Q${f(x + a * .4)} ${f(60 - h * .6)} ${f(x + a)} ${f(60 - h)}" stroke="${pick(["#5b8f3a", "#6fa443", "#4a7a30"])}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; if (i % 2 === 0) s += `<rect x="${f(x + a - 2.6)}" y="${f(60 - h + 2)}" width="5.2" height="${f(h * .24)}" rx="2.6" fill="#6b4226" stroke="#3a2414" stroke-width=".5"/><path d="M${f(x + a - 1)} ${f(60 - h + 4)}v${f(h * .16)}" stroke="#a87a4a" stroke-width=".8"/>`; }
+      for (let i = 0; i < 12; i++) s += `<path d="${blade(r(8, 78), 60, r(8, 22), r(-4, 4), 1)}" fill="${pick(["#4a7f30", "#5a9a3a", "#3a6a2a"])}"/>`; return sv(s + `<g transform="translate(58 50)">${WLD.lily(8, 3, "#ffb3d1")}</g>`); } },
+    roots: { w: "swamp", n: "Mangrove mit Moos", svg: () => { WLD.seed(212); let s = mud(); s += `<path d="M38 0Q36 20 40 34" stroke="#3a3226" stroke-width="7" fill="none"/>`;
+        for (let i = 0; i < 7; i++) { const ex = 10 + i * 11; s += `<path d="M40 ${30 + i * 2}Q${(40 + ex) / 2} ${f(r(34, 44))} ${ex} 59" stroke="#3a3226" stroke-width="${f(r(2.4, 4))}" fill="none" stroke-linecap="round"/><path d="M40 ${30 + i * 2}Q${(40 + ex) / 2} ${f(r(34, 44))} ${ex} 59" stroke="#5a4c3a" stroke-width=".8" fill="none" opacity=".6"/>`; }
+        s += WLD.moss(30, 26, "#8a9a7a").replace(/<path /g, '<path transform="translate(26 4)" '); for (let i = 0; i < 5; i++) s += `<circle cx="${f(r(20, 64))}" cy="${f(r(10, 40))}" r="1.4" fill="#e8ff8a" opacity=".85"/>`; return sv(s); } },
+    log: { w: "swamp", n: "Moosiger Baumstamm", svg: () => { WLD.seed(213); const id = uid("lg");
+      return sv(`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5a3a"/><stop offset=".6" stop-color="#4a3424"/><stop offset="1" stop-color="#2a1c12"/></linearGradient></defs>` + mud()
+        + `<path d="M8 48Q6 36 18 36H68Q78 38 77 49Q76 58 66 58H18Q8 58 8 48Z" fill="url(#${id})" stroke="#24180e" stroke-width=".8"/><ellipse cx="70" cy="47" rx="7" ry="10.4" fill="#8a6a46" stroke="#24180e" stroke-width=".8"/><ellipse cx="70" cy="47" rx="4" ry="6.4" fill="none" stroke="#5a4028" stroke-width=".8"/><ellipse cx="70" cy="47" rx="1.6" ry="2.6" fill="#5a4028"/>
+        <path d="${blob(36, 37, 22, 4, 9, .35)}" fill="#5a8a3a"/><path d="${blob(30, 36, 10, 2.4, 7, .3)}" fill="#7aaa4a"/>${[[24, 37], [34, 35], [48, 36]].map(([x, y], i) => `<rect x="${x - 1}" y="${y - 6}" width="2" height="6" fill="#f2e2c0"/><path d="M${x - 5} ${y - 5}Q${x} ${y - 12} ${x + 5} ${y - 5}Z" fill="${["#e8b04a", "#d8432f", "#e8b04a"][i]}"/><circle cx="${x - 1.4}" cy="${y - 8}" r=".9" fill="#fff" opacity=".8"/>`).join("")}
+        <path d="M18 44H60M16 51H62" stroke="#2a1c12" stroke-width=".8" opacity=".6"/>`); } },
+    lilies: { w: "swamp", n: "Seerosen-Teich", svg: () => { WLD.seed(214); return sv(`<ellipse cx="43" cy="57" rx="42" ry="7" fill="#24443e"/><ellipse cx="43" cy="56" rx="36" ry="4.6" fill="#2f5a52"/><path d="M12 56h14M50 58h16M30 54h8" stroke="#9ac8c0" stroke-width=".8" opacity=".7"/>`
+        + `<g transform="translate(10 46)">${WLD.lily(11, 4.2, "#ffb3d1")}</g><g transform="translate(42 50)">${WLD.lily(13, 5, "#fff")}</g><g transform="translate(58 42)">${WLD.lily(8, 3, null)}</g>`
+        + [...Array(8)].map(() => `<path d="${blade(r(2, 14), 57, r(10, 22), r(-3, 3), 1)}" fill="#4a7f30"/>`).join("") + `<circle cx="66" cy="30" r="1.6" fill="#e8ff8a"/><circle cx="26" cy="24" r="1.3" fill="#e8ff8a"/>`); } },
+    knees: { w: "swamp", n: "Zypressenknie", svg: () => { WLD.seed(215); let s = mud(); [[18, 26], [32, 38], [46, 24], [58, 32], [70, 20]].forEach(([x, h]) => { s += `<path d="M${x - 6} 60Q${x - 4} ${60 - h} ${x} ${60 - h}Q${x + 4} ${60 - h} ${x + 6} 60Z" fill="#4a3c2c" stroke="#24180e" stroke-width=".7"/><path d="M${x - 2} 58Q${x - 1.6} ${60 - h * .8} ${x} ${62 - h}" stroke="#7a6448" stroke-width="1.2" fill="none" opacity=".7"/><path d="${blob(x, 60 - h * .5, 4, 1.6, 6, .3)}" fill="#5a8a3a" opacity=".85"/>`; });
+      return sv(s + `<g transform="translate(64 50)">${WLD.lily(7, 2.6, "#ffd6e8")}</g>`); } },
+    // ---------- Berge: mehr Gestein ----------
+    alprock: { w: "alps", n: "Felsblock mit Moos", svg: () => { WLD.seed(221); const a = uid("ar"), b = uid("ar");
+      return sv(mound("#4E9137", "#6DB548") + rockG(38, 60, 54, 40, a) + rockG(68, 61, 26, 18, b) + `<path d="${blob(30, 24, 16, 4, 8, .3)}" fill="#5a8a3a"/>` + [...Array(12)].map(() => `<path d="${blade(r(6, 80), 61, r(5, 12), r(-3, 3), .8)}" fill="${pick(["#5FA640", "#4E9137"])}"/>`).join("") + WLD.flower(12, 52, 2.2, "daisy")); } },
+    scree: { w: "alps", n: "Geröllhalde", svg: () => { WLD.seed(222); let s = mound("#6a7a5a", "#8a9a72"); const pts = []; for (let i = 0; i < 16; i++) pts.push([r(8, 78), r(36, 60), r(5, 12)]); pts.sort((p, q) => p[1] - q[1]);
+        pts.forEach(([x, y, w], i) => s += rockG(x, y, w, w * .7, uid("sc")));
+        return sv(s + [...Array(8)].map(() => `<path d="${blade(r(4, 82), 61, r(5, 10), r(-3, 3), .7)}" fill="#5FA640"/>`).join("")); } },
+    cairn: { w: "alps", n: "Steinmännchen", svg: () => { WLD.seed(223); let s = mound("#4E9137", "#6DB548"); [[43, 60, 26, 10], [44, 50, 20, 9], [42, 41, 16, 8], [44, 33, 12, 7], [43, 26, 8, 6]].forEach(([x, y, w, h]) => s += rockG(x, y, w, h, uid("cn")));
+        return sv(s + rockG(18, 61, 12, 7, uid("cn")) + rockG(70, 61, 10, 6, uid("cn")) + WLD.flower(60, 50, 2.4, "bell") + WLD.flower(24, 52, 2, "daisy") + [...Array(10)].map(() => `<path d="${blade(r(4, 82), 61, r(5, 11), r(-3, 3), .8)}" fill="#5FA640"/>`).join("")); } },
+  };
+})());
 
 /* ===================== RANG-DESIGNS ===================== */
 // TESTMODUS: alles freigeschaltet, damit du alles ausprobieren kannst. Später auf false setzen → dann zählt der höchste Rang.
@@ -4005,10 +4174,13 @@ const UNLOCKS = [
   { cat: "deco", k: "blossom", tier: 8, emo: "🌸", n: "Kirschblüte", d: "Kirschzweige wachsen aus der Ecke um die Karte, Blütenblätter bleiben auf der unteren Leiste liegen." },
   { cat: "accent", k: "myth", tier: 10, emo: "🌈", n: "Farbfluss", d: "Deine Akzentfarbe wird zu einem Farbverlauf, der über die ganze Seite gleichmäßig von links nach rechts läuft." },
 ];
+// Verzierung der Kästchen ist komplett entfernt
+for (let i = UNLOCKS.length - 1; i >= 0; i--) if (UNLOCKS[i].cat === "deco") UNLOCKS.splice(i, 1);
 const ANIMALS = [
   { k: "lizard", w: "desert", tier: 2, emo: "🦎", n: "Eidechse", d: "Flitzt los, bleibt stehen, züngelt – und macht Liegestütze." },
   { k: "fennec", w: "desert", tier: 4, emo: "🦊", n: "Wüstenfuchs", d: "Riesige Ohren: lauscht, buddelt im Sand und jagt die Eidechse bis in ihr Loch." },
   { k: "camel", w: "desert", tier: 5, emo: "🐫", n: "Kamel", d: "Schaukelt gemütlich vorbei, kaut – und spuckt, wenn der Wüstenfuchs zu neugierig wird." },
+  { k: "scorp", w: "desert", tier: 5, emo: "🦂", n: "Skorpion", d: "Krabbelt über den Sand, hebt drohend den Stachel, klappert mit den Scheren – und gräbt sich blitzschnell ein." },
   { k: "bunny", w: "forest", tier: 3, emo: "🐇", n: "Hasen", d: "Hoppeln, knabbern, ziehen Karotten aus dem Boden – und manchmal geht ein kleines Malheur daneben." },
   { k: "fox", w: "forest", tier: 5, emo: "🦊", n: "Fuchs", d: "Trabt vorbei, macht den Mäusesprung kopfüber ins Gras, kratzt sich – und jagt gern mal einen Hasen." },
   { k: "deer", w: "forest", tier: 6, emo: "🦌", n: "Rehe", d: "Ricke mit Bambi, manchmal mit dem Bock, der Wache hält." },
@@ -4022,21 +4194,27 @@ const ANIMALS = [
   { k: "frog", w: "swamp", tier: 5, emo: "🐸", n: "Frosch", d: "Hüpft mit Platschen, quakt mit Schallblase und fängt Fliegen mit der Zunge." },
   { k: "heron", w: "swamp", tier: 6, emo: "🪶", n: "Reiher", d: "Stakst vorbei, steht auf einem Bein und stößt blitzschnell zu." },
   { k: "gator", w: "swamp", tier: 7, emo: "🐊", n: "Krokodil", d: "Lauert halb versunken, gähnt – und schnappt nach dem Frosch, der ihm auf den Rücken springt." },
+  { k: "dragonfly", w: "swamp", tier: 6, emo: "🪰", n: "Libellen", d: "Flitzen übers Wasser, bleiben in der Luft stehen und wechseln blitzschnell die Richtung." },
   { k: "goat", w: "alps", tier: 6, emo: "🐐", n: "Bergziegen", d: "Springen auf Felsen, stoßen die Köpfe zusammen – eine kippt um." },
   { k: "marmot", w: "alps", tier: 6, emo: "🐿️", n: "Murmeltier", d: "Steht Wache, pfeift laut – und verschwindet blitzschnell in seinem Bau." },
   { k: "eagle", w: "alps", tier: 8, emo: "🦅", n: "Adler", d: "Kreist über allem und stürzt sich aufs Murmeltier – vergeblich." },
+  { k: "bear", w: "alps", tier: 7, emo: "🐻", n: "Braunbär", d: "Trottet heran, schnüffelt, richtet sich auf und brummt – das Murmeltier verschwindet lieber." },
   { k: "hare", w: "snow", tier: 7, emo: "🐇", n: "Schneehase", d: "Buddelt sich in den Schnee, taucht woanders auf – und klaut dem Schneemann die Karotten-Nase." },
   { k: "penguin", w: "snow", tier: 7, emo: "🐧", n: "Pinguine", d: "Watscheln im Gänsemarsch, rutschen auf dem Bauch – einer fällt immer hin." },
   { k: "ermine", w: "snow", tier: 8, emo: "🦦", n: "Hermelin", d: "Flinkes Schneewiesel: macht Männchen, springt Kopf voran in den Schnee und taucht wieder auf." },
-  { k: "astro", w: "space", tier: 9, emo: "🧑‍🚀", n: "Astronaut", d: "Hüpft in Zeitlupe über den Mond, macht einen Salto und lässt einen Ball schweben." },
-  { k: "rover", w: "space", tier: 9, emo: "🚙", n: "Mondrover", d: "Rollt vorbei, schwenkt die Antenne und hinterlässt Spuren." },
-  { k: "alien", w: "space", tier: 10, emo: "👽", n: "Kleines Alien", d: "Landet mit seiner Untertasse, winkt – und beamt sich wieder weg." },
+  { k: "polar", w: "snow", tier: 8, emo: "🐻‍❄️", n: "Eisbär", d: "Rutscht auf dem Bauch über den Schnee und angelt sich einen Fisch aus dem Eisloch." },
+  { k: "astro", w: "space", tier: 9, emo: "🧑‍🚀", n: "Astronaut", d: "Hüpft in Zeitlupe über den Mond, macht Saltos – und wird manchmal von einer Alien-Horde mit Laserkanonen gejagt." },
+  { k: "cow", w: "space", tier: 9, emo: "🐄", n: "UFO-Kuhklau", d: "Ein großes UFO versucht, eine Kuh vom Mond zu beamen – das klappt nicht immer." },
+  { k: "robodog", w: "space", tier: 9, emo: "🤖", n: "Robo-Hund", d: "Hüpft im Zeitlupen-Mondsprung, wedelt mit der Antenne und jagt einen schwebenden Ball." },
+  { k: "alien", w: "space", tier: 10, emo: "👽", n: "Aliens", d: "Ein großes UFO setzt eine ganze Alien-Truppe ab, die tanzt, winkt und wieder hochgebeamt wird." },
 ];
 // Deko links/rechts – jede Welt hat ihre eigenen Sorten
 let PROPS_ = null; const props = () => PROPS_ || (PROPS_ = (() => { const o = {}; const plain = s => s.replace(/<animate[^>]*\/>/g, "").replace(/<animateTransform[^>]*\/>/g, "");
   [["berry", "Beerenbusch"], ["fern", "Farn"], ["bloom", "Blütenbusch"], ["reed", "Schilf"]].forEach(([k, n], i) => { o[k] = { w: "forest", n, svg: () => plain(BUSHES[i]) }; });
   Object.entries(WLD.PROPS).forEach(([k, v]) => { o[k] = v; }); return o; })());
-const propSVG = k => { const p = props()[k]; if (!p) return ""; return p._s || (p._s = p.svg()); };
+// weiche Ränder links/rechts, damit keine Deko wie ein Kasten aussieht
+const propSoft = (k, s) => s.replace(/(<svg[^>]*>)/, `$1<defs><linearGradient id="pf_${k}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="86" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".1" stop-color="#fff"/><stop offset=".9" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="pm_${k}" maskUnits="userSpaceOnUse" x="-30" y="-40" width="146" height="110"><rect x="-30" y="-40" width="146" height="110" fill="url(#pf_${k})"/></mask></defs><g mask="url(#pm_${k})">`).replace(/<\/svg>\s*$/, "</g></svg>");
+const propSVG = k => { const p = props()[k]; if (!p) return ""; return p._s || (p._s = propSoft(k, p.svg())); };
 const peakTier = () => (S.allWo && S.daysFull && typeof rankState === "function") ? rankState().peak : 0;
 const unlocked = u => COSM_TEST_UNLOCK || peakTier() >= u.tier;
 const propTier = k => WORLD(props()[k]?.w).strip;
@@ -4057,9 +4235,11 @@ const normCosm = c => { c = { ...c }; if (c.galaxy && c.bg === undefined) c.bg =
   return c; };
 const cosmRaw = () => { const saved = normCosm(curTheme().cosm || {}), pv = window.__cosmPreview || {};
   return { ...saved, ...pv, animals: { ...saved.animals, ...(pv.animals || {}) }, sides: { ...saved.sides, ...(pv.sides || {}) } }; };
+// Panorama-Hintergründe sind vorerst ausgeschaltet (Code bleibt erhalten – auf true setzen, um sie zurückzuholen)
+const WORLD_BG = false;
 // wirksame Auswahl (was gerade zu sehen ist)
 const cosmNow = () => { const c = cosmRaw(), w = c.world && WK(c.world) ? c.world : null;
-  return { ...c, bg: w && c.wbg ? w : c.bg, deco: c.deco, biome: w || "forest", meadow: !!(w && c.meadow), side: (w && c.sides[w]) || { l: "auto", r: "auto" } }; };
+  return { ...c, bg: WORLD_BG && w && c.wbg ? w : c.bg, deco: null, biome: w || "forest", meadow: !!(w && c.meadow), side: (w && c.sides[w]) || { l: "auto", r: "auto" } }; };
 const rk = t => `${RANKS[t].i} ${RANKS[t].n}`;
 const GOD_PRESETS = [["#FFC21A", "#FF3D8B", "#9B3DFF"], ["#4CC9F0", "#7A4DFF", "#FF4FA3"], ["#2EE59D", "#4CC9F0", "#C04DFF"], ["#FF8A00", "#FF2F4F", "#FFD84D"], ["#FFFFFF", "#FFD84D", "#FF8A00"], ["#FF4FA3", "#C04DFF", "#4C6BFF"]];
 const godCols = c => (c.godColors && c.godColors.length === 3) ? c.godColors : GOD_PRESETS[0];
@@ -4088,16 +4268,15 @@ function cosmPrefsHTML(th) {
     ${sec("pano", "🌍 Panoramen", aw ? `${aw.n} aktiv` : "keins aktiv", `<div class="note" style="margin:0 0 8px">Jedes Panorama ist eine eigene Welt: Landschaft über der Leiste mit eigenen Tieren und eigener Deko links und rechts, auf Wunsch mit passendem Hintergrund. Es ist immer nur eins aktiv.</div>
       ${WORLDS.map(w => worldSection(w, c)).join("")}
       ${aw ? `<button class="btn block" data-action="worldoff" style="margin-top:8px">Panorama ausschalten</button>` : ""}`)}
-    ${sec("deco", "🃏 Verzierung der Kästchen", c.deco ? by(c.deco)?.n : "keine", `<div class="opt-grid">${none("deco", !c.deco, "Keine Deko")}${UNLOCKS.filter(u => u.cat === "deco").map(u => tile(u, c.deco === u.k)).join("")}</div>
-      <div class="note" style="margin-top:8px">Kleine Verzierungen an den Rändern deiner Kästchen (z. B. Efeu, Schnee oder Korallen) – unabhängig vom Panorama.</div>`)}
     ${sec("fx", "✨ Extras", [c.confetti && "Konfetti", c.myth && "Farbfluss"].filter(Boolean).join(" · ") || "aus", `<div class="opt-grid">${["confetti", "myth"].map(k => tile(by(k), !!c[k])).join("")}</div>
       ${c.myth ? `<div class="sub-h">Farben für den Farbfluss</div><div class="cosm-cols">${cols.map((col, j) => `<input type="color" value="${col}" data-mythcol="${j}" title="Farbe ${j + 1}">`).join("")}
         ${cols.length < 6 ? `<button class="chip" data-action="mythadd">+</button>` : ""}${cols.length > 2 ? `<button class="chip" data-action="mythrm">−</button>` : ""}
         <span style="flex-basis:100%;height:4px"></span>${MYTH_PRESETS.map((pr, j) => `<button class="chip" data-action="mythpre" data-v="${j}" style="background:linear-gradient(90deg,${pr.join(",")});width:44px;height:26px;border:0"></button>`).join("")}</div>` : ""}`)}
     ${sec("try", "🏆 Ausprobieren", "Animationen testen", `<div class="opt-grid">
       <button class="opt" data-action="rankuptest"><span class="oe">🏆</span><span><b>Rang-Aufstieg</b><small>Animation testen</small></span></button>
-      <button class="opt" data-action="prtest"><span class="oe">⏱️</span><span><b>Neuer Rekord</b><small>Animation testen</small></span></button>
-      ${c.world === "space" ? `<button class="opt" data-action="entitytest"><span class="oe">👁️</span><span><b>Das Wesen</b><small>einmal herbeirufen</small></span></button>` : ""}</div>`)}
+      <button class="opt" data-action="prtest"><span class="oe">⏱️</span><span><b>Neuer Rekord</b><small>Animation testen</small></span></button></div>
+      <div class="sub-h">Pokal jedes Rangs ansehen</div><div class="opt-grid">${RANKS.map((r, i) => `<button class="opt" data-action="rutest" data-t="${i}"><span class="oe">${r.i}</span><span><b>${r.n}</b><small>Pokal ansehen</small></span></button>`).join("")}
+</div>`)}
     ${sec("unl", "🔓 Was schaltet welcher Rang frei?", "", unlockOverview())}`;
 }
 // ein Panorama zum Aufklappen
@@ -4112,7 +4291,7 @@ function worldSection(w, c) {
     return `<div class="opt-grid">${opt("auto", "Automatisch", "wechselt bei Szenen", `<span class="oe">✨</span>`)}${opt("", "Keine", "frei", `<span class="oe">⬛</span>`)}${pl.map(([k, p]) => opt(k, p.n, unlocked({ tier: propTier(k) }) ? "" : "🔒 " + rk(propTier(k)), `<span class="oe prop">${propSVG(k)}</span>`)).join("")}</div>`; };
   const body = `<p class="muted" style="margin:0 0 10px;font-size:13px;line-height:1.4">${w.d}</p>
     ${active ? "" : `<button class="btn primary block" data-action="worlduse" data-k="${w.k}" style="margin-bottom:10px">„${w.n}“ verwenden</button>`}
-    <div class="opt-grid">${sw(c.meadow, "wstrip", "Landschaft", "🏞️", us)}${sw(c.wbg, "wbg", "Hintergrund", "🖼️", ub)}</div>
+    <div class="opt-grid">${sw(c.meadow, "wstrip", "Landschaft", "🏞️", us)}${WORLD_BG ? sw(c.wbg, "wbg", "Hintergrund", "🖼️", ub) : ""}</div>
     <div class="sub-h">Tiere</div>
     <div class="opt-grid">${animals.map(a => { const open = unlocked(a), on = active && !!A[a.k];
       return `<button class="opt ${on ? "on" : ""} ${open ? "" : "lock"}" data-action="animal" data-w="${w.k}" data-k="${a.k}" title="${esc(a.d)}"><span class="oe">${a.emo}</span><span style="min-width:0"><b>${a.n}</b><small>${open ? "" : "🔒 "}${rk(a.tier)}</small></span></button>`; }).join("")}</div>
@@ -4251,7 +4430,7 @@ function quotaDone() { toast("Quote erfüllt! 🔥"); if (cosmNow().confetti && 
 let AC = null;
 const audio = () => { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); } catch { AC = null; } return AC; };
 document.addEventListener("pointerdown", () => audio(), { once: true });
-function partySound() {
+function partySoundOld() {
   const a = audio(); if (!a) return; const t = a.currentTime + .05, out = a.createGain(); out.gain.value = .55; out.connect(a.destination);
   const noise = (at, len, f, q, vol) => { const b = a.createBuffer(1, a.sampleRate * len, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
     const s = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain(); s.buffer = b; bp.type = "bandpass"; bp.frequency.value = f; bp.Q.value = q; g.gain.value = vol; s.connect(bp).connect(g).connect(out); s.start(at); };
@@ -4315,12 +4494,15 @@ function trophySVG(tier, o = {}) {
     <mask id="${id}mk" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="260" height="320">${W(IMG)}</mask>
     <linearGradient id="${id}sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>`;
   // Hintergrund: weicher, wabernder Galaxie-Nebel + funkelnde Sterne (keine Lichtstrahlen)
-  s += `<g opacity="${f(Math.min(1, I))}">
+  const HI = T >= 9;
+  if (HI) s += `<g class="thue${T === 10 ? " neg" : ""}" style="transform-origin:${cx}px ${cy}px">${[0, 1, 2, 3].map(k => `<circle class="twave" style="animation-delay:${-k * 1.1}s;transform-origin:${cx}px ${cy}px" cx="${cx}" cy="${cy}" r="60" fill="none" stroke="${k % 2 ? c2 : c1}" stroke-width="${10 - k * 1.5}" filter="url(#${id}neb)"/>`).join("")}
+    ${[0, 1, 2].map(k => `<path class="twave star" style="animation-delay:${-k * 1.5 - .5}s;transform-origin:${cx}px ${cy}px" d="${[...Array(16)].map((_, i) => { const a = i * Math.PI / 8, r = i % 2 ? 26 : 50; return `${i ? "L" : "M"}${f(cx + Math.cos(a + k) * r)} ${f(cy + Math.sin(a + k) * r)}`; }).join("")}Z" fill="${k % 2 ? c1 : c2}" opacity=".5" filter="url(#${id}neb)"/>`).join("")}</g>`;
+  if (HI) s += `<g class="thue${T === 10 ? " neg" : ""}" style="transform-origin:${cx}px ${cy}px" opacity="${f(Math.min(1, I))}">
     <ellipse class="tneb a" cx="${cx - 30}" cy="${cy - 10}" rx="${70 + T * 3}" ry="${56 + T * 2}" fill="${c1}" opacity=".8" filter="url(#${id}neb)"/>
     <ellipse class="tneb b" cx="${cx + 34}" cy="${cy + 16}" rx="${66 + T * 3}" ry="${52 + T * 2}" fill="${c2}" opacity=".75" filter="url(#${id}neb)"/>
     <ellipse class="tneb c" cx="${cx}" cy="${cy - 30}" rx="${50 + T * 2}" ry="${40 + T * 2}" fill="${mixc(c1, "#fff", .35)}" opacity=".6" filter="url(#${id}neb)"/>
-    <circle class="tglow" cx="${cx}" cy="${cy}" r="${48 + T * 3}" fill="${c1}" opacity=".35" filter="url(#${id}neb)"/></g>
-    ${[...Array(8 + T * 2)].map((_, i) => { const a = i * 2.39996, r = 40 + (i * 37) % 95; return `<circle class="tstar" style="animation-delay:${(-(i * .37) % 3).toFixed(2)}s" cx="${f(cx + Math.cos(a) * r)}" cy="${f(cy + Math.sin(a) * r * .9)}" r="${(.7 + (i % 4) * .35).toFixed(2)}" fill="${i % 3 ? "#fff" : mixc(c1, "#fff", .5)}"/>`; }).join("")}`;
+    <circle class="tglow" cx="${cx}" cy="${cy}" r="${48 + T * 3}" fill="${c1}" opacity=".35" filter="url(#${id}neb)"/></g>`;
+  s += `${[...Array(HI ? 28 : 10)].map((_, i) => { const a = i * 2.39996, r = 40 + (i * 37) % 95; return `<circle class="tstar" style="animation-delay:${(-(i * .37) % 3).toFixed(2)}s" cx="${f(cx + Math.cos(a) * r)}" cy="${f(cy + Math.sin(a) * r * .9)}" r="${(.7 + (i % 4) * .35).toFixed(2)}" fill="${i % 3 ? "#fff" : mixc(c1, "#fff", .5)}"/>`; }).join("")}`;
   // Galaxie in einer Kugel: dunkler Grund bleibt, darüber drehende Sterne und ziehende Nebelschleier
   const galaxy = (x, y, r, cA, cB, star) => `<defs><clipPath id="${id}gc${x}"><circle cx="${x}" cy="${y}" r="${r}"/></clipPath></defs><g clip-path="url(#${id}gc${x})" style="mix-blend-mode:screen">
     <g class="tgal" style="transform-origin:${x}px ${y}px"><ellipse cx="${x - r * .3}" cy="${y}" rx="${r * .9}" ry="${r * .28}" fill="${cA}" opacity=".55" filter="url(#${id}bl3)" transform="rotate(-25 ${x} ${y})"/><ellipse cx="${x + r * .35}" cy="${y + r * .2}" rx="${r * .7}" ry="${r * .22}" fill="${cB}" opacity=".5" filter="url(#${id}bl3)" transform="rotate(-25 ${x} ${y})"/>
@@ -4331,7 +4513,7 @@ function trophySVG(tier, o = {}) {
   else if (T === 10) s += W(TROPHY_LAY.gbase) + `<g class="twing">${W(TROPHY_LAY.wl)}${W(TROPHY_LAY.wr)}</g>` + W(TROPHY_LAY.gfront) + galaxy(127, 123, 42, "#7a3aff", "#ffb020", "#ffe9a8")
     + `<circle class="torb" cx="114" cy="108" r="4" fill="#fff" opacity=".7" filter="url(#${id}bl)"/>`;
   else s += W(IMG);
-  s += `<g mask="url(#${id}mk)"><rect class="tshine2" x="-80" y="-20" width="50" height="360" fill="url(#${id}sh)" transform="skewX(-18)" style="mix-blend-mode:screen"/></g>`;
+  if (HI) s += `<g mask="url(#${id}mk)"><rect class="tshine2" x="-80" y="-20" width="50" height="360" fill="url(#${id}sh)" transform="skewX(-18)" style="mix-blend-mode:screen"/></g>`;
   if (T >= 8) s += [[34, 70, 8], [228, 100, 7], [44, 210, 6], [220, 200, 7], [130, 14, 6]].map(([x, y, r], i) => `<path class="tspark" style="animation-delay:${(i * .45).toFixed(2)}s" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="#fff"/>`).join("");
   return `<svg viewBox="0 0 260 320" preserveAspectRatio="xMidYMax meet" class="trophy-svg">${s}</svg>`;
 }
@@ -4345,8 +4527,8 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
   wrap.innerHTML = `<div class="ru-bg"></div><div class="ru-stack"><div class="ru-rays"></div><div class="ru-trophy">${trophy}</div>
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
-  document.body.appendChild(wrap); wrap._tier = tier;
-  partySound(); setTimeout(() => confettiBurst(2), 1150); setTimeout(() => confettiBurst(2), 3400);
+  document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
+  partySound(tier); setTimeout(() => confettiBurst(2), 1150); setTimeout(() => confettiBurst(2), 3400);
   setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 1150);
   if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 1150); } catch {}
   return wrap;
@@ -4370,6 +4552,45 @@ function rankUpNext() {
   setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${RANKS[tier].i} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
     <div class="ru-list">${list.map(x => `<div><span>${x.icon}</span><span style="font-size:inherit"><b>${x.n}</b><small>${x.d}</small></span></div>`).join("")}</div>
     <button class="btn primary block" data-action="ruprefs">Gleich ausprobieren</button><button class="btn block" data-action="ruok" style="margin-top:8px">Später</button>`; }, 300);
+}
+
+// ---------- Feier-Sounds: je höher der Rang, desto größer – GOD-Level mit Engelschor ----------
+function partySound(tier = 2) {
+  const a = audio(); if (!a) return; const T = Math.max(0, Math.min(10, tier)), t0 = a.currentTime + .06;
+  const out = a.createGain(); out.gain.value = .5; const comp = a.createDynamicsCompressor(); out.connect(comp).connect(a.destination);
+  // Hall aus generiertem Impuls (länger bei hohen Rängen)
+  const rv = a.createConvolver(), len = 1.2 + T * .25, ir = a.createBuffer(2, a.sampleRate * len, a.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.6); }
+  rv.buffer = ir; const wet = a.createGain(); wet.gain.value = .22 + T * .04; rv.connect(wet).connect(out);
+  const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+  const bell = (n, at, vol = .18, dur = 1.6) => { [1, 2.76, 5.4].forEach((h, k) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = midi(n) * h;
+      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol / (k * 2 + 1), at + .008); g.gain.exponentialRampToValueAtTime(.0005, at + dur / (k + 1)); o.connect(g); g.connect(out); g.connect(rv); o.start(at); o.stop(at + dur); }); };
+  const pad = (notes, at, dur, vol, type = "triangle", cut = 1800) => notes.forEach(n => [-7, 7].forEach(dt => { const o = a.createOscillator(), g = a.createGain(), lp = a.createBiquadFilter(); o.type = type; o.frequency.value = midi(n); o.detune.value = dt;
+      lp.type = "lowpass"; lp.frequency.value = cut; g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .3); g.gain.linearRampToValueAtTime(0, at + dur); o.connect(lp).connect(g); g.connect(out); g.connect(rv); o.start(at); o.stop(at + dur + .05); }));
+  const whoosh = (at, dur, vol) => { const b = a.createBuffer(1, a.sampleRate * dur, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const s = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain(); s.buffer = b; bp.type = "bandpass"; bp.Q.value = 1.4; bp.frequency.setValueAtTime(300, at); bp.frequency.exponentialRampToValueAtTime(6000, at + dur);
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .8); g.gain.linearRampToValueAtTime(0, at + dur); s.connect(bp).connect(g); g.connect(out); g.connect(rv); s.start(at); };
+  const boom = (at, vol) => { const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(120, at); o.frequency.exponentialRampToValueAtTime(38, at + .5); g.gain.setValueAtTime(vol, at); g.gain.exponentialRampToValueAtTime(.001, at + .7); o.connect(g).connect(out); o.start(at); o.stop(at + .8); };
+  // Chor: Sägezahn durch Vokal-Formanten („Aaah“)
+  const choir = (notes, at, dur, vol) => notes.forEach(n => [-9, 0, 9].forEach(dt => { const o = a.createOscillator(), vib = a.createOscillator(), vg = a.createGain(), g = a.createGain(); o.type = "sawtooth"; o.frequency.value = midi(n); o.detune.value = dt;
+      vib.frequency.value = 5 + Math.random(); vg.gain.value = 6; vib.connect(vg).connect(o.detune);
+      const mix = a.createGain(); mix.gain.value = 1; [[800, 6, 1], [1150, 8, .5], [2900, 10, .18], [3900, 12, .1]].forEach(([fq, q, gn]) => { const bp = a.createBiquadFilter(), bg = a.createGain(); bp.type = "bandpass"; bp.frequency.value = fq; bp.Q.value = q; bg.gain.value = gn; o.connect(bp).connect(bg).connect(mix); });
+      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .35); g.gain.setValueAtTime(vol, at + dur * .7); g.gain.linearRampToValueAtTime(0, at + dur); mix.connect(g); g.connect(out); g.connect(rv);
+      [o, vib].forEach(x => { x.start(at); x.stop(at + dur + .05); }); }));
+  // Grundmotiv: aufsteigendes Glockenspiel – mit jedem Rang länger und höher
+  const scale = [0, 4, 7, 12, 16, 19, 24, 28], root = 72 + Math.min(T, 6) % 3 * 2, steps = 3 + Math.min(5, Math.ceil(T / 2));
+  for (let i = 0; i < steps; i++) bell(root + scale[i], t0 + i * (.11 - T * .004), .2, 1.4 + T * .1);
+  const top = t0 + steps * (.11 - T * .004);
+  bell(root + 24, top + .05, .22, 2.2); if (T >= 2) bell(root + 19, top + .05, .14, 2);
+  if (T >= 3) whoosh(t0 - .02, .5 + T * .05, .05 + T * .012);
+  if (T >= 4) pad([root - 12, root - 5, root + 4], top, 1.6 + T * .2, .028 + T * .003);
+  if (T >= 5) boom(top, .45 + T * .03);
+  if (T >= 6) for (let i = 0; i < 6; i++) bell(root + 24 + scale[i % 4], top + .25 + i * .07, .08, 1.2);   // Funkel-Kaskade
+  if (T >= 7) pad([root - 24, root - 12, root - 5, root], top + .1, 2.4 + T * .2, .03, "sawtooth", 900);   // tiefe Fanfare
+  if (T >= 8) { [0, 4, 7, 12].forEach((d, i) => bell(root + 12 + d, top + .9 + i * .12, .14, 1.8)); boom(top + .9, .3); }
+  if (T >= 9) choir([root - 12, root - 5, root + 4], top - .2, 3.4, .05);   // Mythos: Chor
+  if (T >= 10) { choir([root, root + 7, root + 12, root + 16], top + .3, 4.6, .055); choir([root + 24, root + 28], top + 1.2, 3.6, .03);   // GOD: Engelschor mit Sopran
+    for (let i = 0; i < 12; i++) bell(root + 36 + scale[i % 6] - 12, top + 1.4 + i * .09, .06, 2); whoosh(top + 1, 1.6, .08); }
 }
 
 /* ----- Tierwiese: Hasen, Fuchs, Rehe und (optional) Jäger über der unteren Leiste ----- */
@@ -4577,10 +4798,10 @@ const EAGLE_SVG = `<svg class="egsv" viewBox="0 0 64 34"><g class="ewing back"><
 // Fisch, Krabbe, Schildkröte, Qualle
 const FISH = (c, c2, stripe) => `<svg class="fisv" viewBox="0 0 26 14"><g class="ftl"><path d="M5 7L0 2.4V11.6Z" fill="${c2}"/></g><path d="M4 7Q10 0 18 3Q22 5 24 7Q22 9 18 11Q10 14 4 7Z" fill="${c}"/>${stripe ? `<path d="M11 2.4V11.6M15 2.6V11.4" stroke="${stripe}" stroke-width="1.6"/>` : `<path d="M8 8q6 3 12 0" stroke="#fff" stroke-width=".7" fill="none" opacity=".5"/>`}<path d="M12 3L15 .6L16 3Z" fill="${c2}"/><path d="M14 9.6l2 2.4l1 -2.2z" fill="${c2}"/><circle cx="20" cy="6" r="1.3" fill="#fff"/><circle cx="20.3" cy="6" r=".65" fill="#111"/></svg>`;
 const CRAB_SVG = `<svg class="crsv" viewBox="-3 -3 58 39" style="overflow:visible"><defs><radialGradient id="crG" cx=".45" cy=".3" r=".8"><stop offset="0" stop-color="#ff8a62"/><stop offset=".6" stop-color="#e8503a"/><stop offset="1" stop-color="#b8321e"/></radialGradient></defs>
-  <g class="crlegs">${[0, 1, 2].map(i => `<path d="M${19 - i * 2.4} 26l-6 ${2 + i * 2}l-2.4 ${4 - i}M${33 + i * 2.4} 26l6 ${2 + i * 2}l2.4 ${4 - i}" stroke="#c93a2a" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join("")}</g>
-  <path d="M22 18l-1.4 -6M30 18l1.4 -6" stroke="#c93a2a" stroke-width="1.3"/><circle cx="20.6" cy="11" r="2.2" fill="#fff"/><circle cx="21" cy="11.2" r="1.1" fill="#111"/><circle cx="31.4" cy="11" r="2.2" fill="#fff"/><circle cx="31.8" cy="11.2" r="1.1" fill="#111"/>
-  <path d="M13 24Q13 16 26 16Q39 16 39 24Q39 30 26 30.6Q13 30 13 24Z" fill="url(#crG)"/><path d="M17 20q9 -3 18 0" stroke="#ffb08a" stroke-width="1.2" fill="none" opacity=".7"/><path d="M19 27q7 2 14 0M22.4 24.6q3.6 1 7.2 0" stroke="#a82a1a" stroke-width=".8" fill="none"/>
-  ${[[18, 22], [34, 22], [26, 19]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a82a1a" opacity=".6"/>`).join("")}
+  <g class="crl l b" style="transform-origin:18.0px 25.0px"><path d="M18.0 25.0L10.0 21.0L6.0 30.0" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.0 25.0L10.0 21.0L6.0 30.0" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.0" cy="21.0" r=".9" fill="#ff8a6a"/></g><g class="crl l a" style="transform-origin:16.2px 25.8px"><path d="M16.2 25.8L8.8 23.4L4.4 31.6" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.2 25.8L8.8 23.4L4.4 31.6" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.8" cy="23.4" r=".9" fill="#ff8a6a"/></g><g class="crl l b" style="transform-origin:14.4px 26.6px"><path d="M14.4 26.6L7.6 25.8L2.8 33.2" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.4 26.6L7.6 25.8L2.8 33.2" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.6" cy="25.8" r=".9" fill="#ff8a6a"/></g><g class="crl l a" style="transform-origin:12.6px 27.4px"><path d="M12.6 27.4L6.4 28.2L1.2 34.8" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.6 27.4L6.4 28.2L1.2 34.8" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.4" cy="28.2" r=".9" fill="#ff8a6a"/></g><g class="crl r b" style="transform-origin:34.0px 25.0px"><path d="M34.0 25.0L42.0 21.0L46.0 30.0" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M34.0 25.0L42.0 21.0L46.0 30.0" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42.0" cy="21.0" r=".9" fill="#ff8a6a"/></g><g class="crl r a" style="transform-origin:35.8px 25.8px"><path d="M35.8 25.8L43.2 23.4L47.6 31.6" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M35.8 25.8L43.2 23.4L47.6 31.6" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="43.2" cy="23.4" r=".9" fill="#ff8a6a"/></g><g class="crl r b" style="transform-origin:37.6px 26.6px"><path d="M37.6 26.6L44.4 25.8L49.2 33.2" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M37.6 26.6L44.4 25.8L49.2 33.2" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44.4" cy="25.8" r=".9" fill="#ff8a6a"/></g><g class="crl r a" style="transform-origin:39.4px 27.4px"><path d="M39.4 27.4L45.6 28.2L50.8 34.8" stroke="#7a1a10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M39.4 27.4L45.6 28.2L50.8 34.8" stroke="#e8503a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45.6" cy="28.2" r=".9" fill="#ff8a6a"/></g>
+  <path d="M23 19l-2 -7M29 19l2 -7" stroke="#7a1a10" stroke-width="2.2" stroke-linecap="round"/><path d="M23 19l-2 -7M29 19l2 -7" stroke="#e8503a" stroke-width="1.2" stroke-linecap="round"/><circle cx="20.8" cy="11" r="2.4" fill="#fff" stroke="#7a1a10" stroke-width=".6"/><circle cx="21.2" cy="11.3" r="1.2" fill="#111"/><circle cx="31.2" cy="11" r="2.4" fill="#fff" stroke="#7a1a10" stroke-width=".6"/><circle cx="31.6" cy="11.3" r="1.2" fill="#111"/>
+  <path d="M11 24C11 19 15 17 18 17.6L20 16.4L22.6 17.4L26 16.2L29.4 17.4L32 16.4L34 17.6C37 17 41 19 41 24C41 29.4 34 31.6 26 31.6C18 31.6 11 29.4 11 24Z" fill="url(#crG)" stroke="#7a1a10" stroke-width=".8"/>
+  <path d="M16 21q10 -4 20 0" stroke="#ffb08a" stroke-width="1.3" fill="none" opacity=".75"/><path d="M18 28q8 2.4 16 0M21 25q5 1.2 10 0" stroke="#a82a1a" stroke-width=".8" fill="none"/>${[[17, 23], [35, 23], [26, 20.4], [22, 26], [30, 26]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#a82a1a" opacity=".6"/>`).join("")}
   <g class="claw cl"><path d="M15 22Q9 20 8.6 14" stroke="#e8503a" stroke-width="4" fill="none" stroke-linecap="round"/><g transform="translate(8 9) scale(1.28) translate(-8 -9)"><path d="M8.6 15C3 15 1 9 3.4 4.4C4.6 2 7.4 1 9.6 2.4L8.6 6.4C10.6 6.8 12.6 9 12.4 11.4C12.2 14 10.6 15 8.6 15Z" fill="url(#crG)"/><path d="M9.6 2.4C12.4 3 14 5.6 12.6 8" stroke="#e8503a" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M5 6q1 -2 3 -2.6" stroke="#ffb08a" stroke-width=".9" fill="none"/></g></g>
   <g class="claw cr"><path d="M37 22Q43 20 43.4 14" stroke="#e8503a" stroke-width="4" fill="none" stroke-linecap="round"/><g transform="translate(44 9) scale(1.28) translate(-44 -9)"><path d="M43.4 15C49 15 51 9 48.6 4.4C47.4 2 44.6 1 42.4 2.4L43.4 6.4C41.4 6.8 39.4 9 39.6 11.4C39.8 14 41.4 15 43.4 15Z" fill="url(#crG)"/><path d="M42.4 2.4C39.6 3 38 5.6 39.4 8" stroke="#e8503a" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M47 6q-1 -2 -3 -2.6" stroke="#ffb08a" stroke-width=".9" fill="none"/></g></g></svg>`;
 const TURTLE_SVG = `<svg class="tusv" viewBox="0 0 64 30"><defs><linearGradient id="tuF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ad0a8"/><stop offset=".5" stop-color="#6aa87a"/><stop offset="1" stop-color="#3f7a50"/></linearGradient><linearGradient id="tuF2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6aa07a"/><stop offset="1" stop-color="#2f5f3e"/></linearGradient><radialGradient id="tuG" cx=".45" cy=".3" r=".8"><stop offset="0" stop-color="#c8a060"/><stop offset=".6" stop-color="#8a6a32"/><stop offset="1" stop-color="#4e3a18"/></radialGradient></defs>
@@ -4649,20 +4870,31 @@ const ERMINE_SVG = `<svg class="ersv" viewBox="0 0 54 26"><g class="erb"><path d
   <g class="erhead"><path d="M38 12Q42 6 48 7Q53 8 53 12Q52 15 46 16Q40 16 38 12Z" fill="#f6f8fb" stroke="#7a8496" stroke-width=".8"/><circle cx="42" cy="7.4" r="2" fill="#f6f8fb"/><circle cx="42" cy="7.4" r="1" fill="#f2c4c4"/>
     <circle cx="47" cy="10" r="1.2" fill="#111"/><circle cx="47.4" cy="9.6" r=".4" fill="#fff"/><circle cx="53" cy="11.6" r="1" fill="#2a1a1a"/><path d="M49 12.6l5 -1M49 13.2l5 .6" stroke="#9aa4b4" stroke-width=".3"/></g></g></svg>`;
 // Hai
-const SHARK_SVG = `<svg class="shsv" viewBox="0 0 140 50" style="overflow:visible"><defs><linearGradient id="shG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34506a"/><stop offset=".35" stop-color="#5a7c96"/><stop offset=".55" stop-color="#8aa6ba"/><stop offset=".6" stop-color="#eef3f6"/><stop offset="1" stop-color="#f8fafb"/></linearGradient><linearGradient id="shF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a7c96"/><stop offset="1" stop-color="#2c4458"/></linearGradient></defs>
-  <path d="M84 30C80 35 74 41 66 46.4C74 46 84 41 91 33Z" fill="#2c4458" opacity=".55"/>
-  <g class="shrear"><g class="shtail"><path d="M23 25C18 18 12 9 7 1C11 1.6 15.6 6 19.4 12.6C21.4 16.4 22.6 21 23.4 25Z" fill="url(#shF)"/><path d="M23 25.4C19 30 14.6 36 11.4 42.6C15.6 41 19.4 36.4 21.8 31.6Z" fill="url(#shF)"/></g>
-    <path d="M64 13.6C50 15 36 18.6 26 22.4L21.4 25L26 27.6C36 31 50 34.6 64 35.6Z" fill="url(#shG)"/><path d="M24 25H34" stroke="#2c4458" stroke-width="1.4" stroke-linecap="round"/>
-    <path d="M33 20.6L36.4 16.6L39.4 19.8Z" fill="#34506a"/><path d="M36 30.4L39 34.4L41.4 31Z" fill="#8aa6ba"/></g>
-  <path d="M62 13.4C80 9.6 100 9.6 116 13.6C126 16.2 133 19.6 137.6 23.6C138.4 24.4 138 25.4 137 25.8C132 28.4 125 30.6 116 32C98 34.8 80 36 62 35.6Z" fill="url(#shG)"/>
-  <path d="M62 30.4C74 31.6 86 32.2 96 31.6L100 33.4L104 31.2L108 32.6L112 30.6C120 30 128 28.6 134 26.8" stroke="#8aa6ba" stroke-width=".7" fill="none" opacity=".8"/>
-  <path d="M76 12C80 6 85 1.4 91 -1.4C92 -1.6 92.4 -1 92 0C91 4 92 8 96 11.4Z" fill="url(#shF)"/><path d="M80 10.6C84 6 88 2.4 91.4 .2" stroke="#7a98ae" stroke-width=".8" fill="none" opacity=".7"/>
-  <path d="M92 31C88 36 83 41.6 76 46.6C77 47.2 78.4 47.2 80 46.4C88 42.6 95 38 100 32.4Z" fill="url(#shF)"/><path d="M93 32.6C89 37 85 41 80 44.4" stroke="#7a98ae" stroke-width=".7" fill="none" opacity=".7"/>
-  ${[100, 103.4, 106.8, 110.2, 113.4].map((x, i) => `<path d="M${x} ${18 + i * .3}C${x - 1.6} 21 ${x - 1.6} 25 ${x - .4} ${28.4 - i * .3}" stroke="#2c4458" stroke-width=".9" fill="none" opacity=".75"/>`).join("")}
-  <path d="M66 18.6C88 15.4 110 15.6 128 19.4" stroke="#9ab4c6" stroke-width="1.1" fill="none" opacity=".55"/>
-  <ellipse cx="125.6" cy="19.8" rx="1.35" ry="1.25" fill="#05090d"/><path d="M124 18.8q1.6 -1.1 3.4 -.2" stroke="#2c4458" stroke-width=".6" fill="none"/><circle cx="126" cy="19.4" r=".3" fill="#9ab4c6"/>
-  <path d="M134.6 21.6l1.6 .6" stroke="#2c4458" stroke-width=".7" stroke-linecap="round"/>
-  <path d="M114 28.8C121 29.4 128 28.6 133.6 26.6" stroke="#1a2a36" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M117 29l.7 1.3.7-1.3.7 1.3.7-1.3.7 1.3.7-1.3.7 1.2.7-1.2.7 1.1.7-1.1" stroke="#fff" stroke-width=".55" fill="none"/></svg>`;
+// Hai: Körper biegt sich weich wie beim echten Schwimmen (Pfad-Animation über eine Wirbelsäule)
+const SHARK_SVG = (() => { const N = 22, F = 8, f = n => n.toFixed(1), x0 = 20, x1 = 138, cy = 25;
+  const hw = u => u < .58 ? 2.6 + 8.6 * Math.sin(u / .58 * Math.PI / 2) : 11.2 * (1 - Math.pow((u - .58) / .42, 2.2) * .93);
+  const frame = ph => { const P = [], Nn = [];
+    for (let i = 0; i <= N; i++) { const u = i / N, x = x0 + (x1 - x0) * u, A = 8.5 * Math.pow(1 - u, 2.3), y = cy + A * Math.sin(ph * Math.PI * 2 - u * 3.2); P.push([x, y]); }
+    for (let i = 0; i <= N; i++) { const p = P[Math.max(0, i - 1)], q = P[Math.min(N, i + 1)], dx = q[0] - p[0], dy = q[1] - p[1], l = Math.hypot(dx, dy); Nn.push([-dy / l, dx / l]); }
+    const up = P.map((p, i) => [p[0] - Nn[i][0] * hw(i / N) * 1.04, p[1] - Nn[i][1] * hw(i / N) * 1.04]), lo = P.map((p, i) => [p[0] + Nn[i][0] * hw(i / N) * .96, p[1] + Nn[i][1] * hw(i / N) * .96]);
+    const mk = u => u < .4 ? .96 - .74 * Math.pow(u / .4, .7) : .22, mid = P.map((p, i) => [p[0] + Nn[i][0] * hw(i / N) * mk(i / N), p[1] + Nn[i][1] * hw(i / N) * mk(i / N)]);
+    const L = pts => pts.map((p, i) => `${i ? "L" : "M"}${f(p[0])} ${f(p[1])}`).join("");
+    const nose = `Q${f(x1 + 3)} ${f(P[N][1] + .4)} ${f(lo[N][0])} ${f(lo[N][1])}`;
+    const body = L(up) + nose + L(lo.slice().reverse()).replace("M", "L") + "Z";
+    const belly = L(mid.slice(1)) + nose.replace(/Q[^ ]+ [^ ]+ /, `Q${f(x1 + 2)} ${f(P[N][1] + 1.6)} `) + L(lo.slice(1).reverse()).replace("M", "L") + "Z";
+    const t = P[0], d = [P[1][0] - P[0][0], P[1][1] - P[0][1]], ang = Math.atan2(d[1], d[0]) + .25 * Math.sin(ph * Math.PI * 2 - .6), c = Math.cos(ang), sn = Math.sin(ang);
+    const R = (lx, ly) => [t[0] + lx * c - ly * sn, t[1] + lx * sn + ly * c];
+    const tail = L([R(3, -2.6), R(-6, -10), R(-13, -21), R(-9, -11), R(-5, -3), R(-6, 2), R(-11, 15), R(-6, 8), R(3, 2.6)]) + "Z";
+    const fin = (u0, u1, tipU, tipH, side = -1, pts = up) => { const i0 = Math.round(u0 * N), i1 = Math.round(u1 * N), it = Math.round(tipU * N), tip = [P[it][0] - 5, P[it][1] + side * (hw(tipU) + tipH)]; return `M${f(pts[i0][0])} ${f(pts[i0][1])}Q${f((pts[i0][0] + tip[0]) / 2)} ${f(tip[1] + 2 * -side)} ${f(tip[0])} ${f(tip[1])}L${f(pts[i1][0])} ${f(pts[i1][1])}Z`; };
+    return { body, belly, tail, d1: fin(.5, .66, .52, 15), d2: fin(.18, .25, .18, 4.4), an: fin(.2, .27, .2, 3.6, 1, lo) }; };
+  const fr = [...Array(F + 1)].map((_, k) => frame(k / F)), an = key => `<animate attributeName="d" dur=".95s" repeatCount="indefinite" values="${fr.map(x => x[key]).join(";")}"/>`;
+  const st = fr[0], P = k => `<path d="${st[k]}" fill="${k === "belly" ? "#f4f8fa" : k === "body" ? "url(#shG)" : "url(#shF)"}" ${k === "belly" ? 'opacity=".95"' : ""} stroke="${k === "belly" ? "none" : "#1f3446"}" stroke-width=".7" stroke-linejoin="round">${an(k)}</path>`;
+  return `<svg class="shsv" viewBox="0 -4 144 52" style="overflow:visible"><defs><linearGradient id="shG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f4a62"/><stop offset=".45" stop-color="#5a7c96"/><stop offset=".62" stop-color="#9ab4c6"/><stop offset="1" stop-color="#dce8ee"/></linearGradient><linearGradient id="shF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a7c96"/><stop offset="1" stop-color="#253c50"/></linearGradient></defs>
+    ${P("tail")}${P("d2")}${P("an")}${P("d1")}${P("body")}${P("belly")}
+    <path d="M104 33C99 38 93 43 85 47C87 48 89 48 91 47C99 43 105 39 109 34Z" fill="url(#shF)" stroke="#1f3446" stroke-width=".7"/>
+    ${[110, 113.2, 116.4, 119.4, 122.2].map((x, i) => `<path d="M${x} ${19 + i * .4}C${x - 1.4} 22 ${x - 1.4} 26 ${x - .3} ${29 - i * .4}" stroke="#1f3446" stroke-width=".85" fill="none" opacity=".75"/>`).join("")}
+    <ellipse cx="131" cy="21.4" rx="1.3" ry="1.15" fill="#05090d"/><circle cx="131.4" cy="21" r=".28" fill="#9ab4c6"/>
+    <path d="M122 29.2C128 29.6 133 28.6 137 26.8" stroke="#16242e" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M124 29.3l.6 1.1.6-1.1.6 1.1.6-1.1.6 1.1.6-1.1.6 1" stroke="#fff" stroke-width=".5" fill="none"/></svg>`; })();
 // Riesenkrake
 const OCTO_SVG = `<svg class="ocsv" viewBox="0 0 90 70"><defs><radialGradient id="ocG" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ff8a7a"/><stop offset=".6" stop-color="#d8504a"/><stop offset="1" stop-color="#8a2a30"/></radialGradient></defs>
   ${[0, 1, 2, 3, 4, 5, 6, 7].map(i => { const x = 18 + i * 7.6, d = i < 4 ? -1 : 1; return `<g class="octa t${i}"><path d="M${x} 40Q${x + d * 4} 52 ${x + d * 10} 58Q${x + d * 16} 64 ${x + d * 12} 68" stroke="#c8443e" stroke-width="${6 - Math.abs(i - 3.5) * .5}" fill="none" stroke-linecap="round"/>${[50, 56, 62].map((y, k) => `<circle cx="${x + d * (3 + k * 3.6)}" cy="${y}" r="1" fill="#ffc8b8"/>`).join("")}</g>`; }).join("")}
@@ -4693,10 +4925,68 @@ const ASTRO_SVG = `<svg class="assv" viewBox="0 0 36 50"><g class="asb"><rect x=
 const ROVER_SVG = `<svg class="rvsv" viewBox="0 0 70 40"><path d="M10 24H60L56 16H16Z" fill="#d8d8e0"/><path d="M14 18H58" stroke="#9a9aa6" stroke-width="1.2"/><rect x="18" y="8" width="18" height="8" fill="#3a5a9a"/><path d="M18 12H36M27 8V16" stroke="#7a9ad0" stroke-width=".6"/>
   <g class="rvant"><path d="M50 16V4" stroke="#9a9aa6" stroke-width="1.2"/><path d="M44 4Q50 8 56 4Q50 1 44 4Z" fill="#e0e0e8"/></g><rect x="40" y="12" width="6" height="4" fill="#2a2a3a"/><circle cx="43" cy="14" r="1" fill="#4cc9f0"/>
   ${[16, 35, 54].map(x => `<g class="rvw" style="transform-origin:${x}px 30px"><circle cx="${x}" cy="30" r="7" fill="#3a3a44"/><circle cx="${x}" cy="30" r="3.4" fill="#9a9aa6"/><path d="M${x - 7} 30H${x + 7}M${x} 23V37" stroke="#55555f" stroke-width="1"/></g>`).join("")}</svg>`;
+// Großes Alien mit Laserpistole (läuft auf zwei Beinen)
+const ALIEN2_SVG = `<svg class="alsv" viewBox="0 0 30 44"><defs><radialGradient id="alG" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#c8ffb0"/><stop offset=".6" stop-color="#6ad84a"/><stop offset="1" stop-color="#2f8a2a"/></radialGradient></defs>
+  <g class="all l2" style="transform-origin:12px 31px"><path d="M12 31V40h-3" stroke="#3f9a34" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <path d="M8 22Q8 18 15 18Q22 18 22 22L21 33Q15 35 9 33Z" fill="#4ab83c"/><path d="M10 24h10M10 28h10" stroke="#2f8a2a" stroke-width=".6"/><circle cx="15" cy="26" r="1.6" fill="#ffe14a"/>
+  <g class="alarm" style="transform-origin:20px 23px"><path d="M20 23l5 3" stroke="#4ab83c" stroke-width="3" stroke-linecap="round"/><rect x="23" y="23.4" width="7" height="3.4" rx="1" fill="#8a8a9a"/><rect x="28" y="24.2" width="3" height="1.8" fill="#ff3b5c"/><path d="M25 26.8v2" stroke="#55555f" stroke-width="1.4"/></g>
+  <g class="all l1" style="transform-origin:18px 31px"><path d="M18 31V40h3" stroke="#4ab83c" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g class="alhead" style="transform-origin:15px 17px"><path d="M15 2C24 2 27 8 25 13C23 18 19 19 15 19C11 19 7 18 5 13C3 8 6 2 15 2Z" fill="url(#alG)" stroke="#2f7a2a" stroke-width=".7"/>
+    <path d="M7 10Q9 7 13 10Q12 14 9 14Q7 13 7 10Z" fill="#111"/><path d="M23 10Q21 7 17 10Q18 14 21 14Q23 13 23 10Z" fill="#111"/><circle cx="9.6" cy="10" r=".9" fill="#fff"/><circle cx="19.6" cy="10" r=".9" fill="#fff"/>
+    <path d="M13 16q2 1 4 0" stroke="#2f7a2a" stroke-width=".7" fill="none"/><path d="M11 3L8 -3M19 3L22 -3" stroke="#4ab83c" stroke-width="1"/><circle cx="8" cy="-3" r="1.4" fill="#ffe14a"/><circle cx="22" cy="-3" r="1.4" fill="#ffe14a"/></g></svg>`;
+// Kuh (für den UFO-Kuhklau)
+const COW_SVG = `<svg class="cwsv" viewBox="0 0 52 38"><g class="cwl l2" style="transform-origin:15px 26px"><rect x="13" y="25" width="4" height="11" rx="1.4" fill="#e8e2d8"/><rect x="13" y="34" width="4" height="3" rx="1" fill="#3a3028"/></g><g class="cwl l4" style="transform-origin:35px 26px"><rect x="33" y="25" width="4" height="11" rx="1.4" fill="#e8e2d8"/><rect x="33" y="34" width="4" height="3" rx="1" fill="#3a3028"/></g>
+  <path d="M8 17Q4 18 3 24" stroke="#f4f0ea" stroke-width="1.4" fill="none"/><path d="M2 23q-1 3 1.6 3q.6 -2 -1.6 -3z" fill="#3a3028"/>
+  <path d="M8 14Q8 9 16 9H34Q42 9 42 15V22Q42 28 34 28H16Q8 28 8 22Z" fill="#f8f6f2" stroke="#3a3028" stroke-width=".8"/>
+  <path d="M14 10Q20 12 18 18Q14 20 11 16Z M27 9Q32 14 28 19Q24 16 25 10Z M34 20Q39 19 40 24Q37 27 33 25Z" fill="#2a2420"/><ellipse cx="22" cy="27" rx="4" ry="2.4" fill="#f2a8b4"/><path d="M20 29v1.6M22 29.4v1.6M24 29v1.6" stroke="#e88a9a" stroke-width=".9"/>
+  <g class="cwl l1" style="transform-origin:12px 26px"><rect x="10" y="25" width="4.2" height="11" rx="1.4" fill="#f8f6f2"/><rect x="10" y="34" width="4.2" height="3" rx="1" fill="#3a3028"/></g><g class="cwl l3" style="transform-origin:38px 26px"><rect x="36" y="25" width="4.2" height="11" rx="1.4" fill="#f8f6f2"/><rect x="36" y="34" width="4.2" height="3" rx="1" fill="#3a3028"/></g>
+  <g class="cwhead" style="transform-origin:42px 14px"><path d="M40 8Q42 4 47 5Q52 6 52 12Q52 18 48 19H44Q40 18 40 13Z" fill="#f8f6f2" stroke="#3a3028" stroke-width=".8"/><path d="M44 15Q48 13 52 15Q52 19 48 19.6Q44 19.4 44 15Z" fill="#f2a8b4"/><circle cx="47" cy="16.6" r=".6" fill="#3a3028"/><circle cx="50" cy="16.6" r=".6" fill="#3a3028"/>
+    <circle cx="45" cy="9.6" r="1.3" fill="#1a1410"/><circle cx="45.4" cy="9.2" r=".4" fill="#fff"/><path d="M41 6l-3 -3M47 5l1 -4" stroke="#e8d8b0" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="40" cy="9" rx="3" ry="1.4" fill="#f8f6f2" stroke="#3a3028" stroke-width=".6" transform="rotate(-20 40 9)"/></g></svg>`;
+// großes UFO
+const BIGUFO_SVG = `<svg class="bufsv" viewBox="0 -6 120 66" style="overflow:visible"><defs><linearGradient id="bufG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6e8f0"/><stop offset=".5" stop-color="#9aa0b4"/><stop offset="1" stop-color="#4a5064"/></linearGradient><radialGradient id="bufD" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#e8fbff"/><stop offset=".6" stop-color="#7ad8ff" stop-opacity=".8"/><stop offset="1" stop-color="#2a6a9a" stop-opacity=".9"/></radialGradient></defs>
+  <path d="M30 28Q32 0 60 0Q88 0 90 28Z" fill="url(#bufD)" stroke="#3a6a8a" stroke-width=".9"/>
+  <g class="bufal"><path d="M48 28Q48 22 60 22Q72 22 72 28Z" fill="#4ab83c"/><path d="M50 26q-4 -2 -6 1M70 26q4 -2 6 1" stroke="#4ab83c" stroke-width="2.4" stroke-linecap="round"/><path d="M44 27h4M72 27h4" stroke="#2a2a34" stroke-width="2"/><path d="M75 27l3 -6" stroke="#2a2a34" stroke-width="1.4"/><circle cx="78" cy="21" r="1.6" fill="#ff3b5c"/>
+    <path d="M60 2C70 2 73 8 71 13C69 18 65 20 60 20C55 20 51 18 49 13C47 8 50 2 60 2Z" fill="#6ad84a" stroke="#2f7a2a" stroke-width=".7"/><path d="M51 10Q53 7 57 10Q56 14 53 14Q51 13 51 10Z" fill="#111"/><path d="M69 10Q67 7 63 10Q64 14 67 14Q69 13 69 10Z" fill="#111"/><circle cx="53.6" cy="10" r=".9" fill="#fff"/><circle cx="65.6" cy="10" r=".9" fill="#fff"/><path d="M57 16q3 1.6 6 0" stroke="#2f7a2a" stroke-width=".8" fill="none"/>
+    <path d="M55 3L52 -3M65 3L68 -3" stroke="#4ab83c" stroke-width="1.2"/><circle cx="52" cy="-3" r="1.6" fill="#ffe14a"/><circle cx="68" cy="-3" r="1.6" fill="#ffe14a"/></g><path d="M38 12Q44 4 54 3" stroke="#fff" stroke-width="2.4" fill="none" opacity=".75" stroke-linecap="round"/>
+  <ellipse cx="60" cy="32" rx="58" ry="13" fill="url(#bufG)" stroke="#3a3e50" stroke-width="1"/><ellipse cx="60" cy="27" rx="50" ry="6" fill="#f4f6fa" opacity=".55"/><ellipse cx="60" cy="40" rx="22" ry="5" fill="#3a3e50"/><ellipse cx="60" cy="40" rx="16" ry="3" fill="#9affc8" class="bufglow"/>
+  ${[10, 24, 40, 60, 80, 96, 110].map((x, i) => `<circle class="ufl" style="animation-delay:${i * .15}s" cx="${x}" cy="${33 + Math.abs(60 - x) * -.05 + 1}" r="2.4" fill="${["#ff5e57", "#ffe14a", "#4cc9f0"][i % 3]}"/>`).join("")}</svg>`;
 // Untertasse mit Alien
 const UFO_SVG = `<svg class="ufsv" viewBox="0 0 60 40"><g class="ufbeam"><path d="M22 22L10 40H50L38 22Z" fill="#9affc8" opacity=".35"/></g>
   <path d="M18 14Q20 2 30 2Q40 2 42 14Z" fill="#bfe8ff" opacity=".7"/><g class="alien"><ellipse cx="30" cy="10" rx="5" ry="6" fill="#7ae07a"/><ellipse cx="27.6" cy="9" rx="1.8" ry="2.4" fill="#111"/><ellipse cx="32.4" cy="9" rx="1.8" ry="2.4" fill="#111"/><circle cx="27.2" cy="8.2" r=".5" fill="#fff"/><circle cx="32" cy="8.2" r=".5" fill="#fff"/><path d="M28 4l-2 -3M32 4l2 -3" stroke="#7ae07a" stroke-width="1"/><circle cx="26" cy="1" r="1" fill="#ffe14a"/><circle cx="34" cy="1" r="1" fill="#ffe14a"/></g>
   <ellipse cx="30" cy="16" rx="28" ry="7" fill="#9a9aa6"/><ellipse cx="30" cy="14" rx="28" ry="5" fill="#c8c8d4"/>${[8, 18, 30, 42, 52].map((x, i) => `<circle class="ufl" cx="${x}" cy="17" r="1.6" fill="${["#ff5e57", "#ffe14a", "#4cc9f0", "#ffe14a", "#ff5e57"][i]}"/>`).join("")}</svg>`;
+// ===== v35: neue Tiere – Skorpion, Libelle, Bär/Eisbär, Robo-Hund =====
+const SCORP_SVG = (() => { const leg = (cls, x, d) => `<g class="scl ${cls}" style="transform-origin:${x}px 20px"><path d="M${x} 20l${d * 3} 4l${d * 1} 5" stroke="#5a3010" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M${x} 20l${d * 3} 4l${d * 1} 5" stroke="#c8782a" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  return `<svg class="scsv" viewBox="0 0 64 34" style="overflow:visible"><defs><linearGradient id="scG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a04a"/><stop offset=".6" stop-color="#b8661e"/><stop offset="1" stop-color="#6a3410"/></linearGradient></defs>
+  ${leg("a", 22, -1)}${leg("b", 27, -1)}${leg("a", 32, 1)}${leg("b", 37, 1)}
+  <g class="sctail" style="transform-origin:18px 20px">${[[16, 19, 4.2], [11, 15, 3.8], [8.4, 9.6, 3.4], [8.6, 4, 3], [12, .4, 2.6]].map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * .82}" fill="url(#scG)" stroke="#4a2408" stroke-width=".6"/>`).join("")}
+    <path d="M14 -1Q19 -2 19 3Q17 1 14.6 2Z" fill="#3a1a06"/><circle cx="18.6" cy="3" r=".8" fill="#ff5e3a"/></g>
+  <ellipse cx="32" cy="20" rx="14" ry="6" fill="url(#scG)" stroke="#4a2408" stroke-width=".7"/>${[24, 29, 34, 39].map(x => `<path d="M${x} 15q1 5 0 10" stroke="#6a3410" stroke-width=".7" fill="none"/>`).join("")}<path d="M22 17q10 -3 20 0" stroke="#ffd08a" stroke-width="1" fill="none" opacity=".7"/>
+  ${leg("b", 25, 1)}${leg("a", 30, 1)}${leg("b", 35, -1)}${leg("a", 40, -1)}
+  <g class="scclaw" style="transform-origin:45px 19px"><path d="M45 19Q51 15 54 16" stroke="#8a4a14" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M53 13Q61 11 62 16Q60 20 53 19Q56 16 53 13Z" fill="url(#scG)" stroke="#4a2408" stroke-width=".6"/><path d="M45 21Q51 24 54 23" stroke="#8a4a14" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M53 21Q60 21 61 25Q58 28 53 25Z" fill="url(#scG)" stroke="#4a2408" stroke-width=".6"/></g>
+  <circle cx="44" cy="17.4" r="1.1" fill="#111"/><circle cx="44.3" cy="17.1" r=".35" fill="#fff"/><circle cx="42" cy="17" r=".8" fill="#111"/></svg>`; })();
+const DRAGON_SVG = `<svg class="dfsv" viewBox="0 0 44 22" style="overflow:visible"><defs><linearGradient id="dfG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a6a8a"/><stop offset=".6" stop-color="#2ec8e8"/><stop offset="1" stop-color="#7affc8"/></linearGradient></defs>
+  <g class="dfw b"><ellipse cx="26" cy="6" rx="10" ry="2.6" fill="#d8f8ff" opacity=".5" stroke="#9ad8e8" stroke-width=".4" transform="rotate(-18 26 6)"/><ellipse cx="22" cy="6.6" rx="9" ry="2.2" fill="#d8f8ff" opacity=".45" stroke="#9ad8e8" stroke-width=".4" transform="rotate(-36 22 6.6)"/></g>
+  <path d="M2 11Q14 10 26 10.4" stroke="url(#dfG)" stroke-width="2" stroke-linecap="round"/>${[6, 10, 14, 18, 22].map(x => `<path d="M${x} 10v1.8" stroke="#0a3a4a" stroke-width=".5"/>`).join("")}
+  <ellipse cx="29" cy="10.4" rx="4" ry="2.4" fill="#2ec8e8" stroke="#0a3a4a" stroke-width=".5"/><circle cx="34" cy="9.6" r="2.6" fill="#7affc8" stroke="#0a3a4a" stroke-width=".5"/><circle cx="35" cy="8.8" r=".8" fill="#fff"/>
+  <path d="M28 12.4l-2 4M30 12.4l0 4.4M32 12.2l2 4" stroke="#0a3a4a" stroke-width=".5"/>
+  <g class="dfw f"><ellipse cx="26" cy="8" rx="11" ry="3" fill="#e8fcff" opacity=".6" stroke="#9ad8e8" stroke-width=".4" transform="rotate(-10 26 8)"/><ellipse cx="22" cy="9" rx="10" ry="2.6" fill="#e8fcff" opacity=".55" stroke="#9ad8e8" stroke-width=".4" transform="rotate(14 22 9)"/></g></svg>`;
+// Bär (braun für die Berge, weiß als Eisbär) – Beine mit Kniegelenk wie die Rehe
+const BEAR = (c, lt, dk, nose, id) => bendLegs(`<svg class="dsv bearsv" viewBox="0 0 80 56"><defs><radialGradient id="${id}" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="${lt}"/><stop offset=".6" stop-color="${c}"/><stop offset="1" stop-color="${dk}"/></radialGradient></defs>
+  <g class="leg lb2"><path d="M20 30h7l.4 10-.6 12h-6l-.4-12z" fill="${dk}"/><ellipse cx="23.6" cy="53" rx="4.4" ry="2" fill="${dk}"/></g><g class="leg lf2"><path d="M50 30h7l-.4 10 .4 12h-6l-.6-12z" fill="${dk}"/><ellipse cx="54" cy="53" rx="4.4" ry="2" fill="${dk}"/></g>
+  <path d="M10 26C9 16 18 10 32 10C40 10 46 8 52 10C60 12 64 18 64 26C64 34 56 38 40 38C24 38 11 35 10 26Z" fill="url(#${id})" stroke="${mixc(dk, "#000", .3)}" stroke-width=".7"/>
+  ${FUR(12, 10, 62, 38, dk, lt, 44)}<path d="M18 16Q30 10 46 11" stroke="${lt}" stroke-width="1.4" fill="none" opacity=".6"/><path d="M8 24q-2 2 0 4" stroke="${c}" stroke-width="3" stroke-linecap="round"/>
+  <g class="leg lb1"><path d="M14 28h8l.4 12-.6 12h-7l-.6-12z" fill="${c}"/><ellipse cx="18.4" cy="53" rx="5" ry="2.2" fill="${dk}"/></g><g class="leg lf1"><path d="M54 28h8l-.4 12 .4 12h-7l-.6-12z" fill="${c}"/><ellipse cx="58.4" cy="53" rx="5" ry="2.2" fill="${dk}"/><path d="M55.4 53h1M57.6 53.4h1M59.8 53h1" stroke="${lt}" stroke-width=".6"/></g>
+  <g class="dhead"><path d="M56 22C56 12 62 8 68 8C74 8 78 12 78 18C78 24 74 28 68 28C62 28 56 28 56 22Z" fill="url(#${id})" stroke="${mixc(dk, "#000", .3)}" stroke-width=".7"/>
+    <circle cx="61" cy="9" r="3.4" fill="${c}" stroke="${mixc(dk, "#000", .3)}" stroke-width=".6"/><circle cx="61" cy="9" r="1.6" fill="${dk}"/><path d="M70 18Q76 16 79.4 19Q79 24 73 24Q70 23 70 18Z" fill="${lt}"/><ellipse cx="78.4" cy="19" rx="1.6" ry="1.2" fill="${nose}"/>
+    <ellipse cx="69" cy="15" rx="1.2" ry="1.3" fill="#111"/><circle cx="69.4" cy="14.6" r=".4" fill="#fff"/><path d="M74 22.6q2 .8 4 0" stroke="${nose}" stroke-width=".6" fill="none"/></g></svg>`, 41, id + "k");
+const BROWNBEAR_SVG = BEAR("#7a4a26", "#b07a48", "#4a2a14", "#1a0e06", "brBr"), POLARBEAR_SVG = BEAR("#eef2f6", "#ffffff", "#b8c4d4", "#1a1a20", "brPo");
+const ROBODOG_SVG = bendLegs(`<svg class="dsv robosv" viewBox="0 0 56 44"><defs><linearGradient id="rbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".5" stop-color="#b8c0cc"/><stop offset="1" stop-color="#6a7280"/></linearGradient></defs>
+  <g class="leg lb2"><path d="M14 26h3.4v14h-3.4z" fill="#5a6270"/><rect x="13" y="39" width="5.6" height="3" rx="1" fill="#2a2e38"/></g><g class="leg lf2"><path d="M36 26h3.4v14h-3.4z" fill="#5a6270"/><rect x="35" y="39" width="5.6" height="3" rx="1" fill="#2a2e38"/></g>
+  <g class="rbtail" style="transform-origin:9px 20px"><path d="M9 20L3 10" stroke="#8a929e" stroke-width="1.6" stroke-linecap="round"/><circle cx="3" cy="10" r="1.8" fill="#4cc9f0"/></g>
+  <rect x="8" y="15" width="36" height="14" rx="5" fill="url(#rbG)" stroke="#3a3e48" stroke-width=".8"/><rect x="16" y="18" width="14" height="5" rx="1.4" fill="#2a2e38"/><circle cx="19" cy="20.5" r="1" fill="#7aff5a"/><circle cx="23" cy="20.5" r="1" fill="#ffe14a"/><circle cx="27" cy="20.5" r="1" fill="#ff5e57"/>
+  <g class="leg lb1"><path d="M11 26h4v14h-4z" fill="#8a929e"/><circle cx="13" cy="33" r="1.8" fill="#4a5262"/><rect x="10" y="39" width="6.4" height="3" rx="1" fill="#2a2e38"/></g><g class="leg lf1"><path d="M39 26h4v14h-4z" fill="#8a929e"/><circle cx="41" cy="33" r="1.8" fill="#4a5262"/><rect x="38" y="39" width="6.4" height="3" rx="1" fill="#2a2e38"/></g>
+  <g class="dhead"><rect x="38" y="4" width="16" height="13" rx="4" fill="url(#rbG)" stroke="#3a3e48" stroke-width=".8"/><rect x="41" y="7" width="11" height="6" rx="2" fill="#14202a"/><g class="rbeyes"><rect x="43" y="8.6" width="2.6" height="2.6" rx="1" fill="#4cc9f0"/><rect x="47.6" y="8.6" width="2.6" height="2.6" rx="1" fill="#4cc9f0"/></g>
+    <path d="M40 4L37 -1M42 4l1 -6" stroke="#8a929e" stroke-width="1"/><circle cx="37" cy="-1" r="1.2" fill="#ff5e57"/><circle cx="43" cy="-2" r="1.2" fill="#4cc9f0"/><path d="M38 6l-4 5l4 1z" fill="#8a929e"/></g></svg>`, 33, "rbk");
 
 const MD = { busy: false, t: 0, c: {} };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -4722,7 +5012,7 @@ function moveTo(el, x, speed, y = el._y || 0) {
   return a.finished.then(() => { place(el, x, dir, y); a.cancel(); }).catch(() => {});
 }
 const face = (el, dir) => place(el, el._x, dir);
-const STATES = ["walk", "graze", "alert", "bound", "hop", "rest", "nibble", "shake", "run", "aim", "crouch", "fast", "trot", "sniff", "sit", "scratch", "stalk", "dive", "hatoff", "leap", "prance", "buried"];
+const STATES = ["walk", "graze", "alert", "bound", "hop", "rest", "nibble", "shake", "run", "aim", "crouch", "fast", "trot", "sniff", "sit", "scratch", "stalk", "dive", "hatoff", "leap", "prance", "buried", "lift"];
 const state = (el, ...cls) => { el.classList.remove(...STATES); cls.forEach(c => c && el.classList.add(c)); };
 function bubble(text, x, ms = 1400, y = 62) { const b = document.createElement("div"); b.className = "mbubble"; b.textContent = text; b.style.left = Math.max(2, Math.min(W_() - 60, x)) + "px"; b.style.bottom = y + "px"; mdStage().appendChild(b); setTimeout(() => b.remove(), ms); }
 function fx(cls, x, y) { const f = document.createElement("div"); f.className = cls; f.style.left = x + "px"; f.style.bottom = y + "px"; mdStage().appendChild(f); setTimeout(() => f.remove(), 1300); }
@@ -5189,7 +5479,7 @@ async function sharkScene() {
 async function octopusScene() {
   const W = W_(), chest = ["l", "r"].find(x => (MD.c.side || {})[x] === "chest"), fromR = chest ? chest === "r" : chance(.5), dir = fromR ? -1 : 1;
   const o = actor(OCTO_SVG, "octopus swim", 90, 70), x = chest ? (chest === "r" ? W - 130 : 40) : W * rnd(.35, .5); place(o, fromR ? W + 20 : -100, 1, 70);
-  await moveTo(o, x + dir * -40, 70, 60); await moveTo(o, x, 50, 0); o.classList.remove("swim"); fxAt("sandpuff", x + 30, 0, 1200); bubble("Blubb!", x + 30, 900, 74); await sleep(1000);
+  await moveTo(o, x + dir * -40, 62, 60); o.classList.remove("swim"); await moveTo(o, x, 34, 0); fxAt("sandpuff", x + 30, 0, 1200); bubble("Blubb!", x + 30, 900, 74); await sleep(1000);
   if (chest) { o.classList.add("grab"); await sleep(600); const b = mdStage().querySelector(`.bush.${chest}`); b?.classList.add("shake"); bubble("Meins!", x + 30, 1300, 74); await sleep(1600); b?.classList.remove("shake"); o.classList.remove("grab"); }
   else { for (let i = 0; i < 3; i++) fxAt("bubl", x + 40 + rnd(-10, 10), 50, 2400); await sleep(900); }
   // Helmtaucher stapft von der anderen Seite über den Grund heran
@@ -5203,11 +5493,20 @@ async function octopusScene() {
   const away = moveTo(o, fromR ? W + 30 : -110, 150, 110); await sleep(500); bubble("Hust! Nix zu sehen!", dv._x + 20, 1200, 100); await away; o.remove();
   await sleep(900); dv.classList.remove("flail"); bubble("👍", dv._x + 20, 900, 100); await sleep(900); dv.classList.add("walk"); await moveTo(dv, fromR ? W + 10 : -70, 18, 0); clearInterval(bub); clearInterval(dust); dv.remove();
 }
-// Weltall: Astronaut, Rover, Alien
+// Weltall: Astronaut (mit Alien-Jagd), UFO-Kuhklau, Alien-Truppe
+const laser = (x0, y0, x1, y1, ms = 420, col = "#7aff5a") => { const l = document.createElement("div"); l.className = "laser"; l.style.background = col; l.style.boxShadow = `0 0 6px 2px ${col}`; mdStage().appendChild(l);
+  const a = Math.atan2(-(y1 - y0), x1 - x0) * 180 / Math.PI; return l.animate([{ transform: `translate(${x0}px,${-y0}px) rotate(${a}deg)`, opacity: 1 }, { transform: `translate(${x1}px,${-y1}px) rotate(${a}deg)`, opacity: 1 }], { duration: ms, easing: "linear" }).finished.then(() => { l.remove(); fxAt("moondust", x1, Math.max(0, y1 - 4), 1200); }).catch(() => l.remove()); };
+const beamAt = (x, h, w = 64) => { const b = document.createElement("div"); b.className = "ufobeam"; b.style.cssText = `left:${x - w / 2}px;width:${w}px;height:${h}px`; mdStage().appendChild(b); return b; };
 async function astroScene(kind) {
-  const W = W_(); kind = kind || (chance(.4) ? "flip" : chance(.5) ? "ball" : "walk");
+  const W = W_(), A = MD.c.animals || {}; kind = kind || (A.alien && chance(.45) ? "chase" : chance(.3) ? "chase" : chance(.4) ? "flip" : chance(.5) ? "ball" : "walk");
   const ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 10 : -60, a = actor(ASTRO_SVG, "astro", 52, 72); place(a, ltr ? -60 : W + 10, dir);
-  const hop = async to => { const x0 = a._x; const j = a.animate([{ transform: `translate(${x0}px,0) scaleX(${dir})` }, { transform: `translate(${(x0 + to) / 2}px,-40px) scaleX(${dir})` }, { transform: `translate(${to}px,0) scaleX(${dir})` }], { duration: 1500, easing: "ease-in-out", fill: "forwards" }); await j.finished; place(a, to, dir); j.cancel(); fxAt("moondust", to + 6, 0, 1600); };
+  const hop = async (to, ms = 1500, h = 40) => { const x0 = a._x; const j = a.animate([{ transform: `translate(${x0}px,0) scaleX(${dir})` }, { transform: `translate(${(x0 + to) / 2}px,-${h}px) scaleX(${dir})` }, { transform: `translate(${to}px,0) scaleX(${dir})` }], { duration: ms, easing: "ease-in-out", fill: "forwards" }); await j.finished; place(a, to, dir); j.cancel(); fxAt("moondust", to + 10, 0, 1600); };
+  if (kind === "chase") {   // Alien-Horde jagt den Astronauten mit Laserkanonen
+    state(a, "walk"); const n = rndi(3, 5), al = [];
+    for (let i = 0; i < n; i++) { const e = actor(ALIEN2_SVG, "alien2 walk", 36, 52); place(e, (ltr ? -70 : W + 20) - dir * (70 + i * 42), dir); al.push(e); }
+    let shooting = true; const shoot = async () => { while (shooting) { const e = al[Math.floor(Math.random() * al.length)]; if (e.isConnected) { e.classList.add("shoot"); laser(e._x + (dir > 0 ? 34 : 0), 30, a._x + 26 + dir * rnd(10, 60), rnd(2, 40)); setTimeout(() => e.classList.remove("shoot"), 250); } await sleep(rnd(350, 700)); } };
+    const run = (async () => { bubble("Hilfeee!", W * .3, 1200, 78); while ((end - a._x) * dir > 0) await hop(a._x + dir * 70, 700, 28); })();
+    shoot(); await Promise.all([run, ...al.map(e => moveTo(e, end + dir * 30, 105))]); shooting = false; a.remove(); al.forEach(e => e.remove()); return; }
   const mid = W * rnd(.35, .5); while ((mid - a._x) * dir > 10) await hop(a._x + dir * 60);
   if (kind === "flip") { const x0 = a._x; const j = a.animate([{ transform: `translate(${x0}px,0) scaleX(${dir}) rotate(0)` }, { transform: `translate(${x0 + dir * 20}px,-56px) scaleX(${dir}) rotate(-180deg)` }, { transform: `translate(${x0 + dir * 40}px,0) scaleX(${dir}) rotate(-360deg)` }], { duration: 2200, easing: "ease-in-out", fill: "forwards" });
     await j.finished; place(a, x0 + dir * 40, dir); j.cancel(); fxAt("moondust", a._x + 6, 0, 1600); state(a, "wave"); bubble("Tadaa!", a._x + 10, 1200, 80); await sleep(1500); state(a); }
@@ -5216,23 +5515,88 @@ async function astroScene(kind) {
   while ((end - a._x) * dir > 0) await hop(a._x + dir * 70);
   a.remove();
 }
-async function roverScene() {
-  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, v = actor(ROVER_SVG, "rover", 66, 38); place(v, ltr ? -70 : W + 10, dir); state(v, "drive");
-  const mid = W * rnd(.35, .55); await moveTo(v, mid, 30); state(v); bubble("📡 piep", mid + 30, 1200, 44); await sleep(1800); state(v, "drive"); await moveTo(v, ltr ? W + 10 : -70, 34); v.remove();
+// Großes UFO will eine Kuh vom Mond beamen
+async function cowScene() {
+  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, cow = actor(COW_SVG, "cow walk", 60, 44); place(cow, ltr ? -70 : W + 10, dir);
+  const cx = W * rnd(.38, .55); await moveTo(cow, cx, 30); state(cow, "graze"); bubble("Muuuh", cx + 20, 1100, 48); await sleep(1300);
+  const u = actor(BIGUFO_SVG, "bigufo", 168, 92); place(u, ltr ? W + 20 : -180, 1, 24); await moveTo(u, cx + 30 - 84, 120, 24); state(cow, "alert"); bubble("?!", cx + 30, 800, 50);
+  const beam = beamAt(cx + 30, 40, 76); await sleep(600); state(cow, "lift"); bubble("MUUUH!", cx + 10, 1400, 64);
+  await moveTo(cow, cx, 14, 22);
+  if (chance(.5)) {   // Beam flackert, die Kuh plumpst runter und rennt davon
+    beam.classList.add("flicker"); await sleep(900); beam.remove(); await moveTo(cow, cx, 140, 0); fxAt("moondust", cx + 20, 0, 1400); state(cow, "walk"); bubble("Pfff!", u._x + 70, 1000, 104);
+    face(cow, -dir); await Promise.all([moveTo(cow, ltr ? -80 : W + 20, 90), (async () => { await sleep(500); await moveTo(u, ltr ? -190 : W + 30, 180, 40); })()]); }
+  else { await fade(cow, 0, 500); beam.remove(); bubble("Danke! 👽", u._x + 60, 1100, 104); await sleep(900); await moveTo(u, ltr ? -190 : W + 30, 220, 40); await sleep(300); bubble("🐄 …Muh?", W * .5, 1200, 30); await sleep(1200); }
+  cow.remove(); u.remove();
 }
+// Großes UFO setzt eine Alien-Truppe ab: tanzen, winken, Laser-Feuerwerk, wieder hochbeamen
 async function alienScene() {
-  const W = W_(), u = actor(UFO_SVG, "ufo", 60, 40), x = W * rnd(.3, .6); place(u, chance(.5) ? -70 : W + 10, 1, 80);
-  await moveTo(u, x, 90, 50); u.classList.add("beam"); await sleep(600); const al = actor(`<svg viewBox="0 0 14 22"><ellipse cx="7" cy="6" rx="5" ry="6" fill="#7ae07a"/><ellipse cx="4.8" cy="5" rx="1.6" ry="2.2" fill="#111"/><ellipse cx="9.2" cy="5" rx="1.6" ry="2.2" fill="#111"/><rect x="4" y="11" width="6" height="8" rx="3" fill="#7ae07a"/><path d="M4 19l-1 3M10 19l1 3" stroke="#5ac05a" stroke-width="1.6"/></svg>`, "alienx", 14, 22);
-  u.classList.add("hidden-alien"); place(al, x + 22, 1, 40); await moveTo(al, x + 22, 30, 0); u.classList.remove("beam"); bubble("👋 Hallo Erdling!", x, 1600, 34); await sleep(1900);
-  u.classList.add("beam"); await moveTo(al, x + 22, 30, 40); al.remove(); u.classList.remove("hidden-alien"); await sleep(300); u.classList.remove("beam"); await moveTo(u, chance(.5) ? W + 20 : -80, 160, 96); u.remove();
+  const W = W_(), x = W * rnd(.35, .55), u = actor(BIGUFO_SVG, "bigufo", 168, 92); place(u, chance(.5) ? -180 : W + 20, 1, 24);
+  await moveTo(u, x - 84, 140, 24); const beam = beamAt(x, 40, 86); await sleep(500);
+  const n = rndi(3, 4), al = [];
+  for (let i = 0; i < n; i++) { const e = actor(ALIEN2_SVG, "alien2", 36, 52), ex = x - 18 + (i - (n - 1) / 2) * 6; place(e, ex, 1, 26); e.style.opacity = 0; fade(e, 1, 300); await moveTo(e, ex, 60, 0); al.push(e); }
+  beam.remove(); await Promise.all(al.map((e, i) => { const tx = x - 18 + (i - (n - 1) / 2) * 44; e.classList.add("walk"); return moveTo(e, tx, 50).then(() => { e.classList.remove("walk"); face(e, i < n / 2 ? -1 : 1); }); }));
+  bubble("👋 Hallo Erdlinge!", x - 40, 1500, 60); al.forEach(e => e.classList.add("dance")); await sleep(1800);
+  for (let k = 0; k < 5; k++) { const e = al[k % n]; e.classList.add("shoot"); laser(e._x + 18, 34, e._x + 18 + rnd(-40, 40), 110, 600, ["#7aff5a", "#ff4fd8", "#4cc9f0"][k % 3]); setTimeout(() => e.classList.remove("shoot"), 250); await sleep(260); }
+  await sleep(700); al.forEach(e => e.classList.remove("dance"));
+  await Promise.all(al.map(e => { e.classList.add("walk"); return moveTo(e, x - 18, 50); })); al.forEach(e => e.classList.remove("walk"));
+  const b2 = beamAt(x, 40, 86); await Promise.all(al.map(e => moveTo(e, e._x, 60, 30).then(() => fade(e, 0, 200)))); b2.remove(); al.forEach(e => e.remove());
+  await moveTo(u, chance(.5) ? W + 30 : -190, 240, 40); u.remove();
 }
 const pick2 = a => a[Math.floor(Math.random() * a.length)], rndi = (a, b) => Math.floor(rnd(a, b + 1));
-window.__mdsvg = { trophySVG, FOX_SVG, DOE_SVG, CAMEL_SVG, GOAT_SVG, BUNNY_VARS, HERON_SVG, DIVER_SVG, GATOR_SVG, CRAB_SVG, TURTLE_SVG, SHARK_SVG };   // zum Testen
+window.__mdsvg = { SCORP_SVG, DRAGON_SVG, BROWNBEAR_SVG, POLARBEAR_SVG, ROBODOG_SVG, SHARK_SVG, CRAB_SVG, propsAll: () => props(), propSVG, ALIEN2_SVG, COW_SVG, BIGUFO_SVG, trophySVG, FOX_SVG, DOE_SVG, CAMEL_SVG, GOAT_SVG, BUNNY_VARS, HERON_SVG, DIVER_SVG, GATOR_SVG, CRAB_SVG, TURTLE_SVG, SHARK_SVG };   // zum Testen
+// ===== v35: neue Tiere =====
+// Wüste: Skorpion – krabbelt, hebt drohend den Stachel, klappert mit den Scheren, gräbt sich ein
+async function scorpionScene() {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 10 : -70, s = actor(SCORP_SVG, "scorp walk", 62, 33); place(s, ltr ? -70 : W + 10, dir);
+  const mid = W * rnd(.35, .55); await moveTo(s, mid, 38); state(s); await sleep(400);
+  if (A.lizard && chance(.5)) { const l = actor(LIZARD_SVG, "lizard", 62, 21); place(l, ltr ? W + 10 : -60, -dir); state(l, "run"); await moveTo(l, mid + dir * 90, 150); state(l);
+    state(s, "sting"); bubble("Klick-klack!", s._x + 20, 900, 40); await sleep(800); face(l, dir); state(l, "run"); bubble("😱", l._x + 20, 700, 30); await moveTo(l, ltr ? W + 10 : -60, 220); l.remove(); state(s); }
+  else { state(s, "sting"); bubble("Klick-klack!", s._x + 20, 1100, 40); await sleep(1600); state(s); }
+  if (chance(.5)) { state(s, "dig"); for (let i = 0; i < 5; i++) { fxAt("sandpuff", s._x + 20, 0); await sleep(220); } await fade(s, 0, 300); s.remove(); return; }
+  state(s, "walk"); await moveTo(s, end, 42); s.remove();
+}
+// Sumpf: Libellen – flitzen, stehen in der Luft, wechseln blitzschnell die Richtung
+async function dragonflyScene() {
+  const W = W_(), n = rndi(2, 3), ds = [];
+  for (let i = 0; i < n; i++) { const ltr = chance(.5), d = actor(DRAGON_SVG, "dragonfly", 38, 19); place(d, ltr ? -40 : W + 10, ltr ? 1 : -1, rnd(36, 84)); ds.push(d); }
+  await Promise.all(ds.map(async (d, i) => { await sleep(i * 500);
+    for (let k = 0; k < 4; k++) { await moveTo(d, rnd(20, W - 60), rnd(150, 230), rnd(30, 90)); await sleep(rnd(300, 900)); }
+    await moveTo(d, chance(.5) ? W + 20 : -50, 240, rnd(50, 95)); d.remove(); }));
+}
+// Berge: Braunbär – trottet heran, schnüffelt, richtet sich auf und brummt
+async function bearScene() {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 20 : -110, b = actor(BROWNBEAR_SVG, "deer bear", 96, 67); place(b, ltr ? -110 : W + 20, dir);
+  const mid = W * rnd(.3, .5); await deerWalk(b, mid, 30); state(b, "graze"); await sleep(1500); state(b);
+  let m = null; if (A.marmot) { m = actor(MARMOT_SVG, "marmot hide", 34, 38); place(m, mid + dir * 130, -dir); await sleep(300); state(m); }
+  state(b, "stand"); bubble("BRUUMM!", b._x + (ltr ? 60 : 10), 1300, 96); await sleep(400);
+  if (m) { state(m, "whistle"); bubble("PFIFF!", m._x, 700, 44); await sleep(600); state(m, "hide"); setTimeout(() => m.remove(), 600); }
+  await sleep(1400); state(b); await sleep(500); await deerWalk(b, end, 32); b.remove();
+}
+// Schnee: Eisbär – rutscht auf dem Bauch, angelt einen Fisch aus dem Eisloch
+async function polarScene() {
+  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 20 : -110, b = actor(POLARBEAR_SVG, "deer bear", 96, 67); place(b, ltr ? -110 : W + 20, dir);
+  const mid = W * rnd(.3, .45); await deerWalk(b, mid, 28);
+  if (chance(.5)) { state(b, "slide"); fxAt("snowpuff", b._x + 40, 0); bubble("Wiiih!", b._x + 40, 900, 60); await moveTo(b, mid + dir * 120, 120); fxAt("snowpuff", b._x + 50, 0); await sleep(500); state(b); await sleep(400); }
+  const hx = b._x + (ltr ? 100 : -40), hole = document.createElement("div"); hole.className = "burrow"; hole.style.cssText = `left:${hx}px;width:34px;height:7px;background:#7ab0d8;border-radius:50%`; mdStage().appendChild(hole);
+  state(b, "graze"); await sleep(1600); const f = actor(FISH("#7fd6ff", "#3fa8e0"), "fish", 26, 14); place(f, hx + 4, dir, 4); await moveTo(f, hx + 4, 40, 34); state(b, "stand"); bubble("Mjam! 🐟", b._x + 40, 1200, 96); await sleep(300); f.remove(); await sleep(1300);
+  state(b); fade(hole, 0, 600).then(() => hole.remove()); await deerWalk(b, end, 30); b.remove();
+}
+// Weltall: Robo-Hund – hüpft im Zeitlupen-Mondsprung, wedelt, jagt einen schwebenden Ball
+async function robodogScene() {
+  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 10 : -60, d = actor(ROBODOG_SVG, "deer robo", 52, 41); place(d, ltr ? -60 : W + 10, dir);
+  const hop = async to => { state(d); const x0 = d._x; const j = d.animate([{ transform: `translate(${x0}px,0) scaleX(${dir})` }, { transform: `translate(${(x0 + to) / 2}px,-30px) scaleX(${dir})` }, { transform: `translate(${to}px,0) scaleX(${dir})` }], { duration: 1100, easing: "ease-in-out", fill: "forwards" }); await j.finished; place(d, to, dir); j.cancel(); fxAt("moondust", to + 14, 0, 1200); };
+  const mid = W * rnd(.3, .45); while ((mid - d._x) * dir > 10) await hop(d._x + dir * 56);
+  state(d, "wag"); bubble("Wuff! Piep!", d._x + 20, 1100, 52); await sleep(1300);
+  const ball = document.createElement("div"); ball.className = "ball"; mdStage().appendChild(ball); const bx = d._x + (ltr ? 50 : 0);
+  const ba = ball.animate([{ transform: `translate(${bx}px,-60px)` }, { transform: `translate(${bx + dir * 80}px,-90px)` }, { transform: `translate(${bx + dir * 150}px,-4px)` }], { duration: 2600, easing: "ease-out", fill: "forwards" });
+  state(d, "wag"); await sleep(600); state(d, "walk"); await moveTo(d, bx + dir * 130, 80); await ba.finished; ball.remove(); state(d, "wag"); bubble("💙", d._x + 20, 900, 52); await sleep(1000);
+  state(d, "walk"); await moveTo(d, end, 70); d.remove();
+}
 
 const SCENES = { bunny: () => bunnyScene(), fox: () => foxScene(), deer: () => deerScene(), hare: () => hareScene(), goat: () => goatScene(), eagle: () => eagleScene(),
   lizard: () => lizardScene(), fennec: () => fennecScene(), camel: () => camelScene(), tumble: () => tumbleBy(), fish: () => fishScene(), crab: () => crabScene(), turtle: () => turtleScene(), jelly: () => jellyScene(),
-  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(),
-  marmot: () => marmotScene(), penguin: () => penguinScene(), ermine: () => ermineScene(), shark: () => sharkScene(), octopus: () => octopusScene(), astro: () => astroScene(), rover: () => roverScene(), alien: () => alienScene(),
+  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(), scorp: () => scorpionScene(), dragonfly: () => dragonflyScene(), bear: () => bearScene(), polar: () => polarScene(), robodog: () => robodogScene(),
+  marmot: () => marmotScene(), penguin: () => penguinScene(), ermine: () => ermineScene(), shark: () => sharkScene(), octopus: () => octopusScene(), astro: () => astroScene(), cow: () => cowScene(), alien: () => alienScene(),
   hunter: async () => { const A = MD.c.animals || {}, opts = ["bunny", "fox", "deer"].filter(k => A[k]); const pick = opts[Math.floor(Math.random() * opts.length)] || "deer";
     if (chance(.3)) await hunterNap(); else if (pick === "bunny") await bunnyScene("hunter"); else if (pick === "fox") await foxScene("hunter"); else await deerScene(chance(.5) ? "chase" : "shot"); } };
 async function playScene(which) {
@@ -5276,7 +5640,7 @@ let idleT = 0; const wake = () => { clearTimeout(idleT); if (PWR.idle) { PWR.idl
 // Akku fast leer → automatisch sparen (wo der Browser das verrät)
 try { navigator.getBattery?.().then(b => { const upd = () => { PWR.low = !b.charging && b.level <= .2; powerApply(); }; b.addEventListener("levelchange", upd); b.addEventListener("chargingchange", upd); upd(); }); } catch {}
 
-window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, astroScene, roverScene, alienScene, entityPeek };   // zum Testen
+window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, scorpionScene, dragonflyScene, bearScene, polarScene, robodogScene, cowScene, alienScene, astroScene, cowScene, alienScene, entityPeek };   // zum Testen
 window.applyTheme(curTheme());
 
 function openPrefs() {
@@ -5732,7 +6096,7 @@ document.addEventListener("click", async e => {
   else if (["worlduse", "wbg", "wstrip", "wdeco", "worldoff"].includes(a)) { a === "worlduse" ? worldUse(el.dataset.k) : a === "worldoff" ? setCosm({ world: null }) : worldToggle(el.dataset.k, a); reopenPrefs(); }
   else if (a === "godpre") { setCosm({ godColors: [...GOD_PRESETS[+el.dataset.v]] }); reopenPrefs(); }
   else if (a === "sideprop") { pickSide(el.dataset.w, el.dataset.side, el.dataset.k); reopenPrefs(); }
-  else if (a === "entitytest") { closeSheet(); const w = document.querySelector("#bggrad .world"); if (w) setTimeout(() => entityPeek(w), 400); }
+  else if (a === "rutest") { closeSheet(); setTimeout(() => rankUpShow(+el.dataset.t), 300); }
   else if (a === "power") { setPower(el.dataset.v); reopenPrefs(); }
   else if (a === "prtest") { closeSheet(); setTimeout(() => prShow("Bankdrücken", "weight", "4 × 8 mit 62,5 kg", "60 kg"), 300); }
   else if (a === "ruclose") $("#rankup")?.remove();
