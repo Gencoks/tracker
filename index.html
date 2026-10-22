@@ -1519,14 +1519,15 @@ $("#loginBtn").onclick = async () => {
   $("#loginErr").textContent = "";
   try { await signInWithPopup(auth, provider); }
   catch (e) {
-    if (["auth/popup-blocked", "auth/operation-not-supported-in-environment", "auth/cancelled-popup-request"].includes(e.code)) {
-      await signInWithRedirect(auth, provider);
+    if (e.code === "auth/popup-blocked") {
+      $("#loginErr").innerHTML = "Dein Browser hat das Anmeldefenster blockiert. Bitte Pop-ups für diese Seite erlauben und nochmal tippen.";
+    } else if (e.code === "auth/cancelled-popup-request") {
     } else if (e.code !== "auth/popup-closed-by-user") {
       $("#loginErr").textContent = "Anmeldung fehlgeschlagen: " + e.code;
     }
   }
 };
-getRedirectResult(auth).catch(e => { $("#loginErr").textContent = "Anmeldung fehlgeschlagen: " + e.code; });
+getRedirectResult(auth).catch(() => {});
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
