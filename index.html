@@ -564,6 +564,7 @@
   .switch.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .switch.four button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 16px; padding: 7px 2px; line-height: 1.1; }
   .switch.four button span { font-size: 11px; }
+  .tr-locked { pointer-events: none; opacity: .55; filter: saturate(.6); } .lock-note { margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); color: var(--muted); font-size: 13px; font-weight: 600; }
   .switch.four.five { grid-template-columns: repeat(5, minmax(0, 1fr)); } .switch.four.five button span { font-size: 10px; }
   .switch.four button { position: relative; } .switch.four button.has-badge::after { content: ""; position: absolute; top: 5px; right: 18%; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
   .input { width: 100%; padding: 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font: inherit; outline: none; }
@@ -601,6 +602,20 @@
   .fr-priv b { display: block; font-size: 14px; } .fr-priv small { color: var(--muted); font-size: 12px; }
   .fr-priv .tg { flex: none; width: 42px; height: 24px; border-radius: 12px; background: var(--border); position: relative; transition: background .2s; } .fr-priv .tg i { position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; }
   .fr-priv.on .tg { background: var(--accent); } .fr-priv.on .tg i { transform: translateX(18px); }
+  /* Profilbild mit Rang-Rahmen */
+  .pav { position: relative; display: inline-block; width: var(--s); height: var(--s); flex: none; }
+  .pav-i { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #3a3c48, #17181e); color: var(--ac); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ac) 45%, transparent); }
+  .pav.framed .pav-i { inset: 9%; box-shadow: none; } .pav-i img { width: 100%; height: 100%; object-fit: cover; display: block; } .pav-i b { font-weight: 900; }
+  .pav-b, .pav-f { position: absolute; left: -14%; top: -14%; width: 128%; height: 128%; overflow: visible; pointer-events: none; }
+  .pav-f .pf-spin, .pav-b .pf-spin { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 26s linear infinite; }
+  .pav .pf-orbit { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 6s linear infinite; } .pav .pf-orbit2 { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 4s linear infinite; }
+  .pav .pf-tw { transform-box: fill-box; transform-origin: 50% 50%; animation: tStar 2.4s ease-in-out infinite; } .pav .pf-tw.b { animation-delay: -1.2s; }
+  .pf-card { margin-top: 12px; padding: 16px; } .pf-top { display: flex; gap: 18px; align-items: center; padding: 8px 4px 0 10px; }
+  .pf-meta { min-width: 0; flex: 1; } .pf-name-row { display: flex; align-items: center; gap: 4px; } .pf-name-row b { font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pf-meta small { color: var(--muted); font-size: 13px; font-weight: 600; } .pf-btns { display: flex; gap: 8px; margin-top: 10px; } .pf-btns .btn { padding: 8px 12px; font-size: 13px; cursor: pointer; }
+  .pf-frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; margin-top: 8px; }
+  .pf-fr { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 4px 8px; border-radius: 14px; background: var(--surface-2); font: inherit; color: var(--text); }
+  .pf-fr small { font-size: 10.5px; font-weight: 700; color: var(--muted); white-space: nowrap; } .pf-fr.on { background: var(--accent); } .pf-fr.on small { color: var(--accent-ink); } .pf-fr.lock { opacity: .45; }
 
   .switch.three button { font-size: 13px; padding: 10px 4px; }
   .tcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -1239,6 +1254,17 @@
   #rankup .ru-trophy { filter: none !important; } .trophy-svg .tneb, .trophy-svg .twave, .trophy-svg .tfloat, .trophy-svg .twing, .trophy-svg .tgal { will-change: transform; }
   @keyframes tWave { 0% { transform: scale(.3); opacity: 0; } 20% { opacity: 1; } 100% { transform: scale(1.9); opacity: 0; } }
   .trophy-svg .twave { animation: tWave 4.35s ease-out infinite; } .trophy-svg .thue { animation: none !important; }
+  /* v38: Pokal fällt schneller, Freischalt-Liste gleichmäßig und scrollbar */
+  #rankup .ru-trophy { animation: tDrop .6s .05s cubic-bezier(.55, 0, .75, .4) forwards, trophyLand .45s .65s ease-out !important; }
+  #rankup .ru-rays { animation: raysIn .5s .65s forwards !important; }
+  #rankup .ru-list { max-height: min(46vh, 360px); overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; display: grid; gap: 8px; padding: 4px 2px 18px; margin: 12px 0 14px; text-align: left;
+    -webkit-mask: linear-gradient(to bottom, transparent 0, #000 10px, #000 calc(100% - 22px), transparent 100%); mask: linear-gradient(to bottom, transparent 0, #000 10px, #000 calc(100% - 22px), transparent 100%); }
+  #rankup .ru-list > div { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: center; padding: 10px; border-radius: 14px; background: var(--surface-2); opacity: 0; transform: translateY(12px); animation: ruIn .45s ease-out forwards; }
+  @keyframes ruIn { to { opacity: 1; transform: none; } }
+  #rankup .ru-ic { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 28px; background: rgba(255,255,255,.05); overflow: hidden; }
+  #rankup .ru-ic .ru-th { width: 44px; height: 44px; border-radius: 12px; } #rankup .ru-ic .ru-th.pfr { overflow: visible; display: grid; place-items: center; }
+  #rankup .ru-list b { display: block; font-size: 14px; line-height: 1.25; } #rankup .ru-list small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 2px; }
+  #rankup .ru-card[data-step="2"] .ru-list { max-height: min(36vh, 300px); }
   /* Einstellungen: Bereiche zum Aufklappen */
   .psec { border: 1px solid var(--border); border-radius: 14px; margin: 0 0 8px; background: var(--surface-2); overflow: hidden; }
   .psec > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-weight: 750; }
@@ -1525,7 +1551,7 @@ onAuthStateChanged(auth, async user => {
     const ud = u.exists() ? u.data() : {};
     S.pushOn = !!ud.push?.enabled && (ud.push?.tokens || []).length > 0;
     S.rankSeen = typeof ud.rankSeen === "number" ? ud.rankSeen : null;
-    S.dispName = ud.dispName || S.name; S.share = ud.shareStats === true;
+    S.dispName = ud.dispName || S.name; S.share = ud.shareStats === true; S.photo = ud.photo || ""; S.frame = typeof ud.frame === "number" ? ud.frame : 0;
     if (u.exists() && ud.tester === undefined) setDoc(userRef(), { tester: true }, { merge: true }).catch(() => {});   // bestehende Konten behalten den Testmodus
     COSM_TEST_UNLOCK = u.exists() ? ud.tester !== false : false;
     S.needOnb = !u.exists() || ud.onboarded === false;
@@ -1567,6 +1593,8 @@ function watchToday() {
   });
 }
 async function toggleTask(k, key) {
+  if (k < todayKey()) { toast("🔒 Vergangene Tage sind gesperrt – nachtragen geht nicht."); return; }
+  if (k > todayKey()) { toast("Das kannst du erst an dem Tag abhaken."); return; }
   const date = fromKey(k);
   const tasks = tasksFor(date);
   const cur = S.days[k] || { done: {} };
@@ -1607,6 +1635,7 @@ async function syncTrainTask(k, w) {
   try { await setDoc(dayRef(k), data); } catch {}
 }
 async function setWeight(k, key, slot, raw) {
+  if (k !== todayKey()) { toast("🔒 Gewicht kannst du nur für heute eintragen."); return; }
   const v = String(raw).trim().replace(",", ".");
   const num = v === "" ? "" : parseFloat(v);
   if (v !== "" && (isNaN(num) || num < 20 || num > 400)) { toast("Bitte ein gültiges Gewicht eingeben"); return; }
@@ -1875,7 +1904,8 @@ function renderTrain() {
       <div class="seg">${[...(planByName(w.plan) ? [] : [{ name: w.plan }]), ...TYPES].map(o =>
         `<button class="chip ${o.name === w.plan ? "accent" : ""}" data-action="plansel" data-v="${esc(o.name)}">${esc(o.name)}</button>`).join("")}</div></div>
     <h2>${plan.type === "gym" ? "Übungen" : "Eintrag"}</h2>
-    ${body}
+    ${S.trainDate < todayKey() ? `<div class="lock-note">🔒 Vergangener Tag – nur ansehen. Nachtragen ist gesperrt, damit der Rang für alle fair bleibt.</div>` : ""}
+    <div class="${S.trainDate < todayKey() ? "tr-locked" : ""}">${body}</div>
     <div class="saved" id="saved"></div>`;
 }
 const exHTML = (e, i) => {
@@ -1914,6 +1944,7 @@ function paceTxt(r) {
 }
 let saveT;
 function saveWorkout(rerender = false) {
+  if (S.trainDate < todayKey()) { toast("🔒 Vergangene Trainings sind gesperrt."); if (rerender) renderTrain(); return; }
   publishProfile();
   if (rerender) renderTrain();
   clearTimeout(saveT);
@@ -2471,11 +2502,11 @@ const RANKS = [
   { n: "Mythos",      min: 4200, cost: 13,   c: "#C04DFF", i: "🔮" },
   { n: "GOD-LEVEL",   min: 6000, cost: 13.5, c: "#FFFFFF", i: "⚡", god: true },
 ];
-const GAIN = { quota: 12, train: 5, pr: 3 };   // max. 20 RP pro Tag
+const GAIN = { quota: 12, train: 5, pr: 3 }, RANK_MIN_TASKS = 4;   // max. 20 RP pro Tag
 const rankOf = rp => { let t = 0; RANKS.forEach((r, i) => { if (rp >= r.min) t = i; }); return t; };
 function dayGain(k, woByDate) {
   const inf = dayInfo(k), w = woByDate[k];
-  const quota = inf.total ? GAIN.quota * Math.min(1, inf.count / inf.total) : 0;
+  const quota = inf.total ? GAIN.quota * Math.min(1, inf.count / Math.max(inf.total, RANK_MIN_TASKS)) : 0;
   const rest = planFor(fromKey(k).getDay()).type === "rest";
   const train = rest || S.days[k]?.done?.[trainKey()] || woComplete(w) ? GAIN.train : 0;   // nur vollständige Trainings zählen
   const pr = w?.prs?.length ? GAIN.pr : 0;
@@ -2544,7 +2575,7 @@ async function doPublish() {
       if (!recs[k] || v > recs[k].v) recs[k] = { n: e.name, v: Math.round(v * 100) / 100, t: prText(e), m: exMode(e) }; }
     const rb = runBest(null); if (rb.km > 0) recs["run|km"] = { n: "Laufen – weiteste Strecke", v: rb.km, t: `${fmtN(rb.km, 2)} km`, m: "run" };
     if (rb.pace < Infinity) recs["run|pace"] = { n: "Laufen – schnellstes Tempo", v: -rb.pace, t: fmtPace(rb.pace), m: "pace" };
-    const base = { name: S.dispName || S.name || "Sportler", code: S.code };
+    const base = { name: S.dispName || S.name || "Sportler", code: S.code, photo: S.photo || "", frame: typeof S.frame === "number" ? S.frame : 0 };
     const data = S.share ? { ...base, tier: st.tier, rp: Math.round(st.rp), peak: st.peak, stats, recs, private: false } : { ...base, private: true };
     const js = JSON.stringify(data); if (js === FR.lastPub) return; FR.lastPub = js;
     await setDoc(profRef(S.uid), { ...data, updated: Date.now() });
@@ -2581,10 +2612,10 @@ async function addFriend(code) {
 }
 // ---------- Ansicht „Freunde“ ----------
 function friendsCard() {
-  const st = rankState(), me = { uid: S.uid, name: S.dispName || S.name || "Du", tier: st.tier, rp: Math.round(st.rp), me: true };
+  const st = rankState(), me = { uid: S.uid, ...myProfile(), tier: st.tier, rp: Math.round(st.rp), me: true };
   const fs = frFriends(), board = [me, ...fs].sort((a, b) => (!!a.private - !!b.private) || (b.rp || 0) - (a.rp || 0)), inc = frIncoming(), out = frOutgoing();
   const nm = f => f.names?.[f.members.find(m => m !== S.uid)] || "Jemand";
-  return `<div class="card fr-card">
+  return profileCard() + `<div class="card fr-card">
       <div class="fr-code-k">Dein Freundescode</div>
       <div class="fr-code">${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</div>
       <div class="fr-row2"><button class="btn" data-action="frcopy">📋 Kopieren</button><button class="btn primary" data-action="frshare">📤 Teilen</button></div>
@@ -2595,7 +2626,7 @@ function friendsCard() {
       <button class="mini ok" data-action="fraccept" data-id="${f.id}">✓</button><button class="mini" data-action="frdel" data-id="${f.id}">✕</button></div>`).join("")}</div>` : ""}
     <h2>Rangliste unter Freunden</h2>
     <div class="card fr-list">${board.map((p, i) => { const r = RANKS[p.tier || 0];
-      return `<div class="fr-item ${p.me ? "me" : ""}"><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${avatar(p.name, p.private && !p.me ? "var(--muted)" : r.god ? "#FF8A00" : r.c)}
+      return `<div class="fr-item ${p.me ? "me" : ""}"><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${pAvatar(p, 42)}
         <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small></span>
         ${p.me ? "" : `<button class="mini ${FR.rmArm === p.uid ? "warn" : ""}" data-action="frrm" data-uid="${p.uid}" title="Entfernen">${FR.rmArm === p.uid ? "Sicher?" : "⋯"}</button>`}</div>`; }).join("")}
       ${fs.length ? "" : `<div class="empty" style="padding:14px 6px">Noch keine Freunde. Teile deinen Code – sobald jemand ihn eingibt, seht ihr euch hier und in euren Erfolgen.</div>`}</div>
@@ -2627,9 +2658,9 @@ function recFriends(r) {
   return `<div class="rec-fr">${pos === 1 ? "🥇" : "👥"} Platz ${pos}/${all.length} · ${rows.slice(0, 3).map(x => `${esc(x.name)} ${esc(x.s.t)}`).join(" · ")}</div>`;
 }
 function exFriends(name) {
-  const rows = frFriends().flatMap(p => Object.values(p.recs || {}).filter(x => x.n === name).map(x => ({ name: p.name, t: x.t, v: x.v, tier: p.tier || 0 })));
+  const rows = frFriends().flatMap(p => Object.values(p.recs || {}).filter(x => x.n === name).map(x => ({ name: p.name, photo: p.photo, t: x.t, v: x.v, tier: p.tier || 0 })));
   if (!rows.length) return frFriends().length ? `<div class="note" style="margin-top:10px">👥 Noch keiner deiner Freunde hat „${esc(name)}“ eingetragen.</div>` : "";
-  return `<div class="ex-fr"><div class="k">👥 Freunde bei ${esc(name)}</div>${rows.sort((a, b) => b.v - a.v).map(x => `<div class="fr-item sm">${avatar(x.name, RANKS[x.tier].c, 24)}<span class="fr-n"><b>${esc(x.name)}</b></span><b>${esc(x.t)}</b></div>`).join("")}</div>`;
+  return `<div class="ex-fr"><div class="k">👥 Freunde bei ${esc(name)}</div>${rows.sort((a, b) => b.v - a.v).map(x => `<div class="fr-item sm">${pAvatar({ name: x.name, photo: x.photo }, 24, { plain: 1, col: RANKS[x.tier].c })}<span class="fr-n"><b>${esc(x.name)}</b></span><b>${esc(x.t)}</b></div>`).join("")}</div>`;
 }
 // ---------- schöne Auswahlliste (statt des System-Dropdowns) ----------
 function openPick(title, groups, cur, onPick) {
@@ -2650,7 +2681,7 @@ function exPickGroups(all, names) {
 // ---------- Erster Start: kurze Einrichtung für neue Nutzer ----------
 const ONB_TASKS = [
   { key: "wasser", t: "2 Liter Wasser getrunken", on: 1 }, { key: "lesen", t: "15 Minuten gelesen", on: 1 }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht", on: 1 },
-  { key: "schritte", t: "10.000 Schritte" }, { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" },
+  { key: "schritte", t: "10.000 Schritte", on: 1 }, { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" },
   { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" }, { key: "schlaf", t: "Vor 23 Uhr im Bett" },
   { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", remind: "07:00" },
 ];
@@ -2670,7 +2701,7 @@ function onbShow() {
   const o = S.onb, dots = [0, 1, 2].map(i => `<i class="${i === o.step ? "on" : ""}"></i>`).join("");
   const body = o.step === 0 ? `<div class="onb-emo">👋</div><h1>Willkommen!</h1><p>Hake jeden Tag deine Aufgaben ab, trag dein Training ein, sammle Rangpunkte und schalte Pokale, Panoramen und Tiere frei.</p>
       <label class="onb-l">Wie sollen dich deine Freunde sehen?</label><input id="onbName" class="input" maxlength="20" value="${esc(o.name)}" placeholder="Dein Vorname">`
-    : o.step === 1 ? `<div class="onb-emo">✅</div><h1>Tägliche Aufgaben</h1><p>Was willst du jeden Tag schaffen? Du kannst das später jederzeit ändern.</p>
+    : o.step === 1 ? `<div class="onb-emo">✅</div><h1>Tägliche Aufgaben</h1><p>Was willst du jeden Tag schaffen? Du kannst das später jederzeit ändern. Für volle Rangpunkte zählen mindestens 4 Aufgaben – mehr bringt keinen Vorteil, damit es für alle fair bleibt.</p>
       <div class="onb-grid">${ONB_TASKS.map(t => `<button class="opt ${o.tasks.has(t.key) ? "on" : ""}" data-action="onbtask" data-k="${t.key}"><span><b>${esc(t.t)}</b>${t.s ? `<small>${esc(t.s)}</small>` : ""}</span></button>`).join("")}</div>`
     : `<div class="onb-emo">🏋️</div><h1>Dein Trainingsplan</h1><p>Wähle eine Vorlage – Übungen, Tage und Namen kannst du danach anpassen.</p>
       <div class="onb-grid">${Object.entries(ONB_PLANS).map(([k, p]) => `<button class="opt ${o.plan === k ? "on" : ""}" data-action="onbplan" data-k="${k}"><span><b>${p.n}</b><small>${p.d}</small></span></button>`).join("")}</div>`;
@@ -2685,6 +2716,63 @@ async function onbFinish() {
   try { await setDoc(userRef(), { tasks, plan: { types: TYPES, week: WEEK }, onboarded: true, tester: false, dispName: S.dispName, weightAdded: true }, { merge: true }); } catch {}
   renderAll(); publishProfile(); toast("Alles eingerichtet – viel Erfolg! 💪");
 }
+
+/* ===================== PROFILBILD MIT RANG-RAHMEN ===================== */
+// Rahmen 0–10 entsprechen den Rängen; freigeschaltet über den höchsten je erreichten Rang.
+const FRAME_N = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
+let frameN = 0;
+function frameSVG(t) {
+  const id = "pf" + (++frameN), c = (TIER_COL[t] || "#888"), lt = mixc(c, "#fff", .55), dk = mixc(c, "#000", .45), R = 50, f = n => Math.round(n * 10) / 10;
+  const ring = (w, a = c, b = lt, d = dk) => `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${b}"/><stop offset=".5" stop-color="${a}"/><stop offset="1" stop-color="${d}"/></linearGradient></defs>
+    <circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#${id}r)" stroke-width="${w}"/><circle cx="60" cy="60" r="${R + w / 2}" fill="none" stroke="${d}" stroke-width=".8"/><circle cx="60" cy="60" r="${R - w / 2}" fill="none" stroke="${d}" stroke-width=".8"/>`;
+  const gem = (x, y, s, col) => `<path d="M${x} ${y - s}L${x + s * .8} ${y}L${x} ${y + s}L${x - s * .8} ${y}Z" fill="${col}" stroke="#fff" stroke-width=".8"/><path d="M${x - s * .3} ${y - s * .3}l${s * .25} -${s * .35}" stroke="#fff" stroke-width="1"/>`;
+  const star = (x, y, r, col) => `<path d="${[...Array(10)].map((_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r; return `${i ? "L" : "M"}${f(x + Math.cos(a) * rr)} ${f(y + Math.sin(a) * rr)}`; }).join("")}Z" fill="${col}" stroke="${dk}" stroke-width=".7"/>`;
+  const wing = (d, col, ed) => [0, 1, 2].map(i => `<path d="M${60 + d * 40} ${70 - i * 6}C${60 + d * (54 + i * 4)} ${60 - i * 10} ${60 + d * (62 + i * 3)} ${46 - i * 8} ${60 + d * (66 - i * 2)} ${36 - i * 6}C${60 + d * (58 - i * 2)} ${50 - i * 6} ${60 + d * (50 - i)} ${62 - i * 6} ${60 + d * 42} ${76 - i * 6}Z" fill="${col}" stroke="${ed}" stroke-width=".8"/>`).join("");
+  let back = "", front = "";
+  if (t === 0) front = ring(5);
+  else if (t === 1) front = ring(6) + [...Array(12)].map((_, i) => { const a = i * Math.PI / 6; return `<circle cx="${f(60 + Math.cos(a) * R)}" cy="${f(60 + Math.sin(a) * R)}" r="1.4" fill="#fff" opacity=".8"/>`; }).join("");
+  else if (t === 2) front = ring(7) + star(60, 110, 9, lt);
+  else if (t === 3) front = ring(7) + gem(60, 9, 9, "#5ff0dc") + gem(17, 82, 5, "#5ff0dc") + gem(103, 82, 5, "#5ff0dc");
+  else if (t === 4) { back = [...Array(8)].map((_, i) => { const a = i * Math.PI / 4 + .2; return `<path d="M${f(60 + Math.cos(a) * 46)} ${f(60 + Math.sin(a) * 46)}L${f(60 + Math.cos(a - .1) * 62)} ${f(60 + Math.sin(a - .1) * 62)}L${f(60 + Math.cos(a) * 68)} ${f(60 + Math.sin(a) * 68)}L${f(60 + Math.cos(a + .1) * 62)} ${f(60 + Math.sin(a + .1) * 62)}Z" fill="${i % 2 ? "#7ec8ff" : "#3a8cff"}" stroke="#fff" stroke-width=".6"/>`; }).join(""); front = ring(7) + gem(60, 8, 10, "#7ec8ff"); }
+  else if (t === 5) { back = wing(-1, "#c04dff", "#4a1280") + wing(1, "#c04dff", "#4a1280"); front = ring(8) + gem(60, 9, 9, "#e07bff"); }
+  else if (t === 6) { back = [...Array(14)].map((_, i) => { const a = i * Math.PI * 2 / 14; return `<path d="M${f(60 + Math.cos(a - .14) * 48)} ${f(60 + Math.sin(a - .14) * 48)}Q${f(60 + Math.cos(a) * 74)} ${f(60 + Math.sin(a) * 74)} ${f(60 + Math.cos(a + .14) * 48)} ${f(60 + Math.sin(a + .14) * 48)}Z" fill="${i % 2 ? "#ffb020" : "#ff7a10"}" stroke="#9a3c00" stroke-width=".6"/>`; }).join(""); front = ring(8, "#ffa41e", "#ffe680", "#9a3c00"); }
+  else if (t === 7) { back = wing(-1, "#e8ecf2", "#5a6472") + wing(1, "#e8ecf2", "#5a6472"); front = ring(8, "#c8d0dc", "#fff", "#4f5a6a") + gem(60, 7, 11, "#3a8cff") + `<path d="M28 98Q60 116 92 98" stroke="#3a8cff" stroke-width="3" fill="none"/>`; }
+  else if (t === 8) { back = `<g class="pf-spin">${[...Array(16)].map((_, i) => `<path d="M58 4L60 -8L62 4Z" fill="#ffd84d" stroke="#a87a00" stroke-width=".5" transform="rotate(${i * 22.5} 60 60)"/>`).join("")}</g>`; front = ring(8, "#f2c230", "#fff6c8", "#8a5400") + star(60, 8, 9, "#fff6c8") + `<circle cx="22" cy="96" r="2" fill="#fff" class="pf-tw"/><circle cx="100" cy="24" r="1.6" fill="#fff" class="pf-tw b"/>`; }
+  else if (t === 9) { back = `<g class="pf-spin">${[0, 1, 2].map(k => `<path d="M60 0A60 60 0 0 1 120 60" stroke="${["#e07bff", "#ff4fd8", "#7a4dff"][k]}" stroke-width="${5 - k}" fill="none" stroke-linecap="round" transform="rotate(${k * 120} 60 60)"/>`).join("")}</g>`;
+    front = ring(8, "#b04dff", "#ffd0ff", "#3a0a6a") + `<g class="pf-orbit"><circle cx="60" cy="-2" r="5" fill="#ff9cf0" stroke="#fff" stroke-width="1"/></g>`; }
+  else { back = wing(-1, "#ffffff", "#c9a040") + wing(1, "#ffffff", "#c9a040") + `<g class="pf-spin">${[...Array(18)].map((_, i) => `<path d="M59 2L60 -10L61 2Z" fill="#ffe07a" opacity=".8" transform="rotate(${i * 20} 60 60)"/>`).join("")}</g>`;
+    front = ring(9, "#f2c230", "#fff6c8", "#7a4a00") + `<g transform="rotate(-18 60 60)"><ellipse cx="60" cy="60" rx="66" ry="16" fill="none" stroke="#f2c230" stroke-width="2.4"/><g class="pf-orbit2"><circle cx="126" cy="60" r="3.4" fill="#fff"/></g></g>` + star(60, 6, 10, "#fff") + `<circle cx="16" cy="30" r="2" fill="#fff" class="pf-tw"/><circle cx="106" cy="100" r="2" fill="#fff" class="pf-tw b"/><circle cx="100" cy="16" r="1.4" fill="#ffe9a8" class="pf-tw"/>`; }
+  return { back, front };
+}
+// Avatar: Foto (oder Anfangsbuchstabe) im Rang-Rahmen
+function pAvatar(p, size = 40, opts = {}) {
+  const t = typeof p.frame === "number" && p.frame >= 0 ? Math.min(10, p.frame) : -1, col = opts.col || (t >= 0 ? TIER_COL[t] : "var(--accent)");
+  const inner = p.photo ? `<img src="${p.photo}" alt="">` : `<b style="font-size:${Math.round(size * .42)}px">${esc((p.name || "?").trim()[0] || "?").toUpperCase()}</b>`;
+  const fr = t >= 0 && !opts.plain ? frameSVG(t) : null;
+  return `<span class="pav ${fr ? "framed t" + t : ""}" style="--s:${size}px;--ac:${col}">${fr ? `<svg class="pav-b" viewBox="-20 -20 160 160">${fr.back}</svg>` : ""}<span class="pav-i">${inner}</span>${fr ? `<svg class="pav-f" viewBox="-20 -20 160 160">${fr.front}</svg>` : ""}</span>`;
+}
+const myPeak = () => (S.allWo && S.daysFull ? rankState().peak : 0);
+const myFrameOk = t => COSM_TEST_UNLOCK || t <= myPeak();
+function myProfile() { return { name: S.dispName || S.name || "Du", photo: S.photo || "", frame: typeof S.frame === "number" ? S.frame : 0 }; }
+function profileCard() {
+  const me = myProfile(), st = rankState(), r = RANKS[st.tier];
+  return `<div class="card pf-card">
+    <div class="pf-top">${pAvatar(me, 92)}<div class="pf-meta"><div class="pf-name-row"><b>${esc(me.name)}</b><button class="mini" data-action="pfname" title="Name ändern">✎</button></div>
+      <small>${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · Rahmen „${FRAME_N[me.frame]}“</small>
+      <div class="pf-btns"><label class="btn"><input type="file" accept="image/*" data-pfphoto hidden>📷 Foto</label>${me.photo ? `<button class="btn" data-action="pfnophoto">Entfernen</button>` : ""}</div></div></div>
+    ${S.pfEditName ? `<div class="fr-add" style="margin-top:12px"><input id="pfNameIn" class="input" style="text-transform:none;letter-spacing:0" maxlength="20" value="${esc(me.name)}"><button class="btn primary" data-action="pfnamesave">Speichern</button></div>` : ""}
+    <div class="sub-h" style="margin-top:14px">Profilrahmen – pro Rang einer</div>
+    <div class="pf-frames">${FRAME_N.map((n, t) => { const ok = myFrameOk(t); return `<button class="pf-fr ${me.frame === t ? "on" : ""} ${ok ? "" : "lock"}" data-action="pfframe" data-t="${t}">${pAvatar({ ...me, frame: t }, 46)}<small>${ok ? n : "🔒 " + n}</small></button>`; }).join("")}</div></div>`;
+}
+// Foto verkleinern (quadratisch, 192 px) und speichern
+async function pfSetPhoto(file) {
+  try { const url = URL.createObjectURL(file), img = new Image(); img.src = url; await img.decode();
+    const s = Math.min(img.width, img.height), cv = document.createElement("canvas"); cv.width = cv.height = 192;
+    cv.getContext("2d").drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 192, 192); URL.revokeObjectURL(url);
+    S.photo = cv.toDataURL("image/jpeg", .82); await setDoc(userRef(), { photo: S.photo }, { merge: true }); FR.lastPub = ""; doPublish(); renderPerf(); toast("Profilbild gespeichert ✓");
+  } catch (e) { console.log(e); toast("Das Bild konnte nicht geladen werden."); }
+}
+document.addEventListener("change", e => { if (e.target.matches?.("[data-pfphoto]") && e.target.files?.[0]) pfSetPhoto(e.target.files[0]); });
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -2710,7 +2798,7 @@ function rankCard() {
     </div>
     ${chartPts.length > 1 ? lineChart([{ color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#FFC400", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
     <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
-      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote, ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
+      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote (für alle gleich – volle Punkte ab ${RANK_MIN_TASKS} Aufgaben, mehr Aufgaben bringen nicht mehr Punkte), ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
       ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${x.i}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
     </details>
   </div>`;
@@ -4752,9 +4840,9 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
   document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
-  partySound(tier); setTimeout(() => confettiBurst(2), 1150); setTimeout(() => confettiBurst(2), 3400);
-  setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 1150);
-  if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 1150); } catch {}
+  partySound(tier); setTimeout(() => confettiBurst(2), 650); setTimeout(() => confettiBurst(2), 3400);
+  setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 650);
+  if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 650); } catch {}
   return wrap;
 }
 function rankUpShow(tier) {
@@ -4769,52 +4857,65 @@ function prShow(name, mode, txt, prevTxt, label = "REKORD") {
 }
 function rankUpNext() {
   const wrap = $("#rankup"); if (!wrap) return; const tier = wrap._tier, card = wrap.querySelector(".ru-card");
-  const list = [...UNLOCKS.filter(u => u.tier === tier).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
+  const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 44)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
     ...ANIMALS.filter(a => a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
-  if (!list.length || card.dataset.step === "2") { wrap.remove(); return; }
+  if (card.dataset.step === "2") { wrap.remove(); return; }
   card.dataset.step = "2"; card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
   setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${RANKS[tier].i} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
-    <div class="ru-list">${list.map(x => `<div><span>${x.icon}</span><span style="font-size:inherit"><b>${x.n}</b><small>${x.d}</small></span></div>`).join("")}</div>
+    <div class="ru-list">${list.map((x, i) => `<div style="animation-delay:${.15 + i * .07}s"><span class="ru-ic">${x.icon}</span><span style="font-size:inherit"><b>${x.n}</b><small>${x.d}</small></span></div>`).join("")}</div>
     <button class="btn primary block" data-action="ruprefs">Gleich ausprobieren</button><button class="btn block" data-action="ruok" style="margin-top:8px">Später</button>`; }, 300);
 }
 
-// ---------- Feier-Sounds: je höher der Rang, desto größer – GOD-Level mit Engelschor ----------
+// ---------- Feier-Sounds: warm und episch statt grell – jeder Rang eigene Tonart und Melodie, je höher desto größer ----------
+// Instrumente: weiche Streicher-Flächen, gedämpfte Hörner, Harfe, Pauke; ab Mythos Chor. Alles durch einen Tiefpass (nichts Schrilles).
 function partySound(tier = 2) {
-  const a = audio(); if (!a) return; const T = Math.max(0, Math.min(10, tier)), t0 = a.currentTime + .06;
-  const out = a.createGain(); out.gain.value = .5; const comp = a.createDynamicsCompressor(); out.connect(comp).connect(a.destination);
-  // Hall aus generiertem Impuls (länger bei hohen Rängen)
-  const rv = a.createConvolver(), len = 1.2 + T * .25, ir = a.createBuffer(2, a.sampleRate * len, a.sampleRate);
-  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.6); }
-  rv.buffer = ir; const wet = a.createGain(); wet.gain.value = .22 + T * .04; rv.connect(wet).connect(out);
-  const midi = n => 440 * Math.pow(2, (n - 69) / 12);
-  const bell = (n, at, vol = .18, dur = 1.6) => { [1, 2.76, 5.4].forEach((h, k) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = midi(n) * h;
-      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol / (k * 2 + 1), at + .008); g.gain.exponentialRampToValueAtTime(.0005, at + dur / (k + 1)); o.connect(g); g.connect(out); g.connect(rv); o.start(at); o.stop(at + dur); }); };
-  const pad = (notes, at, dur, vol, type = "triangle", cut = 1800) => notes.forEach(n => [-7, 7].forEach(dt => { const o = a.createOscillator(), g = a.createGain(), lp = a.createBiquadFilter(); o.type = type; o.frequency.value = midi(n); o.detune.value = dt;
-      lp.type = "lowpass"; lp.frequency.value = cut; g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .3); g.gain.linearRampToValueAtTime(0, at + dur); o.connect(lp).connect(g); g.connect(out); g.connect(rv); o.start(at); o.stop(at + dur + .05); }));
-  const whoosh = (at, dur, vol) => { const b = a.createBuffer(1, a.sampleRate * dur, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    const s = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain(); s.buffer = b; bp.type = "bandpass"; bp.Q.value = 1.4; bp.frequency.setValueAtTime(300, at); bp.frequency.exponentialRampToValueAtTime(6000, at + dur);
-    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .8); g.gain.linearRampToValueAtTime(0, at + dur); s.connect(bp).connect(g); g.connect(out); g.connect(rv); s.start(at); };
-  const boom = (at, vol) => { const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(120, at); o.frequency.exponentialRampToValueAtTime(38, at + .5); g.gain.setValueAtTime(vol, at); g.gain.exponentialRampToValueAtTime(.001, at + .7); o.connect(g).connect(out); o.start(at); o.stop(at + .8); };
-  // Chor: Sägezahn durch Vokal-Formanten („Aaah“)
-  const choir = (notes, at, dur, vol) => notes.forEach(n => [-9, 0, 9].forEach(dt => { const o = a.createOscillator(), vib = a.createOscillator(), vg = a.createGain(), g = a.createGain(); o.type = "sawtooth"; o.frequency.value = midi(n); o.detune.value = dt;
-      vib.frequency.value = 5 + Math.random(); vg.gain.value = 6; vib.connect(vg).connect(o.detune);
-      const mix = a.createGain(); mix.gain.value = 1; [[800, 6, 1], [1150, 8, .5], [2900, 10, .18], [3900, 12, .1]].forEach(([fq, q, gn]) => { const bp = a.createBiquadFilter(), bg = a.createGain(); bp.type = "bandpass"; bp.frequency.value = fq; bp.Q.value = q; bg.gain.value = gn; o.connect(bp).connect(bg).connect(mix); });
-      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + dur * .35); g.gain.setValueAtTime(vol, at + dur * .7); g.gain.linearRampToValueAtTime(0, at + dur); mix.connect(g); g.connect(out); g.connect(rv);
-      [o, vib].forEach(x => { x.start(at); x.stop(at + dur + .05); }); }));
-  // Grundmotiv: aufsteigendes Glockenspiel – mit jedem Rang länger und höher
-  const scale = [0, 4, 7, 12, 16, 19, 24, 28], root = 72 + Math.min(T, 6) % 3 * 2, steps = 3 + Math.min(5, Math.ceil(T / 2));
-  for (let i = 0; i < steps; i++) bell(root + scale[i], t0 + i * (.11 - T * .004), .2, 1.4 + T * .1);
-  const top = t0 + steps * (.11 - T * .004);
-  bell(root + 24, top + .05, .22, 2.2); if (T >= 2) bell(root + 19, top + .05, .14, 2);
-  if (T >= 3) whoosh(t0 - .02, .5 + T * .05, .05 + T * .012);
-  if (T >= 4) pad([root - 12, root - 5, root + 4], top, 1.6 + T * .2, .028 + T * .003);
-  if (T >= 5) boom(top, .45 + T * .03);
-  if (T >= 6) for (let i = 0; i < 6; i++) bell(root + 24 + scale[i % 4], top + .25 + i * .07, .08, 1.2);   // Funkel-Kaskade
-  if (T >= 7) pad([root - 24, root - 12, root - 5, root], top + .1, 2.4 + T * .2, .03, "sawtooth", 900);   // tiefe Fanfare
-  if (T >= 8) { [0, 4, 7, 12].forEach((d, i) => bell(root + 12 + d, top + .9 + i * .12, .14, 1.8)); boom(top + .9, .3); }
-  if (T >= 9) choir([root - 12, root - 5, root + 4], top - .2, 3.4, .05);   // Mythos: Chor
-  if (T >= 10) { choir([root, root + 7, root + 12, root + 16], top + .3, 4.6, .055); choir([root + 24, root + 28], top + 1.2, 3.6, .03);   // GOD: Engelschor mit Sopran
-    for (let i = 0; i < 12; i++) bell(root + 36 + scale[i % 6] - 12, top + 1.4 + i * .09, .06, 2); whoosh(top + 1, 1.6, .08); }
+  const a = audio(); if (!a) return; const T = Math.max(0, Math.min(10, tier)), t0 = a.currentTime + .08;
+  const master = a.createGain(); master.gain.value = .55 * (T < 2 ? 3 : T < 4 ? 2 : 1); const lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600 + T * 60; lp.Q.value = .4;
+  const comp = a.createDynamicsCompressor(); comp.threshold.value = -16; master.connect(lp).connect(comp).connect(a.destination);
+  const rv = a.createConvolver(), rl = 2.4 + T * .25, ir = a.createBuffer(2, a.sampleRate * rl, a.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3.2); }
+  rv.buffer = ir; const wet = a.createGain(); wet.gain.value = .32 + T * .025; rv.connect(wet).connect(master);
+  const hz = n => 440 * Math.pow(2, (n - 69) / 12), out = (node, dry = 1) => { const g = a.createGain(); g.gain.value = dry; node.connect(g).connect(master); node.connect(rv); };
+  const env = (g, at, atk, hold, rel, v) => { g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(v, at + atk); g.gain.setValueAtTime(v, at + atk + hold); g.gain.exponentialRampToValueAtTime(.0008, at + atk + hold + rel); };
+  // Streicher: mehrere leicht verstimmte Sägezähne, stark gefiltert, langsamer Einsatz
+  const strings = (notes, at, dur, v = .035) => notes.forEach(n => [-8, 0, 7].forEach(dt => { const o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain(); o.type = "sawtooth"; o.frequency.value = hz(n); o.detune.value = dt;
+    f.type = "lowpass"; f.frequency.value = 1100; f.Q.value = .3; env(g, at, Math.min(.7, dur * .35), dur * .4, dur * .5, v); o.connect(f).connect(g); out(g); o.start(at); o.stop(at + dur * 1.3 + .1); }));
+  // Horn: weicher Sägezahn mit Filter-Anschwellen
+  const horn = (n, at, dur, v = .07) => [0, 5].forEach(dt => { const o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain(); o.type = "sawtooth"; o.frequency.value = hz(n); o.detune.value = dt;
+    f.type = "lowpass"; f.Q.value = 1.2; f.frequency.setValueAtTime(380, at); f.frequency.linearRampToValueAtTime(1300, at + .12); f.frequency.linearRampToValueAtTime(800, at + dur);
+    env(g, at, .09, dur * .6, dur * .5, v); o.connect(f).connect(g); out(g); o.start(at); o.stop(at + dur * 1.2 + .1); });
+  // Harfe/Glocke weich: Sinus mit leiser Oktave, kurzer Ausklang
+  const harp = (n, at, v = .09) => [[1, 1], [2, .25]].forEach(([m, k]) => { const o = a.createOscillator(), g = a.createGain(); o.type = "triangle"; o.frequency.value = hz(n) * m; env(g, at, .006, .02, 1.4, v * k); o.connect(g); out(g, .8); o.start(at); o.stop(at + 1.6); });
+  // Pauke: tiefer Sinus mit Tonhöhen-Fall + gedämpftes Rauschen
+  const timp = (at, v = .5, n = 41) => { const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(hz(n) * 1.5, at); o.frequency.exponentialRampToValueAtTime(hz(n), at + .12); env(g, at, .005, .05, 1.1, v); o.connect(g); out(g);
+    o.start(at); o.stop(at + 1.3); const b = a.createBuffer(1, a.sampleRate * .3, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4);
+    const s = a.createBufferSource(), f = a.createBiquadFilter(), gg = a.createGain(); s.buffer = b; f.type = "lowpass"; f.frequency.value = 420; gg.gain.value = v * .5; s.connect(f).connect(gg); out(gg); s.start(at); };
+  const roll = (at, dur, v) => { for (let x = 0; x < dur; x += .07) timp(at + x, v * (.25 + .75 * x / dur), 40); };
+  // Chor „Aah“ (Formanten, tiefer gesetzt, weich)
+  const choir = (notes, at, dur, v = .04) => notes.forEach(n => [-10, 0, 10].forEach(dt => { const o = a.createOscillator(), vib = a.createOscillator(), vg = a.createGain(), g = a.createGain(), mix = a.createGain(); o.type = "sawtooth"; o.frequency.value = hz(n); o.detune.value = dt;
+    vib.frequency.value = 4.6 + Math.random() * .8; vg.gain.value = 5; vib.connect(vg).connect(o.detune);
+    [[700, 5, 1], [1100, 7, .45], [2500, 9, .08]].forEach(([fq, q, gn]) => { const bp = a.createBiquadFilter(), bg = a.createGain(); bp.type = "bandpass"; bp.frequency.value = fq; bp.Q.value = q; bg.gain.value = gn; o.connect(bp).connect(bg).connect(mix); });
+    env(g, at, dur * .35, dur * .35, dur * .45, v); mix.connect(g); out(g); [o, vib].forEach(x => { x.start(at); x.stop(at + dur * 1.2 + .1); }); }));
+  // Akkorde (Halbtöne über Grundton) und Tonart pro Rang
+  const key = [48, 50, 52, 53, 55, 50, 52, 53, 55, 50, 51][T], M = [0, 4, 7], m = [0, 3, 7];
+  const ch = (deg, q = M) => q.map(x => key + deg + x);
+  const prog = T <= 1 ? [[0, M]] : T <= 3 ? [[0, M], [7, M], [0, M]] : T <= 5 ? [[0, M], [5, M], [7, M], [0, M]] : T <= 8 ? [[0, M], [9, m], [5, M], [7, M], [0, M]]
+    : T === 9 ? [[0, m], [8, M], [10, M], [0, M]] : [[0, M], [9, m], [5, M], [7, M], [8, M], [10, M], [0, M]];
+  const step = T >= 9 ? .62 : T >= 6 ? .5 : .42; let t = t0;
+  // Auftakt: Harfen-Arpeggio
+  const arp = [0, 4, 7, 12, 16, 19].slice(0, 3 + Math.min(3, Math.ceil(T / 3)));
+  arp.forEach((x, i) => harp(key + 12 + x, t + i * .07, .08));
+  t += arp.length * .07 + .05;
+  if (T >= 4) roll(t - .45, .45, .18 + T * .015);
+  prog.forEach(([deg, q], i) => { const last = i === prog.length - 1, d = last ? step * (2.6 + T * .12) : step, notes = ch(deg, q);
+    strings([...notes, notes[0] - 12], t, d + .3, .022 + T * .002);
+    if (T >= 2) horn(notes[0] + 12 + (i % 2 ? 4 : 0), t, d, .045 + T * .004);
+    if (T >= 5) horn(notes[2], t, d, .03);
+    if (T >= 4 && (i === 0 || last)) timp(t, .35 + T * .03, key - 12 + deg);
+    if (last && T >= 3) harp(notes[0] + 24, t + .05, .07);
+    if (T >= 9) choir(T === 10 ? [notes[0], notes[1] + 12, notes[2] + 12] : [notes[0], notes[2]], t, d + .4, T === 10 ? .03 : .026);
+    t += d; });
+  if (T === 10) choir([key + 24, key + 28, key + 31], t - step * 2.2, step * 3.6, .018);   // hoher Engels-Sopran zum Schluss
 }
 
 /* ----- Tierwiese: Hasen, Fuchs, Rehe und (optional) Jäger über der unteren Leiste ----- */
@@ -6442,6 +6543,10 @@ document.addEventListener("click", async e => {
   else if (a === "frcopy") { try { await navigator.clipboard.writeText(S.code); toast("Code kopiert ✓"); } catch { toast(S.code); } }
   else if (a === "frshare") { const t = `Lass uns im Tracker zusammen trainieren! Mein Freundescode: ${S.code}`, u = location.origin + location.pathname;
     if (navigator.share) navigator.share({ title: "Tracker", text: t, url: u }).catch(() => {}); else { try { await navigator.clipboard.writeText(t + " " + u); toast("Einladung kopiert ✓"); } catch {} } }
+  else if (a === "pfname") { S.pfEditName = !S.pfEditName; renderPerf(); setTimeout(() => $("#pfNameIn")?.focus(), 50); }
+  else if (a === "pfnamesave") { const v = ($("#pfNameIn")?.value || "").trim().slice(0, 20); if (v) { S.dispName = v; setDoc(userRef(), { dispName: v }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); } S.pfEditName = false; renderPerf(); }
+  else if (a === "pfnophoto") { S.photo = ""; setDoc(userRef(), { photo: "" }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); renderPerf(); }
+  else if (a === "pfframe") { const t = +el.dataset.t; if (!myFrameOk(t)) { toast(`Schaltest du mit ${RANKS[t].i} ${RANKS[t].n} frei`); return; } S.frame = t; setDoc(userRef(), { frame: t }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); renderPerf(); }
   else if (a === "frpriv") { S.share = !S.share; FR.lastPub = ""; setDoc(userRef(), { shareStats: S.share }, { merge: true }).catch(() => {}); doPublish(); renderPerf(); }
   else if (a === "fradd") { const i = $("#frCode"); await addFriend(i?.value); if (i) i.value = ""; }
   else if (a === "fraccept") { try { await updateDoc(doc(db, "friendships", el.dataset.id), { status: "accepted" }); toast("Freund hinzugefügt 🎉"); } catch { toast("Hat nicht geklappt."); } }
