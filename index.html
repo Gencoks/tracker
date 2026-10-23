@@ -1201,6 +1201,110 @@
     background-size: 220% 100%; animation: sandIn 1.4s ease-out forwards, sandFlow 1.2s linear infinite; -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.8) 50%, transparent 100%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.8) 50%, transparent 100%); }
   .sandstorm.rev { animation: sandIn 1.4s ease-out forwards, sandFlowR 1.2s linear infinite; } .sandstorm.out { opacity: 0; transition: opacity 1.2s; }
   @keyframes sandIn { from { opacity: 0; } to { opacity: 1; } } @keyframes sandFlow { from { background-position: 100% 0; } to { background-position: 0 0; } } @keyframes sandFlowR { from { background-position: 0 0; } to { background-position: 100% 0; } }
+  /* ===== v40: Känguru, Rennkuckuck, Kojote, Erdmännchen ===== */
+  .kg, .rr, .mk { bottom: -3px; } .actor.kg svg, .actor.rr svg, .actor.mk svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .kg svg { transform-origin: 50% 100%; } .kg .kgleg { transform-box: view-box; transform-origin: 28px 45px; transition: transform .25s; } .kg .kgtail { transform-box: view-box; transform-origin: 24px 45px; transition: transform .3s; }
+  .kg .kgarm { transform-box: view-box; transform-origin: 37px 28px; transition: transform .2s; } .kg .kghead { transform-box: view-box; transform-origin: 38px 14px; transition: transform .3s; } .kg .kgear { transform-box: view-box; transform-origin: 39px 12px; animation: kgEar 3.6s ease-in-out infinite; }
+  @keyframes kgEar { 0%, 86%, 100% { transform: none; } 90% { transform: rotate(-14deg); } 94% { transform: rotate(6deg); } }
+  .kg .kgjoey { opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .4s; } .kg.joey .kgjoey { opacity: 1; transform: none; animation: kgJoey 1.6s ease-in-out infinite alternate; } @keyframes kgJoey { to { transform: translate(.6px, -1px) rotate(4deg); } }
+  .kg.hop svg { animation: kgJump .62s cubic-bezier(.3,.1,.5,1) infinite; } .kg.hop .kgleg { animation: kgLeg .62s infinite; } .kg.hop .kgtail { animation: kgTail .62s infinite; } .kg.hop .kgarm { transform: rotate(-12deg); }
+  @keyframes kgJump { 0% { transform: translateY(0) scaleY(.93); } 16% { transform: translateY(-2px) scaleY(1.04) rotate(-4deg); } 50% { transform: translateY(-24px) rotate(-2deg); } 84% { transform: translateY(-2px) rotate(3deg); } 100% { transform: translateY(0) scaleY(.93); } }
+  @keyframes kgLeg { 0% { transform: rotate(10deg); } 18% { transform: rotate(-34deg); } 55% { transform: rotate(-20deg); } 84% { transform: rotate(16deg); } 100% { transform: rotate(10deg); } }
+  @keyframes kgTail { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-16deg); } }
+  .kg.box .kghead { transform: rotate(-4deg); } .kg.box .kgarm { transform: rotate(-58deg); } .kg.box .kgarm.f { animation: kgPunch .34s ease-in-out infinite alternate; } .kg.box .kgarm.b { animation: kgPunch .34s -.17s ease-in-out infinite alternate; }
+  .kg.box svg { animation: kgBounce .34s ease-in-out infinite alternate; } @keyframes kgBounce { from { transform: translateY(0); } to { transform: translateY(-2px) rotate(-2deg); } }
+  @keyframes kgPunch { from { transform: rotate(-50deg); } to { transform: translate(5px, -1px) rotate(-88deg); } }
+  .kg.kick svg { transform: rotate(-14deg) translateY(-3px); transition: transform .15s; } .kg.kick .kgleg { transform: rotate(-78deg); transition: transform .12s; } .kg.kick .kgtail { transform: rotate(12deg); }
+  .kg.look .kghead { animation: kgLook 1.4s ease-in-out infinite alternate; } @keyframes kgLook { 0% { transform: rotate(0); } 50% { transform: rotate(-12deg); } 100% { transform: rotate(6deg); } }
+  .kg.scratch .kgarm.f { animation: kgScr .14s linear infinite alternate; } @keyframes kgScr { from { transform: rotate(20deg); } to { transform: rotate(46deg); } }
+
+  .rr .rrleg { transform-box: view-box; transform-origin: 28px 23px; } .rr .rrtail { transform-box: view-box; transform-origin: 23px 16px; animation: rrTail 1.6s ease-in-out infinite; transition: transform .2s; }
+  .rr .rrhead { transform-box: view-box; transform-origin: 38px 18px; transition: transform .2s; } .rr .rrcrest { transform-box: view-box; transform-origin: 42px 7px; transition: transform .2s; } .rr svg { transform-origin: 50% 100%; transition: transform .2s; }
+  @keyframes rrTail { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(4deg); } }
+  .rr.run svg { transform: rotate(9deg); } .rr.run .rrtail { animation: none; transform: rotate(20deg); } .rr.run .rrcrest { transform: rotate(40deg) scaleY(.7); } .rr.run .rrhead { transform: rotate(8deg); }
+  .rr.run .rrleg.a { animation: rrLeg .15s linear infinite; } .rr.run .rrleg.b { animation: rrLeg .15s -.075s linear infinite; }
+  @keyframes rrLeg { 0% { transform: rotate(-55deg); } 50% { transform: rotate(45deg) scaleY(.85); } 100% { transform: rotate(-55deg); } }
+  .rr.run::before { content: ""; position: absolute; left: -60%; top: 34%; width: 70%; height: 46%; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.55) 0 1.4px, transparent 1.4px 6px); -webkit-mask: linear-gradient(to right, transparent, #000); mask: linear-gradient(to right, transparent, #000); opacity: .7; }
+  .rr.stop svg { transform: rotate(-12deg); } .rr.stop .rrleg { transform: rotate(-38deg); } .rr.stop .rrtail { animation: none; transform: rotate(-26deg); } .rr.stop .rrcrest { transform: rotate(-10deg) scaleY(1.15); }
+  .rr.look .rrhead { animation: rrLook .9s steps(1) infinite; } @keyframes rrLook { 0% { transform: none; } 50% { transform: rotate(-14deg); } }
+  .rr.call .rrhead { animation: rrCall .22s ease-in-out 4 alternate; } @keyframes rrCall { to { transform: rotate(-22deg); } } .rr.call .rrcrest { transform: rotate(-16deg) scaleY(1.25); }
+
+  .fox.howl .fbody { transform: rotate(-24deg); } .fox.howl .flb1, .fox.howl .flb2 { transform: rotate(-78deg); } .fox.howl .flf1, .fox.howl .flf2 { transform: rotate(24deg) scaleY(1.55); } .fox.howl .fhead { transform: rotate(-34deg); transform-box: view-box; transform-origin: 48px 22px; } .fox.howl .ftail { animation: none; }
+  .fox.pant .fhead { animation: fxPant .18s ease-in-out infinite alternate; transform-box: view-box; transform-origin: 48px 22px; } @keyframes fxPant { to { transform: rotate(4deg) translateY(.6px); } }
+  .fox.dizzy .fsv { animation: fxDizzy .5s ease-in-out infinite alternate; transform-origin: 50% 100%; } @keyframes fxDizzy { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+  .dizzystars { position: absolute; z-index: 6; width: 30px; height: 12px; font-size: 10px; line-height: 12px; text-align: center; animation: dzSpin .8s linear infinite; } @keyframes dzSpin { from { transform: rotateY(0); } to { transform: rotateY(360deg); } }
+  .dustcloud { position: absolute; z-index: 6; width: 46px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 40% 45%, rgba(240,200,150,.95), rgba(214,170,120,.8) 55%, rgba(214,170,120,0) 72%); animation: dustC 1.6s ease-out forwards; }
+  @keyframes dustC { 0% { transform: scale(.3); opacity: 0; } 15% { opacity: 1; transform: scale(1.1); } 100% { transform: scale(1.6) translateY(-10px); opacity: 0; } }
+
+  .mk .mkst { display: none; } .mk.stand .mkrun { display: none; } .mk.stand .mkst { display: inline; } .mk svg { transform-origin: 50% 100%; }
+  .mk.stand svg { animation: mkUp .3s ease-out; } @keyframes mkUp { from { transform: scaleY(.6); } 70% { transform: scaleY(1.06); } to { transform: none; } }
+  .mk .mkl { transform-box: fill-box; transform-origin: 50% 0; } .mk.run .mkl.a { animation: mkLeg .14s linear infinite alternate; } .mk.run .mkl.b { animation: mkLeg .14s -.07s linear infinite alternate; } .mk.run .mkrun { animation: mkBob .14s ease-in-out infinite alternate; }
+  @keyframes mkLeg { from { transform: rotate(-30deg); } to { transform: rotate(30deg); } } @keyframes mkBob { to { transform: translateY(-1px); } }
+  .mk .mkhead { transform-box: view-box; transform-origin: 21px 11px; } .mk.look .mkhead { animation: mkLook 2.2s steps(1) infinite; } @keyframes mkLook { 0% { transform: none; } 30% { transform: scaleX(-1); } 55% { transform: none; } 75% { transform: rotate(-12deg); } }
+  .mk.alarm .mkhead { animation: mkCall .16s ease-in-out infinite alternate; } @keyframes mkCall { to { transform: rotate(-16deg); } } .mk.alarm .mkarm { transform: rotate(-30deg); transform-box: fill-box; transform-origin: 0 0; }
+  /* ===== v41: neue Tiere ===== */
+  .sq, .hg, .bv, .sl, .dk, .dl { bottom: -3px; } .deer.boar { bottom: -4px; } .ow.sit { bottom: -2px; }
+  .actor.sq svg, .actor.ow svg, .actor.hg svg, .actor.sh svg, .actor.ry svg, .actor.dk svg, .actor.dl svg, .actor.bv svg, .actor.sn svg, .actor.bf svg, .actor.sl svg, .actor.wh svg, .actor.sat svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  /* Eichhörnchen */
+  .sq svg { transform-origin: 50% 100%; } .sq .sqtail { transform-box: view-box; transform-origin: 16px 30px; animation: sqTail 1.8s ease-in-out infinite; } @keyframes sqTail { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-6deg) scaleY(1.03); } }
+  .sq .sqnut { opacity: 0; transition: opacity .2s; } .sq.nut .sqnut { opacity: 1; } .sq .sqarm, .sq .sqhead, .sq .sqleg { transform-box: view-box; transition: transform .2s; } .sq .sqarm { transform-origin: 31px 25px; } .sq .sqhead { transform-origin: 30px 19px; } .sq .sqleg { transform-origin: 20px 30px; }
+  .sq.hop svg { animation: sqHop .34s cubic-bezier(.3,.6,.4,1) infinite; } .sq.hop .sqleg { animation: sqLeg .34s infinite; } .sq.hop .sqtail { animation: sqTailH .34s ease-in-out infinite; }
+  @keyframes sqHop { 0%, 100% { transform: translateY(0) scaleY(.92); } 20% { transform: translateY(-1px) scaleY(1.05) rotate(-5deg); } 55% { transform: translateY(-9px) rotate(-2deg); } 85% { transform: translateY(-1px) rotate(4deg); } }
+  @keyframes sqLeg { 0%, 100% { transform: rotate(8deg); } 25% { transform: rotate(-30deg); } 60% { transform: rotate(-12deg); } } @keyframes sqTailH { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-12deg); } }
+  .sq.dig svg { transform: rotate(14deg); } .sq.dig .sqarm { animation: sqDig .12s linear infinite alternate; } .sq.dig .sqhead { transform: rotate(16deg); } @keyframes sqDig { from { transform: rotate(10deg); } to { transform: rotate(70deg); } }
+  .sq.eat .sqarm { transform: rotate(-36deg) translate(-1px, -2px); } .sq.eat .sqhead { animation: sqNib .16s ease-in-out infinite alternate; } @keyframes sqNib { to { transform: rotate(5deg); } }
+  .sq.alert svg { transform: scaleY(1.06); } .sq.alert .sqhead { transform: rotate(-10deg); } .sq.alert .sqtail { animation: sqTw .12s linear 6 alternate; } @keyframes sqTw { to { transform: rotate(-10deg); } }
+  /* Eule */
+  .ow .owsit { display: none; } .ow.sit .owfly { display: none; } .ow.sit .owsit { display: inline; }
+  .ow .owwing { transform-box: view-box; transform-origin: 24px 20px; } .ow.fly .owwing.f { animation: owFlap .42s ease-in-out infinite; } .ow.fly .owwing.b { animation: owFlap .42s -.04s ease-in-out infinite; }
+  @keyframes owFlap { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(98deg) scaleX(.85); } } .ow.fly svg { animation: owBob .42s ease-in-out infinite; } @keyframes owBob { 0%, 100% { transform: translateY(1px); } 50% { transform: translateY(-2px); } }
+  .ow.glide .owwing { transform: rotate(46deg); transition: transform .3s; } .ow .owtal { opacity: 0; transition: opacity .2s; } .ow.dive .owtal, .ow.glide.dive .owtal { opacity: 1; } .ow.dive svg { transform: rotate(18deg); transition: transform .2s; } .ow.dive .owwing { transform: rotate(-30deg); }
+  .ow .owhead { transform-box: view-box; transform-origin: 24px 14px; } .ow.turn .owhead { animation: owTurn 3.2s ease-in-out infinite; } @keyframes owTurn { 0%, 20% { transform: none; } 35%, 55% { transform: scaleX(-1) rotate(4deg); } 70%, 100% { transform: none; } }
+  .ow .owlid { transform-box: fill-box; transform-origin: 50% 0; transform: scaleY(0); animation: owBlink 3.4s infinite; } @keyframes owBlink { 0%, 90%, 100% { transform: scaleY(0); } 94% { transform: scaleY(2.2); } }
+  .ow.hoot .owhead { animation: owHoot .3s ease-in-out 4 alternate; } @keyframes owHoot { to { transform: translateY(1.4px) scaleY(.94); } }
+  .ow.sit svg { animation: owLand .35s ease-out; transform-origin: 50% 100%; } @keyframes owLand { from { transform: scaleY(.8); } 60% { transform: scaleY(1.06); } }
+  /* Igel */
+  .hg .hgball { display: none; } .hg.roll .hgwalk { display: none; } .hg.roll .hgball { display: inline; } .hg.roll svg { animation: hgRoll .7s linear infinite; transform-origin: 50% 50%; } .hg.curl svg { animation: hgShiver .12s linear infinite alternate; }
+  .hg.curl .hgwalk { display: none; } .hg.curl .hgball { display: inline; } @keyframes hgRoll { to { transform: rotate(360deg); } } @keyframes hgShiver { to { transform: translateX(.6px); } }
+  .hg .hgl { transform-box: fill-box; transform-origin: 50% 50%; } .hg.walk .hgl.a { animation: hgStep .2s linear infinite alternate; } .hg.walk .hgl.b { animation: hgStep .2s -.1s linear infinite alternate; } .hg.walk .hgwalk { animation: hgBob .2s ease-in-out infinite alternate; }
+  @keyframes hgStep { from { transform: translateX(-1.4px); } to { transform: translateX(1.4px); } } @keyframes hgBob { to { transform: translateY(-.6px); } } .hg.sniff .hgwalk { animation: hgSn .25s ease-in-out infinite alternate; transform-origin: 20px 26px; } @keyframes hgSn { to { transform: rotate(4deg); } }
+  /* Seepferdchen, Rochen */
+  .sh svg { animation: shBob 2.2s ease-in-out infinite; } @keyframes shBob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(4deg); } } .sh .shfin { transform-box: view-box; transform-origin: 8.4px 18px; animation: shFin .14s linear infinite alternate; } @keyframes shFin { to { transform: scaleX(.4); } }
+  .ry .rywing { transform-box: view-box; } .ry .rywing { transform-origin: 34px 30px; } .ry .rywing.t { animation: ryW 1.8s ease-in-out infinite; } .ry .rywing.u { animation: ryW 1.8s ease-in-out infinite; } .ry svg { animation: ryBob 1.8s ease-in-out infinite; }
+  @keyframes ryF { 0%, 100% { transform: rotate(-14deg); } 50% { transform: scaleY(-.5) rotate(10deg); } } @keyframes ryB { 0%, 100% { transform: rotate(10deg); } 50% { transform: scaleY(-.4) rotate(-8deg); } } @keyframes ryBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  /* Enten */
+  .dk .dkbody, .dl .dkbody { animation: dkBob 1.2s ease-in-out infinite; } @keyframes dkBob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(.8px) rotate(1.4deg); } }
+  .dk.swim .dkbody, .dl.swim .dkbody { animation-duration: .5s; } .dk .dkripple, .dl .dkripple { transform-box: fill-box; transform-origin: 50% 50%; animation: dkRip 1.4s ease-out infinite; } @keyframes dkRip { from { transform: scaleX(.8); opacity: .8; } to { transform: scaleX(1.25); opacity: .1; } }
+  .dk .dkhead, .dl .dkhead { transform-box: view-box; transition: transform .3s; } .dk .dkhead { transform-origin: 28px 15px; } .dl .dkhead { transform-origin: 12px 6px; }
+  .dk.dabble svg { transform: rotate(62deg) translateY(4px); transform-origin: 60% 80%; transition: transform .35s; } .dk.quack .dkhead, .dl.quack .dkhead { animation: dkQ .14s ease-in-out 6 alternate; } @keyframes dkQ { to { transform: rotate(-14deg); } }
+  /* Biber */
+  .bv .bvstick { opacity: 0; transition: opacity .15s; } .bv.carry .bvstick { opacity: 1; } .bv .bvl { transform-box: fill-box; transform-origin: 50% 50%; } .bv.walk .bvl.a { animation: hgStep .26s linear infinite alternate; } .bv.walk .bvl.b { animation: hgStep .26s -.13s linear infinite alternate; }
+  .bv.walk svg { animation: bvWad .26s ease-in-out infinite alternate; } @keyframes bvWad { to { transform: translateY(-1px) rotate(1deg); } }
+  .bv .bvtail { transform-box: view-box; transform-origin: 13px 24px; } .bv.slap .bvtail { animation: bvSlap .3s ease-in 3; } @keyframes bvSlap { 0% { transform: rotate(0); } 50% { transform: rotate(40deg); } 100% { transform: rotate(-6deg); } }
+  .bv .bvhead { transform-box: view-box; transform-origin: 42px 16px; } .bv.gnaw .bvhead { animation: bvG .1s linear infinite alternate; } @keyframes bvG { from { transform: rotate(6deg); } to { transform: rotate(14deg); } }
+  /* Schlange */
+  .sn .snrise { display: none; } .sn.rise .sncrawl { display: none; } .sn.rise .snrise { display: inline; } .sn.rise svg { animation: snUp .4s ease-out; transform-origin: 30% 100%; } @keyframes snUp { from { transform: scaleY(.3); } }
+  .sn .sntongue { transform-box: fill-box; transform-origin: 0 50%; animation: snT 1.4s steps(1) infinite; } @keyframes snT { 0%, 60% { transform: scaleX(0); } 65%, 75% { transform: scaleX(1); } 80%, 85% { transform: scaleX(.3); } 90% { transform: scaleX(1); } }
+  .sn.rise .snrise { animation: snSway 1.6s ease-in-out infinite; transform-box: view-box; transform-origin: 24px 26px; } @keyframes snSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(4deg); } }
+  /* Schmetterling */
+  .bf .bfw { transform-box: view-box; transform-origin: 10px 8px; } .bf .bfw.l { animation: bfL .2s ease-in-out infinite alternate; } .bf .bfw.r { animation: bfR .2s ease-in-out infinite alternate; } .bf.rest .bfw { animation-duration: 1.4s; }
+  @keyframes bfL { to { transform: scaleX(.15); } } @keyframes bfR { to { transform: scaleX(.15); } }
+  /* Robbe */
+  .sl .slbody { transform-box: view-box; transform-origin: 30px 28px; } .sl.hump .slbody { animation: slHump .5s ease-in-out infinite; } @keyframes slHump { 0%, 100% { transform: scaleY(1) scaleX(1); } 40% { transform: scaleY(1.12) scaleX(.94) translateY(-1px); } 70% { transform: scaleY(.92) scaleX(1.05); } }
+  .sl .slhead { transform-box: view-box; transform-origin: 44px 18px; transition: transform .3s; } .sl.up .slhead { transform: rotate(-30deg); } .sl.clap .slfl { animation: slClap .16s ease-in-out infinite alternate; transform-box: view-box; transform-origin: 36px 24px; } @keyframes slClap { to { transform: rotate(-60deg); } }
+  .sl.ork .slhead { animation: slOrk .18s ease-in-out 6 alternate; } @keyframes slOrk { to { transform: rotate(-36deg); } }
+  /* Weltall: Wal, Satellit, Mondhase */
+  .wh .whtail { transform-box: view-box; transform-origin: 24px 30px; animation: whT 2.4s ease-in-out infinite; } @keyframes whT { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } } .wh svg { animation: whBob 4s ease-in-out infinite; } @keyframes whBob { 50% { transform: translateY(-5px) rotate(-1.5deg); } }
+  .wh .whfin { transform-box: view-box; transform-origin: 76px 39px; animation: whF 2.4s ease-in-out infinite; } @keyframes whF { 50% { transform: rotate(-16deg); } }
+  .sat svg { animation: satRot 9s ease-in-out infinite alternate; } @keyframes satRot { from { transform: rotate(-10deg); } to { transform: rotate(12deg); } } .sat .satblink { animation: satB 1s steps(1) infinite; } @keyframes satB { 50% { opacity: .15; } }
+  .bunny.moon .mhelm { position: absolute; right: -5%; top: -26%; width: 62%; height: 74%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), rgba(190,220,255,.16) 40%, rgba(160,200,255,.08) 70%); box-shadow: inset 0 0 0 1.6px rgba(220,235,255,.75); }
+  .bunny.moon .mtank { position: absolute; left: 22%; top: 12%; width: 18%; height: 32%; border-radius: 3px; background: linear-gradient(#e8ecf2, #9aa4b4); }
+  .ffly { position: absolute; z-index: 6; width: 4px; height: 4px; border-radius: 50%; background: #f8ff9a; box-shadow: 0 0 6px 3px rgba(230,255,120,.6); animation: ffBlink 1.1s ease-in-out infinite alternate; } @keyframes ffBlink { from { opacity: .3; } to { opacity: 1; } }
+  .heartfx { position: absolute; z-index: 6; font-size: 14px; animation: puff 1.6s ease-out forwards; } .acorn { position: absolute; z-index: 4; width: 7px; height: 8px; border-radius: 45% 45% 50% 50%; background: linear-gradient(#6a4422 0 35%, #b07a3a 35%); }
+  .stickpile { position: absolute; z-index: 3; width: 34px; height: 14px; bottom: 0; transition: opacity .8s; }
+  .feather { position: absolute; z-index: 6; width: 8px; height: 3px; border-radius: 50%; background: #c9a477; animation: fthr 1.6s ease-out forwards; } @keyframes fthr { to { transform: translate(var(--fx), -24px) rotate(240deg); opacity: 0; } }
+
+  @keyframes ryW { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.35); } }
   #rankup .ru-stack { position: relative; width: min(340px, calc(100vw - 32px)); margin-top: 236px; }
   #rankup .ru-rays { position: absolute; width: 520px; height: 520px; left: 50%; top: -70px; margin: -260px 0 0 -260px; opacity: 0; pointer-events: none;
     background: radial-gradient(circle at 38% 42%, rgba(255,210,90,.34), transparent 34%), radial-gradient(circle at 63% 58%, rgba(150,80,255,.30), transparent 38%), radial-gradient(circle at 55% 35%, rgba(255,120,200,.18), transparent 30%); animation: raysIn .6s 1.15s forwards; border-radius: 50%;
@@ -1280,6 +1384,9 @@
   #rankup .ru-card[data-step="2"] { max-height: calc(100dvh - 40px); display: flex; flex-direction: column; padding: 20px 16px 16px; }
   #rankup .ru-card[data-step="2"] .ru-list { flex: 1 1 auto; min-height: 0; max-height: none; } #rankup .ru-card[data-step="2"] .ru-emo { font-size: 34px; }
   #rankup .ru-card[data-step="2"] .btn { flex: none; }
+
+  #rankup .ru-th.pfr svg.pav-b, #rankup .ru-th.pfr svg.pav-f { width: 160%; height: 160%; left: -30%; top: -30%; display: block; }
+  #rankup .ru-ic:has(.pfr) { overflow: visible; } #rankup .ru-ic .ru-th.pfr { width: 52px; height: 52px; border-radius: 0; background: none; }
   /* Einstellungen: Bereiche zum Aufklappen */
   .psec { border: 1px solid var(--border); border-radius: 14px; margin: 0 0 8px; background: var(--surface-2); overflow: hidden; }
   .psec > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-weight: 750; }
@@ -2741,7 +2848,7 @@ function frameSVG(t) {
   // Koordinaten: Mitte 60/60, Foto-Rand bei r≈51 – alles Verzierende liegt außerhalb davon (nichts verdeckt das Gesicht)
   const id = "pf" + (++frameN), f = n => Math.round(n * 10) / 10, C = 60;
   const pal = [["#ffd2a8", "#c87a3e", "#5a2a0e"], ["#ffffff", "#c2c7d0", "#4a5060"], ["#fff2a8", "#f2b81e", "#7a4a00"], ["#c8fff6", "#22c4b0", "#06504a"], ["#d8f0ff", "#3f9bff", "#0a2a7a"],
-    ["#f6d0ff", "#b04dff", "#3a0a70"], ["#ffe680", "#ff8a1e", "#8a2a00"], ["#ffffff", "#c8d0dc", "#3f4a5a"], ["#fff2b0", "#f2bc2a", "#7a4400"], ["#ffd0ff", "#c04dff", "#2a0650"], ["#fff6c8", "#f2c230", "#6a3a00"]][t];
+    ["#f6d0ff", "#b04dff", "#3a0a70"], ["#ffe680", "#ff8a1e", "#8a2a00"], ["#ffffff", "#c8d0dc", "#3f4a5a"], ["#fff2b0", "#f2bc2a", "#7a4400"], ["#ffd0ff", "#c04dff", "#2a0650"], ["#d8ccff", "#3a2a86", "#05030c"]][t];
   const [lt, md, dk] = pal, pt = (r, a) => [C + Math.cos(a) * r, C + Math.sin(a) * r];
   let defs = `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${lt}"/><stop offset=".45" stop-color="${md}"/><stop offset="1" stop-color="${dk}"/></linearGradient>
     <radialGradient id="${id}a"><stop offset=".55" stop-color="${md}" stop-opacity="0"/><stop offset=".72" stop-color="${md}" stop-opacity=".55"/><stop offset="1" stop-color="${md}" stop-opacity="0"/></radialGradient>`;
@@ -2768,17 +2875,30 @@ function frameSVG(t) {
   else if (t === 7) { back = aura(90) + wing(-1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2) + wing(1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2); front = ring(9) + crown(8, 22, G, "#3a8cff")
       + `<path d="M14 104Q60 128 106 104L100 116Q60 136 20 116Z" fill="#2f7ae8" stroke="#0a2a6a" stroke-width="1"/><path d="M14 104L4 112L20 116Z M106 104L116 112L100 116Z" fill="#1a5ac0" stroke="#0a2a6a" stroke-width="1"/>`; }
   else if (t === 8) { back = aura(100) + `<g class="pf-spin">${[...Array(24)].map((_, i) => `<path d="M57 -2L60 ${i % 2 ? -22 : -34}L63 -2Z" fill="${i % 2 ? "#ffe07a" : "#f2b81e"}" stroke="#8a5400" stroke-width=".5" transform="rotate(${i * 15} 60 60)"/>`).join("")}</g>`
-      + wing(-1, 4, 30, G, dk) + wing(1, 4, 30, G, dk); front = ring(10) + crown(6, 24, G, "#ff3b5c") + tw([[8, 20, 5], [114, 30, 4], [10, 108, 4], [110, 110, 5]]); }
+; front = ring(10) + crown(6, 24, G, "#ff3b5c") + tw([[8, 20, 5], [114, 30, 4], [10, 108, 4], [110, 110, 5]]); }
   else if (t === 9) { defs += `<radialGradient id="${id}o" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#ff7af0"/><stop offset="1" stop-color="#7a1ad0"/></radialGradient>`;
     back = aura(104) + `<g class="pf-spin f">${[0, 1, 2, 3].map(k => `<path d="M60 -26A86 86 0 0 1 146 60" stroke="${["#e07bff", "#ff4fd8", "#7a4dff", "#ffb0f8"][k]}" stroke-width="${7 - k * 1.2}" fill="none" stroke-linecap="round" opacity=".9" transform="rotate(${k * 90} 60 60)"/>`).join("")}</g>`
       + [-1, 1].map(d => `<path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="${dk}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="url(#${id}g)" stroke-width="6" fill="none" stroke-linecap="round"/>`).join("");
     front = ring(10) + `<g class="pf-orbit">${[0, 1, 2].map(k => { const [x, y] = pt(74, k * 2.094 - 1.57); return `<circle cx="${f(x)}" cy="${f(y)}" r="${6 - k}" fill="url(#${id}o)" stroke="#fff" stroke-width=".8"/>`; }).join("")}</g>` + gem(60, 114, 7, "#ff5ad8") + tw([[12, 14, 5], [110, 18, 4], [116, 100, 5]]); }
-  else { defs += `<linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6dcc0"/></linearGradient>`;
-    back = aura(116) + `<g class="pf-spin">${[...Array(28)].map((_, i) => `<path d="M58.6 -6L60 ${i % 2 ? -34 : -52}L61.4 -6Z" fill="#ffe07a" opacity="${i % 2 ? .55 : .9}" transform="rotate(${i * 12.857} 60 60)"/>`).join("")}</g>`
-      + wing(-1, 6, 50, `url(#${id}w)`, "#b08a30", 1.3) + wing(1, 6, 50, `url(#${id}w)`, "#b08a30", 1.3)
-      + `<g transform="rotate(-16 60 60)"><ellipse cx="60" cy="60" rx="92" ry="24" fill="none" stroke="${dk}" stroke-width="5"/><ellipse cx="60" cy="60" rx="92" ry="24" fill="none" stroke="url(#${id}g)" stroke-width="3"/><circle r="4.4" fill="#fff"><animateMotion dur="3.2s" repeatCount="indefinite" path="M-32 60A92 24 0 1 0 152 60A92 24 0 1 0 -32 60"/></circle></g>`;
-    front = ring(11) + `<ellipse cx="60" cy="-10" rx="30" ry="7" fill="none" stroke="${dk}" stroke-width="6"/><ellipse class="pf-halo" cx="60" cy="-10" rx="30" ry="7" fill="none" stroke="#fff6c8" stroke-width="3.6"/>`
-      + crown(6, 26, G, "#111") + gem(60, 114, 8, "#111") + tw([[0, 10, 6], [120, 6, 5], [4, 112, 5], [118, 112, 6], [60, -30, 4]]); }
+  else { // GOD-LEVEL: goldener Doppelring mit leuchtendem Galaxie-Band, Mythos-Hörner in Gold, Galaxie-Kugel oben, Glitzern
+    defs += `<radialGradient id="${id}x" gradientUnits="userSpaceOnUse" cx="60" cy="60" r="78"><stop offset=".64" stop-color="#e8dcff"/><stop offset=".68" stop-color="#7a5aff"/><stop offset=".72" stop-color="#1a0a3a"/><stop offset=".8" stop-color="#05030c"/><stop offset=".86" stop-color="#160a40"/><stop offset=".93" stop-color="#2a2a8a"/><stop offset="1" stop-color="#9a8aff"/></radialGradient>
+      <radialGradient id="${id}o" cx=".38" cy=".32"><stop offset="0" stop-color="#fff"/><stop offset=".2" stop-color="#e8d8ff"/><stop offset=".45" stop-color="#ff5ad8"/><stop offset=".72" stop-color="#3a1aa0"/><stop offset="1" stop-color="#05030c"/></radialGradient>
+      <radialGradient id="${id}h"><stop offset="0" stop-color="#f0e6ff" stop-opacity=".95"/><stop offset=".45" stop-color="#9a6aff" stop-opacity=".5"/><stop offset="1" stop-color="#b04dff" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${id}q"><stop offset=".6" stop-color="#e0b8ff" stop-opacity="0"/><stop offset=".74" stop-color="#e0b8ff" stop-opacity=".5"/><stop offset=".86" stop-color="#b04dff" stop-opacity=".35"/><stop offset="1" stop-color="#b04dff" stop-opacity="0"/></radialGradient>`;
+    const horn = d => `<path d="M${C + d * 46} 112C${C + d * 92} 102 ${C + d * 100} 40 ${C + d * 74} -4" stroke="${dk}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M${C + d * 46} 112C${C + d * 92} 102 ${C + d * 100} 40 ${C + d * 74} -4" stroke="url(#${id}g)" stroke-width="6.6" fill="none" stroke-linecap="round"/><path d="M${C + d * 52} 106C${C + d * 86} 94 ${C + d * 92} 44 ${C + d * 72} 4" stroke="#b89aff" stroke-width="1.2" fill="none" opacity=".7" stroke-dasharray="10 14"/>`;
+    const stars = [...Array(18)].map((_, i) => { const a = i * 2.39996, r = 58 + (i * 7.3) % 15, [x, y] = pt(r, a); return `<circle class="pf-tw${i % 2 ? " b" : ""}" style="animation-delay:${f(-i * .37)}s" cx="${f(x)}" cy="${f(y)}" r="${i % 4 ? .8 : 1.4}" fill="#fff"/>`; }).join("");
+    back = `<circle class="pf-pulse" cx="60" cy="60" r="112" fill="url(#${id}q)"/>` + horn(-1) + horn(1)
+      + `<circle cx="60" cy="60" r="76" fill="url(#${id}x)"/>`
+      + `<g class="pf-spin">${[[0, "#ff5ad8"], [130, "#5a8aff"], [240, "#b04dff"]].map(([r, col]) => `<ellipse cx="60" cy="-6" rx="22" ry="7" fill="${col}" opacity=".32" transform="rotate(${r} 60 60)"/>`).join("")}</g>`
+      + `<g class="pf-spin f">${[0, 1, 2].map(k => `<path d="M60 -6A66 66 0 0 1 120 32" stroke="${["#ff9cf0", "#9ab8ff", "#e0d0ff"][k]}" stroke-width="${3.4 - k * .6}" fill="none" stroke-linecap="round" opacity=".7" transform="rotate(${k * 120} 60 60)"/>`).join("")}</g>`
+      + `<g class="pf-spin">${stars}</g>`;
+    front = `<circle cx="60" cy="60" r="77" fill="none" stroke="${dk}" stroke-width="5"/><circle cx="60" cy="60" r="77" fill="none" stroke="url(#${id}g)" stroke-width="3.2"/><circle cx="60" cy="60" r="78.4" fill="none" stroke="#fff" stroke-width=".8" opacity=".6" stroke-dasharray="26 40" class="pf-spin f"/>`
+      + ring(6)
+      + `<circle class="pf-halo" cx="60" cy="-22" r="22" fill="url(#${id}h)"/><path d="M47 -14Q60 -4 73 -14L70 -8Q60 0 50 -8Z" fill="url(#${id}g)" stroke="${dk}" stroke-width="1"/>`
+      + `<circle cx="60" cy="-24" r="12" fill="url(#${id}o)" stroke="url(#${id}g)" stroke-width="2.6"/><g class="pf-spin f"><path d="M50 -24Q60 -30 70 -24Q60 -19 50 -24Z" fill="#fff" opacity=".35"/></g><circle cx="56" cy="-28" r="2.4" fill="#fff" opacity=".9"/>`
+      + `<g class="pf-orbit">${[0, 1, 2, 3].map(k => { const [x, y] = pt(84, k * 1.5708 + .78); return `<circle cx="${f(x)}" cy="${f(y)}" r="${k % 2 ? 3 : 4}" fill="url(#${id}o)" stroke="#c8b8ff" stroke-width=".8"/>`; }).join("")}</g>`
+      + `<circle cx="60" cy="137" r="7" fill="url(#${id}o)" stroke="url(#${id}g)" stroke-width="2"/>`
+      + tw([[-6, 6, 7], [126, 2, 6], [-10, 118, 5], [130, 116, 6], [28, -30, 4], [94, -34, 5], [60, 152, 4]]); }
   return { back: `<defs>${defs}</defs>` + back, front };
 }
 // Avatar: Foto (oder Anfangsbuchstabe) im Rang-Rahmen
@@ -4556,29 +4676,55 @@ const ANIMALS = [
   { k: "lizard", w: "desert", tier: 2, emo: "🦎", n: "Eidechse", d: "Flitzt los, bleibt stehen, züngelt – und macht Liegestütze." },
   { k: "fennec", w: "desert", tier: 4, emo: "🦊", n: "Wüstenfuchs", d: "Riesige Ohren: lauscht, buddelt im Sand und jagt die Eidechse bis in ihr Loch." },
   { k: "camel", w: "desert", tier: 5, emo: "🐫", n: "Kamel", d: "Schaukelt gemütlich vorbei, kaut – und spuckt, wenn der Wüstenfuchs zu neugierig wird." },
+  { k: "meerkat", w: "desert", tier: 3, emo: "🐾", n: "Erdmännchen", d: "Eine kleine Familie flitzt herein, stellt sich auf Wache, schaut sich um – und schlägt Alarm, wenn Gefahr naht." },
+  { k: "roadrunner", w: "desert", tier: 6, emo: "🐦", n: "Rennkuckuck", d: "Rast mit Staubfahne durchs Bild, bremst scharf, ruft – und ist schneller weg, als man schauen kann." },
+  { k: "kangaroo", w: "desert", tier: 7, emo: "🦘", n: "Känguru", d: "Hüpft herein, macht Schattenboxen und Kicks – und manchmal schaut das Joey aus dem Beutel." },
+  { k: "coyote", w: "desert", tier: 8, emo: "🐺", n: "Kojote", d: "Schleicht, schnüffelt, heult – und jagt den Rennkuckuck. Erwischt ihn natürlich nie." },
   { k: "scorp", w: "desert", tier: 5, emo: "🦂", n: "Skorpion", d: "Krabbelt über den Sand, hebt drohend den Stachel, klappert mit den Scheren – und gräbt sich blitzschnell ein." },
+  { k: "squirrel", w: "forest", tier: 2, emo: "🐿️", n: "Eichhörnchen", d: "Hüpft mit einer Nuss herein, vergräbt sie – und vergisst manchmal, wo." },
+  { k: "hedgehog", w: "forest", tier: 3, emo: "🦔", n: "Igel", d: "Trippelt schnüffelnd vorbei und rollt sich bei Gefahr zur Stachelkugel zusammen." },
+  { k: "owl", w: "forest", tier: 6, emo: "🦉", n: "Eule", d: "Fliegt seitlich herein, landet, dreht den Kopf, blinzelt und ruft „Huhu!“ – und jagt das Eichhörnchen." },
+  { k: "boar", w: "forest", tier: 7, emo: "🐗", n: "Wildschweine", d: "Bache mit gestreiften Frischlingen: wühlt im Boden, die Kleinen toben herum." },
   { k: "bunny", w: "forest", tier: 3, emo: "🐇", n: "Hasen", d: "Hoppeln, knabbern, ziehen Karotten aus dem Boden – und manchmal geht ein kleines Malheur daneben." },
   { k: "fox", w: "forest", tier: 5, emo: "🦊", n: "Fuchs", d: "Trabt vorbei, macht den Mäusesprung kopfüber ins Gras, kratzt sich – und jagt gern mal einen Hasen." },
   { k: "deer", w: "forest", tier: 6, emo: "🦌", n: "Rehe", d: "Ricke mit Bambi, manchmal mit dem Bock, der Wache hält." },
   { k: "hunter", w: "forest", tier: 8, emo: "🎯", n: "Jäger", d: "Taucht am Rand auf, verliert seinen Hut, rutscht aus, macht ein Nickerchen. Getroffen wird natürlich nie." },
+  { k: "seahorse", w: "ocean", tier: 5, emo: "🌊", n: "Seepferdchen", d: "Zwei Seepferdchen treiben aufeinander zu und tanzen zusammen." },
+  { k: "ray", w: "ocean", tier: 7, emo: "🐟", n: "Mantarochen", d: "Gleitet mit großen Flügelschlägen vorbei – manchmal mit Looping." },
   { k: "fish", w: "ocean", tier: 4, emo: "🐠", n: "Fische", d: "Bunte Schwärme ziehen vorbei – bis ein großer Fisch sie auseinandertreibt." },
   { k: "crab", w: "ocean", tier: 4, emo: "🦀", n: "Krabbe", d: "Läuft seitwärts, tanzt mit den Scheren und zwickt nach neugierigen Fischen." },
   { k: "turtle", w: "ocean", tier: 5, emo: "🐢", n: "Schildkröte", d: "Gleitet ganz entspannt durchs Bild und blubbert." },
   { k: "jelly", w: "ocean", tier: 6, emo: "🪼", n: "Qualle", d: "Pulsiert langsam nach oben." },
   { k: "shark", w: "ocean", tier: 7, emo: "🦈", n: "Hai", d: "Zieht seine Runde – alle Fische stieben auseinander." },
   { k: "octopus", w: "ocean", tier: 8, emo: "🐙", n: "Riesenkrake", d: "Taucht mit langen Armen auf, schnappt sich die Schatztruhe, wechselt die Farbe und verschwindet in einer Tintenwolke." },
+  { k: "duck", w: "swamp", tier: 5, emo: "🦆", n: "Entenfamilie", d: "Mama-Ente mit Küken schwimmt vorbei, gründelt – und das letzte Küken muss sich beeilen." },
+  { k: "firefly", w: "swamp", tier: 6, emo: "✨", n: "Glühwürmchen", d: "Ein leuchtender Schwarm schwebt herein und formt ein Herz." },
+  { k: "beaver", w: "swamp", tier: 7, emo: "🦫", n: "Biber", d: "Schleppt Äste für seinen Damm heran, nagt und klatscht mit dem Schwanz." },
+  { k: "snake", w: "swamp", tier: 8, emo: "🐍", n: "Schlange", d: "Schlängelt sich heran, richtet sich auf und züngelt – der Frosch nimmt Reißaus." },
   { k: "frog", w: "swamp", tier: 5, emo: "🐸", n: "Frosch", d: "Hüpft mit Platschen, quakt mit Schallblase und fängt Fliegen mit der Zunge." },
   { k: "heron", w: "swamp", tier: 6, emo: "🪶", n: "Reiher", d: "Stakst vorbei, steht auf einem Bein und stößt blitzschnell zu." },
   { k: "gator", w: "swamp", tier: 7, emo: "🐊", n: "Krokodil", d: "Lauert halb versunken, gähnt – und schnappt nach dem Frosch, der ihm auf den Rücken springt." },
   { k: "dragonfly", w: "swamp", tier: 6, emo: "🪰", n: "Libellen", d: "Flitzen übers Wasser, bleiben in der Luft stehen und wechseln blitzschnell die Richtung." },
+  { k: "butterfly", w: "alps", tier: 6, emo: "🦋", n: "Schmetterlinge", d: "Bunte Falter flattern herein, ruhen sich aus und tanzen weiter." },
+  { k: "almcow", w: "alps", tier: 6, emo: "🐄", n: "Almkuh", d: "Trottet gemütlich auf die Weide, grast und muht." },
+  { k: "ibex", w: "alps", tier: 7, emo: "🐐", n: "Steinbock", d: "Mächtige Hörner, großer Sprung – und ein Kräftemessen mit der Ziege." },
+  { k: "wolf", w: "alps", tier: 8, emo: "🐺", n: "Wölfe", d: "Traben heran, schnüffeln und heulen zusammen. Das Murmeltier pfeift Alarm." },
   { k: "goat", w: "alps", tier: 6, emo: "🐐", n: "Bergziegen", d: "Springen auf Felsen, stoßen die Köpfe zusammen – eine kippt um." },
   { k: "marmot", w: "alps", tier: 6, emo: "🐿️", n: "Murmeltier", d: "Steht Wache, pfeift laut – und verschwindet blitzschnell in seinem Bau." },
   { k: "eagle", w: "alps", tier: 8, emo: "🦅", n: "Adler", d: "Kreist über allem und stürzt sich aufs Murmeltier – vergeblich." },
   { k: "bear", w: "alps", tier: 7, emo: "🐻", n: "Braunbär", d: "Trottet heran, schnüffelt, richtet sich auf und brummt – das Murmeltier verschwindet lieber." },
+  { k: "arcfox", w: "snow", tier: 7, emo: "🦊", n: "Polarfuchs", d: "Lauscht, springt kopfüber in den Schnee – und taucht mit oder ohne Beute wieder auf." },
+  { k: "seal", w: "snow", tier: 7, emo: "🦭", n: "Robbe", d: "Robbt heran, klatscht mit den Flossen und balanciert einen Schneeball auf der Nase." },
+  { k: "reindeer", w: "snow", tier: 8, emo: "🦌", n: "Rentier", d: "Scharrt mit dem Huf im Schnee nach Flechten." },
+  { k: "snowowl", w: "snow", tier: 8, emo: "🦉", n: "Schneeeule", d: "Schneeweiß, landet lautlos, dreht den Kopf und blinzelt." },
   { k: "hare", w: "snow", tier: 7, emo: "🐇", n: "Schneehase", d: "Buddelt sich in den Schnee, taucht woanders auf – und klaut dem Schneemann die Karotten-Nase." },
   { k: "penguin", w: "snow", tier: 7, emo: "🐧", n: "Pinguine", d: "Watscheln im Gänsemarsch, rutschen auf dem Bauch – einer fällt immer hin." },
   { k: "ermine", w: "snow", tier: 8, emo: "🦦", n: "Hermelin", d: "Flinkes Schneewiesel: macht Männchen, springt Kopf voran in den Schnee und taucht wieder auf." },
   { k: "polar", w: "snow", tier: 8, emo: "🐻‍❄️", n: "Eisbär", d: "Rutscht auf dem Bauch über den Schnee und angelt sich einen Fisch aus dem Eisloch." },
+  { k: "rover", w: "space", tier: 9, emo: "🛰️", n: "Mars-Rover", d: "Rollt heran, nimmt eine Bodenprobe und macht ein Foto." },
+  { k: "satellite", w: "space", tier: 9, emo: "📡", n: "Satellit", d: "Driftet langsam über den Himmel und piept." },
+  { k: "moonbunny", w: "space", tier: 9, emo: "🐇", n: "Mondhase", d: "Hase mit Helm macht Zeitlupen-Hopser in der Schwerelosigkeit." },
+  { k: "whale", w: "space", tier: 10, emo: "🐋", n: "Sternenwal", d: "Ein leuchtender Wal schwimmt singend durchs All." },
   { k: "astro", w: "space", tier: 9, emo: "🧑‍🚀", n: "Astronaut", d: "Hüpft in Zeitlupe über den Mond, macht Saltos – und wird manchmal von einer Alien-Horde mit Laserkanonen gejagt." },
   { k: "cow", w: "space", tier: 9, emo: "🐄", n: "UFO-Kuhklau", d: "Ein großes UFO versucht, eine Kuh vom Mond zu beamen – das klappt nicht immer." },
   { k: "robodog", w: "space", tier: 9, emo: "🤖", n: "Robo-Hund", d: "Hüpft im Zeitlupen-Mondsprung, wedelt mit der Antenne und jagt einen schwebenden Ball." },
@@ -4632,7 +4778,7 @@ function cosmPrefsHTML(th) {
   const tile = (u, on) => { const open = unlocked(u), g = u.cat === "bg" ? GRADS[+u.k.slice(1)] : null;
     return `<button class="opt ${on ? "on" : ""} ${open ? "" : "lock"}" data-action="cosmpick" data-cat="${u.cat}" data-k="${u.k}" title="${esc(u.d)}">
       <span class="oe" ${g ? `style="background:${gradSwatch(g)}"` : ""}>${u.emo || ""}</span><span style="min-width:0"><b>${u.n}</b><small>${open ? "" : "🔒 "}${rk(u.tier)}</small></span></button>`; };
-  const none = (cat, on, label) => `<button class="opt ${on ? "on" : ""}" data-action="cosmpick" data-cat="${cat}" data-k=""><span class="oe">⬛</span><span><b>${label}</b><small>Standard</small></span></button>`;
+  const none = (cat, on, label) => `<button class="opt ${on ? "on" : ""}" data-action="cosmpick" data-cat="${cat}" data-k=""><span class="oe"><svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><path d="M6.4 17.6L17.6 6.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg></span><span><b>${label}</b><small>Standard</small></span></button>`;
   const by = k => UNLOCKS.find(u => u.k === k), aw = c.world && WK(c.world) ? WORLD(c.world) : null;
   const gradName = c.bg ? GRADS[+c.bg.slice(1)]?.n : "";
   return `<h2>Rang-Designs</h2>
@@ -4664,7 +4810,7 @@ function worldSection(w, c) {
   const pl = Object.entries(props()).filter(([, p]) => p.w === w.k);
   const sideGrid = s => { const cur = side[s];
     const opt = (k, label, sub, icon) => `<button class="opt ${active && cur === k ? "on" : ""} ${k && k !== "auto" && k !== "rand" && !unlocked({ tier: propTier(k) }) ? "lock" : ""}" data-action="sideprop" data-w="${w.k}" data-side="${s}" data-k="${k}">${icon}<span style="min-width:0"><b>${label}</b><small>${sub}</small></span></button>`;
-    return `<div class="opt-grid">${opt("", "Keine", "Rand bleibt frei", `<span class="oe">⬛</span>`)}${opt("rand", "Zufall", "wechselt ab und zu", `<span class="oe">🎲</span>`)}${pl.map(([k, p]) => opt(k, p.n, unlocked({ tier: propTier(k) }) ? "" : "🔒 " + rk(propTier(k)), `<span class="oe prop">${propSVG(k)}</span>`)).join("")}</div>`; };
+    return `<div class="opt-grid">${opt("", "Keine", "Rand bleibt frei", `<span class="oe"><svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><path d="M6.4 17.6L17.6 6.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg></span>`)}${opt("rand", "Zufall", "wechselt ab und zu", `<span class="oe">🎲</span>`)}${pl.map(([k, p]) => opt(k, p.n, unlocked({ tier: propTier(k) }) ? "" : "🔒 " + rk(propTier(k)), `<span class="oe prop">${propSVG(k)}</span>`)).join("")}</div>`; };
   const body = `<p class="muted" style="margin:0 0 10px;font-size:13px;line-height:1.4">${w.d}</p>
     ${active ? "" : `<button class="btn primary block" data-action="worlduse" data-k="${w.k}" style="margin-bottom:10px">„${w.n}“ verwenden</button>`}
     <div class="opt-grid">${sw(c.meadow, "wstrip", "Landschaft", "🏞️", us)}${WORLD_BG ? sw(c.wbg, "wbg", "Hintergrund", "🖼️", ub) : ""}</div>
@@ -4914,7 +5060,7 @@ function prShow(name, mode, txt, prevTxt, label = "REKORD") {
 }
 function rankUpNext() {
   const wrap = $("#rankup"); if (!wrap) return; const tier = wrap._tier, card = wrap.querySelector(".ru-card");
-  const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 44)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
+  const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 28)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
     ...ANIMALS.filter(a => a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
   if (card.dataset.step === "2") { wrap.remove(); return; }
   card.dataset.step = "2"; wrap.classList.add("step2"); card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
@@ -5105,7 +5251,7 @@ const FOXT = (o = {}) => { const c = o.c || "#e8742a", d = o.d || "#d9661f", far
     <path d="M64 20.4l6 -1.4M64 21l6 .4M63.6 21.6l5.4 1.6" stroke="#2a1a12" stroke-width=".3" opacity=".7"/>
     <g class="fear">${(() => { const tip = (x0, x1, tx, ty, col) => `<path d="M${x0} ${x0 < 53 ? 14 : 13}C${x0 - .6} ${f2(ty + (14 - ty) * .45)} ${f2(tx - 2.6)} ${f2(ty + 1.4)} ${f2(tx)} ${f2(ty)}C${f2(tx + 2.6)} ${f2(ty + 1.6)} ${x1 + .4} ${f2(ty + (14 - ty) * .5)} ${x1} ${x0 < 53 ? 12 : 13}Z" fill="${col}"/>`;
       const ty = 14 - eh, t1 = 52 - (ear - 1) * 3, t2 = 58 + (ear - 1) * 2;
-      return tip(50, 57, t1, ty, c) + tip(51.5, 55, 52.4 - (ear - 1) * 2.4, 14 - eh * .7, ear > 1 ? "#f2c4b4" : "#2a1a12").replace(/M51.5 12/, "M51.5 12") + tip(54, 60, t2, ty, d) + (ear > 1 ? tip(55.4, 58.6, 57.6 + (ear - 1) * 1.6, 14 - eh * .7, "#e8b0a0") : ""); })()}</g></g>
+      return tip(50, 57, t1, ty, c) + tip(51.5, 55, 52.4 - (ear - 1) * 2.4, 14 - eh * .7, ear > 1 ? (o.earIn || "#f2c4b4") : "#2a1a12").replace(/M51.5 12/, "M51.5 12") + tip(54, 60, t2, ty, d) + (ear > 1 ? tip(55.4, 58.6, 57.6 + (ear - 1) * 1.6, 14 - eh * .7, o.earIn2 || "#e8b0a0") : ""); })()}</g></g>
   </g></svg>`; };
 const FOX_SVG = bendLegs(FOXT(), 35, "kFox");
 const FENNEC_SVG = bendLegs(FOXT({ c: "#ecd2a6", d: "#d9b57e", far: "#c9a46e", leg: "#e2c597", cream: "#fbf3e4", sock: "#c9a46e", ear: 1.65, id: "fn" }), 35, "kFen");
@@ -5372,6 +5518,195 @@ const ROCKET_SVG = `<svg class="rksv" viewBox="0 0 30 64" style="overflow:visibl
   <g class="rkfl"><path d="M10 50Q15 72 20 50Z" fill="#ffb020"/><path d="M12 50Q15 64 18 50Z" fill="#fff6c8"/></g>
   <path d="M4 52L9 38V50Z M26 52L21 38V50Z" fill="#ff4f3a" stroke="#7a1a10" stroke-width=".7"/><path d="M15 2C22 10 23 24 21 50H9C7 24 8 10 15 2Z" fill="url(#rkG)" stroke="#3a3e48" stroke-width=".8"/>
   <path d="M15 2C18 6 20 10 21 14H9C10 10 12 6 15 2Z" fill="#ff4f3a"/><circle cx="15" cy="24" r="4.4" fill="#4cc9f0" stroke="#3a3e48" stroke-width="1"/><circle cx="13.6" cy="22.6" r="1.2" fill="#fff"/><path d="M10 44H20" stroke="#3a3e48" stroke-width=".8"/></svg>`;
+// ===== v40: neue Wüstentiere =====
+// Känguru (mit Joey im Beutel), Blickrichtung rechts
+const KANGA_SVG = `<svg class="kgsv" viewBox="0 0 60 64" style="overflow:visible"><defs><linearGradient id="kgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d79a5e"/><stop offset=".6" stop-color="#bf7f46"/><stop offset="1" stop-color="#9a5e30"/></linearGradient></defs>
+  <g class="kgtail"><path d="M23 41C14 45 6 53 1 61.5C3.6 63.2 7.6 62.6 10.6 59.6C15 55.4 20.4 51.6 26 48.4Z" fill="#a8683a"/><path d="M22 44C15 48 9 54 4 60" stroke="#8a522a" stroke-width=".8" fill="none" opacity=".6"/></g>
+  <g class="kgleg b"><path d="M22 40C19 47 22 53 28 53.4C31 53.6 33 50 32 45C31 39 25 37 22 40Z" fill="#9a5e30"/><path d="M23 57C23 60.6 25 62.6 29 62.6L42 62.8C43.4 62 42.6 60.4 41 60.2L31 58.6C29.6 56 28 54 26 53.6Z" fill="#8a522a"/></g>
+  <path d="M20 46C16 36 20 24 30 19C36 16 40.4 18 41.4 23.4C43 30.4 42.4 40 38.4 47C34.4 52.4 24 52.6 20 46Z" fill="url(#kgG)"/>
+  <path d="M34.6 25.6C39.6 30 39.6 42 35.6 48.2C32.6 50.6 30.4 48.4 31.2 44.2C33 38 33.2 31 34.6 25.6Z" fill="#efd6b0"/>
+  <path d="M31.6 40.4Q35.4 42.4 38.6 40" stroke="#b07a48" stroke-width=".9" fill="none" stroke-linecap="round"/>
+  <g class="kgjoey"><circle cx="35.4" cy="39" r="3.2" fill="#c98a50"/><path d="M33.4 36.6l-1.2 -3.6 2.4 2.2zM36 36l.4 -3.8 1.4 3z" fill="#c98a50"/><circle cx="36.8" cy="38.6" r=".75" fill="#1a110b"/><circle cx="37.1" cy="38.3" r=".25" fill="#fff"/><circle cx="38.4" cy="39.6" r=".55" fill="#3a2214"/></g>
+  <path d="M25 24Q31 20 37 21" stroke="#e6b47e" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/>
+  <g class="kgleg f"><path d="M20 39C17.6 47.4 21.6 54 29.6 54.2C33.6 54.2 35.8 50.4 34.2 44.4C32.4 38.2 24.2 35.6 20 39Z" fill="url(#kgG)"/><path d="M22.4 42Q24 48 29 51" stroke="#8a522a" stroke-width=".8" fill="none" opacity=".5"/>
+    <path d="M24.6 57.6C24.4 61 26.4 63 30.4 63L45.4 63.2C46.8 62.4 46 60.6 44 60.4L32.6 58.8C31 56 29 54 26.6 54Z" fill="#9a5e30"/><path d="M41 60.6l1.6 2.4M43.4 60.6l1.4 2.4" stroke="#5a3418" stroke-width=".5"/></g>
+  <g class="kgarm b"><path d="M36 27.4C39.6 28.6 42.2 31.4 43 34.4C43.4 35.8 42 36.2 41.2 35.2C39.6 33.2 37.6 31.4 35 30.4Z" fill="#9a5e30"/></g>
+  <path d="M31.4 27.4C31 21 33.6 14.4 37.4 10.6L44.6 10.8C43.6 16 42.6 21.6 41.6 25.8Z" fill="url(#kgG)"/><path d="M41.4 12.4C41.4 17 40.8 21.4 39.8 25.2" stroke="#efd6b0" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>
+  <g class="kghead"><g transform="translate(-1.6 -7.2) rotate(-6 40 16)"><path d="M33 21.4C32.6 15.4 36.6 11 41.8 11C46 11 50 12.8 54 15.6C56.2 17 56 19.4 53.8 20.2C50 21.4 46 22.2 42 24.2C37.8 25.6 33.6 24.6 33 21.4Z" fill="url(#kgG)"/>
+    <path d="M44 20.4C47.4 20.6 51 19.6 54.4 18.8C54 20.2 52 21 49 21.6C47 22 45.4 22 44 20.4Z" fill="#efd6b0"/><ellipse cx="55" cy="17.2" rx="1.6" ry="1.3" fill="#2a1a10"/><circle cx="54.6" cy="16.8" r=".4" fill="#fff" opacity=".6"/>
+    <g class="kgear"><path d="M36.4 13.6C34.2 8 34.4 2.6 36.4 .4C39.4 3 41 8 40.8 12.6Z" fill="#a8683a"/><path d="M39 12.8C38.4 7 39.6 2 42.2 0C44.4 3.4 44.4 8.6 42.8 13Z" fill="url(#kgG)"/><path d="M40.2 11.8C40 7.4 40.8 3.8 42.2 2.4C43.2 5 43.2 8.6 42.2 11.6Z" fill="#f0b8a4"/></g>
+    <ellipse cx="45" cy="15.4" rx="2.7" ry="2.5" fill="#1a110b"/><ellipse cx="45.1" cy="15.5" rx="2.2" ry="2.05" fill="#7a4a22"/><ellipse cx="45.4" cy="15.6" rx="1.1" ry="1.5" fill="#100804"/><circle cx="46.1" cy="14.6" r=".7" fill="#fff"/><circle cx="44.4" cy="16.5" r=".3" fill="#fff" opacity=".8"/>
+    <path d="M42.2 13.6Q45 11.4 48 13.4" stroke="#1a110b" stroke-width=".7" fill="none" stroke-linecap="round"/></g></g>
+  <g class="kgarm f"><path d="M37 26.4C41 27.6 44 30.6 45 34C45.6 35.8 44 36.6 43 35.4C41.2 33 39 31.2 36 30Z" fill="#bf7f46"/><ellipse cx="44.4" cy="35" rx="1.6" ry="1.2" fill="#6a3e20"/></g>
+</svg>`;
+// Rennkuckuck – schlank, langer Schwanz, Federhaube, blau-orange Fleck hinterm Auge
+const RUNNER_SVG = `<svg class="rrsv" viewBox="0 0 60 40" style="overflow:visible"><defs><linearGradient id="rrG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5e44"/><stop offset=".6" stop-color="#5e4632"/><stop offset="1" stop-color="#4a3626"/></linearGradient></defs>
+  <g class="rrleg b"><path d="M27 23L29.6 30.6L26.4 37.6" stroke="#6a7480" stroke-width="1.3" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M23.6 38H29.4M26.4 37.6L25 39.2" stroke="#6a7480" stroke-width="1" stroke-linecap="round"/></g>
+  <g class="rrtail"><path d="M22 17.4L2.4 5.6C.8 4.8 1.2 3 3 3.4L24 13.6Z" fill="#4a3626"/><path d="M20 14.4L3 4.4" stroke="#8a6c50" stroke-width=".6" opacity=".8"/><path d="M3.4 4.2l2.2 1.4M7 6.6l2 1.2" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".85"/></g>
+  <path d="M17.6 17.4C21.6 12.4 31.6 11 38 14C42.4 16 42.4 21.4 38.4 23.4C32 26.4 22 25.6 17.6 21.4Z" fill="url(#rrG)"/>
+  <path d="M27 22.6C31 24.2 35.6 23.8 38.6 22C36.6 25 31 26 27 24.6Z" fill="#efe4d0"/>
+  ${[[22, 15.6], [25.6, 14.4], [29.4, 14], [33, 14.4], [36.4, 15.4], [24, 18.6], [28, 18], [32, 18], [35.6, 18.6]].map(([x, y]) => `<path d="M${x} ${y}l1.6 .6" stroke="#e8dcc6" stroke-width=".8" stroke-linecap="round" opacity=".9"/>`).join("")}
+  <path d="M23.6 15.6C29.6 13.6 35.6 15.4 37.6 18.4C32.6 20.2 26.6 20 21.6 18.8Z" fill="#3e2c1e" opacity=".55"/>
+  <g class="rrleg a"><path d="M29 23L31.6 30.6L28.4 37.6" stroke="#7e8894" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M25.6 38H31.4M28.4 37.6L27 39.2" stroke="#7e8894" stroke-width="1.1" stroke-linecap="round"/></g>
+  <g class="rrhead"><path d="M37 18C37.4 14.6 38.6 12.6 40.6 11.4L42.4 14.4C41 16 40 18.2 39.8 20.4Z" fill="#5e4632"/><circle cx="44" cy="10.4" r="5" fill="#6a5038"/><path d="M41 12.6Q44 15.6 48 13" fill="#efe4d0"/>
+    <g class="rrcrest"><path d="M40.2 7.6L36.4 .8L41.6 5L41 -.6L44 5L46.6 .4L46.4 6.2Z" fill="#3e2c1e"/><path d="M37 1.4l1.4 2.4M41.2 0l.4 2.6M46 1.2l-.6 2.4" stroke="#4a7ac8" stroke-width=".9" stroke-linecap="round"/></g>
+    <path d="M47.6 9.4L59 11.4L47.8 12.6Z" fill="#3a3a3e"/><path d="M48 11.2L58 11.4" stroke="#6a6a70" stroke-width=".4"/>
+    <ellipse cx="43" cy="11" rx="3.6" ry="1.5" fill="#4a8ad8" opacity=".9"/><path d="M40 11.6Q42 12.6 43.4 12" stroke="#e8582a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <circle cx="45.4" cy="9.8" r="2" fill="#1a110b"/><circle cx="45.5" cy="9.85" r="1.6" fill="#e8a020"/><circle cx="45.7" cy="9.9" r=".8" fill="#100804"/><circle cx="46.2" cy="9.3" r=".55" fill="#fff"/></g>
+</svg>`;
+// Kojote – Fuchs-Körperbau, grau-beige, längere Beine und Schnauze
+const COYOTE_SVG = bendLegs(FOXT({ c: "#b8a07e", d: "#9c8462", far: "#7e6a4e", leg: "#ac9472", cream: "#ece2d2", sock: "#8a7254", ear: 1.25, earIn: "#5a4836", earIn2: "#d8c8b0", iris: "#e8c040", id: "cy" }), 35, "kCoy");
+// Erdmännchen – zwei Posen: rennend (auf allen vieren) und Wache stehend
+const MEERKAT_SVG = `<svg class="mksv" viewBox="0 0 40 40" style="overflow:visible">
+  <g class="mkrun"><path d="M10 29C6 30 2.4 31 .4 30.4C2.4 29 6 27.6 10 27Z" fill="#a88a64"/><path d="M1.4 30.4C.6 30.2 0 30 .4 29.6C1 29.4 2 29.6 2.6 29.8Z" fill="#3a2a1a"/>
+    <g class="mkl b"><path d="M13 31l-1 6h2l1.4-6zM26 31l-.4 6h2l.6-6z" fill="#8a6c4a"/></g>
+    <ellipse cx="19.6" cy="29.4" rx="11" ry="4.8" fill="#c9a57a"/><ellipse cx="20" cy="32" rx="8" ry="2" fill="#e8d4b2"/>${[13, 16, 19, 22, 25].map(x => `<path d="M${x} 25.4l-.6 2.6" stroke="#7a5a3a" stroke-width=".9" stroke-linecap="round" opacity=".7"/>`).join("")}
+    <g class="mkl a"><path d="M15 31l-1.4 6h2l1.6-6zM28 31l.2 6h2l0-6z" fill="#b08e66"/></g>
+    <path d="M28 27C30 24 34 23.6 36 25.6C37.4 26.8 39 28 39.4 29C37 30 34 30.6 31 30.6C29 30.4 27.6 29 28 27Z" fill="#c9a57a"/><path d="M38.4 28.4l1.4.6-1.2.6z" fill="#2a1a10"/>
+    <ellipse cx="33.4" cy="26.6" rx="1.9" ry="1.4" fill="#3a2414"/><circle cx="33.6" cy="26.5" r=".9" fill="#100804"/><circle cx="33.9" cy="26.2" r=".35" fill="#fff"/><path d="M30 24.6q.6 -1.6 1.8 -.6" fill="#3a2414"/></g>
+  <g class="mkst"><path d="M17 36C12 37 8 38.6 6 39.6C9 39.8 13 39 18 38Z" fill="#a88a64"/><path d="M6 39.6C5.4 39.6 5 39.4 5.4 39C6 38.8 6.8 38.8 7.4 39Z" fill="#3a2a1a"/>
+    <path d="M17 34l-1 5h3l.6-4zM21.4 34l.4 5h3l-.8-5z" fill="#8a6c4a"/>
+    <path d="M14.4 26C14 18 16.4 13.6 20 13.6C23.6 13.6 25.8 18 25.4 26C25 32 23 36 20 36C17 36 14.8 32 14.4 26Z" fill="#c9a57a"/><path d="M17.6 20C17 26 17.6 32 20 34.4C22.4 32 23.2 26 22.4 20C21.6 18 18.4 18 17.6 20Z" fill="#ead6b4"/>
+    <path d="M15.6 22l1.6 1M15.2 25.6l1.8.8M15.4 29l1.8.6" stroke="#7a5a3a" stroke-width=".9" stroke-linecap="round" opacity=".7"/>
+    <path class="mkarm" d="M22 19.6C24.4 20 25.6 21.4 25.4 23.2L24.2 23.4C24 22 23 21.4 21.6 21.4Z" fill="#b08e66"/>
+    <g class="mkhead"><path d="M15.6 12.4C15.6 8 18 5.6 21 5.6C24 5.6 26 7.4 28.4 10C29.4 11 29 12.4 27.6 12.8C25 13.4 22.6 14.6 20 15C17.4 15.2 15.6 14.4 15.6 12.4Z" fill="#c9a57a"/>
+      <path d="M28 10.4l1.4 .6-1.2.8z" fill="#2a1a10"/><path d="M16.6 7.6q-1.6 -.6 -1.4 1.4q1 .4 1.4 -1.4z" fill="#3a2414"/>
+      <ellipse cx="22.4" cy="9.2" rx="2.1" ry="1.6" fill="#3a2414"/><circle cx="22.7" cy="9.1" r="1" fill="#100804"/><circle cx="23" cy="8.7" r=".4" fill="#fff"/><path d="M25 12.4Q26.6 12.6 27.8 12" stroke="#7a5a3a" stroke-width=".4" fill="none"/></g></g>
+</svg>`;
+// ===== v41: 8 Tiere pro Welt =====
+// --- Wald ---
+const SQUIRREL_SVG = `<svg class="sqsv" viewBox="0 0 44 40" style="overflow:visible"><defs><linearGradient id="sqG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0843e"/><stop offset=".6" stop-color="#c4642a"/><stop offset="1" stop-color="#9a4a1e"/></linearGradient></defs>
+  <g class="sqtail"><path d="M15 31C4 31 -.4 22 1.6 13.6C3.6 5.4 12 1.4 18.4 5.6C22.6 8.6 20.8 14 16.4 14.2C12.4 14.4 10.4 18 12 22.2C13 25 15.6 26.6 18.4 27.4Z" fill="url(#sqG)"/>
+    <path d="M14 28C6 27 3 20 4.4 14C5.8 8 11 5 16 7" stroke="#f0a060" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>${[[3, 12], [2.4, 17], [3.4, 22], [6, 26.6], [6.6, 5.6], [11, 3]].map(([x, y]) => `<path d="M${x} ${y}l-1.6 -.6" stroke="#e8904a" stroke-width="1" stroke-linecap="round"/>`).join("")}</g>
+  <path d="M14 30C13 23 18 18 25 18C31 18 34.4 23 33.4 29C32.4 34 26 36.2 20 36.2C16 36.2 14 34 14 30Z" fill="url(#sqG)"/><path d="M28 22C32.4 24 33.4 30 30.4 34.4C28.4 33.4 28 27 28 22Z" fill="#f6e2c4"/>
+  <g class="sqleg"><ellipse cx="20.4" cy="31" rx="7.4" ry="6" fill="#c4642a"/><path d="M15.4 30.6Q18 26 23 27" stroke="#e0843e" stroke-width="1" fill="none" opacity=".7"/><path d="M15.6 35.6h9.6c1.2 0 1.4 1.8 0 1.8H15.2z" fill="#9a4a1e"/></g>
+  <g class="sqarm"><path d="M30.6 24C33.6 24.6 36 26.6 36.4 29L34.4 29.8C33.4 28 31.6 26.8 30 26.6Z" fill="#c4642a"/><g class="sqnut"><ellipse cx="36.6" cy="30.4" rx="2" ry="2.5" fill="#b07a3a"/><path d="M34.4 29.2Q36.6 26.8 38.8 29.2Z" fill="#6a4422"/><path d="M36.6 27.4v-1" stroke="#6a4422" stroke-width=".7"/></g></g>
+  <g class="sqhead"><path d="M26.6 18.4C25.6 12.4 29.6 8.4 34.6 9C38.8 9.6 42 12.6 42.4 15.8C42.6 19 39.6 21.2 35.4 21.4C31 21.6 27.6 20.6 26.6 18.4Z" fill="url(#sqG)"/>
+    <path d="M33 18.4C36 20 40 19.6 42 17.2C41.4 20.4 38 21.6 35 21.4C33.6 21.2 33 20 33 18.4Z" fill="#f6e2c4"/>
+    <path d="M30.4 11L29.4 3.6L34.4 9Z" fill="#c4642a"/><path d="M29.6 4.4L28.6 1.2M30.2 4.2L30.6 1" stroke="#9a4a1e" stroke-width=".8" stroke-linecap="round"/><path d="M30.8 9.4L30.2 6L32.6 8.8Z" fill="#f0b8a4"/>
+    <ellipse cx="42.4" cy="15.4" rx="1.1" ry=".9" fill="#2a1a10"/><path d="M41 17.6l2.8 -.4M41 18.2l2.8 .6" stroke="#5a3418" stroke-width=".3"/>
+    <ellipse cx="36.4" cy="13.6" rx="2.4" ry="2.5" fill="#1a110b"/><circle cx="37.2" cy="12.7" r=".85" fill="#fff"/><circle cx="35.8" cy="14.6" r=".35" fill="#fff" opacity=".8"/><path d="M34 11.6Q36.4 10 38.8 11.4" stroke="#f6e2c4" stroke-width=".6" fill="none" opacity=".8"/></g>
+</svg>`;
+// Eule: zwei Posen – fliegend (Profil) und sitzend (von vorn, Kopf dreht sich, blinzelt)
+const OWL = (c = "#8a6440", lt = "#c9a477", face = "#efe0c4", dk = "#4a3420", eye = "#f2a020", id = "ow") => `<svg class="owsv" viewBox="0 0 48 44" style="overflow:visible"><defs><linearGradient id="${id}G" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lt}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs>
+  <g class="owfly"><g class="owwing b"><path d="M24 20C19 9 10 4 3 7C7 9 8 11 8 13C12 13 14 15 14 17C18 17 20 19 21 21Z" fill="${dk}"/></g>
+    <path d="M15 24L5 22.6L6.6 28Z" fill="${c}"/><path d="M6.4 23.4l7 1.4M6.8 26l7 -.4" stroke="${dk}" stroke-width=".6"/>
+    <ellipse cx="24" cy="24" rx="11.4" ry="7.2" fill="url(#${id}G)"/>${[[20, 22], [24, 21], [28, 22.4], [22, 26], [27, 26.6]].map(([x, y]) => `<path d="M${x} ${y}l1 1.6" stroke="${dk}" stroke-width=".7" stroke-linecap="round" opacity=".7"/>`).join("")}
+    <g class="owtal"><path d="M24 30l1 4M27 30l1.6 3.6" stroke="#d8b44a" stroke-width="1.4" stroke-linecap="round"/><path d="M24.6 34l-1.2 1.4M25 34l.6 1.8M28.4 33.6l-.8 1.6M28.6 33.6l1.2 1.4" stroke="#2a1a10" stroke-width=".7" stroke-linecap="round"/></g>
+    <circle cx="35" cy="18.6" r="7.6" fill="url(#${id}G)"/><path d="M30.4 12.6L29 8.4L33 11.4Z M36.6 11.2L38.4 7.2L39.4 12Z" fill="${c}"/><circle cx="37" cy="19" r="5.6" fill="${face}"/><path d="M31.6 16q5.4 -4 10.4 0" stroke="${dk}" stroke-width=".6" fill="none" opacity=".5"/>
+    <circle cx="38.4" cy="18" r="2.6" fill="${eye}"/><circle cx="38.8" cy="18" r="1.3" fill="#100804"/><circle cx="39.4" cy="17.3" r=".6" fill="#fff"/><path d="M41.4 19.4L44 21L41 22.2Z" fill="#3a2a1a"/>
+    <g class="owwing f"><path d="M26 20C21 8 12 2 4 4.6C8.4 6.6 9.4 9 9.4 11.4C13.4 11.2 15.6 13.4 15.4 15.8C19.6 15.6 22 18 23 21Z" fill="url(#${id}G)" stroke="${dk}" stroke-width=".6"/>
+      <path d="M9.4 11.4Q15 10 19 14M15.4 15.8Q19 15 22 18M6 5.4Q13 4 18 9" stroke="${dk}" stroke-width=".6" fill="none" opacity=".6"/>${[[6.6, 6], [10.6, 9.4], [14.4, 13.6]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".7" fill="${face}"/>`).join("")}</g></g>
+  <g class="owsit"><path d="M24 43C14 43 11.6 33 12.6 25C13.6 17 18 13 24 13C30 13 34.4 17 35.4 25C36.4 33 34 43 24 43Z" fill="url(#${id}G)"/>
+    <path d="M24 41C18 41 16.6 34 17.4 28C18.4 23 21 21 24 21C27 21 29.6 23 30.6 28C31.4 34 30 41 24 41Z" fill="${face}" opacity=".85"/>${[[20, 27], [24, 25.6], [28, 27], [21, 31.4], [26.6, 31.4], [23.6, 35.6]].map(([x, y]) => `<path d="M${x - 1} ${y}l1 1.2l1 -1.2" stroke="${dk}" stroke-width=".7" fill="none" stroke-linecap="round"/>`).join("")}
+    <path d="M13 24C10 30 11 37 15 41C15 34 15.4 28 16.4 24Z M35 24C38 30 37 37 33 41C33 34 32.6 28 31.6 24Z" fill="${c}" stroke="${dk}" stroke-width=".5"/>
+    <path d="M20 43l-.6 1.6M22 43v1.8M26 43v1.8M28 43l.6 1.6" stroke="#d8b44a" stroke-width="1.2" stroke-linecap="round"/>
+    <g class="owhead"><path d="M24 2C15 2 10.6 8 11 15C11.4 21 17 24.4 24 24.4C31 24.4 36.6 21 37 15C37.4 8 33 2 24 2Z" fill="url(#${id}G)"/><path d="M13 5L11.4 -1.4L17.6 3.4Z M35 5L36.6 -1.4L30.4 3.4Z" fill="${c}" stroke="${dk}" stroke-width=".5"/>
+      <circle cx="18.6" cy="13" r="6" fill="${face}"/><circle cx="29.4" cy="13" r="6" fill="${face}"/><path d="M12.8 12.4q5.8 -6 11.2 0q5.4 -6 11.2 0" stroke="${dk}" stroke-width=".7" fill="none" opacity=".6"/>
+      <g class="oweye"><circle cx="18.8" cy="13.2" r="3.6" fill="${eye}"/><circle cx="29.2" cy="13.2" r="3.6" fill="${eye}"/><circle cx="19.2" cy="13.4" r="1.9" fill="#100804"/><circle cx="28.8" cy="13.4" r="1.9" fill="#100804"/><circle cx="20" cy="12.4" r=".8" fill="#fff"/><circle cx="29.6" cy="12.4" r=".8" fill="#fff"/></g>
+      <path class="owlid" d="M15 13a3.8 3.8 0 0 1 7.6 0Z M25.4 13a3.8 3.8 0 0 1 7.6 0Z" fill="${c}"/><path d="M22.4 16.4L24 20.2L25.6 16.4Z" fill="#3a2a1a"/></g></g>
+</svg>`;
+const OWL_SVG = OWL(), SNOWOWL_SVG = OWL("#dfe4ec", "#ffffff", "#ffffff", "#5a6070", "#f2c820", "sow");
+// Igel: Stachelkleid, spitze Schnauze; rollt sich zur Kugel
+const HEDGEHOG_SVG = (() => { const sp = [...Array(19)].map((_, i) => { const a = Math.PI * (1.02 + i * .05), cx = 18, cy = 18, x1 = cx + Math.cos(a - .05) * 12.6, y1 = cy + Math.sin(a - .05) * 9.4, x2 = cx + Math.cos(a) * (15.6 + (i % 2) * 1.4), y2 = cy + Math.sin(a) * (11.6 + (i % 2) * 1.2), x3 = cx + Math.cos(a + .05) * 12.6, y3 = cy + Math.sin(a + .05) * 9.4;
+    return `<path d="M${f2(x1)} ${f2(y1)}L${f2(x2)} ${f2(y2)}L${f2(x3)} ${f2(y3)}Z" fill="${i % 3 ? "#5a4432" : "#7a5e44"}"/><path d="M${f2(x2)} ${f2(y2)}l${f2((x2 - 18) * -.08)} ${f2((y2 - 18) * -.08)}" stroke="#e8dcc8" stroke-width=".7"/>`; }).join("");
+  const ball = [...Array(22)].map((_, i) => { const a = i * Math.PI * 2 / 22, x = 20 + Math.cos(a) * 15, y = 15 + Math.sin(a) * 15, xa = 20 + Math.cos(a - .14) * 9, ya = 15 + Math.sin(a - .14) * 9, xb = 20 + Math.cos(a + .14) * 9, yb = 15 + Math.sin(a + .14) * 9; return `<path d="M${f2(xa)} ${f2(ya)}L${f2(x)} ${f2(y)}L${f2(xb)} ${f2(yb)}Z" fill="${i % 2 ? "#5a4432" : "#7a5e44"}"/>`; }).join("");
+  return `<svg class="hgsv" viewBox="0 0 40 30" style="overflow:visible"><g class="hgwalk"><g class="hgl b"><ellipse cx="13" cy="27" rx="2" ry="1.4" fill="#6a4c34"/><ellipse cx="27" cy="27" rx="2" ry="1.4" fill="#6a4c34"/></g>
+    <ellipse cx="19" cy="20" rx="13" ry="7.4" fill="#c9a882"/>${sp}<ellipse cx="18" cy="17.4" rx="10.4" ry="6.6" fill="#6a5240"/>${sp.replace(/#5a4432/g, "#4a3828").replace(/#7a5e44/g, "#6a5038")}
+    <path d="M27 16C31 16 35.6 19 39 21.2C38.6 22.6 36 23.6 32 23.8C28.4 23.8 26 22 26 19.6Z" fill="#d8b892"/><path d="M27 21.4Q31 24 35 23" stroke="#b8946c" stroke-width=".6" fill="none"/><ellipse cx="39.2" cy="21.2" rx="1.3" ry="1.1" fill="#1a110b"/><circle cx="39" cy="20.8" r=".35" fill="#fff" opacity=".7"/>
+    <ellipse cx="32.6" cy="18.6" rx="1.4" ry="1.5" fill="#1a110b"/><circle cx="33.1" cy="18.1" r=".5" fill="#fff"/><path d="M28.4 15.6q1.4 -2.4 2.6 -.4z" fill="#b8946c"/>
+    <g class="hgl a"><ellipse cx="16" cy="27.4" rx="2.2" ry="1.5" fill="#8a6a4c"/><ellipse cx="30" cy="27.4" rx="2.2" ry="1.5" fill="#8a6a4c"/></g></g>
+    <g class="hgball"><circle cx="20" cy="15" r="10" fill="#6a5240"/>${ball}<circle cx="20" cy="15" r="8.6" fill="#5a4432"/><path d="M14 13q6 -6 12 0M13 17q7 -5 14 0" stroke="#7a5e44" stroke-width="1.2" fill="none"/></g></svg>`; })();
+// Wildschwein + Frischlinge (gestreift)
+const BOAR = (c, lt, dk, stripes, id) => bendLegs(`<svg class="dsv boarsv" viewBox="0 0 70 60"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lt}"/><stop offset=".6" stop-color="${c}"/><stop offset="1" stop-color="${dk}"/></linearGradient></defs>
+  <g class="leg lb2"><path d="M19 38h4.4l-.4 8 .3 7.6h-3.4z" fill="${dk}"/><path d="M19.8 53.4h3.6l.4 3h-4.4z" fill="#1e140e"/></g><g class="leg lf2"><path d="M43 38h4.2l-.4 8 .2 7.6h-3.4z" fill="${dk}"/><path d="M43.4 53.4h3.6l.4 3h-4.4z" fill="#1e140e"/></g>
+  <path d="M11 33q-4 -1 -4 3q1.6 1 3 -1" stroke="${dk}" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M10 32C9 22 18 17 32 17C44 17 52 20 54 27C55.4 35 48 41 32 41C18 41 11 38 10 32Z" fill="url(#${id})"/>
+  <path d="M14 22L16 17.6L18 21L20.4 16.4L22.6 20.4L25 15.6L27.4 20L30 15.2L32.4 19.6L35 15.4L37 19.8L39.6 16.2L41.4 20.4L44 17.4L45 21.6Z" fill="${dk}"/>
+  ${stripes ? [0, 1, 2, 3].map(k => `<path d="M13 ${25 + k * 3.6}Q32 ${21 + k * 3.6} 52 ${26 + k * 3.4}" stroke="#f0d8a8" stroke-width="1.5" fill="none" opacity=".75"/>`).join("") : [[16, 26], [22, 24], [28, 23], [34, 23.4], [40, 24.6], [46, 27], [19, 32], [26, 31], [33, 31], [40, 31.4]].map(([x, y]) => `<path d="M${x} ${y}l1 2.6" stroke="${lt}" stroke-width=".6" opacity=".55"/>`).join("")}
+  <g class="leg lb1"><path d="M14.6 37h5l-.5 9 .3 7.6h-3.6z" fill="${c}"/><path d="M15.2 53.4h3.8l.4 3h-4.6z" fill="#1e140e"/></g><g class="leg lf1"><path d="M47.6 37h4.8l-.6 9 .3 7.6h-3.6z" fill="${c}"/><path d="M48 53.4h3.8l.4 3h-4.6z" fill="#1e140e"/></g>
+  <g class="dhead"><path d="M46 22C52 19.6 59 23 63.6 31C65.6 34.6 65.6 37.6 63.6 38.6C59.4 39.6 53.6 38 49.4 35C46 31 44.4 25.6 46 22Z" fill="url(#${id})"/>
+    <path d="M50 21L48.4 13.4L55 19.4Z" fill="${dk}"/><path d="M50.6 19.6L49.8 15.6L53 18.8Z" fill="#a87a6a" opacity=".7"/>
+    <ellipse cx="64.2" cy="35.4" rx="2.4" ry="3.2" fill="#9a7a6a"/><ellipse cx="64.6" cy="34.6" rx=".55" ry=".8" fill="#2a1a12"/><ellipse cx="64.6" cy="36.6" rx=".55" ry=".8" fill="#2a1a12"/>
+    ${stripes ? "" : `<path d="M58.6 37.6Q60.4 34 63 33.4" stroke="#f4ecd8" stroke-width="1.4" fill="none" stroke-linecap="round"/>`}
+    <ellipse cx="55.6" cy="27.6" rx="1.4" ry="1.5" fill="#100804"/><circle cx="56" cy="27.1" r=".5" fill="#fff"/><path d="M53.6 26q2 -1.4 4 -.2" stroke="${dk}" stroke-width=".7" fill="none"/></g></svg>`, 46, id + "k");
+const BOAR_SVG = BOAR("#5a4436", "#7a604c", "#3a2a20", false, "boG"), PIGLET_SVG = BOAR("#a87a52", "#c49a6c", "#7a5434", true, "plG");
+// --- Unterwasser ---
+const SEAHORSE_SVG = `<svg class="shsv" viewBox="0 0 26 42" style="overflow:visible"><defs><linearGradient id="shG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffcf5a"/><stop offset="1" stop-color="#f08a2a"/></linearGradient></defs>
+  <g class="shfin"><path d="M8.4 15C3.6 15.6 3 21 7.6 22.6Z" fill="#ffe08a" opacity=".85"/><path d="M8 16.4l-3 1M7.8 18.6l-3.4 .4M8 20.6l-3 -.2" stroke="#f0a040" stroke-width=".4"/></g>
+  <path d="M10.4 33C9.4 36.4 10.4 40 13.6 40C16.4 40 17 36.6 14.4 35.8C12.6 35.4 12 37.2 13.2 38" stroke="url(#shG)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M9.4 9C7 13 8 18 9 22C10 26 9.4 30 10.4 33.6C14.4 30.6 17.4 26.6 17.6 21.4C17.8 16 15.6 12 14.4 10Z" fill="url(#shG)"/>
+  ${[13, 16, 19, 22, 25, 28].map((y, i) => `<path d="M${10 + i * .3} ${y}Q${13.4} ${y + 1} ${16.6 - i * .4} ${y - .4}" stroke="#d8702a" stroke-width=".6" fill="none" opacity=".7"/>`).join("")}
+  <path d="M13 13C15.6 16 16 22 14 27" stroke="#fff4c0" stroke-width="1.2" fill="none" opacity=".6"/>
+  <path d="M9 9.4C8.4 5 11.4 3 14 4C16 4.8 16.6 7.4 15.2 10Z" fill="url(#shG)"/><path d="M15 6.4L21.6 7.2C22.4 7.4 22.4 9 21.6 9.2L15.2 9.8Z" fill="#f08a2a"/>
+  <path d="M10 4.4L9.4 1.4L11.4 3.2L12 .4L13.2 3.4L14.6 1.6L14.4 4.4Z" fill="#f0a040"/>
+  <circle cx="13" cy="7" r="1.5" fill="#1a110b"/><circle cx="13.5" cy="6.5" r=".55" fill="#fff"/></svg>`;
+const RAY_SVG = `<svg class="rysv" viewBox="0 0 64 60" style="overflow:visible"><defs><linearGradient id="ryG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1e2846"/><stop offset=".7" stop-color="#3a4a78"/><stop offset="1" stop-color="#2a3658"/></linearGradient></defs>
+  <path d="M22 30C14 29.6 6 29.6 0 30C6 30.6 14 30.6 22 30.4Z" fill="#1e2846" stroke="#1e2846" stroke-width=".8"/>
+  <g class="rywing t"><path d="M48 27C44 20 36 10 26 2C24 12 22 22 20 29Z" fill="url(#ryG)" stroke="#5a6a98" stroke-width=".6"/>${[[30, 12], [27, 18], [34, 18], [31, 24]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1" fill="#a8c0f0" opacity=".55"/>`).join("")}</g>
+  <g class="rywing u"><path d="M48 33C44 40 36 50 26 58C24 48 22 38 20 31Z" fill="url(#ryG)" stroke="#5a6a98" stroke-width=".6"/>${[[30, 48], [27, 42], [34, 42], [31, 36]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1" fill="#a8c0f0" opacity=".55"/>`).join("")}</g>
+  <path d="M19 30C19 25 26 23 38 24C46 24.6 52 26.6 53 30C52 33.4 46 35.4 38 36C26 37 19 35 19 30Z" fill="url(#ryG)"/><path d="M26 30H48" stroke="#5a6a98" stroke-width=".8" opacity=".6"/>
+  <path d="M52 26.4C55 24.4 58 24 60 25C58 26.6 56 27.4 53 28Z M52 33.6C55 35.6 58 36 60 35C58 33.4 56 32.6 53 32Z" fill="#2a3658"/>
+  <circle cx="51" cy="26.6" r="1.1" fill="#0a0e1a"/><circle cx="51" cy="33.4" r="1.1" fill="#0a0e1a"/><circle cx="51.3" cy="26.3" r=".35" fill="#fff"/><circle cx="51.3" cy="33.1" r=".35" fill="#fff"/></svg>`;
+// --- Sumpf ---
+const DUCK = (drake, id) => `<svg class="dksv" viewBox="0 0 40 30" style="overflow:visible"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${drake ? "#b8b4ac" : "#b08860"}"/><stop offset="1" stop-color="${drake ? "#8a867e" : "#7a5a3a"}"/></linearGradient></defs>
+  <g class="dkbody"><path d="M6 18C4 14 5 11 7 10C8 13 10 14 12 14Z" fill="${drake ? "#2a2a2a" : "#6a4a2e"}"/>${drake ? `<path d="M7 11q-2 -2 0 -4q1.6 1.6 0 4z" fill="#1a1a1a"/>` : ""}
+    <path d="M6 18C6 12 12 10 20 10C27 10 31 13 32 17C33 22 28 25 19 25C11 25 6 23 6 18Z" fill="url(#${id})"/>${drake ? `<path d="M26 12C30 13 32 16 32 19C30 22 27 23 24 23C26 19 26 15 26 12Z" fill="#7a4a3a"/>` : [[12, 15], [16, 13.6], [20, 13.4], [24, 14], [14, 19], [19, 18.6], [24, 19]].map(([x, y]) => `<path d="M${x} ${y}q1.4 -1 2.6 0" stroke="#4a3420" stroke-width=".7" fill="none"/>`).join("")}
+    <path d="M10 14C14 12 21 12 25 15C21 18 14 18 10 16Z" fill="${drake ? "#6a6660" : "#5a4028"}" opacity=".6"/><path d="M18 16.4l4 .2" stroke="#3a5ad8" stroke-width="1.4"/>
+    <g class="dkhead"><path d="M27 15C26 10 26 6 28.4 3.6C31 1.4 35 2.4 35.6 6C36 8.6 34 10.6 32 12C31 13.6 30.4 15 30 16Z" fill="${drake ? "#1f6a3a" : "#9a7450"}"/>${drake ? `<path d="M27.4 13.4q2.6 1.4 4.6 -.6" stroke="#fff" stroke-width="1.2" fill="none"/><path d="M29 4.4q3 -1.4 5 1" stroke="#3aa860" stroke-width="1" fill="none" opacity=".8"/>` : `<path d="M29 7.4L36 6.6" stroke="#4a3420" stroke-width="1" opacity=".8"/>`}
+      <path d="M34.6 5.6C37 5.4 39.4 6 40 7C39.4 8 37 8.6 34.6 8.4Z" fill="${drake ? "#f2c43a" : "#e09040"}"/><circle cx="32.4" cy="5.6" r="1.1" fill="#100804"/><circle cx="32.7" cy="5.3" r=".4" fill="#fff"/></g></g>
+  <g class="dkripple"><ellipse cx="19" cy="25" rx="16" ry="1.6" fill="none" stroke="#bfe6ff" stroke-width=".8" opacity=".6"/></g></svg>`;
+const DRAKE_SVG = DUCK(true, "dkM"), HEN_SVG = DUCK(false, "dkF");
+const DUCKLING_SVG = `<svg class="dlsv" viewBox="0 0 18 14" style="overflow:visible"><g class="dkbody"><path d="M2 9C2 5.6 5 4.6 9 4.6C12 4.6 13.6 6.4 13.6 8.6C13.6 11 11 12 8 12C4.6 12 2 11.4 2 9Z" fill="#e8c860"/><path d="M4 7.4Q8 6 11 8" stroke="#b8963a" stroke-width=".7" fill="none"/>
+  <g class="dkhead"><circle cx="13" cy="4.6" r="3" fill="#f2d870"/><path d="M15.6 4.2L17.8 4.8L15.6 5.6Z" fill="#e0902a"/><circle cx="13.8" cy="4" r=".7" fill="#100804"/><circle cx="14" cy="3.8" r=".25" fill="#fff"/></g></g><ellipse class="dkripple" cx="8" cy="12" rx="7" ry=".8" fill="none" stroke="#bfe6ff" stroke-width=".6" opacity=".6"/></svg>`;
+const BEAVER_SVG = `<svg class="bvsv" viewBox="0 0 60 32" style="overflow:visible"><defs><linearGradient id="bvG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a42"/><stop offset="1" stop-color="#6a4426"/></linearGradient></defs>
+  <g class="bvtail"><path d="M14 22C8 20 1.4 20.6 .6 24C0 27 6 28.4 13 26Z" fill="#3a3a44"/><path d="M3 22.4l1 4.4M6 21.6l1 5M9 21.4l.8 5.2M2 24.6h10" stroke="#5a5a66" stroke-width=".5"/></g>
+  <g class="bvl b"><ellipse cx="20" cy="29.4" rx="3.4" ry="2" fill="#4a2e18"/><ellipse cx="38" cy="29.6" rx="2.6" ry="1.8" fill="#4a2e18"/></g>
+  <path d="M12 22C11 14 18 10 28 10C38 10 44 14 45 20C46 26 40 30 28 30C18 30 12.6 27 12 22Z" fill="url(#bvG)"/>${[[17, 15], [22, 13], [28, 12.4], [34, 13], [39, 15], [20, 20], [27, 19], [35, 19.4]].map(([x, y]) => `<path d="M${x} ${y}q.8 1.6 0 3" stroke="#5a3a20" stroke-width=".6" fill="none" opacity=".7"/>`).join("")}
+  <g class="bvhead"><path d="M40 14C42 9 48 7.4 52 9.6C56 11.6 58 15 57.4 18C56.8 21 53 22 49 22C44 22 40.6 19 40 14Z" fill="url(#bvG)"/><ellipse cx="45" cy="8.6" rx="1.8" ry="1.6" fill="#6a4426"/>
+    <ellipse cx="57.4" cy="15" rx="1.6" ry="1.2" fill="#1a110b"/><path d="M53 18.4C55 18.6 57 18 57.8 17.4C57.6 19.6 55 21 53 21Z" fill="#c8a07a"/>
+    <path class="bvteeth" d="M54.2 19.8h2.4v3.4c-.6.6-1.8.6-2.4 0Z" fill="#f4a43a" stroke="#c87a20" stroke-width=".4"/><path d="M55.4 19.8v3.4" stroke="#c87a20" stroke-width=".4"/>
+    <ellipse cx="51" cy="12.4" rx="1.5" ry="1.6" fill="#100804"/><circle cx="51.5" cy="11.9" r=".5" fill="#fff"/><path d="M55 16.6l3.4 -.6M55 17.2l3.4 .6" stroke="#2a1a10" stroke-width=".3"/></g>
+  <g class="bvstick"><path d="M46 21L66 17" stroke="#8a6a3a" stroke-width="2" stroke-linecap="round"/><path d="M60 18.2l3 -3.6M52 19.8l1.4 -3" stroke="#8a6a3a" stroke-width="1" stroke-linecap="round"/><ellipse cx="63" cy="14.4" rx="2" ry="1" fill="#6aa040" transform="rotate(-40 63 14.4)"/></g>
+  <g class="bvl a"><ellipse cx="17" cy="29.6" rx="3.8" ry="2.1" fill="#5a3a20"/><ellipse cx="41" cy="29.8" rx="2.8" ry="1.9" fill="#5a3a20"/></g></svg>`;
+const SNAKE_SVG = (() => { const fr = [[12, 18, 18, 12], [16, 14, 10, 18], [18, 12, 12, 16], [14, 16, 18, 10]].map(([a, b, c, d]) => `M2 26C8 ${a} 14 ${a} 20 ${(a + b) / 2 + 3}S32 ${b + 6} 38 ${c + 4}S48 ${d} 52 22`);
+  const D = [...fr, fr[0]].join(";");
+  return `<svg class="snsv" viewBox="0 0 64 30" style="overflow:visible"><defs><linearGradient id="snG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a7a2a"/><stop offset="1" stop-color="#6ab040"/></linearGradient></defs>
+  <g class="sncrawl"><path d="${fr[0]}" stroke="#244a1a" stroke-width="6" fill="none" stroke-linecap="round"><animate attributeName="d" dur="1.1s" repeatCount="indefinite" values="${D}"/></path>
+    <path d="${fr[0]}" stroke="url(#snG)" stroke-width="4.4" fill="none" stroke-linecap="round"><animate attributeName="d" dur="1.1s" repeatCount="indefinite" values="${D}"/></path>
+    <path d="${fr[0]}" stroke="#d8e86a" stroke-width="1.2" fill="none" stroke-dasharray="1.6 2.4" opacity=".8"><animate attributeName="d" dur="1.1s" repeatCount="indefinite" values="${D}"/></path>
+    <g class="snhead"><path d="M50 20C53 18.4 58 19 60 21.4C58 23.6 53 24.4 50 23Z" fill="#5aa03a" stroke="#244a1a" stroke-width=".8"/><circle cx="56" cy="20.8" r="1" fill="#f2d040"/><circle cx="56.2" cy="20.8" r=".45" fill="#100804"/>
+      <path class="sntongue" d="M60 21.8l3 .2l1.2 -1M63 22l1.2 1" stroke="#e03a3a" stroke-width=".6" fill="none"/></g></g>
+  <g class="snrise"><path d="M6 27C2 27 2 23 8 23C16 23 26 24 26 27C26 29 14 29.4 6 27Z" fill="#3a7a2a" stroke="#244a1a" stroke-width=".8"/><path d="M24 26C30 24 32 18 28 13C25 9 28 4 34 4" stroke="#244a1a" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M24 26C30 24 32 18 28 13C25 9 28 4 34 4" stroke="url(#snG)" stroke-width="4.4" fill="none" stroke-linecap="round"/>
+    <path d="M32 2C35 .4 40 1 42 3.4C40 5.6 35 6.4 32 5Z" fill="#5aa03a" stroke="#244a1a" stroke-width=".8"/><circle cx="38" cy="2.8" r="1" fill="#f2d040"/><circle cx="38.2" cy="2.8" r=".45" fill="#100804"/><path class="sntongue" d="M42 3.8l3 .2l1.2 -1M45 4l1.2 1" stroke="#e03a3a" stroke-width=".6" fill="none"/></g></svg>`; })();
+// --- Berge ---
+const IBEX_SVG = GOAT_SVG.replace(/#fbf8f2/g, "#b8946a").replace(/#ece5d8/g, "#9e7a52").replace(/#cfc6b6/g, "#7a5a3a").replace(/#f4efe6/g, "#a8845c").replace(/#d9d1c2/g, "#8a6a46").replace(/#e2dacb/g, "#8a6a46").replace(/gtG/g, "ibG").replace(/kGoat/g, "kIbex").replace(/<path d="M54 6q1 -5 4 -7M55 3.4l2 .4M54.4 1l2.2 .2"[^>]*>/, "")
+  .replace(`<path d="M53 9C51 2 55 -4 62 -4C58 -2 56 2 57 8Z" fill="#2a2420"/>`, `<path d="M53 10C50.4 2 46 -4.4 40.4 -7.2C36 -9.2 32 -7.6 31.4 -4" stroke="#4a3e30" stroke-width="5.4" stroke-linecap="round" fill="none"/><path d="M53 10C50.4 2 46 -4.4 40.4 -7.2C36 -9.2 32 -7.6 31.4 -4" stroke="#9a8a70" stroke-width="3.8" stroke-linecap="round" fill="none"/><path d="M53 10C50.4 2 46 -4.4 40.4 -7.2C36 -9.2 32 -7.6 31.4 -4" stroke="#4a3e30" stroke-width="3.8" stroke-dasharray=".8 2" fill="none" opacity=".75"/>`);
+const WOLF_SVG = bendLegs(FOXT({ c: "#8e939c", d: "#6e737c", far: "#5a5e66", leg: "#858a93", cream: "#e4e6ea", sock: "#757a83", ear: 1.12, earIn: "#3a3c42", earIn2: "#c8ccd4", iris: "#e8b030", id: "wf" }), 35, "kWolf");
+const ARCFOX_SVG = bendLegs(FOXT({ c: "#f4f6fa", d: "#e2e7ef", far: "#c8ced8", leg: "#e8ecf2", cream: "#ffffff", sock: "#d6dce6", iris: "#c08a3a", id: "afx" }), 35, "kArc");
+const BUTTERFLY = (a, b) => `<svg class="bfsv" viewBox="0 0 20 16" style="overflow:visible"><g class="bfw l"><path d="M10 8C6 1 1 1 1.4 5C1.6 8 5 9 10 8.6Z" fill="${a}" stroke="#2a1a10" stroke-width=".5"/><path d="M10 8.6C6 9 3 11 3.6 13.6C4.4 15.6 8 13 10 9.4Z" fill="${b}" stroke="#2a1a10" stroke-width=".5"/><circle cx="4.4" cy="4.6" r="1.1" fill="#fff" opacity=".8"/></g>
+  <g class="bfw r"><path d="M10 8C14 1 19 1 18.6 5C18.4 8 15 9 10 8.6Z" fill="${a}" stroke="#2a1a10" stroke-width=".5"/><path d="M10 8.6C14 9 17 11 16.4 13.6C15.6 15.6 12 13 10 9.4Z" fill="${b}" stroke="#2a1a10" stroke-width=".5"/><circle cx="15.6" cy="4.6" r="1.1" fill="#fff" opacity=".8"/></g>
+  <ellipse cx="10" cy="9" rx=".9" ry="3.6" fill="#2a1a10"/><path d="M9.6 5.6L8 2.6M10.4 5.6L12 2.6" stroke="#2a1a10" stroke-width=".4"/></svg>`;
+// --- Schnee ---
+const SEAL_SVG = `<svg class="slsv" viewBox="0 0 60 30" style="overflow:visible"><defs><linearGradient id="slG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8b0bc"/><stop offset=".6" stop-color="#848c9a"/><stop offset="1" stop-color="#d8dde4"/></linearGradient></defs>
+  <g class="slbody"><path d="M2 22C4 18 8 17 12 19L8 24Z M2 26C4 28 8 28 11 25L8 23Z" fill="#6a7280"/>
+    <path d="M8 24C10 16 22 12 34 12C42 12 48 14 50 18C51 22 48 27 40 28C28 29.4 14 28.6 8 24Z" fill="url(#slG)"/>${[[16, 18], [22, 15.6], [29, 15], [36, 15.4], [20, 22], [30, 20], [40, 19]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.2" ry=".8" fill="#5a6270" opacity=".6"/>`).join("")}
+    <g class="slfl"><path d="M34 24C36 28 40 30 44 29.6C42 27.6 40 25.6 38 23Z" fill="#6a7280"/></g>
+    <g class="slhead"><path d="M42 16C42 9 47 5 52 6C56.6 7 59 11 58.4 15C57.8 19 54 21 49 20.6C45 20.4 42 19 42 16Z" fill="url(#slG)"/><ellipse cx="56.6" cy="13.6" rx="2.6" ry="2" fill="#c8ced8"/><ellipse cx="58" cy="12.8" rx="1" ry=".8" fill="#1a1a22"/>
+      <path d="M55 14.6l5 -1M55 15.2l5 .6M54.6 15.8l4.4 1.6" stroke="#4a505a" stroke-width=".3"/><ellipse cx="51.6" cy="10.4" rx="2.2" ry="2.4" fill="#100810"/><circle cx="52.4" cy="9.6" r=".8" fill="#fff"/><circle cx="51" cy="11.4" r=".35" fill="#fff" opacity=".8"/></g></g></svg>`;
+const REINDEER_SVG = bendLegs(DEER2("#8a7a66", "#6a5a48", "#efe8dc", true, "dRein").replace(/<\/g><\/svg>$/, `<path d="M55.6 5C53 -2 50 -8 44 -13M52.4 -3.6C49.6 -3 47 -4 45 -6M50 -8.4C51 -11 51 -14 50 -17M57.8 5C59 -1 60 -6 58 -12M59.2 -4C61.6 -6 63.6 -6 65.4 -5M58.6 -8C60 -10 60.6 -13 60 -16M55.4 1.4C57 2 58.2 3.6 58.6 5.6" stroke="#e0cea8" stroke-width="1.9" stroke-linecap="round" fill="none"/></g></svg>`).replace('<ellipse cx="32" cy="32.5" rx="13" ry="4.4" fill="#efe8dc"/>', '<ellipse cx="32" cy="32.5" rx="13" ry="4.4" fill="#efe8dc"/><path d="M44 30C47 26 49 22 51 20L54 22C52 26 50 30 48 33Z" fill="#efe8dc" opacity=".9"/>'), 43, "kRein");
+// --- Weltall ---
+const WHALE_SVG = `<svg class="whsv" viewBox="0 0 130 54" style="overflow:visible"><defs><linearGradient id="whG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5ad0"/><stop offset=".55" stop-color="#3a2a8a"/><stop offset="1" stop-color="#1a1250"/></linearGradient><radialGradient id="whS"><stop offset="0" stop-color="#e8f4ff"/><stop offset=".4" stop-color="#8ac8ff" stop-opacity=".8"/><stop offset="1" stop-color="#8ac8ff" stop-opacity="0"/></radialGradient></defs>
+  <g class="whtail"><path d="M24 28C16 26 10 18 2 14C4 22 8 26 6 30C10 32 14 34 2 42C12 40 18 34 24 32Z" fill="#3a2a8a" stroke="#8a7aff" stroke-width=".8"/></g>
+  <path d="M20 30C30 16 60 10 90 12C112 14 126 22 126 32C126 40 112 46 90 46C60 46 34 42 20 30Z" fill="url(#whG)" stroke="#8a7aff" stroke-width=".8"/>
+  <path d="M40 38C60 44 90 46 112 40C104 46 80 48 60 46C50 44 44 42 40 38Z" fill="#8ab0ff" opacity=".35"/>${[0, 1, 2, 3, 4, 5].map(i => `<path d="M${62 + i * 9} ${41 - i * .4}l2 4" stroke="#c8d8ff" stroke-width=".8" opacity=".5"/>`).join("")}
+  ${[[50, 22, 3], [64, 18, 2.2], [78, 17, 3.4], [92, 19, 2], [104, 23, 2.6], [58, 30, 1.8], [72, 26, 2.4], [86, 28, 1.6]].map(([x, y, r], i) => `<circle class="pf-tw${i % 2 ? " b" : ""}" style="animation-delay:${-i * .5}s" cx="${x}" cy="${y}" r="${r * 2}" fill="url(#whS)"/>`).join("")}
+  <g class="whfin"><path d="M80 38C82 46 78 52 70 54C72 48 72 44 70 40Z" fill="#2a1e6a" stroke="#8a7aff" stroke-width=".6"/></g>
+  <ellipse cx="110" cy="29" rx="2.6" ry="2.4" fill="#0a0820"/><circle cx="111" cy="28.2" r=".9" fill="#fff"/><path d="M113 36q6 1 11 -2" stroke="#1a1250" stroke-width="1" fill="none"/></svg>`;
+const SAT_SVG = `<svg class="satsv" viewBox="0 0 80 40" style="overflow:visible">
+  ${[-1, 1].map(d => `<g><path d="M${40 + d * 8} 20H${40 + d * 12}" stroke="#9aa4b4" stroke-width="1.4"/>${[0, 1, 2].map(k => `<rect x="${d > 0 ? 52 + k * 9 : 19 - k * 9}" y="12" width="8.4" height="16" fill="#1e3a8a" stroke="#8aa0d8" stroke-width=".6"/><path d="M${d > 0 ? 52 + k * 9 : 19 - k * 9} 17.4h8.4M${d > 0 ? 52 + k * 9 : 19 - k * 9} 22.6h8.4M${(d > 0 ? 52 + k * 9 : 19 - k * 9) + 4.2} 12v16" stroke="#5a78c8" stroke-width=".4"/>`).join("")}</g>`).join("")}
+  <rect x="32" y="12" width="16" height="16" rx="1.6" fill="#d8a83a" stroke="#8a6a1a" stroke-width=".8"/><path d="M33 15l14 10M36 12.6l11 8M33 20l8 7" stroke="#f4d070" stroke-width=".7" opacity=".7"/>
+  <path d="M40 12V6" stroke="#9aa4b4" stroke-width="1"/><path d="M34 6Q40 0 46 6Z" fill="#e8ecf2" stroke="#9aa4b4" stroke-width=".6"/><circle class="satblink" cx="40" cy="31" r="1.6" fill="#ff4a4a"/></svg>`;
 
 const MD = { busy: false, t: 0, c: {} };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -5932,7 +6267,7 @@ async function alienScene() {
   await moveTo(u, chance(.5) ? W + 30 : -190, 240, 40); u.remove();
 }
 const pick2 = a => a[Math.floor(Math.random() * a.length)], rndi = (a, b) => Math.floor(rnd(a, b + 1));
-window.__mdsvg = { SCORP_SVG, DRAGON_SVG, BROWNBEAR_SVG, POLARBEAR_SVG, ROBODOG_SVG, SHARK_SVG, CRAB_SVG, propsAll: () => props(), propSVG, ALIEN2_SVG, COW_SVG, BIGUFO_SVG, trophySVG, FOX_SVG, DOE_SVG, CAMEL_SVG, GOAT_SVG, BUNNY_VARS, HERON_SVG, DIVER_SVG, GATOR_SVG, CRAB_SVG, TURTLE_SVG, SHARK_SVG };   // zum Testen
+window.__mdsvg = { SQUIRREL_SVG, OWL_SVG, SNOWOWL_SVG, HEDGEHOG_SVG, BOAR_SVG, PIGLET_SVG, SEAHORSE_SVG, RAY_SVG, DRAKE_SVG, HEN_SVG, DUCKLING_SVG, BEAVER_SVG, SNAKE_SVG, IBEX_SVG, WOLF_SVG, ARCFOX_SVG, BUTTERFLY, SEAL_SVG, REINDEER_SVG, WHALE_SVG, SAT_SVG, BUNNY_SVG, COW_SVG, ROVER_SVG, KANGA_SVG, RUNNER_SVG, COYOTE_SVG, MEERKAT_SVG, FENNEC_SVG, SCORP_SVG, DRAGON_SVG, BROWNBEAR_SVG, POLARBEAR_SVG, ROBODOG_SVG, SHARK_SVG, CRAB_SVG, propsAll: () => props(), propSVG, ALIEN2_SVG, COW_SVG, BIGUFO_SVG, trophySVG, FOX_SVG, DOE_SVG, CAMEL_SVG, GOAT_SVG, BUNNY_VARS, HERON_SVG, DIVER_SVG, GATOR_SVG, CRAB_SVG, TURTLE_SVG, SHARK_SVG };   // zum Testen
 // ===== v35: neue Tiere =====
 // Wüste: Skorpion – krabbelt, hebt drohend den Stachel, klappert mit den Scheren, gräbt sich ein
 async function scorpionScene() {
@@ -6133,10 +6468,269 @@ const STORIES = {
   ocean: [[["crab"], crabDiscoStory]], swamp: [[["frog"], frogChoirStory]], alps: [[["goat"], goatRaceStory]], snow: [[["penguin", "hare"], snowballStory]],
 };
 function storyScene() { const A = MD.c.animals || {}, ok = (STORIES[MD.c.biome] || []).filter(([need]) => need.every(k => A[k])); if (!ok.length) return; return ok[Math.floor(Math.random() * ok.length)][1](); }
+// ===== v40: Wüste – Känguru, Rennkuckuck, Kojote, Erdmännchen =====
+["box", "kick", "joey", "look", "stand", "alarm", "stop", "call", "howl", "pant", "dizzy"].forEach(s => STATES.includes(s) || STATES.push(s));
+const curX = el => { const s = mdStage().getBoundingClientRect(), r = el.getBoundingClientRect(); return r.left - s.left + r.width / 2; };
+const dustTrail = (el, ms, every = 110, cls = "sandpuff") => { const t0 = Date.now(), iv = setInterval(() => { if (Date.now() - t0 > ms || !el.isConnected) return clearInterval(iv); fxAt(cls, curX(el) - 13 - el._dir * el._w * .3, -2, 1200); }, every); return iv; };
+const dizzy = (el, ms = 1800) => { const d = fxAt("dizzystars", el._x + el._w / 2 - 15, el.offsetHeight + 2, ms); d.textContent = "⭐💫⭐"; return d; };
+const kgHop = (k, x, sp = 95) => { state(k, "hop", k.classList.contains("joey") ? "joey" : ""); return moveTo(k, x, sp).then(() => state(k, k._joey ? "joey" : "")); };
+function kangaroo(dir) { const k = actor(KANGA_SVG, "kg", 56, 60); k._joey = chance(.45); place(k, dir > 0 ? -66 : W_() + 10, dir); if (k._joey) k.classList.add("joey"); return k; }
+
+// Känguru: hüpft rein, Schattenboxen (Gym-Vibes!), Joey guckt raus, hüpft weiter
+async function kangarooScene(kind) {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 20 : -80;
+  kind = kind || (chance(.35) ? "box" : chance(.5) ? "joey" : chance(.5) ? "kick" : "graze");
+  const k = kangaroo(dir); await kgHop(k, W * rnd(.3, .55) - 28);
+  if (kind === "box") { state(k, "box", k._joey ? "joey" : ""); bubble(["Eins-zwei! 🥊", "Schattenboxen!", "Cardio-Tag!"][rndi(0, 2)], k._x + 20, 1300, 66); await sleep(1800);
+    state(k, "kick", k._joey ? "joey" : ""); fxAt("sandpuff", k._x + (dir > 0 ? 40 : 4), 6); await sleep(450); state(k, "box", k._joey ? "joey" : ""); await sleep(1100); state(k, k._joey ? "joey" : ""); bubble("💪", k._x + 20, 800, 66); await sleep(700); }
+  else if (kind === "kick") { state(k, "look"); await sleep(900);
+    if (A.lizard) { const l = actor(LIZARD_SVG, "lizard run", 62, 21); place(l, ltr ? W + 10 : -60, -dir); await moveTo(l, k._x + dir * 70, 170); state(l); bubble("?", l._x + 20, 700, 30); await sleep(500);
+      state(k, "kick"); fxAt("sandpuff", l._x + 20, 4); await sleep(350); state(k); face(l, dir); state(l, "run"); bubble("Wuaaah!", l._x, 800, 34); await moveTo(l, ltr ? W + 20 : -70, 230); l.remove(); }
+    else { state(k, "kick"); await sleep(500); state(k); await sleep(300); state(k, "kick"); await sleep(500); state(k); }
+    await sleep(400); }
+  else if (kind === "joey") { k.classList.add("joey"); k._joey = true; state(k, "joey"); bubble("Psst… 👀", k._x + 24, 1100, 50); await sleep(1600); state(k, "joey", "look"); await sleep(1400); state(k, "joey"); }
+  else { state(k, "scratch"); await sleep(1300); state(k, "look", k._joey ? "joey" : ""); await sleep(1500); state(k); }
+  await kgHop(k, end, 110); k.remove();
+}
+// Rennkuckuck: rast durchs Bild, bremst mit Staubwolke, ruft, flitzt weiter
+async function roadrunnerScene(kind) {
+  const W = W_(), A = MD.c.animals || {}; if (A.coyote && chance(.55)) return chaseStory();
+  const ltr = chance(.5), dir = ltr ? 1 : -1, r = actor(RUNNER_SVG, "rr", 56, 38); place(r, ltr ? -70 : W + 14, dir);
+  state(r, "run"); dustTrail(r, 1400); await moveTo(r, W * rnd(.4, .6), 420); state(r, "stop"); for (let i = 0; i < 3; i++) fxAt("sandpuff", r._x + 20 + dir * i * 8, 0, 1000); await sleep(500);
+  state(r, "look"); await sleep(1300); state(r, "call"); bubble(["Kuu-kuu-kuu!", "Brrrrr-up!", "Tschak-tschak!"][rndi(0, 2)], r._x + 20, 1100, 44); await sleep(1100); state(r);
+  if (chance(.5)) { face(r, -dir); await sleep(300); state(r, "run"); dustTrail(r, 1400); await moveTo(r, ltr ? -80 : W + 20, 460); }
+  else { state(r, "run"); dustTrail(r, 1400); await moveTo(r, ltr ? W + 20 : -80, 460); }
+  r.remove();
+}
+// Kojote allein: schnüffelt, setzt sich und heult
+async function coyoteScene() {
+  const W = W_(), A = MD.c.animals || {}; if (A.roadrunner && chance(.6)) return chaseStory();
+  const ltr = chance(.5), dir = ltr ? 1 : -1, c = actor(COYOTE_SVG, "fox", 66, 42); place(c, ltr ? -70 : W + 10, dir);
+  state(c, "trot"); await moveTo(c, W * rnd(.35, .55), 70); state(c, "sniff"); await sleep(1300); state(c, "alert"); await sleep(600);
+  state(c, "howl"); bubble("Auuuuuuu! 🌙", c._x + 30, 1700, 60); await sleep(2000); state(c, "sit"); await sleep(700);
+  state(c, "trot"); await moveTo(c, ltr ? W + 20 : -80, 75); c.remove();
+}
+// Erdmännchen: Familie flitzt rein, stellt sich auf Wache – bei Gefahr Alarm und alle rennen weg
+async function meerkatScene() {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, n = rndi(2, 3), base = W * rnd(.3, .5), ms = [];
+  for (let i = 0; i < n; i++) { const m = actor(MEERKAT_SVG, "mk", 36, 36); place(m, ltr ? -40 - i * 26 : W + 10 + i * 26, dir); ms.push(m); }
+  await Promise.all(ms.map((m, i) => { state(m, "run"); return moveTo(m, base + i * 30 * dir, 150).then(() => state(m, "stand")); }));
+  await sleep(500); ms.forEach((m, i) => setTimeout(() => state(m, "stand", "look"), i * 300)); await sleep(2200);
+  const enemy = A.coyote && chance(.5) ? "coyote" : A.fennec && chance(.5) ? "fennec" : null;
+  if (enemy) { const e = actor(enemy === "coyote" ? COYOTE_SVG : FENNEC_SVG, "fox", enemy === "coyote" ? 66 : 58, enemy === "coyote" ? 42 : 37); place(e, ltr ? W + 10 : -70, -dir); state(e, "stalk"); const ap = moveTo(e, ltr ? W * .78 : W * .1, 40);
+    await sleep(700); state(ms[0], "stand", "alarm"); bubble("ALARM! 🚨", ms[0]._x, 1000, 40); await sleep(700); await ap;
+    await Promise.all([...ms.map(m => { face(m, -dir); state(m, "run"); return moveTo(m, ltr ? -50 : W + 20, 190); }), (async () => { state(e, "trot", "fast"); await moveTo(e, ltr ? -80 : W + 20, 200); })()]); e.remove(); }
+  else { bubble(["Alles ruhig. 👌", "Wache steht!", "…"][rndi(0, 2)], ms[0]._x, 1100, 40); await sleep(1400); await Promise.all(ms.map((m, i) => sleep(i * 200).then(() => { state(m, "run"); return moveTo(m, ltr ? W + 20 + i * 30 : -50 - i * 30, 160); }))); }
+  ms.forEach(m => m.remove());
+}
+// Story: Kojote jagt den Rennkuckuck – und hat keine Chance
+async function chaseStory() {
+  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, c = actor(COYOTE_SVG, "fox", 66, 42), r = actor(RUNNER_SVG, "rr", 56, 38);
+  place(c, ltr ? -80 : W + 14, dir); place(r, ltr ? -200 : W + 140, dir);
+  state(c, "stalk"); await moveTo(c, W * .32 - 33, 45); state(c, "sniff"); await sleep(800); state(c, "alert"); bubble("Hm… Abendessen? 😏", c._x + 30, 1100, 56); await sleep(600);
+  state(r, "run"); dustTrail(r, 2600); const pass = moveTo(r, W * .82, 420); await sleep(450); bubble("Zisch!", W * .5, 600, 40); state(c, "trot", "fast");
+  const cRun = moveTo(c, W * .6, 230); await pass; state(r, "stop"); fxAt("sandpuff", r._x + 24, 0); await sleep(250); face(r, -dir); state(r, "call"); bubble("Kuu-kuu! 😜", r._x + 20, 900, 44); await cRun; state(c, "stalk"); await sleep(500);
+  state(c, "leap"); const x0 = c._x, j = c.animate([{ transform: `translate(${x0}px,0) scaleX(${dir})` }, { transform: `translate(${x0 + dir * 60}px,-30px) scaleX(${dir})` }, { transform: `translate(${x0 + dir * 110}px,0) scaleX(${dir})` }], { duration: 700, fill: "forwards" });
+  await sleep(220); state(r, "run"); dustTrail(r, 1600); const esc = moveTo(r, ltr ? -90 : W + 24, 480); await j.finished; place(c, x0 + dir * 110, dir); j.cancel();
+  const cl = fxAt("dustcloud", c._x + 10, 2, 1600); state(c, "dizzy"); dizzy(c); bubble("…", c._x + 30, 900, 56); await esc; r.remove(); await sleep(1500);
+  state(c, "pant"); await sleep(1100); face(c, dir); state(c, "trot"); bubble("Morgen krieg ich dich!", c._x, 1100, 56); await moveTo(c, ltr ? W + 20 : -90, 70); c.remove();
+}
+// Story: Känguru-Boxkampf – zwei Kängurus, Runde 1!
+async function kangaBoxStory() {
+  const W = W_(), mid = W * .5, a = kangaroo(1), b = kangaroo(-1); a.classList.remove("joey"); b.classList.remove("joey"); a._joey = b._joey = false;
+  await Promise.all([kgHop(a, mid - 74), kgHop(b, mid + 18, 90)]); bubble("🔔 Runde 1!", mid - 30, 1100, 74); await sleep(900);
+  for (let r = 0; r < 2; r++) { state(a, "box"); state(b, "box"); await sleep(1300); state(a, "kick"); bubble("Bämm!", mid, 600, 50); fxAt("sandpuff", mid, 4); await moveTo(b, b._x + 18, 140); state(a, "box"); await sleep(600);
+    state(b, "kick"); bubble("Pow!", mid - 30, 600, 50); fxAt("sandpuff", mid - 20, 4); await moveTo(a, a._x - 14, 140); state(b, "box"); await sleep(500); await Promise.all([moveTo(a, mid - 74, 80), moveTo(b, mid + 18, 80)]); }
+  state(a); state(b); bubble("Unentschieden! 🤝", mid - 40, 1300, 74); await sleep(1500); await Promise.all([kgHop(a, -80, 110), (face(b, 1), kgHop(b, W + 20, 110))]); a.remove(); b.remove();
+}
+STORIES.desert.push([["roadrunner", "coyote"], chaseStory], [["roadrunner", "coyote"], chaseStory], [["kangaroo"], kangaBoxStory]);
+// ===== v41: Szenen der neuen Tiere (alle kommen seitlich ins Bild) =====
+["hop", "dig", "eat", "nut", "fly", "glide", "dive", "turn", "hoot", "roll", "curl", "swim", "dabble", "quack", "carry", "gnaw", "slap", "rise", "rest", "hump", "up", "clap", "ork", "drive", "buried", "wiggle"].forEach(s => STATES.includes(s) || STATES.push(s));
+const side = () => { const ltr = chance(.5); return { ltr, dir: ltr ? 1 : -1, from: w => ltr ? -w - 10 : W_() + 10, to: w => ltr ? W_() + 20 : -w - 20 }; };
+const arcTo = async (el, x1, h, ms, y1 = el._y || 0) => { const x0 = el._x, y0 = el._y || 0, d = el._dir || 1, k = []; for (let i = 0; i <= 10; i++) { const t = i / 10; k.push({ transform: `translate(${x0 + (x1 - x0) * t}px, ${-(y0 + (y1 - y0) * t + Math.sin(t * Math.PI) * h)}px) scaleX(${d})` }); }
+  const a = el.animate(k, { duration: ms, fill: "forwards" }); await a.finished.catch(() => {}); place(el, x1, d, y1); a.cancel(); };
+const feathers = (x, y, n = 6, col) => { for (let i = 0; i < n; i++) { const f = fxAt("feather", x + rnd(-6, 6), y + rnd(-4, 6), 1600); f.style.setProperty("--fx", rnd(-26, 26) + "px"); if (col) f.style.background = col; } };
+// ---------- Wald ----------
+function squirrel(s) { const q = actor(SQUIRREL_SVG, "sq", 40, 36); place(q, s.from(40), s.dir); return q; }
+async function squirrelScene(kind) {
+  const W = W_(), s = side(), q = squirrel(s); kind = kind || (chance(.4) ? "bury" : chance(.5) ? "eat" : "forgot");
+  state(q, "hop", "nut"); await moveTo(q, W * rnd(.32, .56), 130); state(q, "nut", "alert"); await sleep(700);
+  if (kind === "eat") { state(q, "eat", "nut"); bubble("Mmh, Nuss! 🌰", q._x + 10, 1100, 42); for (let i = 0; i < 4; i++) { await sleep(450); fxAt("puff", q._x + (s.dir > 0 ? 30 : 4), 14, 700).style.transform = "scale(.3)"; } state(q, "alert"); await sleep(500); }
+  else { state(q, "dig", "nut"); for (let i = 0; i < 6; i++) { fxAt("puff", q._x + (s.dir > 0 ? 30 : 0), 0, 900); await sleep(200); }
+    if (kind === "bury") { state(q, "dig"); const a = document.createElement("div"); a.className = "acorn"; a.style.left = (q._x + (s.dir > 0 ? 32 : 2)) + "px"; a.style.bottom = "2px"; mdStage().appendChild(a); await sleep(500);
+      for (let i = 0; i < 3; i++) { fxAt("puff", q._x + (s.dir > 0 ? 30 : 0), 0, 900); await sleep(200); } a.remove(); state(q, "alert"); bubble("Versteckt! 🤫", q._x + 10, 1100, 42); await sleep(1100); }
+    else { state(q, "dig"); await sleep(600); state(q, "alert"); bubble("Wo war die nochmal? 🤔", q._x - 10, 1400, 42); await sleep(800); face(q, -s.dir); await sleep(500); face(q, s.dir); state(q, "dig"); for (let i = 0; i < 3; i++) { fxAt("puff", q._x + 20, 0, 900); await sleep(200); } state(q); bubble("…egal. 🤷", q._x, 900, 42); await sleep(900); } }
+  state(q, "hop"); await moveTo(q, s.to(40), 150); q.remove();
+}
+function owl(s, svg = OWL_SVG) { const o = actor(svg, "ow fly", 56, 52); place(o, s.from(56), s.dir, rnd(90, 120)); return o; }
+async function owlScene(kind, svg = OWL_SVG) {
+  const W = W_(), s = side(), o = owl(s, svg); const lx = W * rnd(.3, .6);
+  await moveTo(o, lx - s.dir * 60, 110, o._y - 20); state(o, "fly", "glide"); await moveTo(o, lx, 80, 0); state(o, "sit"); fxAt(svg === SNOWOWL_SVG ? "snowpuff" : "puff", lx + 16, 0, 900); await sleep(700);
+  state(o, "sit", "turn"); await sleep(2200); state(o, "sit", "hoot"); bubble(["Huhu! 🦉", "Hu-huuu!", "Uhuuu…"][rndi(0, 2)], lx + 10, 1200, 58); await sleep(1400); state(o, "sit"); await sleep(400);
+  state(o, "fly"); await moveTo(o, lx + s.dir * 40, 90, 50); await moveTo(o, s.to(56), 130, rnd(100, 130)); o.remove();
+}
+async function hedgehogScene(kind) {
+  const W = W_(), s = side(), h = actor(HEDGEHOG_SVG, "hg", 40, 30); place(h, s.from(40), s.dir); kind = kind || (chance(.5) ? "roll" : "sniff");
+  state(h, "walk"); await moveTo(h, W * rnd(.3, .55), 32); state(h, "sniff"); bubble("Schnüff, schnüff…", h._x, 1100, 30); await sleep(1500);
+  if (kind === "roll") { state(h, "curl"); bubble("❗", h._x + 14, 600, 32); await sleep(900); state(h, "roll"); await moveTo(h, s.to(40), 120); }
+  else { bubble("Ein Käfer! 🪲", h._x, 1000, 30); state(h, "walk"); await moveTo(h, h._x + s.dir * 30, 30); state(h, "sniff"); await sleep(900); state(h, "walk"); await moveTo(h, s.to(40), 34); }
+  h.remove();
+}
+async function boarScene() {
+  const W = W_(), s = side(), b = actor(BOAR_SVG, "deer boar", 70, 60), n = rndi(2, 3), ps = []; place(b, s.from(70), s.dir);
+  for (let i = 0; i < n; i++) { const p = actor(PIGLET_SVG, "deer boar", 34, 29); place(p, s.from(70) - s.dir * (30 + i * 30), s.dir); ps.push(p); }
+  const mid = W * rnd(.35, .55); state(b, "walk"); ps.forEach(p => state(p, "walk"));
+  await Promise.all([moveTo(b, mid, 40), ...ps.map((p, i) => moveTo(p, mid - s.dir * (34 + i * 28), 40))]); state(b, "graze"); ps.forEach(p => state(p));
+  bubble("Grunz! 🐗", b._x + 30, 1000, 58); for (let i = 0; i < 4; i++) { fxAt("puff", b._x + (s.dir > 0 ? 58 : 0), 0, 900); await sleep(350); }
+  // Frischlinge toben herum
+  await Promise.all(ps.map(async (p, i) => { state(p, "bound"); await moveTo(p, p._x + s.dir * rnd(30, 70), 120); face(p, -s.dir); await moveTo(p, p._x - s.dir * rnd(20, 50), 120); face(p, s.dir); state(p); }));
+  ps.forEach(p => bubble("quiek!", p._x, 700, 30)); await sleep(800); state(b, "walk"); ps.forEach(p => state(p, "walk"));
+  await Promise.all([moveTo(b, s.to(70), 44), ...ps.map((p, i) => moveTo(p, s.to(70) + (s.dir > 0 ? 40 + i * 30 : -40 - i * 30) * 0, 50))]); b.remove(); ps.forEach(p => p.remove());
+}
+async function owlSquirrelStory() {
+  const W = W_(), s = side(), q = squirrel(s); state(q, "hop", "nut"); await moveTo(q, W * .45, 130); state(q, "dig", "nut");
+  const o = actor(OWL_SVG, "ow fly", 56, 52); place(o, s.ltr ? W + 10 : -66, -s.dir, 120);
+  const dig = (async () => { for (let i = 0; i < 10; i++) { fxAt("puff", q._x + (s.dir > 0 ? 30 : 0), 0, 900); await sleep(220); } })();
+  await moveTo(o, q._x + s.dir * 120, 120, 90); state(o, "fly", "glide", "dive"); bubble("🦉❗", o._x, 700, 110);
+  const dv = moveTo(o, q._x - s.dir * 6, 150, 4); await sleep(500); state(q, "alert"); bubble("!!", q._x + 10, 500, 40); await sleep(150);
+  state(q, "hop"); await arcTo(q, q._x - s.dir * 60, 34, 420); await dv; state(o, "sit"); fxAt("puff", o._x + 16, 0, 1200); feathers(o._x + 26, 22, 7); bubble("Plumps!", o._x + 10, 900, 56); await dig;
+  face(q, s.dir); state(q, "nut", "alert"); bubble("Hehe, zu langsam! 😜", q._x - 20, 1300, 42); await sleep(1300); state(o, "sit", "hoot"); bubble("Grrr-huu!", o._x + 10, 900, 58); await sleep(900);
+  state(q, "hop", "nut"); const qo = moveTo(q, s.ltr ? -60 : W + 20, 160); await sleep(400); state(o, "fly"); await moveTo(o, o._x - s.dir * 30, 90, 60); await moveTo(o, s.ltr ? W + 20 : -70, 140, 120); await qo; q.remove(); o.remove();
+}
+async function foxHedgehogStory() {
+  const W = W_(), s = side(), h = actor(HEDGEHOG_SVG, "hg", 40, 30), f = actor(FOX_SVG, "fox", 66, 42); place(h, s.from(40), s.dir); place(f, s.ltr ? W + 10 : -76, -s.dir);
+  state(h, "walk"); state(f, "trot"); await Promise.all([moveTo(h, W * .42, 32), moveTo(f, W * .42 + s.dir * 44, 70)]); state(h, "sniff"); state(f, "sniff"); await sleep(900);
+  state(h, "curl"); bubble("❗", h._x + 14, 600, 32); await sleep(700); state(f, "stalk"); await moveTo(f, h._x + s.dir * 30, 20); await sleep(300);
+  bubble("AUTSCH! 😣", f._x + 20, 1100, 52); state(f, "leap"); await arcTo(f, f._x + s.dir * 60, 26, 500); state(f, "trot", "fast"); const run = moveTo(f, s.ltr ? W + 20 : -80, 200);
+  await sleep(1000); state(h, "sniff"); bubble("Pff. 😤", h._x, 900, 30); await sleep(900); state(h, "walk"); await Promise.all([run, moveTo(h, s.to(40), 34)]); h.remove(); f.remove();
+}
+// ---------- Unterwasser ----------
+async function seahorseScene() {
+  const W = W_(), mid = W * rnd(.38, .55), y = rnd(36, 70), a = actor(SEAHORSE_SVG, "sh", 24, 40), b = actor(SEAHORSE_SVG, "sh", 21, 35); place(a, -30, 1, y); place(b, W + 10, -1, y + 6);
+  await Promise.all([moveTo(a, mid - 26, 26, y), moveTo(b, mid + 6, 24, y + 4)]); fxAt("heartfx", mid - 6, y + 40, 1600).textContent = "💛"; await sleep(800);
+  for (let k = 0; k < 2; k++) { await Promise.all([moveTo(a, a._x, 12, y + 14), moveTo(b, b._x, 12, y - 8)]); await Promise.all([moveTo(a, a._x, 12, y), moveTo(b, b._x, 12, y + 4)]); }
+  face(b, 1); fxAt("bubl", mid, y + 30, 2400); await Promise.all([moveTo(a, W + 20, 30, y + 20), moveTo(b, W + 50, 30, y + 22)]); a.remove(); b.remove();
+}
+async function rayScene() {
+  const W = W_(), s = side(), r = actor(RAY_SVG, "ry", 76, 72), y = rnd(46, 84); place(r, s.from(76), s.dir, y);
+  await moveTo(r, W * .5 - 38, 46, y); if (chance(.6)) { const sv = r.querySelector("svg"); bubble("Looping! 🌀", r._x + 30, 1200, y + 50); await sv.animate([{ transform: "rotate(0)" }, { transform: `rotate(${-s.dir * 360}deg) translateY(-6px)` }], { duration: 1800, easing: "ease-in-out" }).finished.catch(() => {}); }
+  await moveTo(r, s.to(76), 50, y + rnd(-10, 14)); r.remove();
+}
+// ---------- Sumpf ----------
+async function duckScene() {
+  const W = W_(), s = side(), m = actor(chance(.5) ? HEN_SVG : DRAKE_SVG, "dk swim", 44, 33), n = rndi(3, 4), ks = []; place(m, s.from(44), s.dir);
+  for (let i = 0; i < n; i++) { const k = actor(DUCKLING_SVG, "dl swim", 18, 14); place(k, s.from(44) - s.dir * (30 + i * 22), s.dir); ks.push(k); }
+  const mid = W * rnd(.4, .55); await Promise.all([moveTo(m, mid, 34), ...ks.map((k, i) => moveTo(k, mid - s.dir * (28 + i * 20) - (i === n - 1 ? s.dir * 40 : 0), 34))]); state(m); ks.forEach(k => state(k));
+  state(m, "quack"); bubble("Quak quak!", m._x + 10, 1000, 38); await sleep(900); state(m, "dabble"); fxAt("splash", m._x + 20, 0, 700); await sleep(1300); state(m); fxAt("splash", m._x + 20, 0, 700); await sleep(400);
+  const last = ks[n - 1]; state(last, "quack"); bubble("Piep! Wartet!", last._x - 10, 1000, 22); await sleep(700); state(last, "swim"); await moveTo(last, mid - s.dir * (28 + (n - 1) * 20), 60);
+  state(m, "swim"); ks.forEach(k => state(k, "swim")); await Promise.all([moveTo(m, s.to(44), 38), ...ks.map((k, i) => moveTo(k, s.to(44) - s.dir * (28 + i * 20) * 0, 38))]); m.remove(); ks.forEach(k => k.remove());
+}
+async function beaverScene() {
+  const W = W_(), s = side(), b = actor(BEAVER_SVG, "bv", 56, 30), px = W * rnd(.38, .55); place(b, s.from(56), s.dir);
+  const pile = document.createElement("div"); pile.className = "stickpile"; pile.style.left = px + "px"; mdStage().appendChild(pile); const sticks = [];
+  const drawPile = () => { pile.innerHTML = `<svg viewBox="0 0 34 14" width="34" height="14">${sticks.map(([a, y]) => `<path d="M3 ${y}L31 ${y - a}" stroke="#8a6a3a" stroke-width="2.4" stroke-linecap="round"/>`).join("")}</svg>`; };
+  for (let t = 0; t < 2; t++) { state(b, "walk", "carry"); await moveTo(b, px - s.dir * 40 + (s.dir > 0 ? 0 : 20), 46); state(b); sticks.push([rnd(-4, 4), 12 - t * 3.4]); drawPile(); fxAt("puff", px + 10, 0, 700); await sleep(400);
+    if (t === 0) { bubble("Damm-Baustelle 🦫", b._x, 1100, 34); await sleep(900); face(b, -s.dir); state(b, "walk"); await moveTo(b, s.from(56), 60); face(b, s.dir); await sleep(600); } }
+  state(b, "gnaw"); bubble("Knabber-knabber…", b._x, 1000, 34); await sleep(1200); sticks.push([2, 5]); drawPile(); state(b, "slap"); bubble("PATSCH! 💦", b._x - 10, 900, 34); fxAt("splash", b._x, 0, 700); await sleep(1000);
+  state(b, "walk"); await moveTo(b, s.to(56), 50); b.remove(); pile.style.opacity = 0; setTimeout(() => pile.remove(), 900);
+}
+async function snakeScene() {
+  const W = W_(), A = MD.c.animals || {}, s = side(), sn = actor(SNAKE_SVG, "sn", 64, 30); place(sn, s.from(64), s.dir); let fr = null;
+  if (A.frog) { fr = actor(FROG_SVG, "frog", 40, 28); place(fr, s.ltr ? W + 10 : -50, -s.dir); await moveTo(fr, W * (s.ltr ? .7 : .2), 70); state(fr); }
+  await moveTo(sn, W * .42 - 32, 40); state(sn, "rise"); bubble("Ssssss… 🐍", sn._x + 20, 1300, 44); await sleep(1500);
+  if (fr) { bubble("QUAAK! 😱", fr._x, 800, 36); state(fr, "jump"); face(fr, s.dir); await moveTo(fr, s.to(40), 160); fr.remove(); }
+  await sleep(500); state(sn); await moveTo(sn, s.to(64), 44); sn.remove();
+}
+async function fireflyScene() {
+  const W = W_(), mid = W * .5, n = 12, fs = []; const heart = t => [16 * Math.sin(t) ** 3, 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)];
+  for (let i = 0; i < n; i++) { const f = document.createElement("div"); f.className = "ffly"; f.style.left = "0px"; f.style.bottom = "0px"; f.style.animationDelay = -rnd(0, 1.1) + "s"; mdStage().appendChild(f); fs.push(f); }
+  const pos = fs.map((_, i) => [i % 2 ? -10 : W + 10, rnd(30, 120)]);
+  await Promise.all(fs.map((f, i) => { const [hx, hy] = heart(i / n * Math.PI * 2), x1 = mid + hx * 2.4, y1 = 70 + hy * 2.4, mx = (pos[i][0] + x1) / 2;
+    return f.animate([{ transform: `translate(${pos[i][0]}px, ${-pos[i][1]}px)` }, { transform: `translate(${mx}px, ${-(pos[i][1] + rnd(-30, 30))}px)` }, { transform: `translate(${x1}px, ${-y1}px)` }], { duration: 3200 + i * 80, easing: "ease-in-out", fill: "forwards" }).finished.catch(() => {}); }));
+  bubble("✨ Glühwürmchen ✨", mid - 50, 1500, 120); await sleep(1800);
+  await Promise.all(fs.map((f, i) => { const [hx, hy] = heart(i / n * Math.PI * 2); return f.animate([{ transform: `translate(${mid + hx * 2.4}px, ${-(70 + hy * 2.4)}px)` }, { transform: `translate(${i % 2 ? W + 20 : -20}px, ${-rnd(40, 140)}px)` }], { duration: 2800, easing: "ease-in", fill: "forwards" }).finished.catch(() => {}); }));
+  fs.forEach(f => f.remove());
+}
+// ---------- Berge ----------
+async function almcowScene() {
+  const W = W_(), s = side(), c = actor(COW_SVG, "cow walk", 60, 44); place(c, s.from(60), s.dir);
+  await moveTo(c, W * rnd(.35, .55), 26); state(c, "graze"); await sleep(1600); state(c, "alert"); bubble("Muuuuh! 🔔", c._x + 20, 1300, 50); await sleep(1500);
+  state(c, "graze"); await sleep(1200); state(c, "walk"); await moveTo(c, s.to(60), 28); c.remove();
+}
+async function wolfScene() {
+  const W = W_(), s = side(), n = chance(.5) ? 2 : 1, ws = []; for (let i = 0; i < n; i++) { const w = actor(WOLF_SVG, "fox", 76 - i * 8, 48 - i * 5); place(w, s.from(76) - s.dir * i * 70, s.dir); ws.push(w); }
+  const mid = W * rnd(.35, .5); ws.forEach(w => state(w, "trot")); await Promise.all(ws.map((w, i) => moveTo(w, mid - s.dir * i * 64, 70))); ws.forEach(w => state(w, "sniff")); await sleep(1100);
+  ws.forEach((w, i) => setTimeout(() => state(w, "howl"), i * 400)); bubble("Auuuuuuuu! 🌕", mid, 1800, 64); await sleep(2200); ws.forEach(w => state(w, "trot")); await Promise.all(ws.map((w, i) => moveTo(w, s.to(76) + (s.ltr ? i * 60 : -i * 60) * 0, 74))); ws.forEach(w => w.remove());
+}
+async function ibexScene() {
+  const W = W_(), s = side(), b = actor(IBEX_SVG, "deer goat", 62, 54); place(b, s.from(62), s.dir);
+  state(b, "walk"); await moveTo(b, W * .3 - (s.ltr ? 0 : -W * .4), 34); state(b, "alert"); await sleep(700); bubble("Hopp! 🏔️", b._x + 20, 800, 60);
+  state(b, "bound"); await arcTo(b, b._x + s.dir * 90, 50, 700); state(b, "alert"); bubble("König der Berge. 😎", b._x, 1300, 62); await sleep(1600); state(b, "graze"); await sleep(1100); state(b, "walk"); await moveTo(b, s.to(62), 36); b.remove();
+}
+async function butterflyScene() {
+  const W = W_(), n = rndi(2, 3), cols = [["#ff9a3a", "#ffd23a"], ["#5ab4ff", "#a8e0ff"], ["#ff6ab0", "#ffc0e0"]], bs = [];
+  for (let i = 0; i < n; i++) { const fromL = i % 2 === 0, b = actor(BUTTERFLY(...cols[i]), "bf", 20, 16); place(b, fromL ? -24 : W + 10, fromL ? 1 : -1, rnd(40, 90)); bs.push(b); }
+  await Promise.all(bs.map(async (b, i) => { for (let k = 0; k < 3; k++) await moveTo(b, rnd(30, W - 50), 60, rnd(20, 90)); await moveTo(b, b._x, 30, 2); state(b, "rest"); await sleep(1600 + i * 300); state(b); for (let k = 0; k < 2; k++) await moveTo(b, rnd(30, W - 50), 70, rnd(30, 100)); await moveTo(b, i % 2 ? -30 : W + 20, 70, rnd(40, 110)); }));
+  bs.forEach(b => b.remove());
+}
+async function wolfMarmotStory() {
+  const W = W_(), s = side(), m = actor(MARMOT_SVG, "marmot", 34, 38); place(m, s.from(34), s.dir); state(m, "walk"); await moveTo(m, W * .5, 60); state(m, "look"); await sleep(900);
+  const w = actor(WOLF_SVG, "fox", 76, 48); place(w, s.ltr ? W + 10 : -86, -s.dir); state(w, "stalk"); const ap = moveTo(w, s.ltr ? W * .78 : W * .1, 36); await sleep(900);
+  state(m, "whistle"); bubble("PFIIIIFF! 🚨", m._x - 10, 1100, 44); await sleep(900); face(m, -s.dir); state(m, "walk"); const run = moveTo(m, s.ltr ? -50 : W + 20, 170); await ap;
+  state(w, "alert"); bubble("Mist… 😒", w._x + 20, 1000, 56); await sleep(1100); state(w, "trot"); await Promise.all([run, moveTo(w, s.ltr ? W + 20 : -90, 70)]); m.remove(); w.remove();
+}
+async function ibexGoatStory() {
+  const W = W_(), mid = W * .5, a = actor(IBEX_SVG, "deer goat", 62, 54), b = actor(GOAT_SVG, "deer goat", 58, 50); place(a, -72, 1); place(b, W + 10, -1);
+  await Promise.all([deerWalk(a, mid - 80, 40), deerWalk(b, mid + 22, 36)]); state(a, "alert"); state(b, "alert"); await sleep(600); bubble("Kräftemessen!", mid - 50, 1000, 64);
+  for (let k = 0; k < 2; k++) { state(a, "buck"); state(b, "buck"); await sleep(800); state(a, "butt"); state(b, "butt"); await Promise.all([moveTo(a, mid - 52, 130), moveTo(b, mid - 4, 130)]); bubble("KLONK!", mid - 26, 600, 52); fxAt("puff", mid - 6, 24, 800); await sleep(250); state(a); state(b); await Promise.all([moveTo(a, mid - 80, 60), moveTo(b, mid + 22, 60)]); }
+  bubble("Unentschieden. 🤝", mid - 50, 1100, 64); await sleep(1200); face(a, -1); await Promise.all([deerWalk(a, -80, 40), deerWalk(b, W + 20, 40)]); a.remove(); b.remove();
+}
+// ---------- Schnee ----------
+async function sealScene() {
+  const W = W_(), s = side(), r = actor(SEAL_SVG, "sl", 60, 30); place(r, s.from(60), s.dir); state(r, "hump"); await moveTo(r, W * rnd(.32, .5), 34); state(r, "up", "ork"); bubble("Ork! Ork! 👏", r._x + 30, 1100, 40); state(r, "up", "ork", "clap"); await sleep(1400);
+  if (chance(.7)) { state(r, "up"); const b = document.createElement("div"); b.className = "ball"; b.style.background = "radial-gradient(circle at 35% 35%, #fff, #dfe8f8 70%)"; mdStage().appendChild(b); const nx = r._x + (s.dir > 0 ? 52 : 4);
+    await b.animate([{ transform: `translate(${nx - s.dir * 60}px,-60px)` }, { transform: `translate(${nx}px,-28px)` }], { duration: 600, easing: "ease-in" }).finished.catch(() => {});
+    const bb = b.animate([{ transform: `translate(${nx}px,-28px)` }, { transform: `translate(${nx + 1}px,-46px)` }, { transform: `translate(${nx}px,-28px)` }], { duration: 420, iterations: 4 }); bubble("Tadaa! 🎪", r._x + 20, 1500, 44); await bb.finished.catch(() => {}); b.remove(); }
+  state(r); await sleep(300); fxAt("snowpuff", r._x + 20, 0, 900); await moveTo(r, s.to(60), 110); r.remove();
+}
+async function arcfoxScene() {
+  const W = W_(), s = side(), f = actor(ARCFOX_SVG, "fox", 62, 40); place(f, s.from(62), s.dir); state(f, "trot"); await moveTo(f, W * rnd(.3, .45), 70);
+  state(f, "alert"); await sleep(600); state(f, "sniff"); bubble("Da raschelt was… 👂", f._x + 10, 1300, 50); await sleep(1500); state(f, "stalk"); await sleep(500);
+  state(f, "leap"); await arcTo(f, f._x + s.dir * 60, 40, 650); state(f, "buried"); for (let i = 0; i < 3; i++) fxAt("snowpuff", f._x + 10 + i * 12, 0, 1000); await sleep(1500);
+  state(f, "wiggle"); fxAt("snowpuff", f._x + 20, 6, 1000); bubble(chance(.5) ? "Nix erwischt… 😅" : "Hab dich! 🐭", f._x, 1200, 50); await sleep(1300); state(f, "trot"); await moveTo(f, s.to(62), 74); f.remove();
+}
+async function reindeerScene() {
+  const W = W_(), s = side(), r = actor(REINDEER_SVG, "deer", 80, 68); place(r, s.from(80), s.dir); state(r, "walk"); await moveTo(r, W * rnd(.3, .5), 34);
+  state(r, "graze"); for (let i = 0; i < 5; i++) { fxAt("snowpuff", r._x + (s.dir > 0 ? 56 : 6), 0, 900); await sleep(380); } bubble("Mampf… Flechten! 🌿", r._x + 20, 1200, 70); await sleep(1300);
+  state(r, "alert"); await sleep(1000); state(r, "walk"); await moveTo(r, s.to(80), 36); r.remove();
+}
+const snowowlScene = () => owlScene(null, SNOWOWL_SVG);
+// ---------- Weltall ----------
+async function roverScene() {
+  const W = W_(), s = side(), r = actor(ROVER_SVG, "rover drive", 70, 40); place(r, s.from(70), s.dir); await moveTo(r, W * rnd(.35, .5), 40); state(r);
+  bubble("Piep! Probe nehmen…", r._x, 1200, 44); for (let i = 0; i < 4; i++) { fxAt("sandpuff", r._x + 30, 0, 900).style.background = "rgba(200,200,215,.8)"; await sleep(320); }
+  fxAt("camflash", r._x + 40, 30, 500); bubble("Probe ✅", r._x + 10, 1000, 44); await sleep(1200); state(r, "drive"); await moveTo(r, s.to(70), 44); r.remove();
+}
+async function whaleScene() {
+  const W = W_(), s = side(), w = actor(WHALE_SVG, "wh", 150, 62), y = rnd(56, 80); place(w, s.from(150), s.dir, y);
+  const half = moveTo(w, W * .5 - 75, 30, y); await sleep(2600); bubble("🎵 Wuuuuooo… 🎵", W * .5 - 50, 1800, y + 66); await half; await moveTo(w, s.to(150), 30, y + rnd(-10, 10)); w.remove();
+}
+async function moonbunnyScene() {
+  const W = W_(), s = side(), b = actor(BUNNY_SVG + `<div class="mtank"></div><div class="mhelm"></div>`, "bunny moon", 44, 34); place(b, s.from(44), s.dir);
+  const mid = W * rnd(.4, .55); while (Math.abs(b._x - mid) > 40) { state(b, "hop"); await arcTo(b, b._x + s.dir * 60, 52, 1500); state(b); fxAt("sandpuff", b._x + 14, 0, 900).style.background = "rgba(200,200,215,.8)"; await sleep(200); }
+  bubble("Ein kleiner Hopser für einen Hasen… 🚀", Math.max(4, b._x - 80), 2000, 44); await sleep(2200);
+  while (s.ltr ? b._x < W + 10 : b._x > -50) { state(b, "hop"); await arcTo(b, b._x + s.dir * 70, 60, 1500); state(b); await sleep(150); } b.remove();
+}
+async function satelliteScene() {
+  const W = W_(), s = side(), t = actor(SAT_SVG, "sat", 80, 40), y = rnd(110, 140); place(t, s.from(80), s.dir, y); const go = moveTo(t, s.to(80), 26, y - 10);
+  await sleep(rnd(3000, 5000)); bubble("piep… piep… 📡", t.getBoundingClientRect().left - mdStage().getBoundingClientRect().left, 1500, y + 40); await go; t.remove();
+}
+Object.assign(STORIES, { forest: [[["owl", "squirrel"], owlSquirrelStory], [["fox", "hedgehog"], foxHedgehogStory]] });
+STORIES.alps.push([["wolf", "marmot"], wolfMarmotStory], [["ibex", "goat"], ibexGoatStory]);
 
 const SCENES = { bunny: () => bunnyScene(), fox: () => foxScene(), deer: () => deerScene(), hare: () => hareScene(), goat: () => goatScene(), eagle: () => eagleScene(),
   lizard: () => lizardScene(), fennec: () => fennecScene(), camel: () => camelScene(), tumble: () => tumbleBy(), fish: () => fishScene(), crab: () => crabScene(), turtle: () => turtleScene(), jelly: () => jellyScene(),
-  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(), scorp: () => scorpionScene(), dragonfly: () => dragonflyScene(), bear: () => bearScene(), polar: () => polarScene(), robodog: () => robodogScene(), spacex: () => spaceExtra(), story: () => storyScene(),
+  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(), scorp: () => scorpionScene(), squirrel: () => squirrelScene(), owl: () => owlScene(), hedgehog: () => hedgehogScene(), boar: () => boarScene(), seahorse: () => seahorseScene(), ray: () => rayScene(), duck: () => duckScene(), beaver: () => beaverScene(), snake: () => snakeScene(), firefly: () => fireflyScene(), almcow: () => almcowScene(), wolf: () => wolfScene(), ibex: () => ibexScene(), butterfly: () => butterflyScene(), seal: () => sealScene(), arcfox: () => arcfoxScene(), reindeer: () => reindeerScene(), snowowl: () => snowowlScene(), rover: () => roverScene(), whale: () => whaleScene(), moonbunny: () => moonbunnyScene(), satellite: () => satelliteScene(), kangaroo: () => kangarooScene(), roadrunner: () => roadrunnerScene(), coyote: () => coyoteScene(), meerkat: () => meerkatScene(), dragonfly: () => dragonflyScene(), bear: () => bearScene(), polar: () => polarScene(), robodog: () => robodogScene(), spacex: () => spaceExtra(), story: () => storyScene(),
   marmot: () => marmotScene(), penguin: () => penguinScene(), ermine: () => ermineScene(), shark: () => sharkScene(), octopus: () => octopusScene(), astro: () => astroScene(), cow: () => cowScene(), alien: () => alienScene(),
   hunter: async () => { const A = MD.c.animals || {}, opts = ["bunny", "fox", "deer"].filter(k => A[k]); const pick = opts[Math.floor(Math.random() * opts.length)] || "deer";
     if (chance(.3)) await hunterNap(); else if (pick === "bunny") await bunnyScene("hunter"); else if (pick === "fox") await foxScene("hunter"); else await deerScene(chance(.5) ? "chase" : "shot"); } };
@@ -6184,7 +6778,7 @@ let idleT = 0; const wake = () => { clearTimeout(idleT); if (PWR.idle) { PWR.idl
 // Akku fast leer → automatisch sparen (wo der Browser das verrät)
 try { navigator.getBattery?.().then(b => { const upd = () => { PWR.low = !b.charging && b.level <= .2; powerApply(); }; b.addEventListener("levelchange", upd); b.addEventListener("chargingchange", upd); upd(); }); } catch {}
 
-window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, scorpionScene, dragonflyScene, bearScene, polarScene, robodogScene, storyScene, sandstormStory, scorpFennecStory, caravanStory, crabDiscoStory, frogChoirStory, goatRaceStory, snowballStory, flagScene, moonwalkScene, golfScene, cowJumpScene, abductScene, meteorScene, rocketScene, selfieScene, cowScene, alienScene, astroScene, cowScene, alienScene, entityPeek };   // zum Testen
+window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, scorpionScene, dragonflyScene, bearScene, polarScene, robodogScene, storyScene, squirrelScene, owlScene, hedgehogScene, boarScene, seahorseScene, rayScene, duckScene, beaverScene, snakeScene, fireflyScene, almcowScene, wolfScene, ibexScene, butterflyScene, sealScene, arcfoxScene, reindeerScene, snowowlScene, roverScene, whaleScene, moonbunnyScene, satelliteScene, owlSquirrelStory, foxHedgehogStory, wolfMarmotStory, ibexGoatStory, kangarooScene, roadrunnerScene, coyoteScene, meerkatScene, chaseStory, kangaBoxStory, sandstormStory, scorpFennecStory, caravanStory, crabDiscoStory, frogChoirStory, goatRaceStory, snowballStory, flagScene, moonwalkScene, golfScene, cowJumpScene, abductScene, meteorScene, rocketScene, selfieScene, cowScene, alienScene, astroScene, cowScene, alienScene, entityPeek };   // zum Testen
 window.applyTheme(curTheme());
 
 function openPrefs() {
