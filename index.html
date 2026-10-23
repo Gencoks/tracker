@@ -606,7 +606,7 @@
   .pav { position: relative; display: inline-block; width: var(--s); height: var(--s); flex: none; }
   .pav-i { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #3a3c48, #17181e); color: var(--ac); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ac) 45%, transparent); }
   .pav.framed .pav-i { inset: 9%; box-shadow: none; } .pav-i img { width: 100%; height: 100%; object-fit: cover; display: block; } .pav-i b { font-weight: 900; }
-  .pav-b, .pav-f { position: absolute; left: -14%; top: -14%; width: 128%; height: 128%; overflow: visible; pointer-events: none; }
+  .pav-b, .pav-f { position: absolute; left: -30%; top: -30%; width: 160%; height: 160%; overflow: visible; pointer-events: none; }
   .pav-f .pf-spin, .pav-b .pf-spin { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 26s linear infinite; }
   .pav .pf-orbit { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 6s linear infinite; } .pav .pf-orbit2 { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 4s linear infinite; }
   .pav .pf-tw { transform-box: fill-box; transform-origin: 50% 50%; animation: tStar 2.4s ease-in-out infinite; } .pav .pf-tw.b { animation-delay: -1.2s; }
@@ -616,6 +616,12 @@
   .pf-frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; margin-top: 8px; }
   .pf-fr { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 4px 8px; border-radius: 14px; background: var(--surface-2); font: inherit; color: var(--text); }
   .pf-fr small { font-size: 10.5px; font-weight: 700; color: var(--muted); white-space: nowrap; } .pf-fr.on { background: var(--accent); } .pf-fr.on small { color: var(--accent-ink); } .pf-fr.lock { opacity: .45; }
+  .pav .pf-pulse { transform-box: fill-box; transform-origin: 50% 50%; animation: tGlow 2.4s ease-in-out infinite alternate; } .pav .pf-spin.f { animation-duration: 9s; }
+  .pav .pf-orbit3 { transform-box: view-box; transform-origin: 60px 60px; animation: tSpin 3.2s linear infinite; } .pav .pf-halo { animation: tOrb 1.8s ease-in-out infinite alternate; }
+  .fr-me { margin-top: 12px; padding: 0; overflow: hidden; } .fr-me > summary { list-style: none; display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 20px; cursor: pointer; }
+  .fr-me > summary::-webkit-details-marker { display: none; } .fr-chev { color: var(--muted); transition: transform .25s; } .fr-me[open] .fr-chev { transform: rotate(180deg); }
+  .fr-me .pf-card { padding: 4px 16px 0; border-top: 1px solid var(--border); } .fr-me .fr-card { margin: 0; padding: 14px 16px 16px; border-top: 1px solid var(--border); text-align: center; }
+  .fr-me .pf-top { padding: 14px 4px 4px 14px; gap: 22px; } .fr-me .fr-code { font-size: 28px; margin: 4px 0 10px; }
 
   .switch.three button { font-size: 13px; padding: 10px 4px; }
   .tcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -1191,6 +1197,10 @@
   .astro.lift .asarm { animation: asFl2 .2s ease-in-out infinite alternate; } .astro.lift .asl { animation: asFl2 .26s ease-in-out infinite alternate-reverse; } @keyframes asFl2 { from { transform: rotate(-35deg); } to { transform: rotate(35deg); } }
   .astro.lift .assv { animation: asFlail .3s ease-in-out infinite alternate; }
   .astro .asant { animation: wBlink 1.2s ease-in-out infinite; }
+  .sandstorm { position: absolute; inset: 0; z-index: 7; pointer-events: none; background: linear-gradient(90deg, rgba(232,176,112,0), rgba(232,176,112,.55) 30%, rgba(214,150,90,.65) 60%, rgba(232,176,112,.3));
+    background-size: 220% 100%; animation: sandIn 1.4s ease-out forwards, sandFlow 1.2s linear infinite; -webkit-mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.8) 50%, transparent 100%); mask: linear-gradient(to top, #000 0%, rgba(0,0,0,.8) 50%, transparent 100%); }
+  .sandstorm.rev { animation: sandIn 1.4s ease-out forwards, sandFlowR 1.2s linear infinite; } .sandstorm.out { opacity: 0; transition: opacity 1.2s; }
+  @keyframes sandIn { from { opacity: 0; } to { opacity: 1; } } @keyframes sandFlow { from { background-position: 100% 0; } to { background-position: 0 0; } } @keyframes sandFlowR { from { background-position: 0 0; } to { background-position: 100% 0; } }
   #rankup .ru-stack { position: relative; width: min(340px, calc(100vw - 32px)); margin-top: 236px; }
   #rankup .ru-rays { position: absolute; width: 520px; height: 520px; left: 50%; top: -70px; margin: -260px 0 0 -260px; opacity: 0; pointer-events: none;
     background: radial-gradient(circle at 38% 42%, rgba(255,210,90,.34), transparent 34%), radial-gradient(circle at 63% 58%, rgba(150,80,255,.30), transparent 38%), radial-gradient(circle at 55% 35%, rgba(255,120,200,.18), transparent 30%); animation: raysIn .6s 1.15s forwards; border-radius: 50%;
@@ -1265,6 +1275,11 @@
   #rankup .ru-ic .ru-th { width: 44px; height: 44px; border-radius: 12px; } #rankup .ru-ic .ru-th.pfr { overflow: visible; display: grid; place-items: center; }
   #rankup .ru-list b { display: block; font-size: 14px; line-height: 1.25; } #rankup .ru-list small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 2px; }
   #rankup .ru-card[data-step="2"] .ru-list { max-height: min(36vh, 300px); }
+  /* Freischalt-Seite: Pokal weg, Karte passt komplett auf den Bildschirm, Liste scrollt */
+  #rankup.step2 .ru-trophy, #rankup.step2 .ru-rays { display: none; } #rankup.step2 .ru-stack { margin-top: 0; }
+  #rankup .ru-card[data-step="2"] { max-height: calc(100dvh - 40px); display: flex; flex-direction: column; padding: 20px 16px 16px; }
+  #rankup .ru-card[data-step="2"] .ru-list { flex: 1 1 auto; min-height: 0; max-height: none; } #rankup .ru-card[data-step="2"] .ru-emo { font-size: 34px; }
+  #rankup .ru-card[data-step="2"] .btn { flex: none; }
   /* Einstellungen: Bereiche zum Aufklappen */
   .psec { border: 1px solid var(--border); border-radius: 14px; margin: 0 0 8px; background: var(--surface-2); overflow: hidden; }
   .psec > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-weight: 750; }
@@ -2616,13 +2631,13 @@ function friendsCard() {
   const st = rankState(), me = { uid: S.uid, ...myProfile(), tier: st.tier, rp: Math.round(st.rp), me: true };
   const fs = frFriends(), board = [me, ...fs].sort((a, b) => (!!a.private - !!b.private) || (b.rp || 0) - (a.rp || 0)), inc = frIncoming(), out = frOutgoing();
   const nm = f => f.names?.[f.members.find(m => m !== S.uid)] || "Jemand";
-  return profileCard() + `<div class="card fr-card">
+  return `<details class="card fr-me" ${S.pfOpen ? "open" : ""}><summary>${pAvatar(myProfile(), 46)}<span class="fr-n"><b>Mein Profil & Freundescode</b><small>Profil bearbeiten · Code ${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</small></span><span class="fr-chev">▾</span></summary>` + profileCard() + `<div class="fr-card">
       <div class="fr-code-k">Dein Freundescode</div>
       <div class="fr-code">${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</div>
       <div class="fr-row2"><button class="btn" data-action="frcopy">📋 Kopieren</button><button class="btn primary" data-action="frshare">📤 Teilen</button></div>
       <div class="fr-add"><input id="frCode" class="input" maxlength="7" placeholder="Code eines Freundes" autocomplete="off" autocapitalize="characters"><button class="btn primary" data-action="fradd">Hinzufügen</button></div>
       <button class="fr-priv ${S.share ? "on" : ""}" data-action="frpriv"><span class="tg"><i></i></span><span><b>Rang, Erfolge & Bestwerte freigeben</b><small>${S.share ? "Deine Freunde sehen deinen Rang, deine Erfolge und Bestwerte." : "Aus: Freunde sehen nur deinen Namen – alles bleibt privat."}</small></span></button>
-    </div>
+    </div></details>
     ${inc.length ? `<h2>Anfragen</h2><div class="card fr-list">${inc.map(f => `<div class="fr-item">${avatar(nm(f))}<span class="fr-n"><b>${esc(nm(f))}</b><small>möchte dein Freund sein</small></span>
       <button class="mini ok" data-action="fraccept" data-id="${f.id}">✓</button><button class="mini" data-action="frdel" data-id="${f.id}">✕</button></div>`).join("")}</div>` : ""}
     <h2>Rangliste unter Freunden</h2>
@@ -2723,42 +2738,63 @@ async function onbFinish() {
 const FRAME_N = ["Bronze", "Silber", "Gold", "Platin", "Diamant", "Meister", "Großmeister", "Champion", "Legende", "Mythos", "GOD-LEVEL"];
 let frameN = 0;
 function frameSVG(t) {
-  const id = "pf" + (++frameN), c = (TIER_COL[t] || "#888"), lt = mixc(c, "#fff", .55), dk = mixc(c, "#000", .45), R = 50, f = n => Math.round(n * 10) / 10;
-  const ring = (w, a = c, b = lt, d = dk) => `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${b}"/><stop offset=".5" stop-color="${a}"/><stop offset="1" stop-color="${d}"/></linearGradient></defs>
-    <circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#${id}r)" stroke-width="${w}"/><circle cx="60" cy="60" r="${R + w / 2}" fill="none" stroke="${d}" stroke-width=".8"/><circle cx="60" cy="60" r="${R - w / 2}" fill="none" stroke="${d}" stroke-width=".8"/>`;
-  const gem = (x, y, s, col) => `<path d="M${x} ${y - s}L${x + s * .8} ${y}L${x} ${y + s}L${x - s * .8} ${y}Z" fill="${col}" stroke="#fff" stroke-width=".8"/><path d="M${x - s * .3} ${y - s * .3}l${s * .25} -${s * .35}" stroke="#fff" stroke-width="1"/>`;
-  const star = (x, y, r, col) => `<path d="${[...Array(10)].map((_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r; return `${i ? "L" : "M"}${f(x + Math.cos(a) * rr)} ${f(y + Math.sin(a) * rr)}`; }).join("")}Z" fill="${col}" stroke="${dk}" stroke-width=".7"/>`;
-  const wing = (d, col, ed) => [0, 1, 2].map(i => `<path d="M${60 + d * 40} ${70 - i * 6}C${60 + d * (54 + i * 4)} ${60 - i * 10} ${60 + d * (62 + i * 3)} ${46 - i * 8} ${60 + d * (66 - i * 2)} ${36 - i * 6}C${60 + d * (58 - i * 2)} ${50 - i * 6} ${60 + d * (50 - i)} ${62 - i * 6} ${60 + d * 42} ${76 - i * 6}Z" fill="${col}" stroke="${ed}" stroke-width=".8"/>`).join("");
+  // Koordinaten: Mitte 60/60, Foto-Rand bei r≈51 – alles Verzierende liegt außerhalb davon (nichts verdeckt das Gesicht)
+  const id = "pf" + (++frameN), f = n => Math.round(n * 10) / 10, C = 60;
+  const pal = [["#ffd2a8", "#c87a3e", "#5a2a0e"], ["#ffffff", "#c2c7d0", "#4a5060"], ["#fff2a8", "#f2b81e", "#7a4a00"], ["#c8fff6", "#22c4b0", "#06504a"], ["#d8f0ff", "#3f9bff", "#0a2a7a"],
+    ["#f6d0ff", "#b04dff", "#3a0a70"], ["#ffe680", "#ff8a1e", "#8a2a00"], ["#ffffff", "#c8d0dc", "#3f4a5a"], ["#fff2b0", "#f2bc2a", "#7a4400"], ["#ffd0ff", "#c04dff", "#2a0650"], ["#fff6c8", "#f2c230", "#6a3a00"]][t];
+  const [lt, md, dk] = pal, pt = (r, a) => [C + Math.cos(a) * r, C + Math.sin(a) * r];
+  let defs = `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${lt}"/><stop offset=".45" stop-color="${md}"/><stop offset="1" stop-color="${dk}"/></linearGradient>
+    <radialGradient id="${id}a"><stop offset=".55" stop-color="${md}" stop-opacity="0"/><stop offset=".72" stop-color="${md}" stop-opacity=".55"/><stop offset="1" stop-color="${md}" stop-opacity="0"/></radialGradient>`;
+  const G = `url(#${id}g)`, st = `stroke="${dk}" stroke-width="1" stroke-linejoin="round"`;
+  const ring = w => `<circle cx="60" cy="60" r="${52 + w / 2}" fill="none" stroke="${dk}" stroke-width="${w + 2.4}"/><circle cx="60" cy="60" r="${52 + w / 2}" fill="none" stroke="${G}" stroke-width="${w}"/><circle cx="60" cy="60" r="${52 + w * .8}" fill="none" stroke="#fff" stroke-width=".9" opacity=".55" stroke-dasharray="40 30"/>`;
+  const gem = (x, y, s, col) => `<path d="M${x} ${y - s}L${x + s * .8} ${y}L${x} ${y + s}L${x - s * .8} ${y}Z" fill="${col}" stroke="#fff" stroke-width="1"/><path d="M${x - s * .8} ${y}H${x + s * .8}M${x} ${y - s}V${y + s}" stroke="#fff" stroke-width=".5" opacity=".6"/><path d="M${x - s * .35} ${y - s * .3}l${s * .25} -${s * .35}" stroke="#fff" stroke-width="1.2"/>`;
+  const star = (x, y, r, col) => `<path d="${[...Array(10)].map((_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r; return `${i ? "L" : "M"}${f(x + Math.cos(a) * rr)} ${f(y + Math.sin(a) * rr)}`; }).join("")}Z" fill="${col}" ${st}/>`;
+  const crown = (y, w, col, g2) => `<path d="M${C - w} ${y}L${C - w * .8} ${y - 14}L${C - w * .35} ${y - 5}L${C} ${y - 20}L${C + w * .35} ${y - 5}L${C + w * .8} ${y - 14}L${C + w} ${y}Z" fill="${col}" ${st}/>${gem(C, y - 9, 4.4, g2)}${gem(C - w * .78, y - 9, 2.6, g2)}${gem(C + w * .78, y - 9, 2.6, g2)}`;
+  const wing = (d, n, len, col, ed, rise = 1) => { let w = ""; for (let i = n - 1; i >= 0; i--) { const y0 = 70 - i * 9, l = len - i * len * .1, tx = C + d * (56 + l), ty = y0 - l * .55 * rise - i * 4;
+      w += `<path d="M${C + d * 46} ${y0 + 8}C${C + d * (56 + l * .4)} ${y0 + 2} ${tx - d * 6} ${ty + 10} ${tx} ${ty}C${tx - d * 10} ${ty + 12} ${C + d * (52 + l * .3)} ${y0 + 14} ${C + d * 47} ${y0 + 18}Z" fill="${col}" stroke="${ed}" stroke-width="1"/><path d="M${C + d * 50} ${y0 + 9}Q${C + d * (56 + l * .5)} ${y0 + 2} ${tx - d * 4} ${ty + 3}" stroke="#fff" stroke-width=".8" fill="none" opacity=".6"/>`; } return w; };
+  const laurel = d => [...Array(7)].map((_, i) => { const a = Math.PI / 2 + d * (.35 + i * .28), [x, y] = pt(60, a); return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="8" ry="3.4" fill="${i % 2 ? "#7ab04a" : "#5a9a3a"}" stroke="#2f5a1e" stroke-width=".7" transform="rotate(${f(a * 180 / Math.PI + d * 70)} ${f(x)} ${f(y)})"/>`; }).join("");
+  const aura = (r = 92) => `<circle class="pf-pulse" cx="60" cy="60" r="${r}" fill="url(#${id}a)"/>`;
+  const tw = (pts) => pts.map(([x, y, r], i) => `<path class="pf-tw" style="animation-delay:${-i * .7}s" d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="#fff"/>`).join("");
   let back = "", front = "";
-  if (t === 0) front = ring(5);
-  else if (t === 1) front = ring(6) + [...Array(12)].map((_, i) => { const a = i * Math.PI / 6; return `<circle cx="${f(60 + Math.cos(a) * R)}" cy="${f(60 + Math.sin(a) * R)}" r="1.4" fill="#fff" opacity=".8"/>`; }).join("");
-  else if (t === 2) front = ring(7) + star(60, 110, 9, lt);
-  else if (t === 3) front = ring(7) + gem(60, 9, 9, "#5ff0dc") + gem(17, 82, 5, "#5ff0dc") + gem(103, 82, 5, "#5ff0dc");
-  else if (t === 4) { back = [...Array(8)].map((_, i) => { const a = i * Math.PI / 4 + .2; return `<path d="M${f(60 + Math.cos(a) * 46)} ${f(60 + Math.sin(a) * 46)}L${f(60 + Math.cos(a - .1) * 62)} ${f(60 + Math.sin(a - .1) * 62)}L${f(60 + Math.cos(a) * 68)} ${f(60 + Math.sin(a) * 68)}L${f(60 + Math.cos(a + .1) * 62)} ${f(60 + Math.sin(a + .1) * 62)}Z" fill="${i % 2 ? "#7ec8ff" : "#3a8cff"}" stroke="#fff" stroke-width=".6"/>`; }).join(""); front = ring(7) + gem(60, 8, 10, "#7ec8ff"); }
-  else if (t === 5) { back = wing(-1, "#c04dff", "#4a1280") + wing(1, "#c04dff", "#4a1280"); front = ring(8) + gem(60, 9, 9, "#e07bff"); }
-  else if (t === 6) { back = [...Array(14)].map((_, i) => { const a = i * Math.PI * 2 / 14; return `<path d="M${f(60 + Math.cos(a - .14) * 48)} ${f(60 + Math.sin(a - .14) * 48)}Q${f(60 + Math.cos(a) * 74)} ${f(60 + Math.sin(a) * 74)} ${f(60 + Math.cos(a + .14) * 48)} ${f(60 + Math.sin(a + .14) * 48)}Z" fill="${i % 2 ? "#ffb020" : "#ff7a10"}" stroke="#9a3c00" stroke-width=".6"/>`; }).join(""); front = ring(8, "#ffa41e", "#ffe680", "#9a3c00"); }
-  else if (t === 7) { back = wing(-1, "#e8ecf2", "#5a6472") + wing(1, "#e8ecf2", "#5a6472"); front = ring(8, "#c8d0dc", "#fff", "#4f5a6a") + gem(60, 7, 11, "#3a8cff") + `<path d="M28 98Q60 116 92 98" stroke="#3a8cff" stroke-width="3" fill="none"/>`; }
-  else if (t === 8) { back = `<g class="pf-spin">${[...Array(16)].map((_, i) => `<path d="M58 4L60 -8L62 4Z" fill="#ffd84d" stroke="#a87a00" stroke-width=".5" transform="rotate(${i * 22.5} 60 60)"/>`).join("")}</g>`; front = ring(8, "#f2c230", "#fff6c8", "#8a5400") + star(60, 8, 9, "#fff6c8") + `<circle cx="22" cy="96" r="2" fill="#fff" class="pf-tw"/><circle cx="100" cy="24" r="1.6" fill="#fff" class="pf-tw b"/>`; }
-  else if (t === 9) { back = `<g class="pf-spin">${[0, 1, 2].map(k => `<path d="M60 0A60 60 0 0 1 120 60" stroke="${["#e07bff", "#ff4fd8", "#7a4dff"][k]}" stroke-width="${5 - k}" fill="none" stroke-linecap="round" transform="rotate(${k * 120} 60 60)"/>`).join("")}</g>`;
-    front = ring(8, "#b04dff", "#ffd0ff", "#3a0a6a") + `<g class="pf-orbit"><circle cx="60" cy="-2" r="5" fill="#ff9cf0" stroke="#fff" stroke-width="1"/></g>`; }
-  else { back = wing(-1, "#ffffff", "#c9a040") + wing(1, "#ffffff", "#c9a040") + `<g class="pf-spin">${[...Array(18)].map((_, i) => `<path d="M59 2L60 -10L61 2Z" fill="#ffe07a" opacity=".8" transform="rotate(${i * 20} 60 60)"/>`).join("")}</g>`;
-    front = ring(9, "#f2c230", "#fff6c8", "#7a4a00") + `<g transform="rotate(-18 60 60)"><ellipse cx="60" cy="60" rx="66" ry="16" fill="none" stroke="#f2c230" stroke-width="2.4"/><g class="pf-orbit2"><circle cx="126" cy="60" r="3.4" fill="#fff"/></g></g>` + star(60, 6, 10, "#fff") + `<circle cx="16" cy="30" r="2" fill="#fff" class="pf-tw"/><circle cx="106" cy="100" r="2" fill="#fff" class="pf-tw b"/><circle cx="100" cy="16" r="1.4" fill="#ffe9a8" class="pf-tw"/>`; }
-  return { back, front };
+  if (t === 0) front = ring(6) + [0, 1, 2, 3].map(i => { const [x, y] = pt(55, i * Math.PI / 2 + Math.PI / 4); return `<circle cx="${f(x)}" cy="${f(y)}" r="2.6" fill="${lt}" stroke="${dk}" stroke-width=".8"/>`; }).join("");
+  else if (t === 1) front = [...Array(24)].map((_, i) => { const a = i * Math.PI / 12, [x1, y1] = pt(57, a - .06), [x2, y2] = pt(64, a), [x3, y3] = pt(57, a + .06); return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(x3)} ${f(y3)}Z" fill="${md}" stroke="${dk}" stroke-width=".6"/>`; }).join("") + ring(7);
+  else if (t === 2) { back = laurel(-1) + laurel(1); front = ring(8) + star(60, 2, 10, lt); }
+  else if (t === 3) { back = [...Array(12)].map((_, i) => { const a = i * Math.PI / 6, [x1, y1] = pt(54, a - .1), [x2, y2] = pt(70, a), [x3, y3] = pt(54, a + .1); return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(x3)} ${f(y3)}Z" fill="${i % 2 ? md : lt}" ${st}/>`; }).join(""); front = ring(8) + gem(60, 2, 9, "#5ff0dc") + gem(6, 76, 6, "#5ff0dc") + gem(114, 76, 6, "#5ff0dc"); }
+  else if (t === 4) { back = [...Array(9)].map((_, i) => { const a = Math.PI + .25 + i * (Math.PI - .5) / 8, L = i % 2 ? 76 : 88, [x1, y1] = pt(50, a - .13), [x2, y2] = pt(L, a), [x3, y3] = pt(50, a + .13), [xm, ym] = pt(L - 12, a - .03);
+      return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(x3)} ${f(y3)}Z" fill="${i % 2 ? "#7ec8ff" : "#3a8cff"}" stroke="#fff" stroke-width=".8"/><path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(xm)} ${f(ym)}Z" fill="#fff" opacity=".35"/>`; }).join(""); front = ring(9) + gem(60, 112, 7, "#7ec8ff"); }
+  else if (t === 5) { back = aura(84) + wing(-1, 4, 34, "#c04dff", "#3a0a70") + wing(1, 4, 34, "#c04dff", "#3a0a70"); front = ring(9) + crown(8, 22, G, "#ff9cf0"); }
+  else if (t === 6) { back = aura(96) + `<g class="pf-spin">${[...Array(16)].map((_, i) => { const a = i * Math.PI / 8, [x1, y1] = pt(50, a - .16), [x2, y2] = pt(i % 2 ? 80 : 92, a), [x3, y3] = pt(50, a + .16), [xc, yc] = pt(74, a + .12);
+      return `<path d="M${f(x1)} ${f(y1)}Q${f(xc)} ${f(yc)} ${f(x2)} ${f(y2)}Q${f(x3 + (x2 - x3) * .3)} ${f(y3 + (y2 - y3) * .3)} ${f(x3)} ${f(y3)}Z" fill="${i % 2 ? "#ffb020" : "#ff6a10"}" stroke="#8a2a00" stroke-width=".7"/>`; }).join("")}</g>`; front = ring(9) + gem(60, 4, 9, "#ffe680") + tw([[14, 20, 4], [108, 104, 4]]); }
+  else if (t === 7) { back = aura(90) + wing(-1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2) + wing(1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2); front = ring(9) + crown(8, 22, G, "#3a8cff")
+      + `<path d="M14 104Q60 128 106 104L100 116Q60 136 20 116Z" fill="#2f7ae8" stroke="#0a2a6a" stroke-width="1"/><path d="M14 104L4 112L20 116Z M106 104L116 112L100 116Z" fill="#1a5ac0" stroke="#0a2a6a" stroke-width="1"/>`; }
+  else if (t === 8) { back = aura(100) + `<g class="pf-spin">${[...Array(24)].map((_, i) => `<path d="M57 -2L60 ${i % 2 ? -22 : -34}L63 -2Z" fill="${i % 2 ? "#ffe07a" : "#f2b81e"}" stroke="#8a5400" stroke-width=".5" transform="rotate(${i * 15} 60 60)"/>`).join("")}</g>`
+      + wing(-1, 4, 30, G, dk) + wing(1, 4, 30, G, dk); front = ring(10) + crown(6, 24, G, "#ff3b5c") + tw([[8, 20, 5], [114, 30, 4], [10, 108, 4], [110, 110, 5]]); }
+  else if (t === 9) { defs += `<radialGradient id="${id}o" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#ff7af0"/><stop offset="1" stop-color="#7a1ad0"/></radialGradient>`;
+    back = aura(104) + `<g class="pf-spin f">${[0, 1, 2, 3].map(k => `<path d="M60 -26A86 86 0 0 1 146 60" stroke="${["#e07bff", "#ff4fd8", "#7a4dff", "#ffb0f8"][k]}" stroke-width="${7 - k * 1.2}" fill="none" stroke-linecap="round" opacity=".9" transform="rotate(${k * 90} 60 60)"/>`).join("")}</g>`
+      + [-1, 1].map(d => `<path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="${dk}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="url(#${id}g)" stroke-width="6" fill="none" stroke-linecap="round"/>`).join("");
+    front = ring(10) + `<g class="pf-orbit">${[0, 1, 2].map(k => { const [x, y] = pt(74, k * 2.094 - 1.57); return `<circle cx="${f(x)}" cy="${f(y)}" r="${6 - k}" fill="url(#${id}o)" stroke="#fff" stroke-width=".8"/>`; }).join("")}</g>` + gem(60, 114, 7, "#ff5ad8") + tw([[12, 14, 5], [110, 18, 4], [116, 100, 5]]); }
+  else { defs += `<linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6dcc0"/></linearGradient>`;
+    back = aura(116) + `<g class="pf-spin">${[...Array(28)].map((_, i) => `<path d="M58.6 -6L60 ${i % 2 ? -34 : -52}L61.4 -6Z" fill="#ffe07a" opacity="${i % 2 ? .55 : .9}" transform="rotate(${i * 12.857} 60 60)"/>`).join("")}</g>`
+      + wing(-1, 6, 50, `url(#${id}w)`, "#b08a30", 1.3) + wing(1, 6, 50, `url(#${id}w)`, "#b08a30", 1.3)
+      + `<g transform="rotate(-16 60 60)"><ellipse cx="60" cy="60" rx="92" ry="24" fill="none" stroke="${dk}" stroke-width="5"/><ellipse cx="60" cy="60" rx="92" ry="24" fill="none" stroke="url(#${id}g)" stroke-width="3"/><circle r="4.4" fill="#fff"><animateMotion dur="3.2s" repeatCount="indefinite" path="M-32 60A92 24 0 1 0 152 60A92 24 0 1 0 -32 60"/></circle></g>`;
+    front = ring(11) + `<ellipse cx="60" cy="-10" rx="30" ry="7" fill="none" stroke="${dk}" stroke-width="6"/><ellipse class="pf-halo" cx="60" cy="-10" rx="30" ry="7" fill="none" stroke="#fff6c8" stroke-width="3.6"/>`
+      + crown(6, 26, G, "#111") + gem(60, 114, 8, "#111") + tw([[0, 10, 6], [120, 6, 5], [4, 112, 5], [118, 112, 6], [60, -30, 4]]); }
+  return { back: `<defs>${defs}</defs>` + back, front };
 }
 // Avatar: Foto (oder Anfangsbuchstabe) im Rang-Rahmen
 function pAvatar(p, size = 40, opts = {}) {
   const t = typeof p.frame === "number" && p.frame >= 0 ? Math.min(10, p.frame) : -1, col = opts.col || (t >= 0 ? TIER_COL[t] : "var(--accent)");
   const inner = p.photo ? `<img src="${p.photo}" alt="">` : `<b style="font-size:${Math.round(size * .42)}px">${esc((p.name || "?").trim()[0] || "?").toUpperCase()}</b>`;
   const fr = t >= 0 && !opts.plain ? frameSVG(t) : null;
-  return `<span class="pav ${fr ? "framed t" + t : ""}" style="--s:${size}px;--ac:${col}">${fr ? `<svg class="pav-b" viewBox="-20 -20 160 160">${fr.back}</svg>` : ""}<span class="pav-i">${inner}</span>${fr ? `<svg class="pav-f" viewBox="-20 -20 160 160">${fr.front}</svg>` : ""}</span>`;
+  return `<span class="pav ${fr ? "framed t" + t : ""}" style="--s:${size}px;--ac:${col}">${fr ? `<svg class="pav-b" viewBox="-40 -40 200 200">${fr.back}</svg>` : ""}<span class="pav-i">${inner}</span>${fr ? `<svg class="pav-f" viewBox="-40 -40 200 200">${fr.front}</svg>` : ""}</span>`;
 }
 const myPeak = () => (S.allWo && S.daysFull ? rankState().peak : 0);
 const myFrameOk = t => COSM_TEST_UNLOCK || t <= myPeak();
 function myProfile() { return { name: S.dispName || S.name || "Du", photo: S.photo || "", frame: typeof S.frame === "number" ? S.frame : 0 }; }
 function profileCard() {
   const me = myProfile(), st = rankState(), r = RANKS[st.tier];
-  return `<div class="card pf-card">
-    <div class="pf-top">${pAvatar(me, 92)}<div class="pf-meta"><div class="pf-name-row"><b>${esc(me.name)}</b><button class="mini" data-action="pfname" title="Name ändern">✎</button></div>
+  return `<div class="pf-card">
+    <div class="pf-top">${pAvatar(me, 70)}<div class="pf-meta"><div class="pf-name-row"><b>${esc(me.name)}</b><button class="mini" data-action="pfname" title="Name ändern">✎</button></div>
       <small>${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · Rahmen „${FRAME_N[me.frame]}“</small>
       <div class="pf-btns"><label class="btn"><input type="file" accept="image/*" data-pfphoto hidden>📷 Foto</label>${me.photo ? `<button class="btn" data-action="pfnophoto">Entfernen</button>` : ""}</div></div></div>
     ${S.pfEditName ? `<div class="fr-add" style="margin-top:12px"><input id="pfNameIn" class="input" style="text-transform:none;letter-spacing:0" maxlength="20" value="${esc(me.name)}"><button class="btn primary" data-action="pfnamesave">Speichern</button></div>` : ""}
@@ -2774,6 +2810,8 @@ async function pfSetPhoto(file) {
   } catch (e) { console.log(e); toast("Das Bild konnte nicht geladen werden."); }
 }
 document.addEventListener("change", e => { if (e.target.matches?.("[data-pfphoto]") && e.target.files?.[0]) pfSetPhoto(e.target.files[0]); });
+
+document.addEventListener("toggle", e => { if (e.target.classList?.contains("fr-me")) S.pfOpen = e.target.open; }, true);
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -4417,6 +4455,24 @@ Object.assign(WLD.PROPS, (() => { const { r, f, pick, blob, leaf, blade, uid } =
         return sv(s + rockG(18, 61, 12, 7, uid("cn")) + rockG(70, 61, 10, 6, uid("cn")) + WLD.flower(60, 50, 2.4, "bell") + WLD.flower(24, 52, 2, "daisy") + [...Array(10)].map(() => `<path d="${blade(r(4, 82), 61, r(5, 11), r(-3, 3), .8)}" fill="#5FA640"/>`).join("")); } },
   };
 })());
+// ----- v39: Wüste – sperrige Deko raus, kleine, feine Sorten rein (Agave + Feigenkaktus bleiben) -----
+["saguaro", "skull", "barrel", "ocotillo", "arch", "pots"].forEach(k => delete WLD.PROPS[k]);
+Object.assign(WLD.PROPS, (() => { const { r, f, pick, blob, leaf, blade, uid } = WLD; const sv = b => `<svg viewBox="0 0 86 62" style="overflow:visible">${b}</svg>`;
+  const sand = (w = 36) => `<ellipse cx="43" cy="61" rx="${w}" ry="5" fill="#d99a5c"/><ellipse cx="40" cy="59.4" rx="${w * .7}" ry="2.4" fill="#f0c080" opacity=".7"/>`;
+  const pebble = (x, y, w, c = "#c07a44") => `<path d="${blob(x, y - w * .35, w, w * .55, 7, .2)}" fill="${c}" stroke="#7a4424" stroke-width=".5"/><path d="${blob(x - w * .2, y - w * .55, w * .5, w * .2, 6, .2)}" fill="#fff" opacity=".28"/>`;
+  const tuft = (x, y, s = 1, cols = ["#c9a65a", "#b08a44", "#d8bc72"]) => [...Array(8)].map(() => `<path d="${blade(x + r(-3, 3) * s, y, r(5, 11) * s, r(-5, 5) * s, .8 * s)}" fill="${pick(cols)}"/>`).join("");
+  const bloom = (x, y, s, col) => `<path d="M${x} ${y + 9 * s}V${y}" stroke="#6a8a3a" stroke-width="${.9 * s}"/>${[0, 1, 2, 3, 4].map(k => `<ellipse cx="${x}" cy="${y - 2.4 * s}" rx="${1.4 * s}" ry="${2.6 * s}" fill="${col}" transform="rotate(${k * 72} ${x} ${y})"/>`).join("")}<circle cx="${x}" cy="${y}" r="${1.3 * s}" fill="#ffd23a"/>`;
+  return {
+    blooms: { w: "desert", n: "Wüstenblumen", svg: () => { WLD.seed(301); let s = sand(30) + tuft(22, 61, .8, ["#7a9a4a", "#8aaa52"]) + tuft(62, 61, .8, ["#7a9a4a", "#8aaa52"]);
+      [[18, 46, 1, "#ff6f91"], [28, 42, 1.2, "#ffb347"], [40, 48, .9, "#e07bff"], [50, 43, 1.1, "#ff5e57"], [62, 47, 1, "#ffd23a"], [70, 50, .8, "#ff6f91"]].forEach(([x, y, k, c]) => s += bloom(x, y, k, c)); return sv(s + pebble(76, 61, 4)); } },
+    dunegrass: { w: "desert", n: "Dünengras", svg: () => { WLD.seed(302); return sv(`<path d="M6 62Q30 50 50 54T82 62Z" fill="#e3a465"/><path d="M14 62Q34 56 52 58T78 62Z" fill="#f0bc7c"/>` + tuft(30, 58, 1.6) + tuft(54, 58, 1.3) + tuft(70, 61, .9) + `<path d="M20 58q8 -3 16 0M46 60q8 -3 16 0" stroke="#c98a52" stroke-width=".7" fill="none"/>`); } },
+    oasis: { w: "desert", n: "Kleine Oase", svg: () => { WLD.seed(303); const palm = (x, h, s) => `<path d="M${x} 58Q${x + 2} ${58 - h * .5} ${x + 4 * s} ${58 - h}" stroke="#8a5a30" stroke-width="${2.6 * s}" fill="none"/>${[-70, -35, 0, 35, 70, 110].map(a => `<path d="${leaf(x + 4 * s, 58 - h, 13 * s, a - 90, .3)}" fill="${pick(["#4f8a3a", "#5f9a42", "#3f7a30"])}" stroke="#2f5a24" stroke-width=".4"/>`).join("")}<circle cx="${x + 4 * s}" cy="${58 - h + 2}" r="${1.6 * s}" fill="#8a5a30"/>`;
+      return sv(sand(40) + `<ellipse cx="46" cy="59" rx="22" ry="3.4" fill="#3a9ac0"/><ellipse cx="44" cy="58.4" rx="14" ry="1.4" fill="#9ae0f0" opacity=".7"/>` + palm(22, 34, 1) + palm(64, 26, .8) + tuft(36, 58, .7, ["#5f9a42", "#7aaa4a"]) + tuft(58, 59, .6, ["#5f9a42", "#7aaa4a"])); } },
+    pebbles: { w: "desert", n: "Sandsteine", svg: () => { WLD.seed(304); return sv(sand(34) + pebble(30, 61, 12) + pebble(50, 61, 8, "#d08a50") + pebble(62, 61, 5) + pebble(18, 61, 5, "#a8683a") + tuft(42, 61, .6) + `<g transform="translate(40 38) scale(.32)">${WLD.prickly(40, 46, { fl: "#ffd23a" })}</g>`); } },
+    dryshrub: { w: "desert", n: "Trockenbusch", svg: () => { WLD.seed(305); let s = sand(30); for (let i = 0; i < 14; i++) { const a = (-75 + i * 11) * Math.PI / 180, l = r(12, 22); s += `<path d="M42 60Q${f(42 + Math.sin(a) * l * .5)} ${f(60 - l * .55)} ${f(42 + Math.sin(a) * l)} ${f(60 - Math.cos(a) * l)}" stroke="${pick(["#8a6a44", "#a07a50", "#6e5236"])}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`; }
+      for (let i = 0; i < 8; i++) s += `<circle cx="${f(r(26, 58))}" cy="${f(r(40, 52))}" r="1.3" fill="#c9a65a"/>`; return sv(s + `<g transform="translate(62 46)">${WLD.tumble(14).replace(/<\/?svg[^>]*>/g, "")}</g>` + pebble(18, 61, 4)); } },
+  };
+})());
 
 /* ===================== RANG-DESIGNS ===================== */
 // TESTMODUS: alles freigeschaltet, damit du alles ausprobieren kannst. Später auf false setzen → dann zählt der höchste Rang.
@@ -4729,13 +4785,13 @@ function confettiBurst(level = 1) {
   let ps = [];
   if (level === 1) ps = [...Array(160)].map(() => mk(W / 2 + (Math.random() - .5) * 60, H * .35, (Math.random() - .5) * 14, -6 - Math.random() * 10));
   else {
-    const rain = n => [...Array(n)].map(() => mk(Math.random() * W, -20 - Math.random() * H * .9, (Math.random() - .5) * 2.4, 1.6 + Math.random() * 2.6));
-    ps = rain(300); setTimeout(() => { ps.push(...rain(160)); }, 1400);
+    const rain = n => [...Array(n)].map(() => Object.assign(mk(Math.random() * W, -20 - Math.random() * H * 1.5, (Math.random() - .5) * 1.6, 2.4 + Math.random() * 2), { rain: 1 }));
+    ps = rain(420);
   }
-  const t0 = performance.now(), dur = level > 1 ? 6500 : 2800;
+  const t0 = performance.now(), dur = level > 1 ? 8000 : 2800;
   (function step(now) {
     const k = (now - t0) / dur; x.clearRect(0, 0, W, H);
-    for (const p of ps) { p.vy += p.rib ? .18 : .3; p.vx *= .985; p.vy *= p.vy > 0 ? .985 : 1; p.x += p.vx + Math.sin(now / 300 + p.ph) * (p.rib ? 1.2 : .4); p.y += p.vy; p.r += p.vr;
+    for (const p of ps) { p.vy += p.rain ? .05 : p.rib ? .18 : .3; p.vx *= .985; p.vy *= p.vy > 0 ? (p.rain ? .99 : .985) : 1; p.x += p.vx + Math.sin(now / 300 + p.ph) * (p.rib ? 1.2 : .4); p.y += p.vy; p.r += p.vr;
       x.save(); x.globalAlpha = Math.max(0, 1 - Math.max(0, k - .75) / .25); x.translate(p.x, p.y); x.rotate(p.r);
       if (p.rib) { x.strokeStyle = p.c; x.lineWidth = 3; x.beginPath(); x.moveTo(-14, 0); x.bezierCurveTo(-5, -8, 5, 8, 14, 0); x.stroke(); }
       else { x.scale(1, Math.abs(Math.cos(p.r * 2))); x.fillStyle = p.c; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
@@ -4841,7 +4897,7 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
   document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
-  partySound(tier); setTimeout(() => confettiBurst(2), 650); setTimeout(() => confettiBurst(2), 3400);
+  partySound(tier); setTimeout(() => confettiBurst(2), 450);
   setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 650);
   if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 650); } catch {}
   return wrap;
@@ -4861,7 +4917,7 @@ function rankUpNext() {
   const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 44)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
     ...ANIMALS.filter(a => a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
   if (card.dataset.step === "2") { wrap.remove(); return; }
-  card.dataset.step = "2"; card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
+  card.dataset.step = "2"; wrap.classList.add("step2"); card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
   setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${RANKS[tier].i} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
     <div class="ru-list">${list.map((x, i) => `<div style="animation-delay:${.15 + i * .07}s"><span class="ru-ic">${x.icon}</span><span style="font-size:inherit"><b>${x.n}</b><small>${x.d}</small></span></div>`).join("")}</div>
     <button class="btn primary block" data-action="ruprefs">Gleich ausprobieren</button><button class="btn block" data-action="ruok" style="margin-top:8px">Später</button>`; }, 300);
@@ -5026,6 +5082,7 @@ const FAWN_SVG = bendLegs(`<svg class="dsv fawnsv" viewBox="0 0 50 52"><defs><li
     <path d="M40 8.7l-.8-1.4M41.5 8.3l-.3-1.6M43 8.4l.3-1.5" stroke="#1a110b" stroke-width=".5" stroke-linecap="round"/>
     <ellipse cx="38" cy="15.5" rx="2" ry="1.2" fill="#e9a58c" opacity=".55"/><path d="M45 18.6q1.6 .8 3 .2" stroke="#8a5a30" stroke-width=".4" fill="none"/></g></svg>`, 39, "kFawn");
 
+const f2 = v => (+v).toFixed(2);
 // Fuchs (und Wüstenfuchs mit riesigen Ohren)
 const FOXT = (o = {}) => { const c = o.c || "#e8742a", d = o.d || "#d9661f", far = o.far || "#c45a18", leg = o.leg || "#e07028", cream = o.cream || "#f6efe6", sock = o.sock || "#2a1a12", ear = o.ear || 1, id = o.id || "fx";
   const LEG = (cls, x, back, isFar) => `<g class="fleg ${cls}">${back
@@ -5033,7 +5090,7 @@ const FOXT = (o = {}) => { const c = o.c || "#e8742a", d = o.d || "#d9661f", far
     : `<path d="M${x} 26c-.5 4.6-.3 9 .3 12.6l-.2 3h3.2l.2-3c.3-3.6.6-8 .4-12.6z" fill="${isFar ? far : leg}"/>`}
     <path d="M${back ? x - 0.4 : x + .2} 36.5c.1 1.8.1 3.4 0 5.4h3.2c-.1-2 0-3.6.3-5.4z" fill="${sock}"/><ellipse cx="${back ? x + 1.4 : x + 2}" cy="42.2" rx="2.4" ry="1.1" fill="${sock}"/></g>`;
   const eh = 10 * ear;   // Ohrhöhe
-  return `<svg class="fsv" viewBox="0 0 72 46"><defs><linearGradient id="${id}G" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${d}"/><stop offset=".45" stop-color="${c}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs><g class="fbody">
+  return `<svg class="fsv" viewBox="0 0 72 46" style="overflow:visible"><defs><linearGradient id="${id}G" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${d}"/><stop offset=".45" stop-color="${c}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs><g class="fbody">
   ${LEG("flb2", 21, true, true)}${LEG("flf2", 46, false, true)}
   <g class="ftail"><path d="M15 25C6 27 -1 23 -3 13C2 18 9 18 16 19Z" fill="${c}"/><path d="M15 25C9 26 4 25 1 22C6 22 11 21 16 21Z" fill="${d}"/><path d="M-1 17C-3 15 -4 13 -3 11C0 14 2 15 5 16Z" fill="${cream}"/>
     <path d="M12 21q-6 1 -11 -3M10 23q-5 0 -9 -3" stroke="${far}" stroke-width=".5" fill="none" opacity=".6"/></g>
@@ -5044,12 +5101,14 @@ const FOXT = (o = {}) => { const c = o.c || "#e8742a", d = o.d || "#d9661f", far
   <g class="fhead"><path d="M44 24C45 16 51 12 58 13L68 19C64 22 58 24 52 26Z" fill="${c}"/><path d="M58 21L68 19C66 22 62 23 58 23Z" fill="${cream}"/><path d="M45 23C48 27 52 27 55 25L50 21Z" fill="${cream}"/>
     <path d="M47 24l-2 2.4M49 25l-1.4 2.6M51 25.2l-.6 2.4M45.4 23l-2.4 1.4" stroke="${cream}" stroke-width=".9" stroke-linecap="round"/><path d="M50 16q4 -2 8 -1" stroke="${far}" stroke-width=".5" fill="none" opacity=".7"/><path d="M60 20.6q3 .2 5 -.6" stroke="${far}" stroke-width=".4" fill="none"/>
     <circle cx="68.4" cy="19" r="1.3" fill="#1a110b"/><circle cx="68" cy="18.6" r=".35" fill="#fff" opacity=".7"/>
-    <path d="M56.4 16.4Q58.4 14.3 61.2 15.4Q59.2 17.4 56.4 16.4Z" fill="${o.iris || "#f2a23a"}"/><ellipse cx="58.9" cy="15.9" rx=".38" ry=".95" fill="#1a110b"/><path d="M56 16.5Q58.4 14 61.6 15.3" stroke="#1a110b" stroke-width=".55" fill="none" stroke-linecap="round"/><path d="M56.4 16.4Q58.6 17.4 61.2 15.4" stroke="${cream}" stroke-width=".35" fill="none" opacity=".8"/><circle cx="59.5" cy="15.5" r=".22" fill="#fff"/>
+    <ellipse cx="58.4" cy="15.6" rx="3" ry="2.6" fill="#1a110b"/><ellipse cx="58.5" cy="15.7" rx="2.5" ry="2.15" fill="${o.iris || "#e8962a"}"/><ellipse cx="58.8" cy="15.8" rx="1.15" ry="1.65" fill="#120a06"/><circle cx="59.6" cy="14.8" r=".75" fill="#fff"/><circle cx="57.7" cy="16.7" r=".35" fill="#fff" opacity=".85"/><path d="M55.2 14.6Q58.4 11.8 61.8 14.4" stroke="#1a110b" stroke-width=".7" fill="none" stroke-linecap="round"/><path d="M55.6 17.6Q58.4 19 61.2 17.2" stroke="${cream}" stroke-width=".5" fill="none" opacity=".8"/>
     <path d="M64 20.4l6 -1.4M64 21l6 .4M63.6 21.6l5.4 1.6" stroke="#2a1a12" stroke-width=".3" opacity=".7"/>
-    <g class="fear"><path d="M50 14L${52 - (ear - 1) * 3} ${14 - eh}L57 12Z" fill="${c}"/><path d="M51.5 12L${52.4 - (ear - 1) * 2.4} ${14 - eh * .7}L55 11Z" fill="${ear > 1 ? "#f2c4b4" : "#2a1a12"}"/><path d="M54 13L${58 + (ear - 1) * 2} ${14 - eh}L60 13Z" fill="${d}"/>${ear > 1 ? `<path d="M55.4 12.4L${57.6 + (ear - 1) * 1.6} ${14 - eh * .7}L58.6 12.6Z" fill="#e8b0a0"/>` : ""}</g></g>
+    <g class="fear">${(() => { const tip = (x0, x1, tx, ty, col) => `<path d="M${x0} ${x0 < 53 ? 14 : 13}C${x0 - .6} ${f2(ty + (14 - ty) * .45)} ${f2(tx - 2.6)} ${f2(ty + 1.4)} ${f2(tx)} ${f2(ty)}C${f2(tx + 2.6)} ${f2(ty + 1.6)} ${x1 + .4} ${f2(ty + (14 - ty) * .5)} ${x1} ${x0 < 53 ? 12 : 13}Z" fill="${col}"/>`;
+      const ty = 14 - eh, t1 = 52 - (ear - 1) * 3, t2 = 58 + (ear - 1) * 2;
+      return tip(50, 57, t1, ty, c) + tip(51.5, 55, 52.4 - (ear - 1) * 2.4, 14 - eh * .7, ear > 1 ? "#f2c4b4" : "#2a1a12").replace(/M51.5 12/, "M51.5 12") + tip(54, 60, t2, ty, d) + (ear > 1 ? tip(55.4, 58.6, 57.6 + (ear - 1) * 1.6, 14 - eh * .7, "#e8b0a0") : ""); })()}</g></g>
   </g></svg>`; };
 const FOX_SVG = bendLegs(FOXT(), 35, "kFox");
-const FENNEC_SVG = bendLegs(FOXT({ c: "#ecd2a6", d: "#d9b57e", far: "#c9a46e", leg: "#e2c597", cream: "#fbf3e4", sock: "#c9a46e", ear: 1.9, id: "fn" }), 35, "kFen");
+const FENNEC_SVG = bendLegs(FOXT({ c: "#ecd2a6", d: "#d9b57e", far: "#c9a46e", leg: "#e2c597", cream: "#fbf3e4", sock: "#c9a46e", ear: 1.65, id: "fn" }), 35, "kFen");
 
 // Jäger mit mehr Details: Kragen, Taschen, Schnurrbart, Schnürstiefel
 const HUNTER_SVG = `<svg class="hsv" viewBox="0 0 60 72">
@@ -5155,7 +5214,6 @@ const HERON_SVG = `<svg class="hrsv" viewBox="0 0 44 72"><g class="hrwing back">
   <g class="hrneck"><path d="M28 26C34 22 30 14 32 8C33 4 36 3 38 4L37 8C35 10 36 16 34 22C33 26 32 28 30 30Z" fill="#e6ecf0"/><path d="M32 12q1 6 -1 10" stroke="#5a6874" stroke-width="1" fill="none" stroke-dasharray="1.4 1.2"/>
     <ellipse cx="36" cy="5" rx="4" ry="3.2" fill="#f4f6f8"/><path d="M33 3Q30 1 27 2" stroke="#2a3440" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M39 4L48 6L39 6.6Z" fill="#e8b84a"/><circle cx="37" cy="4.3" r="1.15" fill="#f2d03a"/><circle cx="37.2" cy="4.3" r=".55" fill="#111"/><path d="M35.7 3.6q1.3 -.8 2.6 0" stroke="#5a6874" stroke-width=".35" fill="none"/><path d="M35.4 3.4l3 .2" stroke="#2a3440" stroke-width=".8"/></g>
   <g class="hrl h1"><path d="M17 40V55" stroke="#e0b85a" stroke-width="1.6" stroke-linecap="round"/><g class="hshin" style="transform-origin:17px 55px"><circle cx="17" cy="55" r="1.12" fill="#e0b85a"/><path d="M17 55V68M17 68l-4 2M17 68l4 2M17 68v3" stroke="#e0b85a" stroke-width="1.6" fill="none" stroke-linecap="round"/></g></g><g class="hrwing front"><path d="M20 26C16 12 18 2 30 -6C30 4 28 12 26 20C30 16 34 14 40 14C36 20 30 26 22 30Z" fill="#b4c0ca"/><path d="M29 -4l-3 8M27 -1l-2 8M36 15l-6 5M32 16l-5 5" stroke="#5a6874" stroke-width=".8"/><path d="M28 -6q2 2 2 6" stroke="#2a3440" stroke-width="1.6" fill="none"/></g></svg>`;
-const f2 = v => v.toFixed(2);
 const AGLEG = (cls, x, y, d, c, w) => `<g class="agl ${cls}" style="transform-origin:${x}px ${y}px"><path d="M${x} ${y}q${d * -1.6} 2.6 ${d * -3.4} 3.4q${d * .4} 2 ${d * -.6} 3.4" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M${x - d * 4} ${y + 6.8}l${d * -1.8} .6M${x - d * 4} ${y + 6.8}l${d * -.4} 1.6M${x - d * 4} ${y + 6.8}l${d * 1.4} 1.2" stroke="${c}" stroke-width="1.1" stroke-linecap="round"/></g>`;
 const GATOR_SVG = `<svg class="agsv" viewBox="0 0 96 26" style="overflow:visible"><defs><linearGradient id="agG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f6230"/><stop offset=".55" stop-color="#628c40"/><stop offset=".8" stop-color="#86a45a"/><stop offset="1" stop-color="#c8c890"/></linearGradient></defs>
   ${AGLEG("a2", 31, 18.6, 1, "#3a5a28", 3)}${AGLEG("a4", 59, 18.4, -1, "#3a5a28", 3)}
@@ -5652,9 +5710,9 @@ async function marmotScene(kind) {
   const W = W_(), A = MD.c.animals || {}; kind = kind || (A.eagle && chance(.3) ? "eagle" : "whistle");
   if (kind === "eagle") return eagleScene("marmot");
   const x = W * rnd(.3, .65), hole = document.createElement("div"); hole.className = "burrow"; hole.style.cssText = `left:${x + 4}px;width:30px;height:8px;background:#4a3420`; mdStage().appendChild(hole);
-  const m = actor(MARMOT_SVG, "marmot hide", 34, 38); place(m, x, chance(.5) ? 1 : -1); await sleep(300); state(m, "low"); await sleep(900); state(m); await sleep(1200);
+  const fromL = chance(.5), m = actor(MARMOT_SVG, "marmot", 34, 38); place(m, fromL ? -40 : W + 10, fromL ? 1 : -1); state(m, "walk"); await moveTo(m, x, 60); state(m); await sleep(500); state(m, "low"); await sleep(700); state(m); await sleep(900);
   state(m, "look"); await sleep(3200); state(m, "whistle"); bubble("PFIIIIFF!", x, 1200, 44); await sleep(1500); state(m, "hop"); await sleep(800); state(m); await sleep(400);
-  const f = actor(MARMOT_SVG, "marmot hide", 28, 31); place(f, x + 46, -1); await sleep(400); state(f); bubble("?", x + 52, 800, 36); await sleep(1200);
+  const f = actor(MARMOT_SVG, "marmot", 28, 31); place(f, fromL ? W + 10 : -40, fromL ? -1 : 1); state(f, "walk"); await moveTo(f, x + (fromL ? 46 : -40), 70); state(f); face(f, fromL ? -1 : 1); bubble("?", x + 52, 800, 36); await sleep(1200);
   state(m, "low"); await sleep(600); state(m, "walk"); await moveTo(m, x + 20, 30); state(m); await sleep(500); state(m, "whistle"); state(f, "whistle"); await sleep(900);
   state(m, "hide"); state(f, "hide"); await sleep(800); m.remove(); f.remove(); fade(hole, 0, 800).then(() => hole.remove());
 }
@@ -5664,7 +5722,7 @@ async function eagleScene(kind) {
   if (kind === "soar" || kind === "goat") { await moveTo(e, W * .3, 70, 70); state(e); await moveTo(e, W * .5, 60, 36); state(e, "dive"); await moveTo(e, W * .58, 90, 12); state(e, "grab"); fxAt("puff", e._x + 40, 0); await sleep(300); state(e, "flap"); bubble(chance(.5) ? "Daneben!" : "Hmm…", e._x + 30, 900, 70); await moveTo(e, W * .75, 60, 70); state(e); await moveTo(e, ltr ? W + 30 : -110, 70, 96); e.remove(); return; }
   // Adler stürzt auf das Murmeltier – das verschwindet rechtzeitig im Bau
   const bx = W * rnd(.4, .6), hole = document.createElement("div"); hole.className = "burrow"; hole.style.cssText = `left:${bx + 2}px;width:30px;height:8px;background:#4a3420`; mdStage().appendChild(hole);
-  const m = actor(MARMOT_SVG, "marmot", 34, 38); place(m, bx, -dir);
+  const m = actor(MARMOT_SVG, "marmot", 34, 38); place(m, ltr ? W + 10 : -40, -dir); state(m, "walk"); moveTo(m, bx, 70).then(() => state(m));
   await moveTo(e, bx - dir * 150, 80, 90); state(e); await sleep(300); state(m, "whistle"); bubble("PFIFF!", bx, 800, 44); state(e, "dive");
   const dive = moveTo(e, bx - (ltr ? 28 : 38), 190, 8); await sleep(420); state(m, "hide");
   await dive; state(e, "grab"); fxAt("puff", bx + 10, 0); await sleep(250); bubble("Mist!", e._x + 10, 1000, 48); state(e, "flap");
@@ -5701,14 +5759,14 @@ async function camelScene(kind) {
   const W = W_(), A = MD.c.animals || {}; kind = kind || (A.fennec && chance(.3) ? "spit" : chance(.5) ? "chew" : "walk");
   const ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 20 : -110, c = actor(CAMEL_SVG, "deer camel", 100, 86); place(c, ltr ? -110 : W + 20, dir);
   if (kind === "walk") { await deerWalk(c, end, 26); c.remove(); return; }
-  const mid = W * rnd(.3, .5); await deerWalk(c, mid, 26); state(c, "chew"); await sleep(2200);
+  const mid = W * rnd(.3, .5); await deerWalk(c, mid, 26); state(c, "graze"); await sleep(2200);
   if (kind === "spit") {   // der Fennek kommt zu nah – Ptui!
     const f = actor(FENNEC_SVG, "fox", 58, 37); place(f, ltr ? W + 10 : -60, -dir); state(f, "trot"); await moveTo(f, mid + dir * 110, 60); state(f, "sit"); bubble("?", f._x + 20, 900, 40); await sleep(1000);
     state(c, "alert"); await sleep(500); bubble("Ptui!", c._x + dir * 70 + (ltr ? 0 : 30), 900, 76);
     const s = document.createElement("div"); s.className = "spit"; mdStage().appendChild(s); const sx = ltr ? c._x + 96 : c._x + 4;
     await s.animate([{ transform: `translate(${sx}px,-72px)` }, { transform: `translate(${(sx + f._x + 24) / 2}px,-80px)`, offset: .4 }, { transform: `translate(${f._x + 24}px,-22px)` }], { duration: 500, fill: "forwards" }).finished; s.remove();
     state(f, "alert"); f.classList.add("wiggle"); bubble("Iiih!", f._x + 10, 1000, 40); await sleep(700); f.classList.remove("wiggle"); face(f, dir); state(f, "trot", "fast"); await moveTo(f, ltr ? W + 10 : -60, 170); f.remove();
-    state(c, "chew"); await sleep(1200); }
+    state(c, "graze"); await sleep(1200); }
   else { bubble("…", c._x + (ltr ? 80 : 10), 1200, 82); await sleep(1500); }
   state(c); await deerWalk(c, end, 26); c.remove();
 }
@@ -5746,8 +5804,8 @@ async function turtleScene() {
   bubble("😌", t._x + 20, 1200, t._y + 30); await sleep(1400); await moveTo(t, ltr ? W + 10 : -60, 26, rnd(50, 80)); t.remove();
 }
 async function jellyScene() {
-  const W = W_(), x = W * rnd(.2, .8), j = actor(JELLY_SVG, "jelly", 30, 48); place(j, x, 1, -40);
-  await moveTo(j, x + rnd(-20, 20), 14, 60); await sleep(800); await moveTo(j, x + rnd(-20, 20), 10, 40); await moveTo(j, x + rnd(-30, 30), 16, 130); j.remove();
+  const W = W_(), x = W * rnd(.2, .8), j = actor(JELLY_SVG, "jelly", 30, 48); place(j, x < W / 2 ? -40 : W + 10, 1, 20);
+  await moveTo(j, x + rnd(-20, 20), 26, 60); await sleep(800); await moveTo(j, x + rnd(-20, 20), 10, 40); await moveTo(j, x + rnd(-30, 30), 16, 130); j.remove();
 }
 // ---------- Sumpf ----------
 async function frogScene(kind) {
@@ -5898,7 +5956,7 @@ async function dragonflyScene() {
 async function bearScene() {
   const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 20 : -110, b = actor(BROWNBEAR_SVG, "deer bear", 96, 67); place(b, ltr ? -110 : W + 20, dir);
   const mid = W * rnd(.3, .5); await deerWalk(b, mid, 30); state(b, "graze"); await sleep(1500); state(b);
-  let m = null; if (A.marmot) { m = actor(MARMOT_SVG, "marmot hide", 34, 38); place(m, mid + dir * 130, -dir); await sleep(300); state(m); }
+  let m = null; if (A.marmot) { m = actor(MARMOT_SVG, "marmot", 34, 38); place(m, ltr ? W + 10 : -40, -dir); state(m, "walk"); await moveTo(m, mid + dir * 130, 70); state(m); }
   state(b, "stand"); bubble("BRUUMM!", b._x + (ltr ? 60 : 10), 1300, 96); await sleep(400);
   if (m) { state(m, "whistle"); bubble("PFIFF!", m._x, 700, 44); await sleep(600); state(m, "hide"); setTimeout(() => m.remove(), 600); }
   await sleep(1400); state(b); await sleep(500); await deerWalk(b, end, 32); b.remove();
@@ -5948,7 +6006,7 @@ async function meteorScene() {
 // Mini-Rakete startet mit Countdown
 async function rocketScene() {
   const W = W_(), x = W * rnd(.3, .6), r = actor(ROCKET_SVG, "rocket", 30, 64); place(r, x, 1);
-  const al = actor(ALIEN2_SVG, "alien2", 36, 52); place(al, x - 60, 1);
+  place(r, -50, 1); const al = actor(ALIEN2_SVG, "alien2 walk", 36, 52); place(al, -110, 1); bubble("Hau-ruck! 🚀", 20, 1200, 70); await Promise.all([moveTo(r, x, 40), moveTo(al, x - 60, 40)]); al.classList.remove("walk");
   for (const n of ["3…", "2…", "1…", "🚀 Start!"]) { bubble(n, x - 60, 700, 60); await sleep(800); }
   r.classList.add("fire"); for (let i = 0; i < 6; i++) fxAt("moondust", x + rnd(-14, 14), 0, 1400); al.classList.add("dance");
   await moveTo(r, x + rnd(-20, 20), 120, 220); r.remove(); bubble("Juhuu! 🎉", x - 60, 1200, 60); await sleep(1400); al.classList.remove("dance"); al.classList.add("walk"); await moveTo(al, -60, 50); al.remove();
@@ -5995,10 +6053,90 @@ async function cowJumpScene() {
 }
 function spaceExtra() { const all = { abduct: abductScene, meteor: meteorScene, rocket: rocketScene, selfie: selfieScene, flag: flagScene, moonwalk: moonwalkScene, golf: golfScene, cowjump: cowJumpScene };
   const k = Object.keys(all)[Math.floor(Math.random() * 8)]; return all[k](); }
+["dance","snap","croak","jump","flap","fall","wave","waddle","buck","butt","sting","dig"].forEach(s => STATES.includes(s) || STATES.push(s));
+// ===== v39: Storylines – mehrere Tiere, eine kleine Geschichte (unabhängig von der Deko) =====
+// Wüste: Sandsturm zieht auf – alle Tiere flüchten, Steppenläufer rasen durchs Bild
+async function sandstormStory() {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, st = mdStage(), fog = document.createElement("div"); fog.className = "sandstorm" + (ltr ? "" : " rev"); st.appendChild(fog);
+  bubble("🌪️ Sandsturm!", W * .4, 1400, 70); const actors = [];
+  if (A.camel) { const c = actor(CAMEL_SVG, "deer camel walk", 100, 86); place(c, ltr ? -110 : W + 20, dir); actors.push(moveTo(c, ltr ? W + 20 : -110, 46).then(() => c.remove())); }
+  if (A.fennec) { const f = actor(FENNEC_SVG, "fox trot fast", 58, 37); place(f, ltr ? -160 : W + 70, dir); actors.push(moveTo(f, ltr ? W + 10 : -60, 150).then(() => f.remove())); }
+  if (A.lizard) { const l = actor(LIZARD_SVG, "lizard run", 62, 21); place(l, ltr ? -220 : W + 120, dir); actors.push(moveTo(l, ltr ? W + 10 : -60, 190).then(() => l.remove())); }
+  for (let i = 0; i < 5; i++) { setTimeout(() => { const t = document.createElement("div"); t.className = "tumble"; t.innerHTML = WLD.tumble(18 + Math.random() * 10); st.appendChild(t);
+    t.animate([{ transform: `translate(${ltr ? -30 : W + 10}px,0) rotate(0)` }, { transform: `translate(${W * .5}px,-${rnd(10, 30)}px) rotate(${dir * 500}deg)`, offset: .5 }, { transform: `translate(${ltr ? W + 20 : -40}px,0) rotate(${dir * 1000}deg)` }], { duration: 2400 + Math.random() * 1200, easing: "linear" }).finished.then(() => t.remove()).catch(() => t.remove()); }, i * 700); }
+  await Promise.all([...actors, sleep(5200)]); fog.classList.add("out"); await sleep(1200); fog.remove();
+}
+// Wüste: Fennek trifft den Skorpion – Mutprobe, Stachel hoch, Fennek springt erschrocken zurück
+async function scorpFennecStory() {
+  const W = W_(), ltr = chance(.5), dir = ltr ? 1 : -1, s = actor(SCORP_SVG, "scorp walk", 62, 33), f = actor(FENNEC_SVG, "fox", 58, 37);
+  place(s, ltr ? W + 10 : -70, -dir); place(f, ltr ? -60 : W + 10, dir); const mid = W * .5;
+  state(f, "trot"); await Promise.all([moveTo(s, mid + dir * 30, 40), moveTo(f, mid - dir * 70, 60)]); state(s); state(f, "sniff"); await sleep(900);
+  bubble("Hm? 🤔", f._x + 20, 900, 44); state(f, "stalk"); await moveTo(f, mid - dir * 45, 20); await sleep(300);
+  state(s, "sting"); bubble("KLICK-KLACK!", s._x + 10, 1000, 40); await sleep(500);
+  state(f, "leap"); const x0 = f._x; const j = f.animate([{ transform: `translate(${x0}px,0) scaleX(${dir})` }, { transform: `translate(${x0 - dir * 40}px,-34px) scaleX(${dir})` }, { transform: `translate(${x0 - dir * 70}px,0) scaleX(${dir})` }], { duration: 600, fill: "forwards" });
+  await j.finished; place(f, x0 - dir * 70, dir); j.cancel(); state(f, "sit"); bubble("😳", f._x + 20, 900, 44); await sleep(1100); state(s); bubble("Hehe.", s._x + 10, 800, 40); await sleep(900);
+  face(f, -dir); state(f, "trot", "fast"); state(s, "walk"); await Promise.all([moveTo(f, ltr ? -70 : W + 10, 150), moveTo(s, ltr ? W + 10 : -70, 45)]); f.remove(); s.remove();
+}
+// Wüste: Karawane – Kamel trottet, Fennek reitet obendrauf, Eidechse rennt hinterher
+async function caravanStory() {
+  const W = W_(), A = MD.c.animals || {}, ltr = chance(.5), dir = ltr ? 1 : -1, end = ltr ? W + 30 : -130, c = actor(CAMEL_SVG, "deer camel", 100, 86); place(c, ltr ? -110 : W + 20, dir);
+  let f = null; if (A.fennec) { f = actor(FENNEC_SVG, "fox sit", 46, 29); place(f, c._x + (ltr ? 26 : 28), dir, 50); }
+  const go = async (x, sp) => { state(c, "walk"); await Promise.all([moveTo(c, x, sp), f ? moveTo(f, x + (ltr ? 26 : 28), sp, 50) : 0]); state(c); };
+  await go(W * .35 - 50, 28); bubble(f ? "Taxi! 🐫" : "🐫 …", c._x + 50, 1100, 92); await sleep(900); state(c, "graze"); await sleep(1400);
+  if (A.lizard) { const l = actor(LIZARD_SVG, "lizard run", 62, 21); place(l, ltr ? -70 : W + 10, dir); await moveTo(l, c._x - dir * 20, 190); state(l); bubble("Wartet auf mich!", l._x, 1100, 30); await sleep(1100);
+    state(l, "run"); state(c); const run = moveTo(l, end + dir * 40, 70); await go(end, 32); await run; l.remove(); }
+  else await go(end, 32);
+  c.remove(); f && f.remove();
+}
+// Unterwasser: Krabben-Disco
+async function crabDiscoStory() {
+  const W = W_(), n = 3, cs = [], mid = W * .5;
+  for (let i = 0; i < n; i++) { const fromL = i % 2 === 0, c = actor(CRAB_SVG, "crab walk", 56, 39); place(c, fromL ? -60 - i * 30 : W + 10 + i * 30, 1); cs.push([c, mid - 90 + i * 60]); }
+  await Promise.all(cs.map(([c, x]) => moveTo(c, x, 60).then(() => { place(c, x, 1); state(c); }))); bubble("🎶 Krabben-Disco! 🎶", mid - 60, 1600, 50);
+  for (let k = 0; k < 3; k++) { cs.forEach(([c], i) => setTimeout(() => state(c, "dance", "snap"), i * 180)); await sleep(1400); cs.forEach(([c]) => state(c)); await sleep(250); }
+  cs.forEach(([c], i) => fxAt("bubl", c._x + 20, 26, 2400)); await Promise.all(cs.map(([c], i) => { state(c, "walk"); return moveTo(c, i % 2 ? W + 20 : -70, 60); })); cs.forEach(([c]) => c.remove());
+}
+// Sumpf: Frosch-Chor mit Dirigent
+async function frogChoirStory() {
+  const W = W_(), fs = [], base = W * .25;
+  for (let i = 0; i < 3; i++) { const f = actor(FROG_SVG, "frog", 40, 28); place(f, -50 - i * 40, 1); fs.push(f); }
+  await Promise.all(fs.map((f, i) => (async () => { const to = base + i * 60; while (to - f._x > 20) { state(f, "jump"); const x0 = f._x, x1 = Math.min(to, x0 + 40); const a = f.animate([{ transform: `translate(${x0}px,0)` }, { transform: `translate(${(x0 + x1) / 2}px,-22px)` }, { transform: `translate(${x1}px,0)` }], { duration: 420, fill: "forwards" }); await a.finished; place(f, x1, 1); a.cancel(); state(f); await sleep(200); } })()));
+  bubble("Eins, zwei, drei …", base, 1100, 40); await sleep(1100);
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++) { state(fs[i], "croak"); bubble(["Quak!", "QUAAK!", "quak?"][i], fs[i]._x, 600, 36); await sleep(520); state(fs[i]); }
+  fs.forEach(f => state(f, "croak")); bubble("🎵 QUAAAAK! 🎵", base + 20, 1400, 44); await sleep(1500); fs.forEach(f => state(f));
+  await Promise.all(fs.map(f => (async () => { while (f._x < W + 20) { state(f, "jump"); const x0 = f._x, x1 = x0 + 44; const a = f.animate([{ transform: `translate(${x0}px,0)` }, { transform: `translate(${x0 + 22}px,-24px)` }, { transform: `translate(${x1}px,0)` }], { duration: 420, fill: "forwards" }); await a.finished; place(f, x1, 1); a.cancel(); fxAt("splash", x1 + 4, 0, 600); } f.remove(); })()));
+}
+// Berge: Zwei Ziegen, ein Grasbüschel – wer zuerst kommt …
+async function goatRaceStory() {
+  const W = W_(), mid = W * .5, a = actor(GOAT_SVG, "deer goat", 60, 52), b = actor(GOAT_SVG, "deer goat", 56, 48); place(a, -70, 1); place(b, W + 10, -1);
+  const tuft = document.createElement("div"); tuft.className = "bush"; tuft.style.cssText = `left:${mid - 12}px;bottom:0;width:24px;height:18px;opacity:1;z-index:3`; tuft.innerHTML = `<svg viewBox="0 0 24 18">${[...Array(9)].map((_, i) => `<path d="M${4 + i * 2} 18Q${3 + i * 2} 8 ${2 + i * 2.2} ${2 + (i % 3) * 2}" stroke="#5FA640" stroke-width="1.6" fill="none"/>`).join("")}</svg>`; mdStage().appendChild(tuft);
+  bubble("Mein Gras!", 20, 900, 60); await Promise.all([deerWalk(a, mid - 80, 40), deerWalk(b, mid + 30, 34)]); state(a, "alert"); state(b, "alert"); bubble("Nein, MEINS!", W - 110, 900, 60); await sleep(900);
+  state(a, "buck"); state(b, "buck"); await sleep(1000); state(a, "butt"); state(b, "butt"); await Promise.all([moveTo(a, mid - 56, 120), moveTo(b, mid + 4, 120)]); bubble("BONK!", mid - 20, 700, 50); fxAt("puff", mid, 20, 900); await sleep(300);
+  state(a); state(b); await Promise.all([moveTo(a, mid - 90, 60), moveTo(b, mid + 40, 60)]);
+  const m = actor(MARMOT_SVG, "marmot walk", 30, 34); place(m, W + 10, -1); await moveTo(m, mid - 14, 120); state(m); bubble("Danke! 😋", mid - 20, 1000, 40); tuft.remove(); await sleep(400); state(m, "walk"); await moveTo(m, W + 20, 140); m.remove();
+  bubble("…", mid - 60, 900, 60); await sleep(900); await Promise.all([deerWalk(a, -80, 40), deerWalk(b, W + 20, 40)]); a.remove(); b.remove();
+}
+// Schnee: Schneeballschlacht – Pinguine gegen den Schneehasen
+async function snowballStory() {
+  const W = W_(), ps = [0, 1].map(i => { const p = actor(PENGUIN_SVG, "penguin waddle", 28, 37); place(p, -40 - i * 34, 1); return p; }), h = actor(HARE_SVG, "bunny hop", 44, 34); place(h, W + 10, -1);
+  await Promise.all([...ps.map((p, i) => moveTo(p, W * .2 + i * 34, 34)), moveTo(h, W * .72, 80)]); ps.forEach(p => state(p)); state(h, "rest");
+  const throwBall = async (x0, x1, y = 20) => { const b = document.createElement("div"); b.className = "ball"; b.style.background = "radial-gradient(circle at 35% 35%, #fff, #dfe8f8 70%)"; mdStage().appendChild(b);
+    await b.animate([{ transform: `translate(${x0}px,-${y}px)` }, { transform: `translate(${(x0 + x1) / 2}px,-${y + 40}px)` }, { transform: `translate(${x1}px,-${y - 6}px)` }], { duration: 700, easing: "ease-in-out" }).finished; b.remove(); fxAt("snowpuff", x1 - 8, 4, 900); };
+  bubble("Achtung! ❄️", ps[0]._x, 900, 46); state(ps[0], "flap"); await throwBall(ps[0]._x + 26, h._x + 10); state(ps[0]); state(h, "shake"); bubble("Hey!", h._x, 700, 40); await sleep(600);
+  state(h, "rest"); await throwBall(h._x, ps[1]._x + 14); state(ps[1], "fall"); bubble("Uff!", ps[1]._x, 700, 30); await sleep(700); state(ps[1]);
+  for (let k = 0; k < 2; k++) { state(ps[k], "flap"); throwBall(ps[k]._x + 26, h._x + 10 + k * 6, 16 + k * 6); await sleep(350); state(ps[k]); }
+  await sleep(500); state(h, "hop"); bubble("Ihr habt gewonnen! 🏳️", h._x - 30, 1200, 40); await moveTo(h, W + 20, 120); h.remove(); ps.forEach(p => state(p, "wave")); bubble("Juhuu!", ps[0]._x, 1000, 46); await sleep(1200);
+  ps.forEach(p => state(p, "waddle")); await Promise.all(ps.map(p => moveTo(p, W + 30, 36))); ps.forEach(p => p.remove());
+}
+const STORIES = {
+  desert: [[[], sandstormStory], [["fennec", "scorp"], scorpFennecStory], [["camel"], caravanStory]],
+  ocean: [[["crab"], crabDiscoStory]], swamp: [[["frog"], frogChoirStory]], alps: [[["goat"], goatRaceStory]], snow: [[["penguin", "hare"], snowballStory]],
+};
+function storyScene() { const A = MD.c.animals || {}, ok = (STORIES[MD.c.biome] || []).filter(([need]) => need.every(k => A[k])); if (!ok.length) return; return ok[Math.floor(Math.random() * ok.length)][1](); }
 
 const SCENES = { bunny: () => bunnyScene(), fox: () => foxScene(), deer: () => deerScene(), hare: () => hareScene(), goat: () => goatScene(), eagle: () => eagleScene(),
   lizard: () => lizardScene(), fennec: () => fennecScene(), camel: () => camelScene(), tumble: () => tumbleBy(), fish: () => fishScene(), crab: () => crabScene(), turtle: () => turtleScene(), jelly: () => jellyScene(),
-  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(), scorp: () => scorpionScene(), dragonfly: () => dragonflyScene(), bear: () => bearScene(), polar: () => polarScene(), robodog: () => robodogScene(), spacex: () => spaceExtra(),
+  frog: () => frogScene(), heron: () => heronScene(), gator: () => gatorScene(), scorp: () => scorpionScene(), dragonfly: () => dragonflyScene(), bear: () => bearScene(), polar: () => polarScene(), robodog: () => robodogScene(), spacex: () => spaceExtra(), story: () => storyScene(),
   marmot: () => marmotScene(), penguin: () => penguinScene(), ermine: () => ermineScene(), shark: () => sharkScene(), octopus: () => octopusScene(), astro: () => astroScene(), cow: () => cowScene(), alien: () => alienScene(),
   hunter: async () => { const A = MD.c.animals || {}, opts = ["bunny", "fox", "deer"].filter(k => A[k]); const pick = opts[Math.floor(Math.random() * opts.length)] || "deer";
     if (chance(.3)) await hunterNap(); else if (pick === "bunny") await bunnyScene("hunter"); else if (pick === "fox") await foxScene("hunter"); else await deerScene(chance(.5) ? "chase" : "shot"); } };
@@ -6013,15 +6151,17 @@ function meadowSchedule() {
   if (biome === "forest" && A.hunter && opts.length) opts.push("hunter");
   if (biome === "desert" && MD.c.meadow) opts.push("tumble", "tumble", "tumble");
   if (biome === "space" && opts.length) opts.push("spacex", "spacex", "spacex");
+  if (opts.length && (STORIES[biome] || []).some(([need]) => need.every(k => A[k]))) opts.push("story", "story", "story");
   if (!opts.length) return;
-  MD.t = setTimeout(async () => { await playScene(opts[Math.floor(Math.random() * opts.length)]); meadowSchedule(); }, rnd(25000, 55000) * (PWR.level === "full" ? .7 : 1));
+  const wait = MD.first ? rnd(2500, 5000) : rnd(8000, 18000) * (PWR.level === "full" ? .8 : 1); MD.first = false;
+  MD.t = setTimeout(async () => { await playScene(opts[Math.floor(Math.random() * opts.length)]); meadowSchedule(); }, wait);
 }
 function meadowSetup(c) {
   MD.c = c; if (!c.meadow) { clearTimeout(MD.t); MD.key = ""; return; }
   const st = mdStage(); ensureStrip(c.biome); if (st.dataset.biome !== c.biome) { st.dataset.biome = c.biome; st.querySelectorAll(".actor, .bubl, .pellet, .tumble").forEach(x => x.remove()); }
   sideSetup();
   const key = JSON.stringify([c.biome, c.animals, PWR.level]);
-  if (key !== MD.key) { MD.key = key; meadowSchedule(); }
+  if (key !== MD.key) { MD.key = key; MD.first = true; meadowSchedule(); }
 }
 
 /* ===================== AKKU: Animationen sparen ===================== */
@@ -6044,7 +6184,7 @@ let idleT = 0; const wake = () => { clearTimeout(idleT); if (PWR.idle) { PWR.idl
 // Akku fast leer → automatisch sparen (wo der Browser das verrät)
 try { navigator.getBattery?.().then(b => { const upd = () => { PWR.low = !b.charging && b.level <= .2; powerApply(); }; b.addEventListener("levelchange", upd); b.addEventListener("chargingchange", upd); upd(); }); } catch {}
 
-window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, scorpionScene, dragonflyScene, bearScene, polarScene, robodogScene, flagScene, moonwalkScene, golfScene, cowJumpScene, abductScene, meteorScene, rocketScene, selfieScene, cowScene, alienScene, astroScene, cowScene, alienScene, entityPeek };   // zum Testen
+window.__md = { bunnyScene, deerScene, foxScene, hunterNap, deerBunnyFriends, deerFamily, hunterChase, rankUpShow, prShow, MD, SCENES, playScene, PWR, setPower, hareScene, goatScene, eagleScene, lizardScene, fennecScene, camelScene, fishScene, crabScene, turtleScene, jellyScene, frogScene, heronScene, gatorScene, tumbleBy, marmotScene, penguinScene, ermineScene, sharkScene, octopusScene, scorpionScene, dragonflyScene, bearScene, polarScene, robodogScene, storyScene, sandstormStory, scorpFennecStory, caravanStory, crabDiscoStory, frogChoirStory, goatRaceStory, snowballStory, flagScene, moonwalkScene, golfScene, cowJumpScene, abductScene, meteorScene, rocketScene, selfieScene, cowScene, alienScene, astroScene, cowScene, alienScene, entityPeek };   // zum Testen
 window.applyTheme(curTheme());
 
 function openPrefs() {
