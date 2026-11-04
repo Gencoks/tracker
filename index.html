@@ -1936,6 +1936,15 @@
   .h3today { padding-top: 22px; }
   .w3list { grid-template-columns: minmax(0, 1fr); } .w3list .w3blk.ex { margin-top: 0; }
 
+  /* v51: einheitliche Schriftgrößen in den Fenstern, untere Leiste mit „Nächster Satz“ */
+  .gw .w3step input, .gw .w3fld input, .gw-kg input { font-size: 20px !important; height: 38px !important; }
+  .gw .w3step button { width: 36px; height: 36px; font-size: 19px; } .gw-sets.ed input { font-size: 18px; height: 34px; }
+  .gw-big { font-size: 34px; } .gw-tap b { font-size: 58px; } .gw .w3fld textarea { font-size: 14px; }
+  .gw-sets.ed div { flex-wrap: wrap; } .gw-sets.ed div.now { box-shadow: inset 3px 0 0 var(--accent); background: color-mix(in srgb, var(--accent) 10%, #19191b); }
+  .gs-tag { flex-basis: 100%; padding-left: 22px; font-size: 10.5px; color: color-mix(in srgb, var(--accent) 70%, #9a9aa0); margin-top: -2px; }
+  #w3 .w3bot { gap: 8px; } .w3nset { flex: 1; min-width: 0; padding: 15px 10px; border-radius: 16px; font-weight: 700; font-size: 14px; background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); white-space: nowrap; }
+  #w3 .w3next { flex: 1; font-size: 14px; padding: 15px 10px; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2677,8 +2686,8 @@ const dShort = k => { const d = fromKey(k); return `${d.getDate()}.${d.getMonth(
 // Bester Satz einer Übung: mit Gewicht = geschätztes Maximalgewicht (Epley), ohne Gewicht = Wiederholungen
 // Kraft: mit Gewicht = geschätztes Maximalgewicht (Epley), sonst Wiederholungen. Ausdauer zählt nicht zur Kraft.
 const setScore = st => { const kg = numv(st.kg), r = numv(st.reps); if (!r) return 0; return kg > 0 ? kg * (1 + r / 30) : r; };
-const exBest = e => { const m = exMode(e); if (m === "cardio") return 0; if (m === "time") return Math.max(0, ...(e.sets || []).map(x => numv(x.sec)));
-  return Math.max(0, ...(e.sets || []).map(setScore)); };
+const exBest = e => { const m = exMode(e), ss = (e.sets || []).filter(x => !x.via); if (m === "cardio") return 0; if (m === "time") return Math.max(0, ...ss.map(x => numv(x.sec)));
+  return Math.max(0, ...ss.map(setScore)); };
 const exWeighted = e => exMode(e) === "weight" && (e.sets || []).some(x => numv(x.kg) > 0 && numv(x.reps) > 0);
 const exVolume = e => exMode(e) === "weight" ? (e.sets || []).reduce((a, x) => a + numv(x.kg) * numv(x.reps), 0) : 0;
 const exSets = e => (e.sets || []).filter(x => numv(x.reps) > 0 || numv(x.km) > 0 || numv(x.sec) > 0).length;
@@ -3975,11 +3984,15 @@ function w3Open(n = null) {
   W3.i = Math.max(0, Math.min(items.length - 1, n));
   if (!W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); }
   let o = $("#w3"); if (!o) { o = document.createElement("div"); o.id = "w3"; document.body.appendChild(o); o.addEventListener("click", w3Click); o.addEventListener("input", w3Input); o.addEventListener("pointerdown", w3DragStart); }
-  { const ws = w3Wins(w3It()); if (ws.edit) { ws.edit.on = 1; ws.edit.min = false; } if (ws.sets) { ws.sets.on = 1; ws.sets.min = false; } }
+  w3Form();
   w3Cur(true); o.classList.add("on"); document.documentElement.classList.add("pg-on"); w3Render(); w3Tick();
 }
 function w3Close() { $("#w3")?.classList.remove("on"); document.documentElement.classList.remove("pg-on"); renderTrain(); }
 const w3It = () => w3Items()[W3.i];
+// Übung merkt sich ihre Form (z. B. Tabata 20/10 mit Zähler) und startet beim nächsten Mal so
+function w3Form() { const it = w3It(); if (!it || it.kind !== "ex") return; const f = S.workout.exercises[it.i].form; if (!f) return; const ws = w3Wins(it);
+  if (f.via === "tabata") { if (!W3T.tb.run && !W3T.tb.acc) Object.assign(W3T.tb, { work: f.work, rest: f.rest, rounds: f.rounds }); ws.tabata.on = 1; ws.count.on = 1; }
+  if (f.via === "timer") { if (!W3T.tm.run) W3T.tm = { dur: f.dur, run: false, end: 0, left: f.dur * 1000, done: false, rest: false }; ws.timer.on = 1; ws.count.on = 1; } w3TSave(); }
 function w3Cur(reset) {
   const it = w3It(); if (!it || it.kind !== "ex") return;
   const e = S.workout.exercises[it.i], nx = e.sets.find(x => !setFilled(x)), last = e.sets.filter(setFilled).slice(-1)[0] || nx?._ph || {};
@@ -4027,7 +4040,8 @@ function w3Render() {
       ${bar.c ? "" : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}
       <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button>`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
-      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>`;
+      ${it.kind === "ex" ? (() => { const ex = S.workout.exercises[it.i], k = ex.sets.findIndex(x => !setFilled(x)), nr = (k >= 0 ? k : ex.sets.length) + 2; return `<button class="w3nset" data-w3a="nextset">Nächster Satz (${nr})</button>`; })() : ""}
+      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Abschließen ✓" : "Nächste Übung ›"}</button></div>`;
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
 }
 // Fenster im Bild halten
@@ -4060,7 +4074,7 @@ function w3Body(it, g) {
   if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
     const prevR = S.prevSame?.run;
     if (g === "edit") return it.kind === "run" ? `${prevR?.km || prevR?.minutes ? `<div class="gw-last">Letztes Mal: <b>${esc(prevR.km || "–")} km · ${esc(prevR.minutes || "–")}</b></div>` : ""}<label class="w3fld"><small>Distanz (km)</small><input data-w3in="run.km" inputmode="decimal" value="${esc(r.km || "")}"></label>
-        <label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3in="run.minutes" inputmode="numeric" placeholder="mm:ss" value="${esc(r.minutes || "")}"></label>
+        <label class="w3fld"><small>Zeit (Min:Sek)</small><input data-w3in="run.minutes" inputmode="numeric" placeholder="Min:Sek" value="${esc(r.minutes || "")}"></label>
         <div class="w3pace">Pace <b id="w3pace">${paceOf(r.km, r.minutes) || "–"}</b> /km</div><label class="w3fld"><small>Notiz</small><textarea data-w3in="run.note">${esc(r.note || "")}</textarea></label>`
       : `<label class="w3fld"><small>Dauer (Minuten)</small><input data-w3in="session.minutes" inputmode="numeric" value="${esc(r.minutes || "")}"></label><label class="w3fld"><small>Notiz</small><textarea data-w3in="session.note">${esc(r.note || "")}</textarea></label>`;
     return ""; }
@@ -4070,7 +4084,7 @@ function w3Body(it, g) {
     const fields = m === "weight" ? w3Step("kg", "Gewicht", c.kg, 2.5, "kg") + w3Step("reps", "Wiederholungen", c.reps, 1)
       : m === "band" ? `<label class="w3fld"><small>Band / Stufe</small><input data-w3f="band" value="${esc(c.band)}" placeholder="z. B. Grün"></label>` + w3Step("reps", "Wiederholungen", c.reps, 1)
       : m === "reps" ? w3Step("reps", "Wiederholungen", c.reps, 1) : m === "time" ? w3Step("sec", "Zeit", c.sec, 5, "Sek.")
-      : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3f="min" placeholder="mm:ss" value="${esc(c.min)}"></label>`;
+      : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (Min:Sek)</small><input data-w3f="min" placeholder="Min:Sek" value="${esc(c.min)}"></label>`;
     const nxi = e.sets.findIndex(x => !setFilled(x)), nr = nxi >= 0 ? nxi + 1 : e.sets.length + 1;
     return `${lastCache[e.name] ? `<div class="gw-last"><b>${esc(/^Letztes Mal/.test(lastCache[e.name]) ? lastCache[e.name] : "Letztes Mal: " + lastCache[e.name])}</b></div>` : ""}${modes}${fields}<button class="gw-main acc" data-w3a="saveset">✓ Satz ${nr} speichern</button>`;
   }
@@ -4082,7 +4096,7 @@ function w3Body(it, g) {
       <button class="gw-main acc" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig → nächster Satz</button>`;
   if (g === "sets") { const F = { weight: [["kg", "kg"], ["reps", "Wdh."]], band: [["band", "Band"], ["reps", "Wdh."]], reps: [["reps", "Wdh."]], time: [["sec", "Sek."]], cardio: [["km", "km"], ["min", "Zeit"]] }[m] || [["reps", "Wdh."]];
     const rows = e.sets.map((x, j) => [x, j]);
-    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div><b>${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button></div>`).join("")}</div>`
+    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === e.sets.findIndex(q => !setFilled(q)) ? "now" : ""}"><b>${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"}` : "Timer"} · ${fmtMs((x.dur || 0) * 1000, false)}</small>` : ""}</div>`).join("")}</div>`
       : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`}
       <button class="gw-add" data-w3a="addset">${W3I.plus} Satz hinzufügen</button><div class="gw-hint">Tippe in einen Satz, um ihn zu ändern.</div>`; }
   if (g === "notes") { const tn = it.kind === "ex" ? (w.extra?.note || "") : "";
@@ -4125,7 +4139,7 @@ async function w3Click(e) {
   if (a === "barc") { W3.bar = { ...(W3.bar || { x: innerWidth - 62, y: 90 }), c: !(W3.bar || {}).c }; w3Save(); return re(); }
   if (a === "gset") { if (b.dataset.v === "count") W3T.cset = !W3T.cset; else W3T.tbset = !W3T.tbset; return re(); }
   if (a === "cstep") { W3T.step = +b.dataset.v; return re(); }
-  if (a === "tmcustom") { const v = await pgAsk("Eigene Zeit", "", "Sekunden (z. B. 75) oder mm:ss"); if (!v) return; const sec = v.includes(":") ? v.split(":").reduce((q, p) => q * 60 + (+p || 0), 0) : parseInt(v, 10);
+  if (a === "tmcustom") { const v = await pgAsk("Eigene Zeit", "", "Sekunden (z. B. 75) oder Min:Sek"); if (!v) return; const sec = v.includes(":") ? v.split(":").reduce((q, p) => q * 60 + (+p || 0), 0) : parseInt(v, 10);
     if (sec > 0 && sec < 36000) { W3T.tm = { dur: sec, run: false, end: 0, left: sec * 1000, done: false }; re(); } return; }
   if (a === "tbgo") { const t = tbState(); if (t.done) { W3T.tb.acc = 0; } W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
   if (a === "tbstop") { W3T.tb.acc = tbMs(); W3T.tb.run = false; return re(); }
@@ -4152,7 +4166,7 @@ async function w3Click(e) {
     else { toast("Zeit passt zu „Zeit“ oder „Ausdauer“ – stell die Übung im Eingabe-Fenster um."); return; }
     W3T.sw = { run: false, t0: 0, acc: 0 }; saveWorkout(false); toast(`✓ ${mmss} übernommen`); return re(); }
   if (a === "tmset") { W3T.tm = { dur: +b.dataset.v, run: false, end: 0, left: +b.dataset.v * 1000, done: false }; return re(); }
-  if (a === "tmgo") { if (W3T.tm.done || W3T.tm.left <= 0) W3T.tm.left = W3T.tm.dur * 1000; W3T.tm.end = Date.now() + W3T.tm.left; W3T.tm.run = true; W3T.tm.done = false; w3Tick(); return re(); }
+  if (a === "tmgo") { W3T.tm.rest = false; if (W3T.tm.done || W3T.tm.left <= 0) W3T.tm.left = W3T.tm.dur * 1000; W3T.tm.end = Date.now() + W3T.tm.left; W3T.tm.run = true; W3T.tm.done = false; w3Tick(); return re(); }
   if (a === "tmpause") { W3T.tm.left = w3TmLeft(); W3T.tm.run = false; return re(); }
   if (a === "tmreset") { W3T.tm = { ...W3T.tm, run: false, left: W3T.tm.dur * 1000, done: false }; return re(); }
   if (a === "tmplus") { const d = +b.dataset.v * 1000; if (W3T.tm.run) W3T.tm.end = Math.max(Date.now() + 1000, W3T.tm.end + d); else W3T.tm.left = Math.max(1000, W3T.tm.left + d); return re(); }
@@ -4162,9 +4176,10 @@ async function w3Click(e) {
   if (a === "tzero" && t) { t.n = 0; w3Save(); return re(); }
   if (a === "tmin" && t) { t.min = !t.min; w3Save(); return re(); }
   if (a === "tdel" && t) { W3.tabs = W3.tabs.filter(x => x !== t); w3Save(); return re(); }
-  if (a === "prev") { W3.i = Math.max(0, W3.i - 1); w3Cur(true); return re(); }
+  if (a === "prev") { W3.i = Math.max(0, W3.i - 1); w3Cur(true); w3Form(); return re(); }
+  if (a === "nextset" && ex) { if (W3T.cnt > 0 && (m === "reps" || m === "weight" || m === "band")) { const n = W3T.cnt; W3T.cnt = 0; return w3AddSet(ex, m, n); } return w3AddSet(ex, m, W3.cur.reps); }
   if (a === "next") { const nx = w3Items()[W3.i + 1]; if (!nx) return;
-    if (await askYesNo(`Weiter zur nächsten Übung: „${nx.name}“?`, "Weiter")) { W3.i++; w3Cur(true); W3T.cnt = 0; re(); } return; }
+    if (await askYesNo(`Weiter zur nächsten Übung: „${nx.name}“?`, "Weiter")) { W3.i++; w3Cur(true); W3T.cnt = 0; w3Form(); re(); } return; }
   if (a === "finish") return w3Finish();
 }
 function w3Input(e) {
@@ -4180,18 +4195,19 @@ function w3Input(e) {
     w[o] = { ...(w[o] || {}), [f]: v }; saveWorkout(false); const p = $("#w3pace"); if (p) p.textContent = paceOf(w.run?.km, w.run?.minutes) || "–"; }
 }
 document.addEventListener("change", e => { if (e.target.dataset?.w3sel === "rest") { W3.autoRest = +e.target.value; w3Save(); } });
-function w3AddSet(ex, m, reps) {
+function w3AddSet(ex, m, reps, extra = null) {
   const c = W3.cur, ns = emptySet(m);
   if (m === "weight") { ns.kg = c.kg ? String(c.kg).replace(".", ",") : ""; ns.reps = String(reps || ""); }
   else if (m === "band") { ns.band = c.band || ""; ns.reps = String(reps || ""); } else if (m === "reps") ns.reps = String(reps || "");
   else if (m === "time") ns.sec = String(c.sec || ""); else { ns.km = c.km ? String(c.km).replace(".", ",") : ""; ns.min = c.min || ""; }
-  if (!setFilled(ns)) { toast("Bitte erst einen Wert eintragen."); return; }
+  if (extra) { Object.assign(ns, extra); if (m === "time" && !numv(ns.sec)) ns.sec = String(extra.dur || ""); }
+  if (!setFilled(ns)) { if (!extra) toast("Bitte erst einen Wert eintragen."); return; }
   const ei = ex.sets.findIndex(x => !setFilled(x)); let nr;
   if (ei >= 0) { ex.sets[ei] = { ...ns, ...(ex.sets[ei]._ph ? { _ph: ex.sets[ei]._ph } : {}) }; nr = ei + 1; } else { ex.sets.push(ns); nr = ex.sets.length; }
   saveWorkout(false); pgBeep(1046, 90); pgBuzz(30);
-  toast(`✓ Satz ${nr} gespeichert`);
+  toast(extra ? `✓ Satz ${nr}: ${ns.reps ? ns.reps + " Wdh." : fmtSec(ns.sec)} in ${fmtMs((extra.dur || 0) * 1000, false)} gespeichert` : `✓ Satz ${nr} gespeichert`);
   { const nx = ex.sets.find(x => !setFilled(x)); if (nx?._ph) { const p = nx._ph; if (p.kg) W3.cur.kg = numv(p.kg); if (p.reps) W3.cur.reps = numv(p.reps); } }
-  if (W3.autoRest && m !== "cardio") { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false }; const ws = w3Wins(w3It()); if (ws.timer) ws.timer.on = 1; w3Tick(); }
+  if (W3.autoRest && m !== "cardio" && !extra) { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false, rest: true }; const ws = w3Wins(w3It()); if (ws.timer) ws.timer.on = 1; w3Tick(); }
   w3TSave(); w3Render();
 }
 async function w3Finish() {
@@ -4207,10 +4223,20 @@ async function w3Finish() {
 }
 // Uhren: nur 4× pro Sekunde und nur die Zahlen
 let w3TickT = 0;
+// Ende einer Arbeitsphase: Zähler-Stand automatisch als Satz speichern
+function w3AutoSet(via, dur, rd) {
+  const it = w3It(); if (!it || it.kind !== "ex") return; const ex = S.workout.exercises[it.i], m = exMode(ex);
+  if (m === "cardio") return; if (m !== "time" && !(W3T.cnt > 0)) return;
+  const n = W3T.cnt; W3T.cnt = 0;
+  ex.form = via === "tabata" ? { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds } : { via, dur };
+  w3AddSet(ex, m, n, { via, dur, ...(rd ? { rd } : {}) });
+}
 function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   const on = $("#w3")?.classList.contains("on");
-  if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]); toast("⏳ Pause vorbei – nächster Satz!"); if (on) w3Render(); }
-  if (W3T.tb.run) { const t = tbState(); if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
+  if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]);
+    if (!W3T.tm.rest && W3T.cnt > 0) w3AutoSet("timer", W3T.tm.dur); else toast(W3T.tm.rest ? "⏳ Pause vorbei – nächster Satz!" : "⏳ Zeit ist um!"); if (on) w3Render(); }
+  if (W3T.tb.run) { const t = tbState(); if ((t.done || t.idx !== W3T.tb.ph) && W3T.tb.ph >= 0 && W3T.tb.ph % 2 === 0) w3AutoSet("tabata", W3T.tb.work, W3T.tb.ph / 2 + 1);
+    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
     else { if (t.idx !== W3T.tb.ph) { W3T.tb.ph = t.idx; w3TSave(); pgBeep(t.work ? 988 : 660, 220, t.work ? 2 : 1); pgBuzz(t.work ? [200, 80, 200] : 250); }
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
