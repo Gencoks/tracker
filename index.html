@@ -2001,6 +2001,51 @@
   #w3 .w3nset svg { margin-left: -6px; } #w3 .w3next svg { margin-right: -6px; width: 17px; height: 17px; }
   #w3 .w3bot { padding-left: 10px; padding-right: 10px; }
 
+  /* Rang-Symbole (eigene) */
+  .rico { display: inline-block; width: 1.2em; height: 1.2em; vertical-align: -.22em; line-height: 0; } .rico svg { width: 100%; height: 100%; display: block; }
+  .rank-badge .rico { width: 1em; height: 1em; vertical-align: 0; }
+  /* Schritte */
+  .st-bar { display: block; height: 3px; border-radius: 3px; background: color-mix(in srgb, var(--text) 12%, transparent); margin-top: 6px; max-width: 140px; overflow: hidden; } .st-bar b { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .st-in .num-in { width: 74px; } .st-ol { padding-left: 18px; font-size: 13.5px; line-height: 1.5; } .st-ol li { margin: 4px 0; } .st-ol code { font-size: 11.5px; word-break: break-all; background: color-mix(in srgb, var(--text) 8%, transparent); padding: 1px 4px; border-radius: 5px; }
+  /* Ernährung */
+  .t3food { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 10px; padding: 14px 16px; border-radius: 22px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .tf-i svg { width: 24px; height: 24px; color: var(--accent-text); display: block; } .tf-t { flex: 1; min-width: 0; display: grid; gap: 4px; } .tf-t small, .tf-p small { color: var(--muted); font-size: 11px; }
+  .tf-t b { font-size: 17px; } .tf-t em { font-style: normal; color: var(--muted); font-size: 12px; font-weight: 500; } .tf-t .t3line { margin: 2px 0 0; } .tf-p { display: grid; text-align: right; } .tf-p b { font-size: 15px; }
+  #f3 { position: fixed; inset: 0; z-index: 35; display: none; overflow-y: auto; background: var(--bg); background-image: var(--wall-img, none); background-size: cover; background-attachment: fixed; color: var(--text); font-family: var(--fb, inherit); }
+  #f3.on { display: block; } :root.f3on body { overflow: hidden; }
+  .f3in { max-width: 640px; margin: 0 auto; padding: calc(14px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  .f3top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; } .f3top > div:nth-child(2) { flex: 1; } .f3top small { color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .f3top h1 { margin: 0; font-size: 32px; line-height: 1.1; font-family: var(--fh, inherit); }
+  .f3x, .f3nav button { width: 42px; height: 42px; border-radius: 14px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--text); display: grid; place-items: center; cursor: pointer; }
+  .f3nav { display: flex; gap: 6px; } .f3nav button:disabled { opacity: .3; }
+  .f3sum { padding: 16px; } .f3kc { display: flex; justify-content: space-between; align-items: flex-end; } .f3kc small { color: var(--muted); font-size: 12px; }
+  .f3kc b { display: block; font-size: 38px; line-height: 1.05; font-family: var(--fh, inherit); } .f3kc em { font-style: normal; font-size: 14px; color: var(--muted); font-weight: 500; }
+  .f3eat { text-align: right; } .f3eat b { font-size: 20px; } .f3sum .t3line { margin: 12px 0; }
+  .f3ms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } .f3m small { color: var(--muted); font-size: 11px; } .f3m b { display: block; font-size: 15px; } .f3m em { font-style: normal; color: var(--muted); font-size: 11px; font-weight: 500; }
+  .f3m > i { display: block; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--text) 12%, transparent); margin-top: 5px; overflow: hidden; } .f3m > i > i { display: block; height: 100%; background: var(--accent); }
+  .f3goal { margin-top: 12px; background: none; border: 0; color: var(--accent-text); font: inherit; font-size: 13px; font-weight: 600; padding: 0; cursor: pointer; }
+  .f3acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0 4px; }
+  .f3acts button { display: grid; justify-items: center; gap: 6px; padding: 14px 6px; border-radius: 18px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--text); font: inherit; font-size: 12.5px; font-weight: 600; line-height: 1.2; cursor: pointer; }
+  .f3acts button:first-child { background: var(--accent); color: var(--accent-ink); border-color: transparent; } .f3acts svg { width: 26px; height: 26px; }
+  .f3rec { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; } .f3rec::-webkit-scrollbar { display: none; }
+  .f3rec button { flex: none; display: grid; text-align: left; gap: 2px; padding: 9px 12px; border-radius: 14px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--text); font: inherit; font-size: 13px; font-weight: 600; max-width: 180px; cursor: pointer; }
+  .f3rec small { color: var(--muted); font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .f3meal { margin-top: 6px; } .f3mh { display: flex; align-items: center; gap: 10px; } .f3mh h2 { flex: 1; margin: 16px 0 8px; } .f3mh span { color: var(--muted); font-size: 12px; }
+  .f3mh button { width: 32px; height: 32px; border-radius: 11px; border: 1px solid var(--border); background: transparent; color: var(--accent-text); display: grid; place-items: center; cursor: pointer; } .f3mh button svg { width: 16px; height: 16px; }
+  .f3it { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 16px; background: color-mix(in srgb, var(--surface) 80%, transparent); border: 1px solid var(--border); margin-bottom: 6px; }
+  .f3it span { flex: 1; min-width: 0; display: grid; } .f3it b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .f3it small { color: var(--muted); font-size: 11px; }
+  .f3it em { font-style: normal; font-weight: 700; font-size: 14px; } .f3it button { background: none; border: 0; color: var(--muted); padding: 4px; cursor: pointer; display: grid; } .f3it button svg { width: 16px; height: 16px; }
+  .f3note { color: var(--muted); font-size: 11.5px; margin-top: 18px; line-height: 1.45; } .f3empty { color: var(--muted); text-align: center; padding: 20px; }
+  .f3res { display: grid; gap: 6px; margin-top: 10px; } .f3res button { display: flex; align-items: center; gap: 10px; text-align: left; padding: 11px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+  .f3res span { flex: 1; min-width: 0; display: grid; } .f3res b { font-size: 14px; } .f3res small { color: var(--muted); font-size: 11px; } .f3res em { font-style: normal; font-weight: 700; font-size: 14px; white-space: nowrap; } .f3st { color: var(--muted); font-size: 12.5px; text-align: center; padding: 10px; }
+  .f3grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .f3grid .w3fld:first-child { grid-column: 1 / -1; }
+  .f3prev { display: flex; gap: 12px; align-items: baseline; margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 12%, transparent); } .f3prev b { font-size: 20px; flex: 1; } .f3prev span { font-size: 13px; color: var(--muted); }
+  #f3scan { position: fixed; inset: 0; z-index: 60; background: #000; display: none; } #f3scan.on { display: block; } #f3scan video { width: 100%; height: 100%; object-fit: cover; }
+  .f3frame { position: absolute; left: 50%; top: 42%; width: min(78vw, 340px); height: 150px; transform: translate(-50%, -50%); border-radius: 18px; box-shadow: 0 0 0 2px #fff, 0 0 0 100vmax rgba(0,0,0,.45); }
+  .f3sh { position: absolute; left: 0; right: 0; top: calc(42% + 100px); text-align: center; color: #fff; font-size: 14px; padding: 0 24px; }
+  .f3sx { position: absolute; top: calc(14px + env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; display: grid; place-items: center; } .f3sx svg { width: 20px; height: 20px; }
+  .f3sm { position: absolute; left: 16px; right: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); display: flex; gap: 8px; } .f3sm input { flex: 1; min-width: 0; padding: 14px; border-radius: 14px; border: 0; background: rgba(255,255,255,.14); color: #fff; font: inherit; font-size: 16px; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2320,7 +2365,7 @@ async function toggleTask(k, key) {
   const done = { ...(cur.done || {}) };
   done[key] = !done[key];
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: false };
+  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), ...(cur.steps != null ? { steps: cur.steps } : {}), date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: false };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) quotaDone();
@@ -2363,7 +2408,7 @@ async function setWeight(k, key, slot, raw) {
   const done = { ...(cur.done || {}) }, weight = { ...(cur.weight || {}) };
   if (num === "") { delete weight[slot]; done[key] = false; } else { weight[slot] = num; done[key] = true; }
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), date: k, done, weight, count, total: tasks.length, complete: count === tasks.length };
+  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), ...(cur.steps != null ? { steps: cur.steps } : {}), date: k, done, weight, count, total: tasks.length, complete: count === tasks.length };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) quotaDone();
@@ -2427,7 +2472,7 @@ function renderStartV1() {
           <div class="stats">
             <span class="chip streak-chip">${FLAME} ${streak()} Tage Serie</span>
             <span class="chip accent">${esc(plan.name)}</span>
-            ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span></button>`; })() : ""}
+            ${S.allWo && S.daysFull ? (() => { const r = RANKS[rankState().tier]; return `<button class="chip" data-action="gorank" style="border-color:${r.god ? "#FF4FA3" : r.c}">${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span></button>`; })() : ""}
             ${openTodos ? `<button class="chip" data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}
           </div>
         </div>
@@ -2444,7 +2489,8 @@ const taskHTML = (t, isDone, k, editable = false) => {
   const sub = [t.s, !t.training ? daysTxt(t.days) : "", rs.length ? `🔔 ${rs.join(", ")}` : ""].filter(Boolean).join(" · ");
   const text = `<span style="min-width:0"><div class="t">${esc(t.t)}</div>${sub ? `<div class="s">${document.documentElement.dataset.ui === "v2" ? esc(sub).replace(/🔔 /g, TI.bell + " ") : esc(sub)}</div>` : ""}</span>`;
   let main;
-  if (t.kind === "weight") {
+  if (t.kind === "steps" && document.documentElement.dataset.ui === "v2") main = stepsMain(t, k, text);
+  else if (t.kind === "weight") {
     const val = S.days[k]?.weight?.[t.slot] ?? "";
     main = `<div class="task-main"><span class="box-check">${CHECK}</span>${text}
       <span class="kg-in"><input class="num-in" inputmode="decimal" placeholder="–" data-weight="${t.slot}" data-key="${t.key}" data-day="${k}" value="${esc(val)}"><small>kg</small></span>${document.documentElement.dataset.ui === "v2" && editable ? `<button class="wn-btn ${S.days[k]?.wnote ? "on" : ""}" data-wnote="${k}" title="Notiz zum Gewicht"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button>` : ""}</div>`;
@@ -3357,7 +3403,7 @@ function friendsCard() {
     <h2>Rangliste unter Freunden</h2>
     <div class="card fr-list">${board.map((p, i) => { const r = RANKS[p.tier || 0];
       return `<div class="fr-item ${p.me ? "me" : ""}"><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${pAvatar(p, 42)}
-        <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small></span>
+        <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small></span>
         ${p.me ? "" : `<button class="mini ${FR.rmArm === p.uid ? "warn" : ""}" data-action="frrm" data-uid="${p.uid}" title="Entfernen">${FR.rmArm === p.uid ? "Sicher?" : "⋯"}</button>`}</div>`; }).join("")}
       ${fs.length ? "" : `<div class="empty" style="padding:14px 6px">Noch keine Freunde. Teile deinen Code – sobald jemand ihn eingibt, seht ihr euch hier und in euren Erfolgen.</div>`}</div>
     ${out.length ? `<h2>Gesendet</h2><div class="card fr-list">${out.map(f => `<div class="fr-item">${avatar(nm(f), "var(--muted)")}<span class="fr-n"><b>${esc(nm(f))}</b><small>wartet auf Bestätigung</small></span><button class="mini" data-action="frdel" data-id="${f.id}">Zurückziehen</button></div>`).join("")}</div>` : ""}
@@ -3454,7 +3500,7 @@ let frameN = 0;
 function frameSVG(t) {
   // Koordinaten: Mitte 60/60, Foto-Rand bei r≈51 – alles Verzierende liegt außerhalb davon (nichts verdeckt das Gesicht)
   const id = "pf" + (++frameN), f = n => Math.round(n * 10) / 10, C = 60;
-  const pal = [["#ffd2a8", "#c87a3e", "#5a2a0e"], ["#ffffff", "#c2c7d0", "#4a5060"], ["#fff2a8", "#f2b81e", "#7a4a00"], ["#c8fff6", "#22c4b0", "#06504a"], ["#d8f0ff", "#3f9bff", "#0a2a7a"],
+  const pal = (isV2() && fpal2(t)) || [["#ffd2a8", "#c87a3e", "#5a2a0e"], ["#ffffff", "#c2c7d0", "#4a5060"], ["#fff2a8", "#f2b81e", "#7a4a00"], ["#c8fff6", "#22c4b0", "#06504a"], ["#d8f0ff", "#3f9bff", "#0a2a7a"],
     ["#f6d0ff", "#b04dff", "#3a0a70"], ["#ffe680", "#ff8a1e", "#8a2a00"], ["#ffffff", "#c8d0dc", "#3f4a5a"], ["#fff2b0", "#f2bc2a", "#7a4400"], ["#ffd0ff", "#c04dff", "#2a0650"], ["#d8ccff", "#3a2a86", "#05030c"]][t];
   const [lt, md, dk] = pal, pt = (r, a) => [C + Math.cos(a) * r, C + Math.sin(a) * r];
   let defs = `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${lt}"/><stop offset=".45" stop-color="${md}"/><stop offset="1" stop-color="${dk}"/></linearGradient>
@@ -3476,13 +3522,17 @@ function frameSVG(t) {
   else if (t === 3) { back = [...Array(12)].map((_, i) => { const a = i * Math.PI / 6, [x1, y1] = pt(54, a - .1), [x2, y2] = pt(70, a), [x3, y3] = pt(54, a + .1); return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(x3)} ${f(y3)}Z" fill="${i % 2 ? md : lt}" ${st}/>`; }).join(""); front = ring(8) + gem(60, 2, 9, "#5ff0dc") + gem(6, 76, 6, "#5ff0dc") + gem(114, 76, 6, "#5ff0dc"); }
   else if (t === 4) { back = [...Array(9)].map((_, i) => { const a = Math.PI + .25 + i * (Math.PI - .5) / 8, L = i % 2 ? 76 : 88, [x1, y1] = pt(50, a - .13), [x2, y2] = pt(L, a), [x3, y3] = pt(50, a + .13), [xm, ym] = pt(L - 12, a - .03);
       return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(x3)} ${f(y3)}Z" fill="${i % 2 ? "#7ec8ff" : "#3a8cff"}" stroke="#fff" stroke-width=".8"/><path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}L${f(xm)} ${f(ym)}Z" fill="#fff" opacity=".35"/>`; }).join(""); front = ring(9) + gem(60, 112, 7, "#7ec8ff"); }
+  else if (t === 5 && isV2()) { back = aura(86) + [...Array(8)].map((_, i) => { const [x, y] = pt(67, i * Math.PI / 4 + Math.PI / 8); return gem(f(x), f(y), 7.5, i % 2 ? "#57e39a" : "#1c8f52"); }).join("");
+    front = ring(9) + crown(8, 26, G, "#d6ffe9") + tw([[10, 24, 4], [112, 100, 4]]); }
   else if (t === 5) { back = aura(84) + wing(-1, 4, 34, "#c04dff", "#3a0a70") + wing(1, 4, 34, "#c04dff", "#3a0a70"); front = ring(9) + crown(8, 22, G, "#ff9cf0"); }
   else if (t === 6) { back = aura(96) + `<g class="pf-spin">${[...Array(16)].map((_, i) => { const a = i * Math.PI / 8, [x1, y1] = pt(50, a - .16), [x2, y2] = pt(i % 2 ? 80 : 92, a), [x3, y3] = pt(50, a + .16), [xc, yc] = pt(74, a + .12);
       return `<path d="M${f(x1)} ${f(y1)}Q${f(xc)} ${f(yc)} ${f(x2)} ${f(y2)}Q${f(x3 + (x2 - x3) * .3)} ${f(y3 + (y2 - y3) * .3)} ${f(x3)} ${f(y3)}Z" fill="${i % 2 ? "#ffb020" : "#ff6a10"}" stroke="#8a2a00" stroke-width=".7"/>`; }).join("")}</g>`; front = ring(9) + gem(60, 4, 9, "#ffe680") + tw([[14, 20, 4], [108, 104, 4]]); }
+  else if (t === 7 && isV2()) { const sword = rot => `<g transform="rotate(${rot} 60 60)"><path d="M56.5 -26L60 -38L63.5 -26V106H56.5Z" fill="#eef1f6" stroke="#3f4a5a" stroke-width="1"/><path d="M60 -34V104" stroke="#fff" stroke-width=".8" opacity=".7"/><rect x="43" y="106" width="34" height="6" rx="2.5" fill="${md}" stroke="${dk}" stroke-width="1"/><rect x="57" y="112" width="6" height="16" rx="1.5" fill="${dk}"/><circle cx="60" cy="132" r="5" fill="${md}" stroke="${dk}" stroke-width="1"/></g>`;
+    back = aura(92) + sword(-40) + sword(40); front = ring(9) + crown(8, 26, G, "#ffe680") + gem(60, 112, 7, "#ff8fa3") + tw([[12, 22, 4], [110, 26, 4]]); }
   else if (t === 7) { back = aura(90) + wing(-1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2) + wing(1, 5, 40, "#f4f6fa", "#4f5a6a", 1.2); front = ring(9) + crown(8, 22, G, "#3a8cff")
       + `<path d="M14 104Q60 128 106 104L100 116Q60 136 20 116Z" fill="#2f7ae8" stroke="#0a2a6a" stroke-width="1"/><path d="M14 104L4 112L20 116Z M106 104L116 112L100 116Z" fill="#1a5ac0" stroke="#0a2a6a" stroke-width="1"/>`; }
-  else if (t === 8) { back = aura(100) + `<g class="pf-spin">${[...Array(24)].map((_, i) => `<path d="M57 -2L60 ${i % 2 ? -22 : -34}L63 -2Z" fill="${i % 2 ? "#ffe07a" : "#f2b81e"}" stroke="#8a5400" stroke-width=".5" transform="rotate(${i * 15} 60 60)"/>`).join("")}</g>`
-; front = ring(10) + crown(6, 24, G, "#ff3b5c") + tw([[8, 20, 5], [114, 30, 4], [10, 108, 4], [110, 110, 5]]); }
+  else if (t === 8) { back = aura(100) + `<g class="pf-spin">${[...Array(24)].map((_, i) => `<path d="M57 -2L60 ${i % 2 ? -22 : -34}L63 -2Z" fill="${i % 2 ? (isV2() ? "#b4b5ff" : "#ffe07a") : (isV2() ? "#6a6bff" : "#f2b81e")}" stroke="${isV2() ? "#14125e" : "#8a5400"}" stroke-width=".5" transform="rotate(${i * 15} 60 60)"/>`).join("")}</g>`
+; front = ring(10) + crown(6, 24, G, isV2() ? "#ffd84d" : "#ff3b5c") + tw([[8, 20, 5], [114, 30, 4], [10, 108, 4], [110, 110, 5]]); }
   else if (t === 9) { defs += `<radialGradient id="${id}o" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#ff7af0"/><stop offset="1" stop-color="#7a1ad0"/></radialGradient>`;
     back = aura(104) + `<g class="pf-spin f">${[0, 1, 2, 3].map(k => `<path d="M60 -26A86 86 0 0 1 146 60" stroke="${["#e07bff", "#ff4fd8", "#7a4dff", "#ffb0f8"][k]}" stroke-width="${7 - k * 1.2}" fill="none" stroke-linecap="round" opacity=".9" transform="rotate(${k * 90} 60 60)"/>`).join("")}</g>`
       + [-1, 1].map(d => `<path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="${dk}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${C + d * 40} 104C${C + d * 76} 92 ${C + d * 82} 40 ${C + d * 62} 4" stroke="url(#${id}g)" stroke-width="6" fill="none" stroke-linecap="round"/>`).join("");
@@ -3522,7 +3572,7 @@ function profileCard() {
   const me = myProfile(), st = rankState(), r = RANKS[st.tier];
   return `<div class="pf-card">
     <div class="pf-top">${pAvatar(me, 70)}<div class="pf-meta"><div class="pf-name-row"><b>${esc(me.name)}</b><button class="mini" data-action="pfname" title="Name ändern">✎</button></div>
-      <small>${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · Rahmen „${FRAME_N[me.frame]}“</small>
+      <small>${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · Rahmen „${FRAME_N[me.frame]}“</small>
       <div class="pf-btns"><label class="btn"><input type="file" accept="image/*" data-pfphoto hidden>📷 Foto</label>${me.photo ? `<button class="btn" data-action="pfnophoto">Entfernen</button>` : ""}</div></div></div>
     ${S.pfEditName ? `<div class="fr-add" style="margin-top:12px"><input id="pfNameIn" class="input" style="text-transform:none;letter-spacing:0" maxlength="20" value="${esc(me.name)}"><button class="btn primary" data-action="pfnamesave">Speichern</button></div>` : ""}
     <div class="sub-h" style="margin-top:14px">Profilrahmen – pro Rang einer</div>
@@ -3883,7 +3933,7 @@ function v3Home() {
   const first = !document.querySelector("#view-start .h3home");
   { const v1 = $("#view-start").cloneNode(true); v1.querySelector("header.top")?.remove(); S.v3today = v1.innerHTML; }
   const day = WD_FULL[now.getDay()], fs = Math.round(Math.min(124, Math.max(44, (innerHeight - 300) * .9 / (day.length * .8))));
-  const HOME_APPS = ["tasks", "notes", "timer", "walls", "gear"];
+  const HOME_APPS = ["tasks", "food", "notes", "timer", "gear"];
   $("#view-start").innerHTML = `<div class="h3home">
     <div class="h3panel">
       <div class="h3side" aria-hidden="true">
@@ -3937,8 +3987,9 @@ function v3TodayHTML() {
       <div class="t3top"><div><small>Tagesfortschritt</small><div class="t3big">${cnt}<span>/${tasks.length}</span></div></div><div class="t3pct">${pct}<small>%</small></div></div>
       <div class="t3line"><i style="width:${pct}%"></i></div>
       <div class="t3sub">${left ? `Noch <b>${left}</b> ${left === 1 ? "Aufgabe" : "Aufgaben"} offen` : "Tagesquote erfüllt 🔥"}</div>
-      <div class="t3pills"><span>${FLAME} ${streak()} Tage Serie</span><span>🏋️ ${esc(plan.name)}</span>${rk ? `<button data-action="gorank">${rk.i} ${esc(rk.n)}</button>` : ""}${openTodos ? `<button data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}</div>
+      <div class="t3pills"><span>${FLAME} ${streak()} Tage Serie</span><span>🏋️ ${esc(plan.name)}</span>${rk ? `<button data-action="gorank">${rIco(rk)} ${esc(rk.n)}</button>` : ""}${openTodos ? `<button data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}</div>
     </div>
+    ${foodMini(k)}
     <div class="t3week"><div class="cal">${["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map(w => `<div class="wd">${w}</div>`).join("")}${week}</div></div>
     ${notif}
     <h2>Offen${openT.length ? ` · ${openT.length}` : ""}</h2>
@@ -4561,11 +4612,6 @@ function taskIcon(name) { const n = (name || "").toLowerCase();
 function achKey(c) { const k = c.icon || "";
   if (k.startsWith("type_")) { const ty = (typeof TYPES !== "undefined" ? TYPES : []).find(t => "type_" + t.name === k); return actIcon(k.slice(5), ty?.type); }
   if (k.startsWith("task_")) return taskIcon(c.n || ""); return k; }
-function achIco(c) {
-  if (!isV2()) return c.emo || AEMO[c.icon] || "🏅";
-  const k = achKey(c), p = AI2[k] || AICON[k] || AI2.medal;
-  return `<svg class="ach-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
-}
 
 /* ===================== V2/V3: Trainingsarten-Katalog & Aufgaben-Vorschläge =====================
    Jeder stellt seinen eigenen Wochenplan zusammen: pro Wochentag „+ Trainingsart“ → Katalog (Schwimmen, Klettern …). */
@@ -4625,7 +4671,7 @@ document.addEventListener("click", e => {
 // ---------- Tägliche Aufgaben: Vorschläge mit „+“ (u. a. Gewicht morgens/abends) ----------
 const TASK_SUG = [
   { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", reminds: ["07:00"] }, { key: "gewicht_pm", t: "Gewicht abends", kind: "weight", slot: "pm", reminds: ["21:00"] },
-  { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "schritte", t: "10.000 Schritte" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
+  { key: "schritte", t: "Schritte", s: "Ziel 10.000 · iPhone automatisch", kind: "steps", goal: 10000, reminds: ["22:00"] }, { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
   { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" }, { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" },
   { key: "schlaf", t: "Vor 23 Uhr im Bett" },
 ];
@@ -4644,8 +4690,276 @@ document.addEventListener("click", async e => {
   const cfg = S.taskCfg || DEFAULT_TASKS; if (cfg.some(x => x.key === t.key)) return;
   const task = JSON.parse(JSON.stringify(t)), ti = cfg.findIndex(x => x.training);
   S.taskCfg = t.kind === "weight" ? [task, ...cfg] : ti >= 0 ? [...cfg.slice(0, ti), task, ...cfg.slice(ti)] : [...cfg, task];
-  b.remove(); await saveTaskCfg(); toast(`„${t.t}“ hinzugefügt ✓`);
+  b.remove(); await saveTaskCfg(); toast(`„${t.t}“ hinzugefügt ✓`); if (t.kind === "steps") openStepsHelp();
 });
+
+// Menü einer Aufgabe: bei „Schritte“ zusätzlich Ziel & Automatik
+function openTaskMenu(key) { openTaskMenuV1(key); const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key);
+  if (isV2() && t?.kind === "steps") $("#sheetInner .menu")?.insertAdjacentHTML("afterbegin", `<button data-sthelp="1">${peIco("shoe")}<span>Ziel & automatisch übernehmen<small>Tagesziel ${fmtN(stepGoal(t), 0)} · iPhone-Kurzbefehl</small></span></button>`); }
+document.addEventListener("click", e => { if (e.target.closest("[data-sthelp]")) openStepsHelp(); });
+
+/* ===================== V2/V3: Rangfarben = Symbol = Profilrahmen, jede Stufe eigene Farbe ===================== */
+function rankCol2(i) { return ["#CD7F32", "#C3C9D4", "#FFC400", "#2FD4B4", "#5EC4FF", "#33D17A", "#FF7A3D", "#FF3355", "#6A6BFF", "#C04DFF", null][i]; }
+// Rahmen-Farben (hell, mittel, dunkel) passend zur Rangfarbe – Mythos & GOD-LEVEL bleiben wie sie sind
+function fpal2(t) { return [null, null, null, null, null, ["#d6ffe9", "#2ecf7a", "#0a4a2a"], ["#ffe0c8", "#ff7a3d", "#7a2600"], ["#ffd6dd", "#e8304f", "#5a0614"], ["#e2e2ff", "#6a6bff", "#14125e"], null, null][t]; }
+// Eigene Symbole im Emoji-Stil, wo das Emoji farblich nicht passt (Meister, Champion, Legende)
+function rankSvg2(i) {
+  const g = (id, a, b, c) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".5" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs>`;
+  if (i === 5) return `<svg viewBox="0 0 36 36">${g("rkm", "#bff7d6", "#2ecf7a", "#0d6a3a")}<path d="M10 2h7l3 11h-7z" fill="#1c8f52"/><path d="M26 2h-7l-3 11h7z" fill="#57e39a"/><circle cx="18" cy="23" r="10.5" fill="url(#rkm)" stroke="#0a4a2a" stroke-width="1.4"/><circle cx="18" cy="23" r="7.2" fill="none" stroke="#d6ffe9" stroke-width="1" opacity=".7"/><path d="M18 17.6l1.7 3.5 3.8.5-2.8 2.6.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z" fill="#eafff2"/><path d="M11.5 19a7.5 7.5 0 014-3.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>`;
+  if (i === 7) return `<svg viewBox="0 0 36 36">${g("rkc", "#ffd0d8", "#ff3355", "#7a0618")}<path d="M10 4h16v8a8 8 0 01-16 0z" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4"/><path d="M10 6.5H5.5a4.5 4.5 0 004.8 6.2M26 6.5h4.5a4.5 4.5 0 01-4.8 6.2" fill="none" stroke="#c81e3c" stroke-width="2.2"/><path d="M15.5 19h5l1 6h-7z" fill="#c81e3c" stroke="#5a0614" stroke-width="1.2"/><rect x="10.5" y="25" width="15" height="6" rx="1.6" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4"/><path d="M13.5 6.5v5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".55"/><circle cx="18" cy="10" r="2.3" fill="#ffe680" stroke="#7a4a00" stroke-width=".8"/></svg>`;
+  if (i === 8) return `<svg viewBox="0 0 36 36">${g("rkl", "#e6e6ff", "#6a6bff", "#1a1680")}<path d="M18 2.5l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L18 26.2 8.7 31l1.8-10.3L3 13.4l10.4-1.5z" fill="url(#rkl)" stroke="#14125e" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 9l2.4 4.9 5.4.8-3.9 3.8.9 5.4L18 21.4" fill="#fff" opacity=".22"/><path d="M13 13.5l2.6-.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/><path d="M30 2.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="#fff"/></svg>`;
+  return null;
+}
+function rIco(r) { const i = RANKS.indexOf(r); const s = isV2() && i >= 0 ? rankSvg2(i) : null; return s ? `<span class="rico">${s}</span>` : r?.i ?? ""; }
+// Farben umschalten: in Version 2/3 die neuen, in Version 1 die alten (Getter, damit ein Versionswechsel sofort greift)
+setTimeout(() => { try {
+  RANKS.forEach((r, i) => { const old = r.c; if (!rankCol2(i)) return; Object.defineProperty(r, "c", { get: () => isV2() ? rankCol2(i) : old, configurable: true }); });
+  TIER_COL.forEach((old, i) => { if (!rankCol2(i)) return; Object.defineProperty(TIER_COL, i, { get: () => isV2() ? rankCol2(i) : old, configurable: true }); });
+} catch (e) { console.error(e); } }, 0);
+// Erfolge: wieder Emojis – nur Gorilla, Kran und Push/Pull ersetzt
+function achIco(c) {
+  const e = c.emo || AEMO[c.icon] || "🏅"; if (!isV2()) return e; const k = c.icon || "";
+  if (k === "heavy") return "🪨"; if (k === "bigvol") return "⛰️";
+  if (k.startsWith("type_")) { const n = k.slice(5).toLowerCase(); if (/pull|zieh|rücken/.test(n)) return "🧲"; if (/push|drück|brust/.test(n)) return "🦾"; }
+  return e;
+}
+
+/* ===================== V2/V3: Schritte & Zurück-Taste ===================== */
+// ---------- Schritte: Eingabe in der Aufgabe, abends Erinnerung, auf dem iPhone automatisch per Kurzbefehl (?steps=1234) ----------
+const stepGoal = t => +t.goal || 10000;
+function stepsMain(t, k, text) {
+  const v = S.days[k]?.steps ?? "", g = stepGoal(t), pct = v ? Math.min(100, Math.round(v / g * 100)) : 0;
+  return `<div class="task-main"><span class="box-check">${CHECK}</span><span style="min-width:0;flex:1">${text}<i class="st-bar"><b style="width:${pct}%"></b></i></span>
+    <span class="kg-in st-in"><input class="num-in" inputmode="numeric" placeholder="–" data-steps="${t.key}" data-day="${k}" value="${v === "" ? "" : esc(String(v))}"><small>/ ${fmtN(g / 1000, g % 1000 ? 1 : 0)}k</small></span></div>`;
+}
+async function setSteps(k, key, raw, quiet) {
+  if (k !== todayKey()) { toast("🔒 Schritte kannst du nur für heute eintragen."); return; }
+  const v = String(raw).replace(/[.\s]/g, "").trim(), n = v === "" ? null : parseInt(v, 10);
+  if (n !== null && (isNaN(n) || n < 0 || n > 200000)) { toast("Bitte eine gültige Schrittzahl eingeben"); return; }
+  const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key), tasks = tasksFor(fromKey(k)), cur = S.days[k] || { done: {} };
+  const done = { ...(cur.done || {}) }; if (t) done[key] = n !== null && n >= stepGoal(t);
+  const count = tasks.filter(x => done[x.key]).length, data = { ...cur, date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length };
+  if (n === null) delete data.steps; else data.steps = n;
+  S.days[k] = data; renderStart(); if (S.tab === "cal") renderCal();
+  if (data.complete && !cur.complete) quotaDone(); else if (!quiet && n !== null) toast(done[key] ? `✓ ${fmtN(n, 0)} Schritte – Ziel geschafft!` : `${fmtN(n, 0)} Schritte gespeichert`);
+  try { await setDoc(dayRef(k), data); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+}
+document.addEventListener("change", e => { const i = e.target.closest?.("[data-steps]"); if (i) setSteps(i.dataset.day, i.dataset.steps, i.value); });
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches?.("[data-steps]")) e.target.blur(); });
+// Link aus dem iPhone-Kurzbefehl: …/tracker/?steps=8423 → wird eingetragen, sobald du angemeldet bist
+(() => { let q; try { q = new URLSearchParams(location.search).get("steps"); } catch {} if (q == null) return;
+  const go = setInterval(async () => { if (!S.uid || !S.days) return; clearInterval(go);
+    let t = (S.taskCfg || DEFAULT_TASKS).find(x => x.kind === "steps");
+    if (!t) { t = { key: "schritte", t: "Schritte", kind: "steps", goal: 10000 }; S.taskCfg = [...(S.taskCfg || DEFAULT_TASKS), t]; await saveTaskCfg(); }
+    await setSteps(todayKey(), t.key, q, true); toast(`👟 ${fmtN(+q || 0, 0)} Schritte übernommen`);
+    try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
+function openStepsHelp() {
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Schritte automatisch</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <p class="muted" style="font-size:13.5px;margin-top:0">Web-Apps dürfen den Schrittzähler nicht direkt auslesen. So klappt es trotzdem:</p>
+    <h2>iPhone – automatisch</h2><ol class="st-ol"><li>App <b>Kurzbefehle</b> → <b>Automation</b> → <b>+</b> → <b>Tageszeit</b>, z. B. 22:30, täglich, <b>„Sofort ausführen“</b>.</li>
+      <li>Aktion <b>„Health-Messwerte suchen“</b>: Schritte, Startdatum <b>heute</b>.</li><li>Aktion <b>„Statistik berechnen“</b> → <b>Summe</b>.</li>
+      <li>Aktion <b>„URL öffnen“</b>: <code>${esc(location.origin + location.pathname)}?steps=</code> und dahinter die <b>Summe</b> einfügen.</li>
+      <li>Einmal ausführen und Health-Zugriff <b>erlauben</b>. In Safari einmal anmelden – fertig.</li></ol>
+    <h2>Android</h2><p class="muted" style="font-size:13.5px">Die Aufgabe hat eine Erinnerung um 22:00 – Schrittzahl aus Google Fit / Samsung Health ablesen und eintippen.</p>
+    <div class="field"><label>Tagesziel</label><input class="text-in" id="stGoal" inputmode="numeric" value="${stepGoal((S.taskCfg || []).find(x => x.kind === "steps") || {})}"></div>
+    <button class="btn primary block" style="margin-top:12px" data-stgoal="1">Speichern</button>`;
+  showSheet(true);
+}
+document.addEventListener("click", async e => { if (!e.target.closest("[data-stgoal]")) return; const g = parseInt($("#stGoal").value, 10); if (!(g > 0)) return;
+  S.taskCfg = (S.taskCfg || DEFAULT_TASKS).map(t => t.kind === "steps" ? { ...t, goal: g } : t); closeSheet(); await saveTaskCfg(); toast(`Ziel: ${fmtN(g, 0)} Schritte ✓`); });
+
+// ---------- Zurück-Taste (Android): erst Fenster schließen, dann vorheriger Reiter, dann App verlassen ----------
+function backTop() {
+  if (!$("#dlg")?.classList.contains("hidden")) { $("#dlgNo")?.click(); return true; }
+  const pick = document.querySelector("#w3 .w3pick, .pg-pick"); if (pick) { pick.remove(); return true; }
+  if ($("#f3")?.classList.contains("on")) { foodClose(); return true; }
+  if (!$("#sheet")?.classList.contains("hidden")) { closeSheet(); return true; }
+  if ($("#w3")?.classList.contains("on")) { w3Close(); return true; }
+  if (PG?.open) { pgClose(); return true; }
+  return false;
+}
+(() => {
+  const arm = () => { try { if (!history.state?.trkBack) history.pushState({ trkBack: 1 }, ""); } catch {} };
+  const init = () => { if (!isV2()) return; try { if (!history.state?.trkBack) { history.replaceState({ trkBase: 1 }, ""); history.pushState({ trkBack: 1 }, ""); } } catch {} };
+  setTimeout(init, 300); document.addEventListener("click", () => { if (isV2() && !history.state?.trkBack) arm(); }, { capture: true, passive: true });
+  addEventListener("popstate", () => {
+    if (!isV2()) return;
+    if (backTop()) return arm();
+    const h = S.tabHist || [];
+    while (h.length && h[h.length - 1] === S.tab) h.pop();
+    if (h.length) { S.backNav = true; setTab(h.pop()); S.backNav = false; return arm(); }
+    if (S.tab !== "start") { S.backNav = true; setTab("start"); S.backNav = false; return arm(); }
+    // ganz am Anfang: nächstes Zurück verlässt die App
+  });
+})();
+
+/* ===================== V2/V3: Ernährung – Barcode scannen, suchen, Kalorien & Makros =====================
+   Daten: users/{uid}/food/{Datum} = { items: [{ n, g, kcal, p, c, f, meal }] } · Nährwerte: Open Food Facts (frei, ohne Schlüssel) */
+V3_ICONS.food = V3I('<path d="M7 2.5v8.5M4.5 2.5v5a2.5 2.5 0 005 0v-5M7 11v10.5M16.5 21.5V2.5c-2.5 1-4 3.8-4 7.5v3.5h4"/>');
+V3_APPS.push(["food", "Essen", "food", () => foodOpen()]);
+const FOOD = { k: null, goal: null, busy: false };
+const FOOD_MEALS = [["fr", "Frühstück"], ["mi", "Mittag"], ["ab", "Abend"], ["sn", "Snacks"]];
+const FOOD_BASE = [ // Richtwerte pro 100 g: kcal, Protein, Kohlenhydrate, Fett, Portion (g)
+  ["Haferflocken", 372, 13.5, 58.7, 7, 60], ["Reis (gekocht)", 130, 2.7, 28, .3, 200], ["Nudeln (gekocht)", 150, 5.5, 30, .9, 250], ["Kartoffeln (gekocht)", 77, 2, 17, .1, 250],
+  ["Hähnchenbrust (gegart)", 165, 31, 0, 3.6, 150], ["Ei (1 Stück)", 143, 12.6, .7, 9.5, 60], ["Magerquark", 67, 12, 4, .2, 250], ["Skyr", 63, 11, 4, .2, 150],
+  ["Milch 1,5 %", 47, 3.4, 4.8, 1.5, 250], ["Vollkornbrot", 215, 7.5, 38, 1.8, 50], ["Banane", 89, 1.1, 20, .3, 120], ["Apfel", 52, .3, 12, .2, 150],
+  ["Lachs", 208, 20, 0, 13, 125], ["Thunfisch (Wasser)", 116, 26, 0, 1, 130], ["Whey-Protein", 380, 78, 8, 5, 30], ["Erdnussbutter", 600, 25, 16, 50, 20],
+  ["Rinderhack 5 %", 125, 21, 0, 5, 125], ["Brokkoli", 34, 2.8, 4, .4, 200], ["Avocado", 160, 2, 2, 15, 80], ["Olivenöl", 884, 0, 0, 100, 10]];
+const fK = () => FOOD.k || todayKey();
+const foodDay = k => (S.food = S.food || {})[k] || { items: [] };
+const foodSum = k => foodDay(k).items.reduce((a, x) => ({ kcal: a.kcal + (+x.kcal || 0), p: a.p + (+x.p || 0), c: a.c + (+x.c || 0), f: a.f + (+x.f || 0) }), { kcal: 0, p: 0, c: 0, f: 0 });
+const foodGoal = () => FOOD.goal || { kcal: 2400, p: 140, c: 280, f: 80 };
+const r1 = v => Math.round(v * 10) / 10;
+async function foodLoad(k) {
+  if (!S.uid) return; S.food = S.food || {};
+  try { const d = await getDoc(doc(db, "users", S.uid, "food", k)); S.food[k] = d.exists() ? { items: d.data().items || [] } : { items: [] }; } catch { S.food[k] = S.food[k] || { items: [] }; }
+  if (!FOOD.goal) { try { const u = await getDoc(userRef()); if (u.exists() && u.data().foodGoal) FOOD.goal = u.data().foodGoal; } catch {} }
+}
+async function foodSave(k) { try { await setDoc(doc(db, "users", S.uid, "food", k), { date: k, items: foodDay(k).items }); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); } }
+// Mini-Karte auf der Heute-Seite
+function foodMini(k) {
+  if (!S.food?.[k]) return ""; const s = foodSum(k), g = foodGoal(), pct = Math.min(100, Math.round(s.kcal / g.kcal * 100));
+  return `<button class="t3food" data-v3app="food"><span class="tf-i">${V3_ICONS.food}</span><span class="tf-t"><small>Ernährung</small><b>${fmtN(s.kcal, 0)} <em>/ ${fmtN(g.kcal, 0)} kcal</em></b><i class="t3line"><i style="width:${pct}%"></i></i></span><span class="tf-p"><b>${fmtN(s.p, 0)} g</b><small>Protein</small></span></button>`;
+}
+setInterval(() => { if (S.uid && S.daysFull && !FOOD.boot) { FOOD.boot = 1; foodLoad(todayKey()).then(() => { if (isV3() && S.tab === "start") renderStart(); }); } }, 1500);
+
+// ---------- Seite ----------
+function foodOpen(k) {
+  FOOD.k = k || FOOD.k || todayKey();
+  let o = $("#f3"); if (!o) { o = document.createElement("div"); o.id = "f3"; document.body.appendChild(o); o.addEventListener("click", foodClick); }
+  o.classList.add("on"); document.documentElement.classList.add("f3on"); foodRender();
+  if (!S.food?.[FOOD.k]) foodLoad(FOOD.k).then(foodRender); else if (!FOOD.goal) foodLoad(FOOD.k).then(foodRender);
+}
+function foodClose() { $("#f3")?.classList.remove("on"); document.documentElement.classList.remove("f3on"); foodScanStop(); if (S.tab === "start") renderStart(); }
+function foodRender() {
+  const o = $("#f3"); if (!o) return; const k = fK(), day = foodDay(k), s = foodSum(k), g = foodGoal(), left = g.kcal - s.kcal, d = fromKey(k), loaded = !!S.food?.[k];
+  const bar = (n, v, gv, u) => `<div class="f3m"><div><small>${n}</small><b>${fmtN(v, 0)}<em>/${fmtN(gv, 0)} ${u}</em></b></div><i><i style="width:${Math.min(100, gv ? v / gv * 100 : 0)}%"></i></i></div>`;
+  let recent = []; try { recent = JSON.parse(localStorage.getItem("tracker-foodrecent") || "[]"); } catch {}
+  o.innerHTML = `<div class="f3in">
+    <div class="f3top"><button class="f3x" data-f3="close" aria-label="Schließen">${ICON.x}</button><div><small>${k === todayKey() ? "Heute" : WD_FULL[d.getDay()]}, ${d.getDate()}. ${MON_SHORT[d.getMonth()]}</small><h1>Ernährung</h1></div>
+      <div class="f3nav"><button data-f3="day" data-v="-1">${W3ARR.l}</button><button data-f3="day" data-v="1" ${k >= todayKey() ? "disabled" : ""}>${W3ARR.r}</button></div></div>
+    <div class="card f3sum">
+      <div class="f3kc"><div><small>${left >= 0 ? "Noch übrig" : "Darüber"}</small><b>${fmtN(Math.abs(left), 0)}<em> kcal</em></b></div><div class="f3eat"><b>${fmtN(s.kcal, 0)}</b><small>gegessen</small></div></div>
+      <div class="t3line"><i style="width:${Math.min(100, s.kcal / g.kcal * 100)}%"></i></div>
+      <div class="f3ms">${bar("Protein", s.p, g.p, "g")}${bar("Kohlenh.", s.c, g.c, "g")}${bar("Fett", s.f, g.f, "g")}</div>
+      <button class="f3goal" data-f3="goal">Ziele anpassen</button></div>
+    <div class="f3acts"><button data-f3="scan">${V3I('<path d="M3 7V4.5A1.5 1.5 0 014.5 3H7M17 3h2.5A1.5 1.5 0 0121 4.5V7M21 17v2.5a1.5 1.5 0 01-1.5 1.5H17M7 21H4.5A1.5 1.5 0 013 19.5V17M7 8v8M10 8v8M13 8v8M16.5 8v8"/>')}<span>Barcode<br>scannen</span></button>
+      <button data-f3="search">${V3I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<span>Lebensmittel<br>suchen</span></button>
+      <button data-f3="manual">${V3I('<path d="M12 5v14M5 12h14"/>')}<span>Selbst<br>eintragen</span></button></div>
+    ${recent.length ? `<h2>Zuletzt</h2><div class="f3rec">${recent.slice(0, 10).map((x, i) => `<button data-f3="rec" data-i="${i}">${esc(x.n)}<small>${fmtN(x.g, 0)} g · ${fmtN(x.kcal, 0)} kcal</small></button>`).join("")}</div>` : ""}
+    ${!loaded ? `<div class="f3empty">Lädt …</div>` : FOOD_MEALS.map(([m, n]) => { const it = day.items.map((x, i) => ({ ...x, i })).filter(x => (x.meal || "sn") === m); const kc = it.reduce((a, x) => a + (+x.kcal || 0), 0);
+      return `<div class="f3meal"><div class="f3mh"><h2>${n}</h2><span>${kc ? fmtN(kc, 0) + " kcal" : ""}</span><button data-f3="search" data-m="${m}" aria-label="Hinzufügen">${W3I.plus}</button></div>
+        ${it.length ? it.map(x => `<div class="f3it"><span><b>${esc(x.n)}</b><small>${fmtN(x.g, 0)} g · ${fmtN(x.p, 0)} g P · ${fmtN(x.c, 0)} g K · ${fmtN(x.f, 0)} g F</small></span><em>${fmtN(x.kcal, 0)}</em><button data-f3="del" data-i="${rIco(x)}" aria-label="Löschen">${ICON.x}</button></div>`).join("") : ""}</div>`; }).join("")}
+    <p class="f3note">Nährwerte aus <b>Open Food Facts</b> (frei, von Nutzern gepflegt) bzw. Richtwerte – kurz prüfen lohnt sich. Foto-Erkennung per KI braucht einen kostenpflichtigen KI-Dienst und ist deshalb (noch) nicht drin.</p>
+  </div>`;
+}
+const foodMealNow = () => { const h = new Date().getHours() + new Date().getMinutes() / 60; return h < 10.5 ? "fr" : h < 15 ? "mi" : h < 21 ? "ab" : "sn"; };
+async function foodAdd(x) {
+  const k = fK(); if (k > todayKey()) return; S.food = S.food || {}; if (!S.food[k]) await foodLoad(k);
+  S.food[k].items.push(x); foodSave(k); pgBuzz(20);
+  try { const r = JSON.parse(localStorage.getItem("tracker-foodrecent") || "[]").filter(y => y.n !== x.n); r.unshift({ ...x, meal: undefined }); localStorage.setItem("tracker-foodrecent", JSON.stringify(r.slice(0, 20))); } catch {}
+  toast(`✓ ${x.n} · ${fmtN(x.kcal, 0)} kcal`); foodRender();
+}
+// Menge wählen (alle Werte pro 100 g)
+function foodAmount(it, meal) {
+  FOOD.cur = { ...it, meal: meal || it.meal || foodMealNow() }; const c = FOOD.cur, def = c.g || c.serv || 100;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px"><div style="min-width:0"><b style="font-size:18px">${esc(c.n)}</b>${c.brand ? `<div class="muted" style="font-size:12px">${esc(c.brand)}</div>` : ""}</div><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="muted" style="font-size:12px">pro 100 g: ${fmtN(c.k100, 0)} kcal · ${r1(c.p100)} g Protein · ${r1(c.c100)} g Kohlenh. · ${r1(c.f100)} g Fett</div>
+    <div class="field"><label>Menge (g / ml)</label><input class="text-in" id="f3g" inputmode="decimal" value="${def}"></div>
+    <div class="groups" style="flex-wrap:wrap;margin-top:8px">${[...new Set([c.serv, 50, 100, 150, 200, 250].filter(Boolean))].map(v => `<button class="chip" data-f3g="${v}">${v === c.serv && c.serv ? "Portion " : ""}${v} g</button>`).join("")}</div>
+    <div class="field"><label>Mahlzeit</label><div class="groups" style="flex-wrap:wrap">${FOOD_MEALS.map(([m, n]) => `<button class="chip ${c.meal === m ? "accent" : ""}" data-f3meal="${m}">${n}</button>`).join("")}</div></div>
+    <div class="f3prev" id="f3prev"></div>
+    <button class="btn primary block" style="margin-top:12px" data-f3add="1">Hinzufügen</button>`;
+  showSheet(true); foodPrev();
+}
+function foodPrev() { const c = FOOD.cur, g = numv($("#f3g")?.value), el = $("#f3prev"); if (!el || !c) return;
+  el.innerHTML = `<b>${fmtN(c.k100 * g / 100, 0)} kcal</b><span>${r1(c.p100 * g / 100)} g P</span><span>${r1(c.c100 * g / 100)} g K</span><span>${r1(c.f100 * g / 100)} g F</span>`; }
+document.addEventListener("input", e => { if (e.target.id === "f3g") foodPrev(); if (e.target.id === "f3q") { clearTimeout(FOOD.qt); FOOD.qt = setTimeout(foodSearchRun, 450); } });
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-f3g]"); if (g) { $("#f3g").value = g.dataset.f3g; foodPrev(); return; }
+  const m = e.target.closest("[data-f3meal]"); if (m) { FOOD.cur.meal = m.dataset.f3meal; document.querySelectorAll("[data-f3meal]").forEach(b => b.classList.toggle("accent", b === m)); return; }
+  if (e.target.closest("[data-f3add]")) { const c = FOOD.cur, gr = numv($("#f3g").value); if (!(gr > 0)) { toast("Bitte eine Menge eingeben"); return; }
+    closeSheet(); foodAdd({ n: c.n, g: gr, kcal: Math.round(c.k100 * gr / 100), p: r1(c.p100 * gr / 100), c: r1(c.c100 * gr / 100), f: r1(c.f100 * gr / 100), meal: c.meal, ...(c.code ? { code: c.code } : {}) }); return; }
+  const r = e.target.closest("[data-f3res]"); if (r) { const it = (FOOD.res || [])[+r.dataset.f3res]; if (it) foodAmount(it, FOOD.meal); return; }
+  if (e.target.closest("[data-f3man]")) { const v = id => numv($(id)?.value), n = $("#f3mn").value.trim(); if (!n || !(v("#f3mk") >= 0)) { toast("Name und Kalorien eintragen"); return; }
+    closeSheet(); foodAdd({ n, g: v("#f3mg") || 0, kcal: Math.round(v("#f3mk")), p: r1(v("#f3mp")), c: r1(v("#f3mc")), f: r1(v("#f3mf")), meal: FOOD.meal || foodMealNow() }); return; }
+  if (e.target.closest("[data-f3goalsave]")) { const v = id => Math.max(0, Math.round(numv($(id).value))); FOOD.goal = { kcal: v("#f3gk") || 2400, p: v("#f3gp"), c: v("#f3gc"), f: v("#f3gf") };
+    setDoc(userRef(), { foodGoal: FOOD.goal }, { merge: true }).catch(() => {}); closeSheet(); foodRender(); toast("Ziele gespeichert ✓"); }
+});
+async function foodClick(e) {
+  const b = e.target.closest("[data-f3]"); if (!b) return; const a = b.dataset.f3, k = fK();
+  if (a === "close") foodClose();
+  else if (a === "day") { FOOD.k = keyOf(addDays(fromKey(k), +b.dataset.v)); if (FOOD.k > todayKey()) FOOD.k = todayKey(); foodRender(); if (!S.food?.[FOOD.k]) foodLoad(FOOD.k).then(foodRender); }
+  else if (a === "del") { const it = foodDay(k).items[+b.dataset.i]; if (!it || !(await askYesNo(`„${it.n}“ entfernen?`, "Entfernen"))) return; foodDay(k).items.splice(+b.dataset.i, 1); foodSave(k); foodRender(); }
+  else if (a === "search") { FOOD.meal = b.dataset.m || null; foodSearch(); }
+  else if (a === "manual") { FOOD.meal = null; foodManual(); }
+  else if (a === "scan") foodScan();
+  else if (a === "goal") foodGoalEdit();
+  else if (a === "rec") { let r = []; try { r = JSON.parse(localStorage.getItem("tracker-foodrecent") || "[]"); } catch {} const x = r[+b.dataset.i]; if (x) foodAdd({ ...x, meal: foodMealNow() }); }
+}
+// Suche: eigene Richtwerte sofort, Open Food Facts nach kurzer Pause
+function foodSearch() {
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Lebensmittel suchen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <input class="text-in" id="f3q" placeholder="z. B. Skyr, Haferflocken, Pizza …" autocomplete="off"><div class="f3res" id="f3res"></div>`;
+  showSheet(true); FOOD.res = []; foodSearchRun(); setTimeout(() => $("#f3q")?.focus(), 80);
+}
+const foodBaseItem = b => ({ n: b[0], k100: b[1], p100: b[2], c100: b[3], f100: b[4], serv: b[5], src: "base" });
+function foodOffItem(p) { const n = p.nutriments || {}, kc = +n["energy-kcal_100g"] || (+n.energy_100g ? n.energy_100g / 4.184 : 0);
+  return { n: p.product_name_de || p.product_name || "Unbenannt", brand: (p.brands || "").split(",")[0], k100: kc, p100: +n.proteins_100g || 0, c100: +n.carbohydrates_100g || 0, f100: +n.fat_100g || 0, serv: Math.round(+p.serving_quantity) || null, code: p.code, src: "off" }; }
+async function foodSearchRun() {
+  const q = ($("#f3q")?.value || "").trim(), ql = q.toLowerCase(), el = $("#f3res"); if (!el) return;
+  const base = FOOD_BASE.filter(b => !ql || b[0].toLowerCase().includes(ql)).map(foodBaseItem);
+  const draw = (off, st) => { FOOD.res = [...base, ...off]; el.innerHTML = FOOD.res.map((x, i) => `<button data-f3res="${i}"><span><b>${esc(x.n)}</b><small>${x.src === "base" ? "Richtwert" : esc(x.brand || "Open Food Facts")}</small></span><em>${fmtN(x.k100, 0)}<small> kcal/100 g</small></em></button>`).join("") + (st ? `<div class="f3st">${st}</div>` : ""); };
+  draw([], q.length >= 3 ? "Suche in Open Food Facts …" : q ? "" : "Tippe mindestens 3 Buchstaben für Markenprodukte.");
+  if (q.length < 3) return; const my = FOOD.qn = (FOOD.qn || 0) + 1;
+  try { const r = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=24&sort_by=unique_scans_n&lc=de&fields=code,product_name,product_name_de,brands,nutriments,serving_quantity`);
+    const j = await r.json(); if (my !== FOOD.qn) return;
+    const off = (j.products || []).map(foodOffItem).filter(x => x.k100 > 0); draw(off, off.length ? "" : "Nichts gefunden – probier es anders oder trag es selbst ein.");
+  } catch { if (my === FOOD.qn) draw([], "Open Food Facts nicht erreichbar – bist du offline?"); }
+}
+function foodManual() {
+  const f = (id, l, ph, m = "decimal") => `<label class="w3fld"><small>${l}</small><input class="text-in" id="${id}" inputmode="${m}" placeholder="${ph}"></label>`;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Selbst eintragen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <label class="w3fld"><small>Was?</small><input class="text-in" id="f3mn" placeholder="z. B. Döner"></label>
+    <div class="f3grid">${f("f3mk", "Kalorien (kcal)", "650")}${f("f3mg", "Menge (g, optional)", "350")}${f("f3mp", "Protein (g)", "30")}${f("f3mc", "Kohlenhydrate (g)", "60")}${f("f3mf", "Fett (g)", "28")}</div>
+    <button class="btn primary block" style="margin-top:14px" data-f3man="1">Hinzufügen</button>`;
+  showSheet(true);
+}
+function foodGoalEdit() { const g = foodGoal(), f = (id, l, v) => `<label class="w3fld"><small>${l}</small><input class="text-in" id="${id}" inputmode="numeric" value="${v}"></label>`;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Tagesziele</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="f3grid">${f("f3gk", "Kalorien (kcal)", g.kcal)}${f("f3gp", "Protein (g)", g.p)}${f("f3gc", "Kohlenhydrate (g)", g.c)}${f("f3gf", "Fett (g)", g.f)}</div>
+    <p class="muted" style="font-size:12px">Faustregel Protein beim Muskelaufbau: etwa 1,6–2 g pro kg Körpergewicht.</p>
+    <button class="btn primary block" style="margin-top:10px" data-f3goalsave="1">Speichern</button>`;
+  showSheet(true); }
+// ---------- Barcode-Scanner: eingebaut (Android/Chrome) oder ZXing als Ersatz (iPhone) ----------
+async function foodScan() {
+  let s = $("#f3scan"); if (!s) { s = document.createElement("div"); s.id = "f3scan"; document.body.appendChild(s); }
+  s.innerHTML = `<video playsinline muted autoplay></video><div class="f3frame"></div><div class="f3sh">Barcode in den Rahmen halten</div><button class="f3sx" aria-label="Schließen">${ICON.x}</button>
+    <form class="f3sm"><input inputmode="numeric" placeholder="oder Nummer eintippen" id="f3code"><button class="btn primary">OK</button></form>`;
+  s.classList.add("on"); s.querySelector(".f3sx").onclick = foodScanStop;
+  s.querySelector("form").onsubmit = ev => { ev.preventDefault(); const c = $("#f3code").value.replace(/\D/g, ""); if (c.length >= 8) foodCode(c); };
+  const v = s.querySelector("video");
+  try {
+    if ("BarcodeDetector" in window && (await BarcodeDetector.getSupportedFormats?.() || []).includes("ean_13")) {
+      FOOD.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); v.srcObject = FOOD.stream; await v.play();
+      const det = new BarcodeDetector({ formats: ["ean_13", "ean_8", "upc_a", "upc_e"] });
+      const loop = async () => { if (!FOOD.stream) return; try { const r = await det.detect(v); if (r[0]?.rawValue) return foodCode(r[0].rawValue); } catch {} FOOD.raf = setTimeout(loop, 180); }; loop();
+    } else {
+      if (!window.ZXing) await new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
+      FOOD.zx = new ZXing.BrowserMultiFormatReader();
+      await FOOD.zx.decodeFromConstraints({ video: { facingMode: "environment" } }, v, res => { if (res && FOOD.zx) foodCode(res.getText()); });
+    }
+  } catch (err) { s.querySelector(".f3sh").textContent = "Kamera nicht verfügbar – erlaube den Kamerazugriff oder tippe die Nummer unten ein."; }
+}
+function foodScanStop() { clearTimeout(FOOD.raf); FOOD.stream?.getTracks().forEach(t => t.stop()); FOOD.stream = null; try { FOOD.zx?.reset(); } catch {} FOOD.zx = null; $("#f3scan")?.classList.remove("on"); }
+async function foodCode(code) {
+  if (FOOD.busy) return; FOOD.busy = true; foodScanStop(); pgBuzz(30); toast("Suche Produkt …");
+  try { const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=code,product_name,product_name_de,brands,nutriments,serving_quantity`), j = await r.json();
+    if (j.status === 1 && j.product) { const it = foodOffItem({ ...j.product, code }); if (it.k100 > 0) foodAmount(it); else { toast("Produkt gefunden, aber ohne Nährwerte – bitte selbst eintragen."); foodManual(); $("#f3mn").value = it.n; } }
+    else { toast("Produkt nicht in Open Food Facts – bitte selbst eintragen."); foodManual(); }
+  } catch { toast("Keine Verbindung zu Open Food Facts."); }
+  FOOD.busy = false;
+}
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -4655,13 +4969,13 @@ function rankCard() {
   const chartPts = st.hist.slice(-90);
   return `<div class="card rank-card ${r.god ? "god shine god-shine" : st.tier >= 8 ? "shine" : ""}" style="--rc:${r.c};--tc:${r.c}">
     <div class="rank-top">
-      <div class="rank-badge ${r.god ? "ico-god" : st.tier >= 8 ? "ico-shine" : ""}">${r.i}</div>
+      <div class="rank-badge ${r.god ? "ico-god" : st.tier >= 8 ? "ico-shine" : ""}">${rIco(r)}</div>
       <div style="min-width:0;flex:1"><div class="k">Dein Rang</div><div class="rank-n">${r.n}</div>
-        <div class="d">${fmtN(st.rp, 0)} RP${st.peak > st.tier ? ` · Bestwert: ${RANKS[st.peak].i} ${RANKS[st.peak].n}` : ""}</div></div>
+        <div class="d">${fmtN(st.rp, 0)} RP${st.peak > st.tier ? ` · Bestwert: ${rIco(RANKS[st.peak])} ${RANKS[st.peak].n}` : ""}</div></div>
     </div>
     <div class="ach-bar" style="margin-top:14px"><i class="rank-bar" style="width:${pct}%;background:${r.god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D) 0 0 / 200% 100%;animation:godshine 3s linear infinite" : `linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #fff))`}"></i></div>
-    <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${nx.i} <span class="${nx.god ? "god-text" : ""}" style="font-weight:700">${nx.n}</span>` : `⚡ <span class="god-text" style="font-weight:800">Höchster Rang. Halte ihn!</span>`}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
-    ${danger ? `<div class="rank-warn danger">⚠️ <b>Gefahr: Abstieg!</b> Hol heute noch ${fmtN(need, 0)} RP, sonst bist du morgen ${RANKS[st.tier - 1].i} ${RANKS[st.tier - 1].n}.</div>` : ""}
+    <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${rIco(nx)} <span class="${nx.god ? "god-text" : ""}" style="font-weight:700">${nx.n}</span>` : `⚡ <span class="god-text" style="font-weight:800">Höchster Rang. Halte ihn!</span>`}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
+    ${danger ? `<div class="rank-warn danger">⚠️ <b>Gefahr: Abstieg!</b> Hol heute noch ${fmtN(need, 0)} RP, sonst bist du morgen ${rIco(RANKS[st.tier - 1])} ${RANKS[st.tier - 1].n}.</div>` : ""}
     <div class="rank-today">
       <div><span>Heute</span><b>+${f1(t.total)}</b></div>
       <div><span>Quote</span><b>+${f1(t.quota)}</b></div>
@@ -4672,7 +4986,7 @@ function rankCard() {
     ${chartPts.length > 1 ? lineChart([{ color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#FFC400", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
     <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
       <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote (für alle gleich – volle Punkte ab ${RANK_MIN_TASKS} Aufgaben, mehr Aufgaben bringen nicht mehr Punkte), ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
-      ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${x.i}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
+      ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${rIco(x)}</span><b style="${isV2() && !x.god ? `color:${x.c}` : ""}">${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
     </details>
   </div>`;
 }
@@ -4909,19 +5223,19 @@ function renderAwards(all, part) {
           <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${achIco(c)}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
-            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `${RANKS[c.lvl - 1].i} <span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
+            <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `${rIco(RANKS[c.lvl - 1])} <span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
           </div>
           <div class="ach-v">${c.fmt ? `<span style="font-size:15px" class="${c.v === 10 ? "god-text" : ""}">${c.fmt(c.v)}</span>` : `${fmtN(c.v, c.dec ? 1 : 0)}<small>${c.u}</small>`}</div>
         </div>
         <div class="ach-bar"><i class="${god ? "god-bar" : ""}" style="width:${pct}%;background:${god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D) 0 0 / 200% 100%;animation:godshine 3s linear infinite" : "var(--accent)"}"></i></div>
-        <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: ${RANKS[c.lvl].i} <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei <span style="white-space:nowrap">${fmtN(c.next, 0) + c.u}</span>`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
+        <div class="ach-f"><span>${c.next ? `${c.fmt ? `Nächstes Ziel: <b class="${c.next === 10 ? "god-text" : ""}">${c.fmt(c.next)}</b> erreichen` : `Nächste Stufe: ${rIco(RANKS[c.lvl])} <b class="${TIER[c.lvl] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl]}</b> bei <span style="white-space:nowrap">${fmtN(c.next, 0) + c.u}</span>`}` : `<span class="god-text" style="font-weight:800">Alle Stufen geschafft – Respekt!</span>`}</span>
           <span class="ach-dots">${c.goals.map((g, i) => { const t = c.fmt ? g : i; return `<i class="${i < c.lvl && t === TIER.length - 1 ? "god-dot" : ""}" style="background:${i < c.lvl ? TIER_COL[t] : "var(--surface-2)"}" title="${TIER[i]}: ${fmtN(g, 0)}${c.u}"></i>`; }).join("")}</span></div>
         ${friendLine(c)}
         <details class="ach-info"><summary><span class="i-btn">i</span> So steigst du auf</summary>
           <div class="note" style="margin:6px 0 8px">${c.info || AINFO[c.icon] || ""}</div>
           ${c.goals.map((g, i) => c.fmt
-            ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${RANKS[g].i}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
-            : `<div class="rl rl5 ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="rl-emo">${RANKS[i].i}</span><b>${TIER[i]}</b>
+            ? `<div class="rl ${i === c.lvl - 1 ? "on" : ""} ${RANKS[g].god ? "godrow" : ""}"><span>${rIco(RANKS[g])}</span><b>${RANKS[g].n}</b><small>einmal erreichen</small><small>${i < c.lvl ? "✓" : ""}</small></div>`
+            : `<div class="rl rl5 ${i === c.lvl - 1 ? "on" : ""} ${TIER[i] === "GOD-LEVEL" ? "godrow" : ""}"><span class="rl-emo">${rIco(RANKS[i])}</span><b>${TIER[i]}</b>
             <small>ab ${fmtN(g, 0) + c.u}</small><small>${i < c.lvl ? "✓" : ""}</small></div>`).slice().reverse().join("")}
         </details>
       </div>`; }).join("")}</div>
@@ -5252,7 +5566,7 @@ async function deleteTask(key) {
   toast("Aufgabe gelöscht");
 }
 // Menü für eine tägliche Aufgabe: Bearbeiten · Erinnerung · Löschen
-function openTaskMenu(key) {
+function openTaskMenuV1(key) {
   const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key); if (!t) return;
   const name = t.training ? "Training (laut Wochenplan)" : t.t;
   $("#sheetInner").innerHTML = `
@@ -6511,7 +6825,7 @@ function cosmPrefsHTML(th) {
     ${sec("try", "🏆 Ausprobieren", "Animationen testen", `<div class="opt-grid">
       <button class="opt" data-action="rankuptest"><span class="oe">🏆</span><span><b>Rang-Aufstieg</b><small>Animation testen</small></span></button>
       <button class="opt" data-action="prtest"><span class="oe">⏱️</span><span><b>Neuer Rekord</b><small>Animation testen</small></span></button></div>
-      <div class="sub-h">Pokal jedes Rangs ansehen</div><div class="opt-grid">${RANKS.map((r, i) => `<button class="opt" data-action="rutest" data-t="${i}"><span class="oe">${r.i}</span><span><b>${r.n}</b><small>Pokal ansehen</small></span></button>`).join("")}
+      <div class="sub-h">Pokal jedes Rangs ansehen</div><div class="opt-grid">${RANKS.map((r, i) => `<button class="opt" data-action="rutest" data-t="${i}"><span class="oe">${rIco(r)}</span><span><b>${r.n}</b><small>Pokal ansehen</small></span></button>`).join("")}
 </div>`)}
     ${sec("unl", "🔓 Was schaltet welcher Rang frei?", "", unlockOverview())}`;
 }
@@ -6547,7 +6861,7 @@ function unlockOverview() {
       ...Object.entries(props()).filter(([k]) => propTier(k) === t).map(([k, p]) => ({ cat: `Panorama ${WORLD(p.w).n}`, n: `Deko ${p.n}` }))];
     if (!items.length) return "";
     const groups = {}; items.forEach(x => (groups[x.cat] ||= []).push(x.n));
-    return `<div class="ul-r ${peakTier() >= t ? "got" : ""}"><b>${r.i} <span class="${r.god ? "god-text" : ""}">${r.n}</span></b>${Object.entries(groups).map(([g, l]) => `<div><small>${g}</small> ${l.join(", ")}</div>`).join("")}</div>`; }).join("");
+    return `<div class="ul-r ${peakTier() >= t ? "got" : ""}"><b>${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span></b>${Object.entries(groups).map(([g, l]) => `<div><small>${g}</small> ${l.join(", ")}</div>`).join("")}</div>`; }).join("");
   return `<div class="ul">${rows}</div>`;
 }
 function openMeadowPrefs() { PREF_OPEN.add("pano"); const w = cosmRaw().world; if (w) PREF_OPEN.add("w-" + w); openPrefs(); setTimeout(() => document.querySelector(`[data-sec="w-${w}"]`)?.scrollIntoView({ block: "start" }), 50); }
@@ -6778,7 +7092,7 @@ function rankUpNext() {
     ...ANIMALS.filter(a => a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
   if (card.dataset.step === "2") { wrap.remove(); return; }
   card.dataset.step = "2"; wrap.classList.add("step2"); card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
-  setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${RANKS[tier].i} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
+  setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${rIco(RANKS[tier])} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
     <div class="ru-list">${list.map((x, i) => `<div style="animation-delay:${.15 + i * .07}s"><span class="ru-ic">${x.icon}</span><span style="font-size:inherit"><b>${x.n}</b><small>${x.d}</small></span></div>`).join("")}</div>
     <button class="btn primary block" data-action="ruprefs">Gleich ausprobieren</button><button class="btn block" data-action="ruok" style="margin-top:8px">Später</button>`; }, 300);
 }
@@ -8820,6 +9134,7 @@ function keepScroll(fn) {
   if (r && typeof r.then === "function") r.then(restore); else restore();
 }
 function setTab(t) {
+  if (S.tab && S.tab !== t && !S.backNav) { (S.tabHist = S.tabHist || []).push(S.tab); if (S.tabHist.length > 30) S.tabHist.shift(); }
   S.tab = t;
   ["start", "cal", "train", "perf", "todo"].forEach(x => $("#view-" + x).classList.toggle("hidden", x !== t));
   document.querySelectorAll("nav.bottom button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
