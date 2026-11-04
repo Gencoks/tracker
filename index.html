@@ -1862,6 +1862,44 @@
   .gw-b { grid-template-columns: minmax(0, 1fr); } .gw-b > *, .gw-set > * { min-width: 0; } .gw .w3fld input, .gw-tb3 input { width: 100%; } .gw { overflow: hidden; }
   .gw-tb3 small { white-space: nowrap; }
 
+  /* v47: einheitliche Ecken für alles Anklickbare */
+  :root[data-ui=v2] { --rc: 12px; }
+  :root[data-ui=v2] :is(.btn, .opt, .pg-open, .w3start, .gw-main, .gw-row button, .t3note, .t3add) { border-radius: 14px; }
+  :root[data-ui=v2] .switch, :root[data-ui=v2] #view-perf .switch { border-radius: 16px; padding: 4px; }
+  :root[data-ui=v2] .switch button, :root[data-ui=v2] #view-perf .switch button { border-radius: 12px; }
+  .ti { width: 1em; height: 1em; vertical-align: -.14em; flex: none; display: inline-block; }
+  /* Gadget-Leiste: größere Punkte, antippen = auf/zu */
+  .gb-grip { display: grid; grid-template-columns: repeat(2, 5px); gap: 4px 6px; justify-content: center; padding: 10px 0 8px; cursor: grab; }
+  .gb-grip i { width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 70%, #8a8a90); }
+  .gbar.h .gb-grip { writing-mode: horizontal-tb; grid-template-columns: repeat(3, 5px); padding: 0 10px; align-content: center; }
+  .gbar.c { width: 48px; padding: 6px 4px; } .gbar.c .gb-grip { padding: 10px 0; }
+  .gbar button svg { width: 20px; height: 20px; } .gbar button { gap: 3px; }
+  .gw-h span { display: flex; align-items: center; gap: 6px; } .gw-h span svg { width: 15px; height: 15px; }
+  .w3hasnote svg { width: 14px; height: 14px; vertical-align: -2px; opacity: .7; }
+  /* Sätze bearbeiten */
+  .gw-sets.ed { max-height: 230px; } .gs-hd { display: flex; gap: 6px; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: #8a8a90; padding: 0 4px; }
+  .gs-hd span:first-child { width: 14px; } .gs-hd span { flex: 1; } .gs-hd span:last-child { flex: 0 0 24px; }
+  .gw-sets.ed div { gap: 6px; padding: 4px 4px 4px 8px; } .gw-sets.ed input { flex: 1; min-width: 0; width: 100%; height: 32px; border: 0; border-bottom: 1.5px solid color-mix(in srgb, var(--accent) 30%, #333337); background: transparent; color: #f5f5f2; font-size: 16px; font-weight: 700; text-align: center; border-radius: 0; }
+  .gw-sets.ed input:focus { outline: none; border-bottom-color: var(--accent); }
+  .gw-add { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 12px; border: 1.5px dashed color-mix(in srgb, var(--accent) 40%, #333337); color: var(--accent); font-weight: 700; font-size: 13px; } .gw-add svg { width: 16px; height: 16px; }
+  .gw-hint { font-size: 10.5px; color: #77777d; text-align: center; margin-top: -4px; }
+  .gw textarea { min-height: 70px; }
+  /* Auswertung: rote gestrichelte Linie mit Schieber */
+  .chart.scrub-on { position: relative; padding-bottom: 26px; touch-action: pan-y; }
+  .sc-line { position: absolute; top: 4px; bottom: 34px; width: 0; border-left: 2px dashed #ff4d4d; transform: translateX(-1px); pointer-events: none; z-index: 2; }
+  .sc-handle { position: absolute; bottom: 2px; width: 26px; height: 26px; transform: translateX(-50%); border-radius: 8px; background: #ff4d4d; box-shadow: 0 4px 12px rgba(255,60,60,.4); z-index: 3; touch-action: none; cursor: ew-resize; display: grid; place-items: center; }
+  .sc-handle::before { content: ""; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top: 0; border-bottom: 6px solid #ff4d4d; }
+  .sc-handle i { width: 10px; height: 10px; border-left: 2px solid rgba(255,255,255,.85); border-right: 2px solid rgba(255,255,255,.85); }
+  .sc-handle.drag { transform: translateX(-50%) scale(1.12); }
+  .sc-pop { position: absolute; top: 4px; left: 6px; z-index: 4; max-width: 62%; border-radius: 14px; background: color-mix(in srgb, var(--surface) 96%, transparent); border: 1px solid color-mix(in srgb, #ff4d4d 45%, var(--border)); box-shadow: 0 10px 28px rgba(0,0,0,.35); padding: 6px 10px 10px; font-size: 12px; }
+  .sc-pop.right { left: auto; right: 6px; } .sc-pop.closed { padding: 6px 8px; } .sc-pop.closed .sc-body { display: none; }
+  .sc-grip { display: grid; grid-template-columns: repeat(3, 4px); gap: 3px 4px; justify-content: center; width: 100%; padding: 2px 0 6px; } .sc-pop.closed .sc-grip { padding: 2px 0; }
+  .sc-grip i { width: 4px; height: 4px; border-radius: 50%; background: #ff4d4d; }
+  .sc-body b { display: block; font-size: 12.5px; margin-bottom: 3px; } .sc-v { color: var(--muted); font-size: 11.5px; } .sc-none { color: var(--muted); font-size: 11px; margin-top: 4px; font-style: italic; }
+  .sc-n { display: flex; gap: 6px; margin-top: 6px; font-size: 12px; line-height: 1.35; } .sc-n svg { width: 13px; height: 13px; flex: none; margin-top: 2px; color: #ff6b6b; } .sc-n i { display: block; font-style: normal; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  /* Startseite: etwas mehr Abstand oben */
+  :root.ui3 .h3panel { padding-top: calc(40px + env(safe-area-inset-top)); } :root.ui3 .h3side { height: calc(100dvh - 318px); }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2668,7 +2706,8 @@ function lineChart(series, { unit = "", dec = 1, height = 170 } = {}) {
     if (s.label !== false) g += `<text x="${Math.min(X(last.x), W - Rm)}" y="${Y(last.y) - 9}" text-anchor="end" font-size="11" font-weight="700" fill="var(--text)">${fmtN(last.y, dec)}${unit}</text>`;
     g += sp.map(p => `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="13" fill="transparent" data-tip="${esc(p.tip || `${dShort(p.x)}: ${fmtN(p.y, dec)}${unit}`)}" data-px="${X(p.x) / W * 100}" data-py="${Y(p.y) / H * 100}"/>`).join("");
   }
-  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
+  const scrub = xl.map(k => ({ x: k, px: +(X(k) / W * 100).toFixed(2), tips: series.flatMap(s => s.pts.filter(p => p.x === k).map(p => (s.name ? s.name + ": " : "") + (p.tip ? p.tip.replace(/^[^:]*:\s*/, "") : fmtN(p.y, dec) + unit))) }));
+  return `<div class="chart" data-scrub="${esc(JSON.stringify({ keys: scrub }))}"><svg viewBox="0 0 ${W} ${H}">${g}</svg></div>`;
 }
 function barChart(items, { unit = "", dec = 0, height = 150 } = {}) {
   if (!items.length) return "";
@@ -3739,7 +3778,7 @@ function v3Home() {
     <div class="h3panel">
       <div class="h3side" aria-hidden="true">
         <div class="col info"><small>${String(now.getDate()).padStart(2, "0")} ${MON_SHORT[now.getMonth()]} ${now.getFullYear()}</small><small id="h3time">${timeWords(now)}</small><small>${cnt} von ${tasks.length} erledigt</small><small>${esc(plan.name)}</small><small>${streak()} Tage Serie${rk ? ` · ${esc(rk.n)}` : ""}</small></div>
-        <div class="col"><b class="v2day" style="font-size:${fs}px">${day}</b></div>
+        <div class="col"><b class="v2day" style="font-size:${S.v3fs?.k === day + "|" + innerHeight ? S.v3fs.f : fs}px">${day}</b></div>
         <div class="col"><span class="v2script">Heute,</span><span class="v2rule"></span></div>
       </div>
       <div class="h3foot">
@@ -3751,7 +3790,8 @@ function v3Home() {
   </div>`;
   // Wochentag so groß wie möglich, ohne abgeschnitten zu werden
   const side = $("#view-start .h3side"), dEl = side?.querySelector(".v2day");
-  if (dEl) { let f = fs; requestAnimationFrame(() => { while (f > 40 && dEl.scrollHeight > side.clientHeight - 4) { f -= 4; dEl.style.fontSize = f + "px"; } }); }
+  if (dEl) { const key = day + "|" + innerHeight; if (S.v3fs?.k === key) dEl.style.fontSize = S.v3fs.f + "px";
+    else requestAnimationFrame(() => { let f = fs; while (f > 40 && dEl.scrollHeight > side.clientHeight - 4) { f -= 4; dEl.style.fontSize = f + "px"; } S.v3fs = { k: key, f }; }); }
   if ($("#d3")?.classList.contains("on")) v3DrawerFill();
 }
 setInterval(() => { const el = $("#h3time"); if (el) el.textContent = timeWords(new Date()); }, 20000);
@@ -3867,7 +3907,7 @@ function w3Overview() {
   const p = w3Plan(), items = w3Items(), locked = S.trainDate < todayKey();
   const exList = v.querySelector("#exList"), runCard = v.querySelector('[data-in="run.km"]')?.closest(".card"), sesCard = v.querySelector('[data-in="session.minutes"]')?.closest(".card");
   const blocks = `<div class="w3list">${items.map((it, n) => `<button class="w3blk ${w3Done(it) ? "done" : ""}" data-w3="open" data-n="${n}">
-      <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}</b><small>${w3Summary(it)}</small></span><span class="box-check">${CHECK}</span></button>`).join("")}</div>`;
+      <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}${it.kind === "ex" && S.workout.exercises[it.i].note ? ` <i class="w3hasnote">${W3I.notes}</i>` : ""}</b><small>${w3Summary(it)}</small></span><span class="box-check">${CHECK}</span></button>`).join("")}</div>`;
   if (exList) exList.outerHTML = blocks; else if (runCard) runCard.outerHTML = blocks; else if (sesCard) sesCard.outerHTML = blocks;
   v.querySelector(".note")?.remove();
   if (items.length && !locked) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
@@ -3908,13 +3948,19 @@ const w3TSave = () => { try { localStorage.setItem("tracker-w3t", JSON.stringify
 const w3SwMs = () => W3T.sw.acc + (W3T.sw.run ? Date.now() - W3T.sw.t0 : 0);
 const w3TmLeft = () => W3T.tm.run ? Math.max(0, W3T.tm.end - Date.now()) : W3T.tm.left;
 // Gadgets (Fenster), wie die Werkzeugleiste bei TradingView
-const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 236], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], sets: ["☰", "Sätze", 240] };
+const W3I = {
+  edit: V3I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>'), sets: V3I('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>'),
+  count: V3I('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 9.5l2-1.5v8M14.5 8v8"/>'), sw: V3I('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5V6M18.5 6.5l1.5-1.5"/>'),
+  timer: V3I('<path d="M6.5 3h11M6.5 21h11M7.5 3c0 5 9 6 9 9s-9 4-9 9M16.5 3c0 5-9 6-9 9"/>'), tabata: V3I('<path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/>'),
+  notes: V3I('<path d="M5 3.5h10l4 4v13H5z"/><path d="M15 3.5v4h4M8.5 12h7M8.5 15.5h5"/>'), plus: V3I('<path d="M12 5v14M5 12h14"/>'), rot: V3I('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
+};
+const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 236], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], sets: ["☰", "Sätze", 252], notes: ["📝", "Notiz", 256] };
 function w3Wins(it) {
   W3.win = W3.win || {}; const k = it.kind === "ex" ? "ex" : "run";
   if (!W3.win[k]) { const W = innerWidth, H = innerHeight;
     W3.win[k] = it.kind === "ex" ? { edit: { on: 1, x: 70, y: 96 }, sets: { on: 1, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: Math.max(8, W - 230), y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
       : { edit: { on: 1, x: 70, y: 96 }, sw: { on: 1, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
-  const ws = W3.win[k]; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) };
+  const ws = W3.win[k]; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 };
   return ws;
 }
 function w3Render() {
@@ -3929,9 +3975,9 @@ function w3Render() {
     <div class="w3vert" aria-hidden="true"><b style="font-size:${Math.max(28, Math.min(54, Math.round(560 / Math.max(6, it.name.length))))}px">${esc(it.name)}</b><span>${nSets ? `${nSets} ${nSets === 1 ? "Satz" : "Sätze"} · ` : ""}${WD_FULL[now.getDay()]}, ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</span></div>
     ${Object.entries(wins).filter(([, w]) => w.on).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
     ${W3.tabs.map(w3TabHTML).join("")}
-    <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Verschieben">⠿</div>
-      ${bar.c ? `<button data-w3a="barc" title="Werkzeuge zeigen"><span>🧰</span><small>Öffnen</small></button>` : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}"><span>${W3G[g][0]}</span><small>${W3G[g][1]}</small></button>`).join("")}
-      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler"><span>＋</span><small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen"><span>⇄</span><small>Drehen</small></button><button data-w3a="barc" title="Leiste einklappen"><span>▾</span><small>Zu</small></button>`}</div>
+    <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      ${bar.c ? "" : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}
+      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen">${W3I.rot}<small>Drehen</small></button>`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
       <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>`;
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
@@ -3940,8 +3986,8 @@ function w3Render() {
 function w3Clamp() { document.querySelectorAll("#w3 .gw, #w3 .gbar, #w3 .w3tab").forEach(el => { const r = el.getBoundingClientRect(); let x = r.left, y = r.top;
   x = Math.max(4, Math.min(innerWidth - r.width - 4, x)); y = Math.max(4, Math.min(innerHeight - Math.min(r.height, 120) - 4, y)); if (x !== r.left || y !== r.top) { el.style.left = x + "px"; el.style.top = y + "px"; } }); }
 function w3WinHTML(it, g, w) {
-  const [ic, title, width] = W3G[g];
-  return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${ic} ${title}</span>${g === "count" || g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
+  const [, title, width] = W3G[g];
+  return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${W3I[g]}${title}</span>${g === "count" || g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
 }
 function w3Step(field, label, val, step, unit = "") {
   return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
@@ -3962,6 +4008,7 @@ function w3Body(it, g) {
       <div class="gw-tbr" id="w3tbr">Runde ${t.round} / ${b.rounds} · gesamt ${fmtMs(b.rounds * (b.work + b.rest) * 1000 - b.rest * 1000, false)}</div>
       <button class="gw-main ${b.run ? "stop" : ""}" data-w3a="${b.run ? "tbstop" : "tbgo"}">${b.run ? "Pause" : b.acc && !t.done ? "Weiter" : "Start"}</button>
       <div class="gw-row"><button data-w3a="tbreset">↺ Neu</button></div>`; }
+  if (g === "notes" && it.kind !== "ex") { const o = it.kind === "run" ? "run" : "session"; return `<label class="w3fld"><small>Notiz zum Training heute</small><textarea data-w3in="${o}.note" placeholder="Wie lief es? Wetter, Gefühl, Schmerzen …">${esc((w[o] || {}).note || "")}</textarea></label>`; }
   if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
     if (g === "edit") return it.kind === "run" ? `<label class="w3fld"><small>Distanz (km)</small><input data-w3in="run.km" inputmode="decimal" value="${esc(r.km || "")}"></label>
         <label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3in="run.minutes" inputmode="numeric" placeholder="mm:ss" value="${esc(r.minutes || "")}"></label>
@@ -3983,14 +4030,19 @@ function w3Body(it, g) {
       ${m === "weight" ? `<div class="gw-kg"><span>Gewicht</span><button data-w3a="dec" data-f="kg" data-s="2.5">−</button><input data-w3f="kg" inputmode="decimal" value="${c.kg}"><button data-w3a="inc" data-f="kg" data-s="2.5">+</button><span>kg</span></div>` : ""}
       <div class="gw-row"><button data-w3a="tapdec">−${W3T.step}</button><button data-w3a="tapreset">↺ 0</button></div>
       <button class="gw-main acc" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig → nächster Satz</button>`;
-  if (g === "sets") { const s = e.sets.map((x, j) => [x, j]).filter(([x]) => setFilled(x));
-    return s.length ? `<div class="gw-sets">${s.map(([x, j], n) => `<div><b>${n + 1}</b><span>${esc(setTxt(x, m))}</span><button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button></div>`).join("")}</div>`
-      : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`; }
+  if (g === "sets") { const F = { weight: [["kg", "kg"], ["reps", "Wdh."]], band: [["band", "Band"], ["reps", "Wdh."]], reps: [["reps", "Wdh."]], time: [["sec", "Sek."]], cardio: [["km", "km"], ["min", "Zeit"]] }[m] || [["reps", "Wdh."]];
+    const rows = e.sets.map((x, j) => [x, j]).filter(([x]) => setFilled(x) || x._new);
+    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div><b>${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="–">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button></div>`).join("")}</div>`
+      : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`}
+      <button class="gw-add" data-w3a="addset">${W3I.plus} Satz hinzufügen</button><div class="gw-hint">Tippe in einen Satz, um ihn zu ändern.</div>`; }
+  if (g === "notes") { const tn = it.kind === "ex" ? (w.extra?.note || "") : "";
+    return `<label class="w3fld"><small>Zu „${esc(e.name)}“</small><textarea data-w3note="ex" placeholder="z. B. Technik, Gefühl, was nicht ging …">${esc(e.note || "")}</textarea></label>
+      <label class="w3fld"><small>Zum Training heute</small><textarea data-w3note="wo" placeholder="z. B. Bauchschmerzen, Gelenke, wenig Schlaf …">${esc(tn)}</textarea></label>`; }
   return "";
 }
 // Zusätzliche Zähler (beliebig viele)
 function w3TabHTML(t) {
-  return `<div class="gw w3tab ${t.min ? "min" : ""}" data-tab="${t.id}" style="left:${t.x}px;top:${t.y}px;width:150px"><div class="gw-h" data-drag="tab:${t.id}"><span>👆 Zähler</span><button data-w3a="tmin" data-id="${t.id}">${t.min ? "▢" : "–"}</button><button data-w3a="tdel" data-id="${t.id}">✕</button></div>
+  return `<div class="gw w3tab ${t.min ? "min" : ""}" data-tab="${t.id}" style="left:${t.x}px;top:${t.y}px;width:150px"><div class="gw-h" data-drag="tab:${t.id}"><span>${W3I.count}Zähler</span><button data-w3a="tmin" data-id="${t.id}">${t.min ? "▢" : "–"}</button><button data-w3a="tdel" data-id="${t.id}">✕</button></div>
     ${t.min ? "" : `<div class="gw-b"><button class="gw-tap sm" data-w3a="ttap" data-id="${t.id}"><b data-live3="${t.id}">${t.n || 0}</b></button><div class="gw-row"><button data-w3a="tdec" data-id="${t.id}">−</button><button data-w3a="tzero" data-id="${t.id}">↺</button></div></div>`}</div>`;
 }
 // Ziehen: Fenster, Zusatz-Zähler und Gadget-Leiste
@@ -4000,8 +4052,10 @@ function w3DragStart(e) {
   e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top; h.setPointerCapture(e.pointerId); el.classList.add("drag");
   let x = r0.left, y = r0.top;
   const mv = ev => { x = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, ev.clientX - ox)); y = Math.max(4, Math.min(innerHeight - 44, ev.clientY - oy)); el.style.left = x + "px"; el.style.top = y + "px"; };
+  const sx = e.clientX, sy = e.clientY; let lx = sx, ly = sy; h.addEventListener("pointermove", ev => { lx = ev.clientX; ly = ev.clientY; });
   const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); el.classList.remove("drag");
     const [kind, id] = h.dataset.drag.split(":"), it = w3It();
+    if (kind === "bar" && Math.hypot(lx - sx, ly - sy) < 6) { W3.bar = { ...(W3.bar || {}), x: r0.left, y: r0.top, c: !(W3.bar || {}).c }; w3Save(); w3Render(); return; }
     if (kind === "bar") W3.bar = { ...(W3.bar || {}), x, y }; else if (kind === "win") Object.assign(w3Wins(it)[id], { x, y }); else { const t = W3.tabs.find(q => q.id === id); if (t) Object.assign(t, { x, y }); }
     w3Save(); };
   h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
@@ -4031,6 +4085,8 @@ async function w3Click(e) {
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
   if (a === "inc" || a === "dec") { const f = b.dataset.f, s = +b.dataset.s * (a === "inc" ? 1 : -1); W3.cur[f] = Math.max(0, Math.round((numv(W3.cur[f]) + s) * 100) / 100); const inp = $(`#w3 [data-w3f="${f}"]`); if (inp) inp.value = W3.cur[f]; pgBuzz(8); return; }
   if (a === "saveset" && ex) return w3AddSet(ex, m, W3.cur.reps);
+  if (a === "addset" && ex) { const ns = emptySet(m), c = W3.cur; if (m === "weight") { ns.kg = c.kg ? String(c.kg).replace(".", ",") : ""; ns.reps = String(c.reps || ""); } else if (m === "band") { ns.band = c.band || ""; ns.reps = String(c.reps || ""); } else if (m === "reps") ns.reps = String(c.reps || ""); else if (m === "time") ns.sec = String(c.sec || ""); else { ns.km = c.km ? String(c.km) : ""; ns.min = c.min || ""; }
+    ex.sets = ex.sets.filter(setFilled); ex.sets.push(ns); saveWorkout(false); toast(`✓ Satz ${ex.sets.length} hinzugefügt`); return re(); }
   if (a === "delset" && ex) { ex.sets.splice(+b.dataset.j, 1); if (!ex.sets.length) ex.sets = [emptySet(m)]; saveWorkout(false); return re(); }
   if (a === "tap") { W3T.cnt += W3T.step || 1; pgBuzz(15); w3TSave(); const el = $("#w3cnt"); if (el) el.textContent = W3T.cnt; const sv = $('#w3 [data-w3a="tapsave"]'); if (sv) sv.disabled = false; const ci = $('#w3 [data-w3c="cnt"]'); if (ci) ci.value = W3T.cnt; return; }
   if (a === "tapdec") { W3T.cnt = Math.max(0, W3T.cnt - (W3T.step || 1)); return re(); }
@@ -4063,6 +4119,8 @@ async function w3Click(e) {
 }
 function w3Input(e) {
   const t = e.target;
+  if (t.dataset.w3set) { const [j, f] = t.dataset.w3set.split("."), it = w3It(), ex = S.workout.exercises[it.i]; if (ex?.sets[+j]) { ex.sets[+j][f] = f === "min" ? fmtDurTyping(t.value) : t.value; if (f === "min" && t.value !== ex.sets[+j][f]) t.value = ex.sets[+j][f]; saveWorkout(false); } return; }
+  if (t.dataset.w3note) { const it = w3It(), w = S.workout; if (t.dataset.w3note === "ex") w.exercises[it.i].note = t.value; else w.extra = { ...(w.extra || {}), note: t.value }; saveWorkout(false); return; }
   if (t.dataset.w3c) { const v = Math.max(0, parseInt(t.value, 10) || 0); if (t.dataset.w3c === "step") W3T.step = Math.max(1, v); else W3T.cnt = v; w3TSave(); const el = $("#w3cnt"); if (el) el.textContent = W3T.cnt; return; }
   if (t.dataset.w3t) { W3T.tb[t.dataset.w3t] = Math.max(1, parseInt(t.value, 10) || 1); w3TSave(); return; }
   if (t.dataset.w3sel === "rest") { W3.autoRest = +t.value; w3Save(); return; }
@@ -4189,6 +4247,43 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-wluid]")) { navigator.clipboard?.writeText(S.uid).then(() => toast("Nutzer-ID kopiert ✓")).catch(() => {}); }
 });
 document.addEventListener("change", e => { if (e.target.id === "wlIn" && e.target.files[0]) wlAdd(e.target.files[0], wlAddShared); });
+
+/* ===================== V2/V3: Symbole statt Emojis, Auswertungs-Linie mit Notizen ===================== */
+const TI = { cal: '<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>',
+  bell: '<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></svg>',
+  note: '<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg>' };
+const v2Ico = html => html.replace(/📅\s?/g, TI.cal + " ").replace(/🔔\s?/g, TI.bell + " ").replace(/📝\s?/g, TI.note + " ");
+function renderTodo() {
+  renderTodoV1();
+  if (!isV2()) return;
+  [...$("#view-todo").children].forEach(el => { if (el.matches("header, .switch")) return; if (/[📅🔔📝]/u.test(el.innerHTML)) el.innerHTML = v2Ico(el.innerHTML); });
+}
+// ---------- Auswertung: rote gestrichelte Linie zum Abfahren ----------
+function scrubNotes(k) {
+  const w = (S.allWo || []).find(x => x.date === k), out = [];
+  if (!w) return out;
+  if (w.extra?.note) out.push(["Training", w.extra.note]); if (w.run?.note) out.push(["Lauf", w.run.note]); if (w.session?.note) out.push([w.plan || "Einheit", w.session.note]);
+  (w.exercises || []).forEach(e => { if (e.note) out.push([e.name, e.note]); });
+  return out;
+}
+function scrubInit(ch) {
+  if (ch.dataset.scrubOn || !isV2()) return; let d; try { d = JSON.parse(ch.dataset.scrub); } catch { return; } if (!d.keys?.length) return;
+  ch.dataset.scrubOn = 1; ch.classList.add("scrub-on");
+  ch.insertAdjacentHTML("beforeend", `<div class="sc-line"></div><div class="sc-handle" title="Ziehen"><i></i></div><div class="sc-pop"><button class="sc-grip" aria-label="Auf- oder zuklappen"><i></i><i></i><i></i><i></i><i></i><i></i></button><div class="sc-body"></div></div>`);
+  const line = ch.querySelector(".sc-line"), hd = ch.querySelector(".sc-handle"), pop = ch.querySelector(".sc-pop"), body = pop.querySelector(".sc-body");
+  const show = i => { const kk = d.keys[i]; ch.dataset.si = i; line.style.left = hd.style.left = kk.px + "%"; pop.classList.toggle("right", kk.px < 50);
+    const notes = scrubNotes(kk.x), dt = fromKey(kk.x);
+    body.innerHTML = `<b>${WD_FULL[dt.getDay()]}, ${dt.getDate()}. ${MON_SHORT[dt.getMonth()]}</b>${kk.tips.map(t => `<div class="sc-v">${esc(t)}</div>`).join("")}
+      ${notes.length ? notes.map(([h, n]) => `<div class="sc-n">${TI.note}<span><i>${esc(h)}</i>${esc(n)}</span></div>`).join("") : `<div class="sc-none">Keine Notiz an diesem Tag</div>`}`; };
+  show(d.keys.length - 1);
+  const pick = clientX => { const r = ch.getBoundingClientRect(), p = (clientX - r.left) / r.width * 100; let best = 0; d.keys.forEach((kk, i) => { if (Math.abs(kk.px - p) < Math.abs(d.keys[best].px - p)) best = i; }); if (best !== +ch.dataset.si) { show(best); try { navigator.vibrate && navigator.vibrate(6); } catch {} } };
+  hd.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); hd.setPointerCapture(e.pointerId); hd.classList.add("drag");
+    const mv = ev => pick(ev.clientX), up = () => { hd.removeEventListener("pointermove", mv); hd.removeEventListener("pointerup", up); hd.removeEventListener("pointercancel", up); hd.classList.remove("drag"); };
+    hd.addEventListener("pointermove", mv); hd.addEventListener("pointerup", up); hd.addEventListener("pointercancel", up); });
+  pop.querySelector(".sc-grip").addEventListener("click", e => { e.stopPropagation(); pop.classList.toggle("closed"); S.scrubClosed = pop.classList.contains("closed"); });
+  if (S.scrubClosed) pop.classList.add("closed");
+}
+new MutationObserver(() => { if (!isV2()) return; document.querySelectorAll("#view-perf .chart[data-scrub]:not([data-scrub-on])").forEach(scrubInit); }).observe(document.documentElement, { childList: true, subtree: true });
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -4551,7 +4646,7 @@ async function setTodoRemind(v) {
   try { await updateDoc(doc(db, "users", S.uid, "todos", id), { remind: v }); toast(v ? `Erinnerung um ${v} Uhr` : "Erinnerung entfernt"); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
   if (v && "Notification" in window && Notification.permission === "default") enableNotifications();
 }
-function renderTodo() {
+function renderTodoV1() {
   const view = S.todoView || "list";
   const sw = (v, l) => `<button class="${view === v ? "on" : ""}" data-action="todoview" data-v="${v}">${l}</button>`;
   let html = `<header class="top"><div><div class="eyebrow">To-Do</div><h1>${view === "notes" ? "Notizen" : view === "cal" ? "Kalender" : "Was noch ansteht"}</h1></div></header>
