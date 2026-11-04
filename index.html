@@ -1945,6 +1945,27 @@
   #w3 .w3bot { gap: 8px; } .w3nset { flex: 1; min-width: 0; padding: 15px 10px; border-radius: 16px; font-weight: 700; font-size: 14px; background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); white-space: nowrap; }
   #w3 .w3next { flex: 1; font-size: 14px; padding: 15px 10px; }
 
+  /* v52: untere Leiste im Training */
+  #w3 .w3nav { width: 52px; flex: none; border-radius: 16px; background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); display: grid; place-items: center; }
+  #w3 .w3nav:disabled { opacity: .3; }
+  #w3 .w3nset { background: var(--accent); color: var(--accent-ink); box-shadow: none; display: flex; align-items: center; justify-content: center; gap: 6px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  #w3 .w3nset svg { width: 17px; height: 17px; }
+  #w3 .w3next { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); display: flex; align-items: center; justify-content: center; gap: 4px; }
+  #w3 .w3next.fin { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+  .gw-sets.ed b[data-w3a] { cursor: pointer; }
+  .w3pick .card { max-height: 80vh; overflow-y: auto; background: #121213 !important; color: #f5f5f2; border-color: #2a2a2d; }
+  .w3pk { display: flex; gap: 6px; } .w3pk button:first-child { flex: 1; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #1b1b1d; text-align: left; font-size: 14px; color: #f5f5f2; }
+  .w3pk.on button:first-child { box-shadow: inset 3px 0 0 var(--accent); background: color-mix(in srgb, var(--accent) 12%, #1b1b1d); } .w3pk i { font-style: normal; color: #8a8a90; font-size: 12px; width: 14px; } .w3pk em { color: #8a8a90; font-style: normal; font-size: 13px; }
+  .w3pk small { color: var(--accent); font-size: 11px; } .w3pk .del { width: 40px; border-radius: 12px; background: #1b1b1d; color: #cfcfd4; }
+  /* Startseite: Panel bis zum unteren Rand, Hinweis rechts */
+  :root.ui3 .h3home { height: 100dvh; } :root.ui3 .h3panel { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .h3hint { position: absolute; right: 14px; bottom: calc(92px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 8px; text-align: right; flex-direction: row-reverse; color: var(--text); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+  .h3hint b { color: var(--accent); font-weight: 700; } .h3hint svg { width: 28px; height: 28px; padding: 5px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--accent); animation: h3up 2.4s ease-in-out infinite; }
+  :root.pw-saver .h3hint svg { animation: none; }
+  .w3pick .btn svg { width: 16px !important; height: 16px !important; }
+  .h3hint { flex-direction: column; align-items: flex-end; gap: 6px; max-width: calc(100vw - min(68vw, 360px) - 22px); font-size: 9.5px; line-height: 1.35; bottom: calc(100px + env(safe-area-inset-bottom)); }
+  #w3 .pg-pick { z-index: 10; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -3837,6 +3858,7 @@ function v3Home() {
         <div class="h3hi"><span>${greetTxt(now.getHours())}</span><small>${S.name ? esc(S.name) + " · " : ""}${cnt === tasks.length && tasks.length ? "Tagesquote erfüllt ✓" : `noch ${tasks.length - cnt} offen`}</small></div>
       </div>
     </div>
+    <button class="h3hint" data-v3app="tasks">${W3ARR.r.replace('<path d="M9 5l7 7-7 7"/>', '<path d="M5 15l7-7 7 7"/>')}<span>Nach oben wischen<br><b>Heutige Aufgaben</b></span></button>
   </div>
   <div class="h3today" id="h3today">${v3TodayHTML()}</div>`;
   // Wochentag so groß wie möglich, ohne abgeschnitten zu werden
@@ -3891,8 +3913,7 @@ function v3DrawerFill() {
   const y = d.querySelector(".d3in")?.scrollTop || 0;
   d.innerHTML = `<div class="d3in"><button class="d3grab" data-v3="drawerx" aria-label="Schließen"><span></span></button>
     ${v3TodayHTML()}
-    <h2>Alle Funktionen</h2>
-    <div class="d3apps">${V3_APPS.map(([key, n, ic]) => `<button data-v3app="${key}"><span>${V3_ICONS[ic]}</span><small>${n}</small></button>`).join("")}<button data-action="logout"><span>${V3_ICONS.out}</span><small>Abmelden</small></button></div></div>`;
+    </div>`;
   d.querySelector(".d3in").scrollTop = y;
 }
 function v3Drawer(on) {
@@ -3993,10 +4014,14 @@ const w3It = () => w3Items()[W3.i];
 function w3Form() { const it = w3It(); if (!it || it.kind !== "ex") return; const f = S.workout.exercises[it.i].form; if (!f) return; const ws = w3Wins(it);
   if (f.via === "tabata") { if (!W3T.tb.run && !W3T.tb.acc) Object.assign(W3T.tb, { work: f.work, rest: f.rest, rounds: f.rounds }); ws.tabata.on = 1; ws.count.on = 1; }
   if (f.via === "timer") { if (!W3T.tm.run) W3T.tm = { dur: f.dur, run: false, end: 0, left: f.dur * 1000, done: false, rest: false }; ws.timer.on = 1; ws.count.on = 1; } w3TSave(); }
+// aktueller Satz (W3.si): zuerst der nächste offene, sonst ein neuer
+const w3SiDef = e => { const k = e.sets.findIndex(x => !setFilled(x)); return k >= 0 ? k : e.sets.length; };
+function w3Load(e) { const st = e.sets[W3.si], src = st && setFilled(st) ? st : (st?._ph && Object.keys(st._ph).length ? st._ph : e.sets.filter(setFilled).slice(-1)[0] || {});
+  W3.cur = { ex: e.name, kg: numv(src.kg) || 0, reps: numv(src.reps) || 8, band: src.band || "", sec: numv(src.sec) || 30, km: numv(src.km) || 0, min: src.min || "" }; }
 function w3Cur(reset) {
   const it = w3It(); if (!it || it.kind !== "ex") return;
-  const e = S.workout.exercises[it.i], nx = e.sets.find(x => !setFilled(x)), last = e.sets.filter(setFilled).slice(-1)[0] || nx?._ph || {};
-  if (reset || W3.cur.ex !== e.name) W3.cur = { ex: e.name, kg: numv(last.kg) || 0, reps: numv(last.reps) || 8, band: last.band || "", sec: numv(last.sec) || 30, km: numv(last.km) || 0, min: last.min || "" };
+  const e = S.workout.exercises[it.i];
+  if (reset || W3.cur.ex !== e.name) { W3.si = w3SiDef(e); w3Load(e); }
 }
 const W3T = (() => { let t = {}; try { t = JSON.parse(localStorage.getItem("tracker-w3t") || "{}"); } catch {} return Object.assign({ cnt: 0, step: 1, cset: false, sw: { run: false, t0: 0, acc: 0 }, tm: { dur: 90, run: false, end: 0, left: 90000, done: false }, tb: { work: 20, rest: 10, rounds: 8, run: false, t0: 0, acc: 0, done: false, ph: -1 } }, t); })();
 const tbMs = () => W3T.tb.acc + (W3T.tb.run ? Date.now() - W3T.tb.t0 : 0);
@@ -4015,6 +4040,7 @@ const W3I = {
   timer: V3I('<rect x="5.5" y="2.5" width="13" height="2.6" rx="1.3"/><rect x="5.5" y="18.9" width="13" height="2.6" rx="1.3"/><path d="M7.5 5.1v1.6c0 2.3 1.9 3.9 3.4 5.3.7.6.7 1.4 0 2C9.4 15.4 7.5 17 7.5 19.3v-.4M16.5 5.1v1.6c0 2.3-1.9 3.9-3.4 5.3-.7.6-.7 1.4 0 2 1.5 1.4 3.4 3 3.4 5.3v-.4"/><path d="M9.6 17.9c.8-1 1.6-1.6 2.4-1.6s1.6.6 2.4 1.6z" fill="currentColor" stroke="none"/>'), tabata: V3I('<path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/>'),
   notes: V3I('<path d="M5 3.5h10l4 4v13H5z"/><path d="M15 3.5v4h4M8.5 12h7M8.5 15.5h5"/>'), plus: V3I('<path d="M12 5v14M5 12h14"/>'), rot: V3I('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
 };
+const W3ARR = { l: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>', r: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>' };
 const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 236], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], sets: ["☰", "Sätze", 252], notes: ["📝", "Notiz", 256] };
 function w3Wins(it) {
   W3.win = W3.win || {}; const k = it.kind === "ex" ? "ex" : "run";
@@ -4039,9 +4065,9 @@ function w3Render() {
     <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       ${bar.c ? "" : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}
       <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button>`}</div>
-    <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
-      ${it.kind === "ex" ? (() => { const ex = S.workout.exercises[it.i], k = ex.sets.findIndex(x => !setFilled(x)), nr = (k >= 0 ? k : ex.sets.length) + 2; return `<button class="w3nset" data-w3a="nextset">Nächster Satz (${nr})</button>`; })() : ""}
-      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Abschließen ✓" : "Nächste Übung ›"}</button></div>`;
+    <div class="w3bot"><button class="w3nav" data-w3a="prev" aria-label="Zurück" ${it.kind === "ex" ? ((W3.si || 0) > 0 || W3.i ? "" : "disabled") : (W3.i ? "" : "disabled")}>${W3ARR.l}</button>
+      ${it.kind === "ex" ? (() => { const ex = S.workout.exercises[it.i], si = Math.min(W3.si ?? w3SiDef(ex), ex.sets.length), isNew = si >= ex.sets.length - 1; return `<button class="w3nset" data-w3a="nextset" data-hold="sets">${isNew ? `${W3I.plus} Neuer Satz` : `Nächster Satz (${si + 2})`}</button>`; })() : ""}
+      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Abschließen ✓" : `Nächste Übung ${W3ARR.r}`}</button></div>`;
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
 }
 // Fenster im Bild halten
@@ -4085,7 +4111,7 @@ function w3Body(it, g) {
       : m === "band" ? `<label class="w3fld"><small>Band / Stufe</small><input data-w3f="band" value="${esc(c.band)}" placeholder="z. B. Grün"></label>` + w3Step("reps", "Wiederholungen", c.reps, 1)
       : m === "reps" ? w3Step("reps", "Wiederholungen", c.reps, 1) : m === "time" ? w3Step("sec", "Zeit", c.sec, 5, "Sek.")
       : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (Min:Sek)</small><input data-w3f="min" placeholder="Min:Sek" value="${esc(c.min)}"></label>`;
-    const nxi = e.sets.findIndex(x => !setFilled(x)), nr = nxi >= 0 ? nxi + 1 : e.sets.length + 1;
+    const nr = Math.min(W3.si ?? w3SiDef(e), e.sets.length) + 1;
     return `${lastCache[e.name] ? `<div class="gw-last"><b>${esc(/^Letztes Mal/.test(lastCache[e.name]) ? lastCache[e.name] : "Letztes Mal: " + lastCache[e.name])}</b></div>` : ""}${modes}${fields}<button class="gw-main acc" data-w3a="saveset">✓ Satz ${nr} speichern</button>`;
   }
   if (g === "count") return `${W3T.cset ? `<div class="gw-set"><small>Pro Klick</small><div class="gw-chips">${[1, 2, 5, 10].map(v => `<button class="${W3T.step === v ? "on" : ""}" data-w3a="cstep" data-v="${v}">+${v}</button>`).join("")}</div>
@@ -4096,7 +4122,7 @@ function w3Body(it, g) {
       <button class="gw-main acc" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig → nächster Satz</button>`;
   if (g === "sets") { const F = { weight: [["kg", "kg"], ["reps", "Wdh."]], band: [["band", "Band"], ["reps", "Wdh."]], reps: [["reps", "Wdh."]], time: [["sec", "Sek."]], cardio: [["km", "km"], ["min", "Zeit"]] }[m] || [["reps", "Wdh."]];
     const rows = e.sets.map((x, j) => [x, j]);
-    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === e.sets.findIndex(q => !setFilled(q)) ? "now" : ""}"><b>${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"}` : "Timer"} · ${fmtMs((x.dur || 0) * 1000, false)}</small>` : ""}</div>`).join("")}</div>`
+    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === W3.si ? "now" : ""}"><b data-w3a="selset" data-j="${j}">${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"}` : "Timer"} · ${fmtMs((x.dur || 0) * 1000, false)}</small>` : ""}</div>`).join("")}</div>`
       : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`}
       <button class="gw-add" data-w3a="addset">${W3I.plus} Satz hinzufügen</button><div class="gw-hint">Tippe in einen Satz, um ihn zu ändern.</div>`; }
   if (g === "notes") { const tn = it.kind === "ex" ? (w.extra?.note || "") : "";
@@ -4124,6 +4150,19 @@ function w3DragStart(e) {
     w3Save(); };
   h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
 }
+// Gedrückthalten auf „Nächster Satz“: alle Sätze zum Springen, Ändern und Löschen
+function w3SetPicker() {
+  const it = w3It(); if (!it || it.kind !== "ex") return; const e = S.workout.exercises[it.i], m = exMode(e);
+  const box = document.createElement("div"); box.className = "pg-pick w3pick";
+  box.innerHTML = `<div class="card"><b>Sätze · ${esc(e.name)}</b>${e.sets.map((x, j) => `<div class="w3pk ${j === W3.si ? "on" : ""}"><button data-w3a="pickset" data-j="${j}"><i>${j + 1}</i>${setFilled(x) ? esc(setTxt(x, m)) : `<em>offen${x._ph && Object.keys(x._ph).length ? " · zuletzt " + esc(setTxt(x._ph, m)) : ""}</em>`}${x.via ? ` <small>${x.via === "tabata" ? "Tabata" : "Timer"}</small>` : ""}</button><button class="del" data-w3a="pickdel" data-j="${j}" aria-label="Löschen">✕</button></div>`).join("")}
+    <button class="btn block" data-w3a="picknew">${W3I.plus} Neuer Satz</button><button class="btn block" data-w3a="pickx">Fertig</button></div>`;
+  $("#w3").appendChild(box);
+}
+(() => { let t = 0, held = false;
+  document.addEventListener("pointerdown", e => { const b = e.target.closest('#w3 [data-hold="sets"]'); if (!b) return; held = false; clearTimeout(t); t = setTimeout(() => { held = true; pgBuzz(25); w3SetPicker(); }, 600); });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(ev => document.addEventListener(ev, () => clearTimeout(t)));
+  document.addEventListener("click", e => { if (held && e.target.closest('#w3 [data-hold="sets"]')) { e.stopPropagation(); e.preventDefault(); held = false; } }, true);
+})();
 // ---------- Aktionen ----------
 const w3Live = () => { const t = $("#w3tm"); if (t) t.innerHTML = fixD(fmtMs(w3TmLeft(), false)); if (!W3T.sw.run) { const el = $("#w3sw"); if (el) el.innerHTML = fixD(fmtMs(w3SwMs())); } };
 // Stoppuhr flüssig (nur solange sie läuft und sichtbar ist)
@@ -4151,7 +4190,11 @@ async function w3Click(e) {
   if (a === "saveset" && ex) return w3AddSet(ex, m, W3.cur.reps);
   if (a === "addset" && ex) { const ns = emptySet(m), c = W3.cur; if (m === "weight") { ns.kg = c.kg ? String(c.kg).replace(".", ",") : ""; ns.reps = String(c.reps || ""); } else if (m === "band") { ns.band = c.band || ""; ns.reps = String(c.reps || ""); } else if (m === "reps") ns.reps = String(c.reps || ""); else if (m === "time") ns.sec = String(c.sec || ""); else { ns.km = c.km ? String(c.km) : ""; ns.min = c.min || ""; }
     ex.sets = ex.sets.filter(setFilled); ex.sets.push(ns); saveWorkout(false); toast(`✓ Satz ${ex.sets.length} hinzugefügt`); return re(); }
-  if (a === "delset" && ex) { ex.sets.splice(+b.dataset.j, 1); if (!ex.sets.length) ex.sets = [emptySet(m)]; saveWorkout(false); return re(); }
+  if (a === "pickset" && ex) { b.closest(".pg-pick")?.remove(); W3.si = +b.dataset.j; w3Load(ex); return re(); }
+  if (a === "pickdel" && ex) { b.closest(".pg-pick")?.remove(); ex.sets.splice(+b.dataset.j, 1); if (!ex.sets.length) ex.sets = [emptySet(m)]; W3.si = Math.min(W3.si, ex.sets.length); saveWorkout(false); w3Load(ex); re(); return w3SetPicker(); }
+  if (a === "picknew" && ex) { b.closest(".pg-pick")?.remove(); W3.si = ex.sets.length; w3Load(ex); return re(); }
+  if (a === "pickx") { b.closest(".pg-pick")?.remove(); return; }
+  if (a === "delset" && ex) { if (+b.dataset.j < W3.si) W3.si--; ex.sets.splice(+b.dataset.j, 1); if (!ex.sets.length) ex.sets = [emptySet(m)]; saveWorkout(false); return re(); }
   if (a === "tap") { W3T.cnt += W3T.step || 1; pgBuzz(15); w3TSave(); const el = $("#w3cnt"); if (el) el.textContent = W3T.cnt; const sv = $('#w3 [data-w3a="tapsave"]'); if (sv) sv.disabled = false; const ci = $('#w3 [data-w3c="cnt"]'); if (ci) ci.value = W3T.cnt; return; }
   if (a === "tapdec") { W3T.cnt = Math.max(0, W3T.cnt - (W3T.step || 1)); return re(); }
   if (a === "tapreset") { W3T.cnt = 0; return re(); }
@@ -4176,7 +4219,9 @@ async function w3Click(e) {
   if (a === "tzero" && t) { t.n = 0; w3Save(); return re(); }
   if (a === "tmin" && t) { t.min = !t.min; w3Save(); return re(); }
   if (a === "tdel" && t) { W3.tabs = W3.tabs.filter(x => x !== t); w3Save(); return re(); }
-  if (a === "prev") { W3.i = Math.max(0, W3.i - 1); w3Cur(true); w3Form(); return re(); }
+  if (a === "prev") { if (ex && (W3.si || 0) > 0) { W3.si = Math.min(W3.si, ex.sets.length) - 1; w3Load(ex); return re(); }
+    if (W3.i > 0) { W3.i--; w3Cur(true); const e2 = S.workout.exercises[w3It().i]; if (e2 && w3It().kind === "ex") { W3.si = Math.max(0, e2.sets.length - 1); w3Load(e2); } w3Form(); return re(); } return; }
+  if (a === "selset" && ex) { W3.si = +b.dataset.j; w3Load(ex); return re(); }
   if (a === "nextset" && ex) { if (W3T.cnt > 0 && (m === "reps" || m === "weight" || m === "band")) { const n = W3T.cnt; W3T.cnt = 0; return w3AddSet(ex, m, n); } return w3AddSet(ex, m, W3.cur.reps); }
   if (a === "next") { const nx = w3Items()[W3.i + 1]; if (!nx) return;
     if (await askYesNo(`Weiter zur nächsten Übung: „${nx.name}“?`, "Weiter")) { W3.i++; w3Cur(true); W3T.cnt = 0; w3Form(); re(); } return; }
@@ -4202,11 +4247,12 @@ function w3AddSet(ex, m, reps, extra = null) {
   else if (m === "time") ns.sec = String(c.sec || ""); else { ns.km = c.km ? String(c.km).replace(".", ",") : ""; ns.min = c.min || ""; }
   if (extra) { Object.assign(ns, extra); if (m === "time" && !numv(ns.sec)) ns.sec = String(extra.dur || ""); }
   if (!setFilled(ns)) { if (!extra) toast("Bitte erst einen Wert eintragen."); return; }
-  const ei = ex.sets.findIndex(x => !setFilled(x)); let nr;
-  if (ei >= 0) { ex.sets[ei] = { ...ns, ...(ex.sets[ei]._ph ? { _ph: ex.sets[ei]._ph } : {}) }; nr = ei + 1; } else { ex.sets.push(ns); nr = ex.sets.length; }
+  const ei = extra ? w3SiDef(ex) : Math.min(W3.si ?? w3SiDef(ex), ex.sets.length); let nr;
+  if (ei < ex.sets.length) { ex.sets[ei] = { ...ns, ...(ex.sets[ei]._ph ? { _ph: ex.sets[ei]._ph } : {}) }; nr = ei + 1; } else { ex.sets.push(ns); nr = ex.sets.length; }
+  W3.si = extra ? w3SiDef(ex) : ei + 1;
   saveWorkout(false); pgBeep(1046, 90); pgBuzz(30);
   toast(extra ? `✓ Satz ${nr}: ${ns.reps ? ns.reps + " Wdh." : fmtSec(ns.sec)} in ${fmtMs((extra.dur || 0) * 1000, false)} gespeichert` : `✓ Satz ${nr} gespeichert`);
-  { const nx = ex.sets.find(x => !setFilled(x)); if (nx?._ph) { const p = nx._ph; if (p.kg) W3.cur.kg = numv(p.kg); if (p.reps) W3.cur.reps = numv(p.reps); } }
+  { const keepKg = W3.cur.kg; w3Load(ex); if (!ex.sets[W3.si] && keepKg) W3.cur.kg = keepKg; }
   if (W3.autoRest && m !== "cardio" && !extra) { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false, rest: true }; const ws = w3Wins(w3It()); if (ws.timer) ws.timer.on = 1; w3Tick(); }
   w3TSave(); w3Render();
 }
