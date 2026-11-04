@@ -21,7 +21,7 @@
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
-      mode = PAL2[pal2][0]; accent = PAL2[pal2][1];
+      mode = PAL2[pal2][0]; accent = t.v2acc || PAL2[pal2][1];
       var FU = { modern: "Poppins:wght@400;500;600;700;800", geo: "Montserrat:wght@400;500;600;700;800", tech: "Space+Grotesk:wght@400;500;600;700", elegant: "Playfair+Display:wght@600;700;800", mono: "Space+Mono:wght@400;700" };
       var fl = document.getElementById("v2font"), want = "https://fonts.googleapis.com/css2?" + (FU[t.font || "modern"] ? "family=" + FU[t.font || "modern"] + "&" : "") + "family=Caveat:wght@500;700&display=swap";
       if (!fl) { fl = document.createElement("link"); fl.id = "v2font"; fl.rel = "stylesheet"; document.head.appendChild(fl); }
@@ -1597,9 +1597,7 @@
   .pg-pick .card { width: 100%; max-width: 380px; display: grid; gap: 8px; background: var(--surface) !important; } .pg-pick .text-in { font-size: 20px; text-align: center; }
 
   /* ================= VERSION 3 · „Fokus“ ================= */
-  :root.ui3 nav.bottom { display: none !important; }
-  :root.ui3 .app { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
-  :root.ui3 body::before { transform-origin: 70% 60%; }
+      :root.ui3 body::before { transform-origin: 70% 60%; }
   :root.ui3.l3go body::before { animation: w3wall 1.3s cubic-bezier(.2,.7,.2,1); } @keyframes w3wall { from { transform: scale(1.12); filter: brightness(.2); } }
   /* Startbildschirm */
   .h3home { position: relative; height: calc(100dvh - 32px - env(safe-area-inset-top)); min-height: 560px; display: flex; }
@@ -1740,7 +1738,7 @@
   .w3blk, .w3start { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
   /* Flüssiges Scrollen: kein Live-Weichzeichner auf scrollenden Kästchen */
   :root[data-ui=v2].v2-glass :is(.card, .task, .todo, .kpi, .rec2, .w3blk) { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: color-mix(in srgb, var(--surface) 80%, transparent) !important; }
-  :root[data-ui=v2] body::before { transform: translateZ(0); will-change: transform; }
+
   :root[data-ui=v2] .seg { padding-bottom: 12px; }
 
   .wl-note { font-size: 12.5px; margin: -6px 0 10px; } .wl-t { position: relative; } .wl-t.on .wp { box-shadow: 0 0 0 2px var(--accent) inset; }
@@ -1748,6 +1746,101 @@
   .wl-add { border: 1.5px dashed var(--border); border-radius: 16px; display: grid; place-items: center; align-content: center; gap: 4px; min-height: 96px; color: var(--muted); font-size: 11.5px; font-weight: 600; } .wl-add span { font-size: 24px; }
   .wl-uid { word-break: break-all; background: var(--surface-2); padding: 1px 5px; border-radius: 6px; font-size: 11px; }
   :root[data-ui=v2] #view-train header.top { flex-wrap: wrap; gap: 10px; } :root[data-ui=v2] #view-train header.top h1 { overflow-wrap: anywhere; }
+
+  /* ===== v43: leichter & schneller (keine Live-Weichzeichner in Version 3) ===== */
+  :root.ui3 :is(.h3panel, #d3, .gbar, .gw, .w3tools, .w3tab, nav.bottom, .sheet, .icon-btn) { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  :root.ui3 .h3panel { background: color-mix(in srgb, var(--surface) 84%, transparent); box-shadow: none; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  :root.ui3 nav.bottom { background: color-mix(in srgb, var(--surface) 94%, transparent); }
+  :root.ui3 .h3home .h3up { bottom: calc(84px + env(safe-area-inset-bottom)); }
+  :root.ui3 .h3home { height: calc(100dvh - 120px); min-height: 0; }
+  #d3 { background: color-mix(in srgb, var(--bg) 97%, transparent); visibility: hidden; transition: transform .45s cubic-bezier(.2,.8,.2,1), visibility 0s .45s; }
+  #d3.on { visibility: visible; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  :root.pw-saver.ui3 :is(.h3up span, .l3hint) { animation: none; }
+  .w3blk .box-check { flex: none; }
+  /* Schwarzer Trainings-Bildschirm mit verschiebbaren Fenstern */
+  #w3 { background: #000; color: #f5f5f2; --wsurf: #121213; --wline: #2a2a2d; }
+  #w3.on { animation: none; }
+  #w3 .w3bg { display: none; }
+  .w3info { position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 22px; display: grid; gap: 3px; pointer-events: none; } .w3info b { font-size: 15px; } .w3info small { font-size: 11px; opacity: .55; font-variant-numeric: tabular-nums; }
+  .w3prog { display: flex; gap: 4px; margin: 6px 0 2px; } .w3prog i { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.18); } .w3prog i.ok { background: rgba(255,255,255,.55); } .w3prog i.on { background: var(--accent); width: 28px; }
+  #w3 .w3x { position: absolute; top: calc(14px + env(safe-area-inset-top)); right: 14px; background: #1a1a1c; color: #f5f5f2; z-index: 6; }
+  #w3 .w3vert { left: 18px; bottom: calc(96px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; opacity: .95; }
+  #w3 .w3vert span { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; opacity: .7; white-space: nowrap; }
+  .gw { position: absolute; z-index: 3; border-radius: 18px; background: var(--wsurf); border: 1px solid var(--wline); box-shadow: 0 14px 34px rgba(0,0,0,.6); max-width: calc(100vw - 16px); }
+  .gw.drag, .gbar.drag { box-shadow: 0 20px 50px rgba(0,0,0,.8); outline: 1.5px solid var(--accent); }
+  .gw-h { display: flex; align-items: center; gap: 6px; padding: 8px 8px 6px 12px; cursor: grab; touch-action: none; user-select: none; border-bottom: 1px solid var(--wline); }
+  .gw.min .gw-h { border-bottom: 0; } .gw-h span { flex: 1; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #9a9aa0; }
+  .gw-h button { width: 26px; height: 24px; border-radius: 999px; background: #1f1f22; color: #cfcfd4; font-size: 11px; }
+  .gw-b { padding: 10px 12px 12px; display: grid; gap: 10px; }
+  .gw .w3step small, .gw .w3fld small { color: #8a8a90; font-size: 10px; margin-bottom: 4px; }
+  .gw .w3step > div { gap: 6px; } .gw .w3step button { width: 42px; height: 42px; font-size: 22px; background: transparent; border: 1.5px solid #3a3a3e; color: #f5f5f2; }
+  .gw .w3step input, .gw .w3fld input { height: 46px; font-size: 28px; background: transparent; border: 0; border-bottom: 1.5px solid #3a3a3e; border-radius: 0; color: #f5f5f2; }
+  .gw .w3fld input { font-size: 22px; width: 100%; } .gw .w3fld textarea { height: 64px; width: 100%; background: transparent; border: 1.5px solid #3a3a3e; border-radius: 12px; color: #f5f5f2; font-size: 14px; padding: 8px; }
+  .gw-chips { display: flex; flex-wrap: wrap; gap: 5px; } .gw-chips button { padding: 5px 10px; border-radius: 999px; border: 1px solid #3a3a3e; font-size: 11.5px; font-weight: 600; color: #cfcfd4; } .gw-chips button.on { background: #f5f5f2; color: #000; border-color: #f5f5f2; }
+  .gw-main { padding: 14px; border-radius: 14px; font-weight: 700; font-size: 15px; background: #f5f5f2; color: #000; } .gw-main.acc { background: var(--accent); color: var(--accent-ink); } .gw-main.stop { background: #f4b0a8; color: #5a1410; } .gw-main:disabled { opacity: .35; }
+  .gw-row { display: flex; gap: 6px; } .gw-row button { flex: 1; padding: 9px 6px; border-radius: 12px; background: #1f1f22; font-weight: 600; font-size: 13px; color: #e6e6ea; } .gw-row button.acc { background: var(--accent); color: var(--accent-ink); }
+  .gw-big { text-align: center; font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; font-family: var(--fh); letter-spacing: -.02em; }
+  .gw-tap { width: 100%; height: 150px; border-radius: 14px; background: #19191b; border: 1.5px dashed #333337; display: grid; place-items: center; align-content: center; touch-action: manipulation; user-select: none; color: #f5f5f2; }
+  .gw-tap:active { background: #222225; } .gw-tap b { font-size: 76px; line-height: 1; font-weight: 800; font-family: var(--fh); font-variant-numeric: tabular-nums; } .gw-tap small { font-size: 11px; color: #8a8a90; }
+  .gw-tap.sm { height: 84px; } .gw-tap.sm b { font-size: 40px; }
+  .gw-sets { display: grid; gap: 4px; max-height: 190px; overflow-y: auto; } .gw-sets div { display: flex; align-items: center; gap: 10px; padding: 7px 4px 7px 8px; border-radius: 10px; background: #19191b; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .gw-sets b { color: #8a8a90; font-size: 11px; width: 14px; } .gw-sets span { flex: 1; } .gw-sets button { width: 24px; height: 24px; border-radius: 50%; background: #26262a; font-size: 11px; color: #cfcfd4; }
+  .gw-empty { color: #8a8a90; font-size: 13px; text-align: center; padding: 6px 0; } .gw-auto { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11.5px; color: #8a8a90; }
+  .gw-auto select { background: #1f1f22; color: #f5f5f2; border: 1px solid #333337; border-radius: 10px; padding: 5px 8px; font-size: 12px; }
+  /* Gadget-Leiste (wie TradingView) */
+  .gbar { position: absolute; z-index: 5; display: flex; flex-direction: column; gap: 2px; padding: 4px; border-radius: 16px; background: #161618; border: 1px solid #2c2c30; box-shadow: 0 12px 30px rgba(0,0,0,.6); width: 56px; }
+  .gbar.h { flex-direction: row; width: auto; } .gbar.h .gb-sep { width: 1px; height: auto; margin: 6px 2px; } .gbar.h .gb-grip { padding: 0 4px; writing-mode: vertical-rl; display: grid; place-items: center; }
+  .gb-grip { text-align: center; font-size: 12px; color: #6a6a70; padding: 5px 0 3px; cursor: grab; touch-action: none; user-select: none; letter-spacing: -1px; }
+  .gbar button { display: grid; justify-items: center; gap: 1px; padding: 7px 4px; border-radius: 12px; color: #9a9aa0; min-width: 46px; } .gbar button.on { background: #f5f5f2; color: #000; }
+  .gbar span { font-size: 17px; line-height: 1; } .gbar small { font-size: 8px; font-weight: 600; letter-spacing: .03em; } .gb-sep { height: 1px; margin: 3px 6px; background: #2c2c30; }
+  #w3 .w3bot { background: linear-gradient(transparent, #000 40%); z-index: 4; }
+  #w3 .w3nav { background: #1a1a1c; color: #f5f5f2; } #w3 .w3next { background: #f5f5f2; color: #000; } #w3 .w3next.fin { background: var(--accent); color: var(--accent-ink); }
+  .v2acc { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; } .v2acc button { display: grid; justify-items: center; gap: 4px; padding: 6px 2px; border-radius: 12px; border: 1.5px solid transparent; }
+  .v2acc button.on { border-color: var(--text); } .v2acc i { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(127,127,127,.35) inset; } .v2acc small { font-size: 10px; color: var(--muted); }
+
+  /* ===== v44: neue „Heute“-Seite ===== */
+  .t3head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 4px 0 14px; }
+  .t3head h1 { font-size: 38px; margin: 0; }
+  .t3num { font-family: var(--fh); line-height: .85; } .t3num b { font-size: 64px; font-weight: 800; letter-spacing: -.04em; color: var(--accent); } .t3num span { font-size: 24px; font-weight: 700; color: var(--muted); }
+  .t3seg { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 4px; }
+  .t3seg i { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--text) 13%, transparent); transition: background .3s; } .t3seg i.on { background: var(--accent); }
+  .t3sub { display: flex; justify-content: space-between; margin: 8px 0 16px; font-size: 13px; color: var(--muted); } .t3sub b { color: var(--text); }
+  .t3meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border-radius: 18px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--text) 10%, transparent); background: color-mix(in srgb, var(--text) 10%, transparent); }
+  .t3meta > * { display: grid; gap: 2px; padding: 12px 14px; background: color-mix(in srgb, var(--surface) 92%, transparent); text-align: left; min-width: 0; }
+  .t3meta small { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-weight: 600; } .t3meta b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .t3meta b svg { width: 16px; height: 16px; }
+  .t3week { margin: 16px 0 4px; } .t3week .cal .c { height: 42px; font-weight: 600; } .t3week .cal .wd { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; }
+  .t3note { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 14px; padding: 12px 14px; border-radius: 16px; border: 1px dashed color-mix(in srgb, var(--text) 25%, transparent); text-align: left; font-size: 13px; }
+  .t3note span { flex: 1; } .t3note b { color: var(--accent); font-size: 13px; }
+  .t3add { margin-top: 10px; border-style: dashed; } .t3empty { padding: 18px; text-align: center; color: var(--muted); border-radius: 16px; border: 1px dashed var(--border); }
+  .t3done summary { list-style: none; cursor: pointer; } .t3done summary::-webkit-details-marker { display: none; } .t3done summary h2::before { content: "▸ "; } .t3done[open] summary h2::before { content: "▾ "; }
+
+  /* v45: Heute – eine ruhige Karte statt Tabelle, durchgehende Linie */
+  .t3card { border-radius: 24px; padding: 18px 18px 16px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); position: relative; overflow: hidden; }
+  .t3card::before { content: ""; position: absolute; right: -40px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%); pointer-events: none; }
+  .t3top { display: flex; justify-content: space-between; align-items: flex-end; position: relative; }
+  .t3top small { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .t3big { font-family: var(--fh); font-size: 54px; font-weight: 800; letter-spacing: -.04em; line-height: .95; color: var(--accent); } .t3big span { font-size: 22px; color: var(--muted); font-weight: 700; letter-spacing: 0; }
+  .t3pct { font-family: var(--fh); font-size: 22px; font-weight: 700; } .t3pct small { font-size: 13px; color: var(--muted); margin-left: 2px; }
+  .t3line { height: 6px; border-radius: 6px; margin: 14px 0 8px; background: color-mix(in srgb, var(--text) 12%, transparent); overflow: hidden; position: relative; }
+  .t3line i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 70%, transparent), var(--accent)); transition: width .6s cubic-bezier(.2,.7,.2,1); }
+  .t3card .t3sub { margin: 0 0 14px; } .t3pills { display: flex; flex-wrap: wrap; gap: 6px; position: relative; }
+  .t3pills > * { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 500; border: 1px solid color-mix(in srgb, var(--text) 16%, transparent); background: color-mix(in srgb, var(--text) 4%, transparent); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .t3pills button { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .t3seg, .t3meta, .t3num { display: none; }
+  /* Trainings-Fenster & Spielwiese in den Farben der Palette */
+  #w3 { --wsurf: color-mix(in srgb, var(--accent) 5%, #0e0e0f); --wline: color-mix(in srgb, var(--accent) 16%, #232326); }
+  .gw-chips button.on, .gbar button.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .gw-main { background: var(--accent); color: var(--accent-ink); }
+  .gw-main.stop, .pg-main.stop { background: transparent; color: var(--accent); box-shadow: 0 0 0 1.5px var(--accent) inset; }
+  .gw .w3step button { border-color: color-mix(in srgb, var(--accent) 40%, #3a3a3e); color: var(--accent); }
+  .gw .w3step input, .gw .w3fld input { border-bottom-color: color-mix(in srgb, var(--accent) 35%, #3a3a3e); }
+  .gw-tap { border-color: color-mix(in srgb, var(--accent) 30%, #333337); } .gw-tap b { color: var(--accent); }
+  .gw-h span, .gw-sets b { color: color-mix(in srgb, var(--accent) 55%, #9a9aa0); }
+  .gw-big { color: var(--text); } .gw-row button { background: color-mix(in srgb, var(--accent) 8%, #1c1c1f); }
+  #w3 .w3next { background: var(--accent); color: var(--accent-ink); } #w3 .w3next.fin { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .pgw-b { background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); }
+  .t3card .t3sub { display: block; font-size: 13px; color: var(--muted); } .t3card::before { background: radial-gradient(circle, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%); }
 
 </style>
 </head>
@@ -3331,6 +3424,8 @@ function v2PrefsHTML(th) {
   const v3 = th.ui === "v3", pal = th.pal || (v3 ? "rose" : "graphit"), font = th.font || "modern", wall = th.wall || (v3 ? "stein" : "asphalt"), cs = getComputedStyle(document.documentElement);
   return `<h2 style="margin-top:4px">Farben</h2>
     <div class="v2pals">${V2_PALS.map(([k, n, cols]) => `<button class="${pal === k ? "on" : ""}" data-v2a="pal" data-v="${k}"><div class="sw2">${cols.map(c => `<i style="background:${c}"></i>`).join("")}</div><small>${n}</small></button>`).join("")}</div>
+    <h2>Akzentfarbe</h2>
+    <div class="v2acc">${[["", "Palette"], ["#ead7dd", "Rosé"], ["#f5f5f2", "Weiß"], ["#FFC400", "Gold"], ["#ff8a3d", "Orange"], ["#ff5c7a", "Koralle"], ["#c04dff", "Violett"], ["#6c8cff", "Blau"], ["#4cc9f0", "Cyan"], ["#5fd38d", "Grün"], ["#bcd6c3", "Salbei"], ["#b9b9c2", "Grau"]].map(([c, n]) => `<button class="${(th.v2acc || "") === c ? "on" : ""}" data-v2a="acc" data-v="${c}" title="${n}"><i style="background:${c || "conic-gradient(from 0deg, var(--text) 0 50%, var(--bg) 0)"}"></i><small>${n}</small></button>`).join("")}</div>
     <h2>Schrift</h2>
     <div class="v2fonts">${V2_FONTS.map(([k, n, fam, css]) => `<button class="${font === k ? "on" : ""}" data-v2a="font" data-v="${k}"><b style="font-family:${css}">Aa Plan.</b><small>${n} · ${fam}</small></button>`).join("")}</div>
     <h2>Hintergrund</h2>
@@ -3364,6 +3459,7 @@ document.addEventListener("click", e => {
   const a = el.dataset.v2a, th = curTheme();
   if (a === "ui") { if ((th.ui || "v1") === el.dataset.v) return; setTheme({ ui: el.dataset.v }); renderAll(); if (S.tab === "perf") loadPerf(); if (S.tab === "todo") renderTodo(); v2Reprefs(); closeSheet(); if (el.dataset.v === "v3") { S.v3intro = false; setTab("start"); } toast(`Version ${el.dataset.v.slice(1)} aktiv ✓`); }
   else if (a === "pal") { setTheme({ pal: el.dataset.v }); renderStart(); v2Reprefs(); }
+  else if (a === "acc") { setTheme({ v2acc: el.dataset.v || null }); renderStart(); v2Reprefs(); }
   else if (a === "font") { setTheme({ font: el.dataset.v }); v2Reprefs(); }
   else if (a === "wall") { if (el.dataset.v === "custom") { openWalls(); return; } setTheme({ wall: el.dataset.v, wallId: null }); v2Reprefs(); }
   else if (a === "glass") { setTheme({ glass2: th.glass2 === false }); if (el.dataset.back === "walls") openWalls(); else v2Reprefs(); }
@@ -3610,11 +3706,11 @@ const greetTxt = h => h < 5 ? "Gute Nacht" : h < 11 ? "Guten Morgen" : h < 14 ? 
 
 // ---------- Startbildschirm ----------
 function v3Home() {
-  v3DockEnsure();
   const now = new Date(), k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length, pct = tasks.length ? cnt / tasks.length : 0;
   const plan = planFor(now.getDay()), rk = S.allWo && S.daysFull ? RANKS[rankState().tier] : null;
   const first = !document.querySelector("#view-start .h3home");
-  $("#view-start").innerHTML = `<div class="h3home ${first ? "enter" : ""}">
+  { const v1 = $("#view-start").cloneNode(true); v1.querySelector("header.top")?.remove(); S.v3today = v1.innerHTML; }
+  $("#view-start").innerHTML = `<div class="h3home">
     <div class="h3panel">
       <div class="h3side" aria-hidden="true">
         <div class="col info"><small>${String(now.getDate()).padStart(2, "0")} ${MON_SHORT[now.getMonth()]} ${now.getFullYear()}</small><small id="h3time">${timeWords(now)}</small><small>${cnt} von ${tasks.length} erledigt</small><small>${esc(plan.name)} · ${streak()} Tage Serie</small>${rk ? `<small>Rang ${esc(rk.n)}</small>` : ""}</div>
@@ -3648,15 +3744,36 @@ function v3Lock() {
 }
 
 // ---------- Übersicht (nach oben wischen) ----------
+function v3TodayHTML() {
+  const now = new Date(), k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length, left = tasks.length - cnt;
+  const pct = tasks.length ? Math.round(cnt / tasks.length * 100) : 0, plan = planFor(now.getDay()), rk = S.allWo && S.daysFull ? RANKS[rankState().tier] : null;
+  const monday = addDays(now, -((now.getDay() + 6) % 7)), openTodos = todosForToday().filter(t => !t.done).length;
+  const week = [...Array(7)].map((_, i) => { const d = addDays(monday, i), dk = keyOf(d), inf = dayInfo(dk), fut = dk > k;
+    const cls = [inf.complete ? "full" : inf.count > 0 ? "part" : "", fut ? "future" : "", dk === k ? "today" : ""].join(" ");
+    const bar = !inf.complete && inf.count > 0 ? `<span class="bar"><i style="width:${(inf.count / inf.total) * 100}%"></i></span>` : "";
+    return `<div class="c ${cls}">${d.getDate()}${bar}</div>`; }).join("");
+  const openT = tasks.filter(t => !done[t.key]), doneT = tasks.filter(t => done[t.key]);
+  const notif = ("Notification" in window && Notification.permission !== "granted") ? `<button class="t3note" data-action="notif">${ICON.bell.replace("<svg", '<svg width="16" height="16"')}<span>Erinnerungen für offene Aufgaben einschalten</span><b>Aktivieren</b></button>` : "";
+  return `<div class="t3head"><div><div class="eyebrow">${WD_FULL[now.getDay()]} · ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</div><h1>Heute</h1></div></div>
+    <div class="t3card">
+      <div class="t3top"><div><small>Tagesfortschritt</small><div class="t3big">${cnt}<span>/${tasks.length}</span></div></div><div class="t3pct">${pct}<small>%</small></div></div>
+      <div class="t3line"><i style="width:${pct}%"></i></div>
+      <div class="t3sub">${left ? `Noch <b>${left}</b> ${left === 1 ? "Aufgabe" : "Aufgaben"} offen` : "Tagesquote erfüllt 🔥"}</div>
+      <div class="t3pills"><span>${FLAME} ${streak()} Tage Serie</span><span>🏋️ ${esc(plan.name)}</span>${rk ? `<button data-action="gorank">${rk.i} ${esc(rk.n)}</button>` : ""}${openTodos ? `<button data-action="gotodo">📝 ${openTodos} To-Do${openTodos > 1 ? "s" : ""}</button>` : ""}</div>
+    </div>
+    <div class="t3week"><div class="cal">${["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map(w => `<div class="wd">${w}</div>`).join("")}${week}</div></div>
+    ${notif}
+    <h2>Offen${openT.length ? ` · ${openT.length}` : ""}</h2>
+    <div class="tasks">${openT.length ? openT.map(t => taskHTML(t, false, k, true)).join("") : `<div class="t3empty">Alles erledigt – stark! 💪</div>`}</div>
+    <button class="btn block t3add" data-action="newtask">+ Aufgabe hinzufügen</button>
+    ${doneT.length ? `<details class="t3done" ${S.t3doneOpen ? "open" : ""}><summary><h2>Erledigt · ${doneT.length}</h2></summary><div class="tasks">${doneT.map(t => taskHTML(t, true, k, true)).join("")}</div></details>` : ""}`;
+}
+document.addEventListener("toggle", e => { if (e.target.classList?.contains("t3done")) S.t3doneOpen = e.target.open; }, true);
 function v3DrawerFill() {
   const d = $("#d3"); if (!d) return;
-  const now = new Date(), k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
   const y = d.querySelector(".d3in")?.scrollTop || 0;
   d.innerHTML = `<div class="d3in"><button class="d3grab" data-v3="drawerx" aria-label="Schließen"><span></span></button>
-    <div class="d3head"><div><div class="eyebrow">${fmtDate(now)}</div><h1>Heu<span class="hl">te</span></h1></div><b class="d3cnt">${cnt}<small>/${tasks.length}</small></b></div>
-    <div class="h3bar big"><i style="width:${tasks.length ? Math.round(cnt / tasks.length * 100) : 0}%"></i></div>
-    <div class="tasks">${tasks.map(t => taskHTML(t, done[t.key], k, true)).join("")}</div>
-    <button class="btn block" style="margin-top:10px;border-style:dashed" data-action="newtask">+ Aufgabe hinzufügen</button>
+    ${v3TodayHTML()}
     <h2>Alle Funktionen</h2>
     <div class="d3apps">${V3_APPS.map(([key, n, ic]) => `<button data-v3app="${key}"><span>${V3_ICONS[ic]}</span><small>${n}</small></button>`).join("")}<button data-action="logout"><span>${V3_ICONS.out}</span><small>Abmelden</small></button></div></div>`;
   d.querySelector(".d3in").scrollTop = y;
@@ -3684,8 +3801,6 @@ function v3Dock(on) {
   document.addEventListener("touchstart", e => { if (!isV3()) return; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); edge = sx > innerWidth - 28; }, { passive: true });
   document.addEventListener("touchend", e => { if (!isV3() || !st) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, fast = Date.now() - st < 700; st = 0;
     if (document.documentElement.classList.contains("pg-on") || $("#w3")?.classList.contains("on")) return;
-    if (edge && dx < -40 && Math.abs(dy) < 80 && fast) return v3Dock(true);
-    if ($("#k3")?.classList.contains("on") && dx > 40 && Math.abs(dy) < 80) return v3Dock(false);
     const dOn = $("#d3")?.classList.contains("on");
     if (!dOn && S.tab === "start" && dy < -60 && Math.abs(dx) < 70 && fast && !e.target.closest(".h3grid")) return v3Drawer(true);
     if (dOn && dy > 70 && Math.abs(dx) < 70 && fast && ($("#d3 .d3in").scrollTop < 5)) return v3Drawer(false);
@@ -3701,8 +3816,8 @@ document.addEventListener("click", e => {
 });
 
 /* ===================== TRAINING (Version 3) ===================== */
-const W3 = (() => { let st = {}; try { st = JSON.parse(localStorage.getItem("tracker-w3") || "{}"); } catch {} return { i: 0, center: st.center || {}, tabs: st.tabs || [], start: st.start || {}, autoRest: st.autoRest ?? 90, toolPos: st.toolPos || null, cur: {} }; })();
-const w3Save = () => { try { localStorage.setItem("tracker-w3", JSON.stringify({ center: W3.center, tabs: W3.tabs, start: W3.start, autoRest: W3.autoRest, toolPos: W3.toolPos })); } catch {} };
+const W3 = (() => { let st = {}; try { st = JSON.parse(localStorage.getItem("tracker-w3") || "{}"); } catch {} return { i: 0, center: st.center || {}, tabs: (st.tabs || []).filter(t => t.type === "count"), start: st.start || {}, autoRest: st.autoRest ?? 90, win: st.win || null, bar: st.bar || null, cur: {} }; })();
+const w3Save = () => { try { localStorage.setItem("tracker-w3", JSON.stringify({ center: W3.center, tabs: W3.tabs, start: W3.start, autoRest: W3.autoRest, win: W3.win, bar: W3.bar })); } catch {} };
 const w3Plan = () => { const w = S.workout; return planByName(w.plan) || ((w.exercises || []).length ? { name: w.plan, type: "gym" } : planFor(fromKey(S.trainDate).getDay())); };
 // Liste der „Blöcke“ für den heutigen Plan
 function w3Items() {
@@ -3726,11 +3841,11 @@ function w3Overview() {
   const p = w3Plan(), items = w3Items(), locked = S.trainDate < todayKey();
   const exList = v.querySelector("#exList"), runCard = v.querySelector('[data-in="run.km"]')?.closest(".card"), sesCard = v.querySelector('[data-in="session.minutes"]')?.closest(".card");
   const blocks = `<div class="w3list">${items.map((it, n) => `<button class="w3blk ${w3Done(it) ? "done" : ""}" data-w3="open" data-n="${n}">
-      <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}</b><small>${w3Summary(it)}</small></span><span class="w3go">${w3Done(it) ? "✓" : "›"}</span></button>`).join("")}</div>`;
+      <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}</b><small>${w3Summary(it)}</small></span><span class="box-check">${CHECK}</span></button>`).join("")}</div>`;
   if (exList) exList.outerHTML = blocks; else if (runCard) runCard.outerHTML = blocks; else if (sesCard) sesCard.outerHTML = blocks;
   v.querySelector(".note")?.remove();
   if (items.length && !locked) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
-    if (h2) h2.insertAdjacentHTML("afterend", `<button class="w3start" data-w3="start">${V3_ICONS.play}<span><b>${W3.start[S.trainDate] ? "Training fortsetzen" : "Training starten"}</b><small>${items.length} ${items.length === 1 ? "Block" : "Blöcke"} · Vollbild mit Werkzeugen</small></span></button>`); }
+    if (h2) h2.insertAdjacentHTML("afterend", `<button class="w3start" data-w3="start">${V3_ICONS.play}<span><b>${W3.start[S.trainDate] ? "Training fortsetzen" : "Training starten"}</b><small>${items.length} ${items.length === 1 ? "Block" : "Blöcke"} · schwarzer Vollbild-Modus mit Fenstern</small></span></button>`); }
 }
 function renderTrainV3Hook() { if (isV3() && S.workout) w3Overview(); }
 document.addEventListener("click", e => {
@@ -3739,7 +3854,7 @@ document.addEventListener("click", e => {
   catch (err) { console.error(err); toast("Konnte die Übung nicht öffnen: " + err.message); }
 });
 
-// ---------- Vollbild-Block pro Übung ----------
+// ---------- Vollbild-Block pro Übung: schwarzer Bildschirm, verschiebbare Fenster + Gadget-Leiste ----------
 function w3Open(n = null) {
   if (!S.workout) return;
   if (S.trainDate < todayKey()) { toast("🔒 Vergangene Trainings sind gesperrt."); return; }
@@ -3748,134 +3863,135 @@ function w3Open(n = null) {
   W3.i = Math.max(0, Math.min(items.length - 1, n));
   if (!W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); }
   let o = $("#w3"); if (!o) { o = document.createElement("div"); o.id = "w3"; document.body.appendChild(o); o.addEventListener("click", w3Click); o.addEventListener("input", w3Input); o.addEventListener("pointerdown", w3DragStart); }
-  w3Cur(true); w3Render(); o.classList.add("on"); document.documentElement.classList.add("pg-on"); pgWake(true); w3Tick();
+  w3Cur(true); o.classList.add("on"); document.documentElement.classList.add("pg-on"); w3Render(); w3Tick();
 }
-function w3Close() { $("#w3")?.classList.remove("on"); document.documentElement.classList.remove("pg-on"); pgWake(false); renderTrain(); }
+function w3Close() { $("#w3")?.classList.remove("on"); document.documentElement.classList.remove("pg-on"); renderTrain(); }
 const w3It = () => w3Items()[W3.i];
-// Eingabewerte für den nächsten Satz (aus letztem Satz übernommen)
 function w3Cur(reset) {
   const it = w3It(); if (!it || it.kind !== "ex") return;
   const e = S.workout.exercises[it.i], last = e.sets.filter(setFilled).slice(-1)[0] || {};
   if (reset || W3.cur.ex !== e.name) W3.cur = { ex: e.name, kg: numv(last.kg) || 0, reps: numv(last.reps) || 8, band: last.band || "", sec: numv(last.sec) || 30, km: numv(last.km) || 0, min: last.min || "" };
 }
-const W3_CENTERS = { ex: [["edit", "Eingabe", "✎"], ["count", "Zähler", "👆"], ["sw", "Stoppuhr", "⏱"], ["timer", "Pause", "⏳"]], run: [["edit", "Eingabe", "✎"], ["sw", "Stoppuhr", "⏱"], ["timer", "Timer", "⏳"]] };
-const w3Kind = it => it.kind === "ex" ? "ex" : "run";
-const w3Center = it => W3.center[it.kind === "ex" ? exMode(S.workout.exercises[it.i]) : it.kind] || (it.kind === "run" ? "sw" : "edit");
-// gemeinsame Mini-Uhren (laufen über Zeitstempel)
 const W3T = (() => { let t = {}; try { t = JSON.parse(localStorage.getItem("tracker-w3t") || "{}"); } catch {} return Object.assign({ cnt: 0, sw: { run: false, t0: 0, acc: 0 }, tm: { dur: 90, run: false, end: 0, left: 90000, done: false } }, t); })();
 const w3TSave = () => { try { localStorage.setItem("tracker-w3t", JSON.stringify(W3T)); } catch {} };
-
-function w3Render() {
-  const o = $("#w3"), items = w3Items(), it = w3It(); if (!it) return w3Close();
-  const kind = w3Kind(it), center = w3Center(it), last = W3.i === items.length - 1;
-  const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, tp = W3.toolPos || { x: innerWidth - 74, y: 70 };
-  o.innerHTML = `<div class="w3bg"></div>
-    <div class="w3top"><button class="w3x" data-w3a="close" aria-label="Schließen">${ICON.x}</button>
-      <div class="w3dots">${items.map((x, k) => `<i class="${k === W3.i ? "on" : w3Done(x) ? "ok" : ""}"></i>`).join("")}</div></div>
-    <div class="w3vert" aria-hidden="true"><b style="font-size:${Math.max(30, Math.min(58, Math.round(600 / Math.max(6, it.name.length))))}px">${esc(it.name)}</b>
-      <div class="w3vi"><small>Block ${W3.i + 1} / ${items.length}${nSets ? ` · ${nSets} ${nSets === 1 ? "Satz" : "Sätze"}` : ""}</small><small id="w3el">${fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false)}</small></div><span class="v2script">Jetzt,</span></div>
-    <div class="w3main">${w3CenterHTML(it, center)}</div>
-    <div class="w3tools" style="left:${tp.x}px;top:${tp.y}px"><div class="w3grip" data-tooldrag="1" title="Verschieben">⋮⋮</div>
-      ${W3_CENTERS[kind].map(([k, n, ic]) => `<button class="${center === k ? "on" : ""}" data-w3a="center" data-v="${k}" title="${n}"><span>${ic}</span><small>${n}</small></button>`).join("")}
-      <span class="w3sep"></span><button data-w3a="addtab" title="Mini-Tab hinzufügen"><span>＋</span><small>Mini-Tab</small></button></div>
-    <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
-      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>
-    ${W3.tabs.map(w3TabHTML).join("")}`;
-}
-function w3SetList(e, m) { const s = e.sets.map((x, j) => [x, j]).filter(([x]) => setFilled(x));
-  return s.length ? `<div class="w3sets">${s.map(([x, j], n) => `<span><b>${n + 1}</b>${esc(setTxt(x, m))}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button></span>`).join("")}</div>` : `<div class="w3empty">Noch kein Satz – los geht's 💪</div>`; }
-function w3Step(field, label, val, step, unit = "") {
-  return `<div class="w3step"><small>${label}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div>${unit ? `<em>${unit}</em>` : ""}</div>`;
-}
-function w3CenterHTML(it, center) {
-  const w = S.workout;
-  if (it.kind !== "ex") {
-    if (center === "edit") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
-      return it.kind === "run" ? `<div class="w3card"><div class="w3grid2"><label class="w3fld"><small>Distanz (km)</small><input data-w3in="run.km" inputmode="decimal" value="${esc(r.km || "")}"></label>
-          <label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3in="run.minutes" inputmode="numeric" placeholder="mm:ss" value="${esc(r.minutes || "")}"></label></div>
-          <div class="w3pace">Pace <b id="w3pace">${paceOf(r.km, r.minutes) || "–"}</b>/km</div><label class="w3fld"><small>Notiz</small><textarea data-w3in="run.note">${esc(r.note || "")}</textarea></label></div>`
-        : `<div class="w3card"><label class="w3fld"><small>Dauer (Minuten)</small><input data-w3in="session.minutes" inputmode="numeric" value="${esc(r.minutes || "")}"></label><label class="w3fld"><small>Notiz</small><textarea data-w3in="session.note">${esc(r.note || "")}</textarea></label></div>`; }
-    if (center === "sw") return w3SwHTML(true);
-    return w3TmHTML();
-  }
-  const e = w.exercises[it.i], m = exMode(e), c = W3.cur;
-  const modes = `<div class="w3modes">${Object.entries(MODE_SHORT).map(([k, l]) => `<button class="${k === m ? "on" : ""}" data-w3a="mode" data-v="${k}">${l}</button>`).join("")}</div>`;
-  if (center === "edit") {
-    const fields = m === "weight" ? w3Step("kg", "Gewicht", c.kg, 2.5, "kg") + w3Step("reps", "Wiederholungen", c.reps, 1)
-      : m === "band" ? `<div class="w3step"><small>Band / Stufe</small><div><input data-w3f="band" class="wide" value="${esc(c.band)}" placeholder="z. B. Grün"></div></div>` + w3Step("reps", "Wiederholungen", c.reps, 1)
-      : m === "reps" ? w3Step("reps", "Wiederholungen", c.reps, 1) : m === "time" ? w3Step("sec", "Zeit", c.sec, 5, "Sek.")
-      : w3Step("km", "Distanz", c.km, .5, "km") + `<div class="w3step"><small>Zeit</small><div><input data-w3f="min" class="wide" placeholder="mm:ss" value="${esc(c.min)}"></div></div>`;
-    return `${modes}<div class="w3card">${fields}<button class="w3save" data-w3a="saveset">✓ Satz ${e.sets.filter(setFilled).length + 1} speichern</button>
-      <div class="w3rest"><span>Pause danach</span>${[0, 60, 90, 120, 180].map(s => `<button class="${W3.autoRest === s ? "on" : ""}" data-w3a="rest" data-v="${s}">${s ? (s < 120 ? s + " s" : s / 60 + " min") : "aus"}</button>`).join("")}</div></div>${w3SetList(e, m)}`;
-  }
-  if (center === "count") return `${modes}<button class="w3tap" data-w3a="tap"><b id="w3cnt">${W3T.cnt}</b><small>Tippen = +1 Wiederholung</small></button>
-    <div class="w3row"><button class="btn" data-w3a="tapdec">−1</button><button class="btn" data-w3a="tapreset">↺</button><button class="btn primary" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz speichern (${W3T.cnt}${m === "weight" && c.kg ? ` × ${c.kg} kg` : ""})</button></div>${w3SetList(e, m)}`;
-  if (center === "sw") return `${modes}${w3SwHTML(false)}${w3SetList(e, m)}`;
-  return `${modes}${w3TmHTML()}${w3SetList(e, m)}`;
-}
 const w3SwMs = () => W3T.sw.acc + (W3T.sw.run ? Date.now() - W3T.sw.t0 : 0);
 const w3TmLeft = () => W3T.tm.run ? Math.max(0, W3T.tm.end - Date.now()) : W3T.tm.left;
-const w3SwHTML = run => `<div class="w3card center"><div class="w3big" id="w3sw">${fmtMs(w3SwMs())}</div>
-    <button class="pg-main ${W3T.sw.run ? "stop" : ""}" data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "Anhalten" : w3SwMs() ? "Weiter" : "Start"}</button>
-    <div class="w3row"><button class="btn" data-w3a="swreset">Zurücksetzen</button>${w3SwMs() && !W3T.sw.run ? `<button class="btn primary" data-w3a="swtake">Zeit übernehmen</button>` : ""}</div></div>`;
-const w3TmHTML = () => `<div class="w3card center"><div class="w3big ${W3T.tm.done ? "pg-done" : ""}" id="w3tm">${fmtMs(w3TmLeft(), false)}</div>
-    <div class="w3row">${[30, 60, 90, 120, 180].map(s => `<button class="chip ${W3T.tm.dur === s ? "accent" : ""}" data-w3a="tmset" data-v="${s}">${s < 120 ? s + " s" : s / 60 + " min"}</button>`).join("")}</div>
-    <button class="pg-main ${W3T.tm.run ? "stop" : ""}" data-w3a="${W3T.tm.run ? "tmpause" : "tmgo"}">${W3T.tm.run ? "Pause" : "Start"}</button>
-    <div class="w3row"><button class="btn" data-w3a="tmplus" data-v="-15">−15 s</button><button class="btn" data-w3a="tmreset">↺</button><button class="btn" data-w3a="tmplus" data-v="15">+15 s</button></div></div>`;
-// ---------- verschiebbare Mini-Tabs ----------
-const W3_TABT = { count: "Zähler", sw: "Stoppuhr", timer: "Pause-Timer" };
-function w3TabHTML(t) {
-  const body = t.type === "count" ? `<button class="w3tb-tap" data-w3a="ttap" data-id="${t.id}"><b data-live3="${t.id}">${t.n || 0}</b></button><div class="w3tb-row"><button data-w3a="tdec" data-id="${t.id}">−</button><button data-w3a="tzero" data-id="${t.id}">↺</button></div>`
-    : t.type === "sw" ? `<b class="w3tb-big" data-live3="${t.id}">${fmtMs(w3SwMs(), false)}</b><div class="w3tb-row"><button data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "❚❚" : "▶"}</button><button data-w3a="swreset">↺</button></div>`
-    : `<b class="w3tb-big" data-live3="${t.id}">${fmtMs(w3TmLeft(), false)}</b><div class="w3tb-row"><button data-w3a="${W3T.tm.run ? "tmpause" : "tmgo"}">${W3T.tm.run ? "❚❚" : "▶"}</button><button data-w3a="tmreset">↺</button></div>`;
-  return `<div class="w3tab ${t.min ? "min" : ""}" data-tab="${t.id}" style="left:${t.x}px;top:${t.y}px"><div class="w3tb-h" data-drag="${t.id}"><span>${W3_TABT[t.type]}</span><button data-w3a="tmin" data-id="${t.id}">${t.min ? "▢" : "–"}</button><button data-w3a="tdel" data-id="${t.id}">✕</button></div>${t.min ? "" : body}</div>`;
+// Gadgets (Fenster), wie die Werkzeugleiste bei TradingView
+const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 210], sw: ["⏱", "Stoppuhr", 200], timer: ["⏳", "Pause", 214], sets: ["☰", "Sätze", 240] };
+function w3Wins(it) {
+  W3.win = W3.win || {}; const k = it.kind === "ex" ? "ex" : "run";
+  if (!W3.win[k]) { const W = innerWidth, H = innerHeight;
+    W3.win[k] = it.kind === "ex" ? { edit: { on: 1, x: 70, y: 96 }, sets: { on: 1, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: Math.max(8, W - 230), y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
+      : { edit: { on: 1, x: 70, y: 96 }, sw: { on: 1, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
+  return W3.win[k];
 }
+function w3Render() {
+  const o = $("#w3"), items = w3Items(), it = w3It(); if (!it) return w3Close();
+  const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || { x: innerWidth - 62, y: 90, h: 0 };
+  const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, now = new Date();
+  const k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
+  o.innerHTML = `
+    <div class="w3info"><b>${esc(w3Plan().name)}</b><small>Block ${W3.i + 1} von ${items.length} · <span id="w3el">${fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false)}</span></small>
+      <div class="w3prog">${items.map((x, n) => `<i class="${n === W3.i ? "on" : w3Done(x) ? "ok" : ""}"></i>`).join("")}</div><small>${cnt}/${tasks.length} Aufgaben heute</small></div>
+    <button class="w3x" data-w3a="close" aria-label="Schließen">${ICON.x}</button>
+    <div class="w3vert" aria-hidden="true"><b style="font-size:${Math.max(28, Math.min(54, Math.round(560 / Math.max(6, it.name.length))))}px">${esc(it.name)}</b><span>${nSets ? `${nSets} ${nSets === 1 ? "Satz" : "Sätze"} · ` : ""}${WD_FULL[now.getDay()]}, ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</span></div>
+    ${Object.entries(wins).filter(([, w]) => w.on).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
+    ${W3.tabs.map(w3TabHTML).join("")}
+    <div class="gbar ${bar.h ? "h" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Verschieben">⋮⋮</div>
+      ${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}"><span>${W3G[g][0]}</span><small>${W3G[g][1]}</small></button>`).join("")}
+      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler"><span>＋</span><small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen"><span>⇄</span><small>Drehen</small></button></div>
+    <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
+      <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>`;
+  w3Clamp();
+}
+// Fenster im Bild halten
+function w3Clamp() { document.querySelectorAll("#w3 .gw, #w3 .gbar, #w3 .w3tab").forEach(el => { const r = el.getBoundingClientRect(); let x = r.left, y = r.top;
+  x = Math.max(4, Math.min(innerWidth - r.width - 4, x)); y = Math.max(4, Math.min(innerHeight - Math.min(r.height, 120) - 4, y)); if (x !== r.left || y !== r.top) { el.style.left = x + "px"; el.style.top = y + "px"; } }); }
+function w3WinHTML(it, g, w) {
+  const [ic, title, width] = W3G[g];
+  return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${ic} ${title}</span><button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
+}
+function w3Step(field, label, val, step, unit = "") {
+  return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
+}
+function w3Body(it, g) {
+  const w = S.workout;
+  if (g === "sw") return `<div class="gw-big" id="w3sw">${fmtMs(w3SwMs())}</div><button class="gw-main ${W3T.sw.run ? "stop" : ""}" data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "Anhalten" : w3SwMs() ? "Weiter" : "Start"}</button>
+      <div class="gw-row"><button data-w3a="swreset">Zurücksetzen</button>${w3SwMs() && !W3T.sw.run ? `<button class="acc" data-w3a="swtake">Übernehmen</button>` : ""}</div>`;
+  if (g === "timer") return `<div class="gw-big ${W3T.tm.done ? "pg-done" : ""}" id="w3tm">${fmtMs(w3TmLeft(), false)}</div>
+      <div class="gw-chips">${[60, 90, 120, 180].map(s => `<button class="${W3T.tm.dur === s ? "on" : ""}" data-w3a="tmset" data-v="${s}">${s < 120 ? s + "s" : s / 60 + "m"}</button>`).join("")}</div>
+      <button class="gw-main ${W3T.tm.run ? "stop" : ""}" data-w3a="${W3T.tm.run ? "tmpause" : "tmgo"}">${W3T.tm.run ? "Pause" : "Start"}</button>
+      <div class="gw-row"><button data-w3a="tmplus" data-v="-15">−15</button><button data-w3a="tmreset">↺</button><button data-w3a="tmplus" data-v="15">+15</button></div>
+      <label class="gw-auto"><span>Nach jedem Satz automatisch</span><select data-w3sel="rest">${[0, 60, 90, 120, 180].map(s => `<option value="${s}" ${W3.autoRest === s ? "selected" : ""}>${s ? s + " s" : "aus"}</option>`).join("")}</select></label>`;
+  if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
+    if (g === "edit") return it.kind === "run" ? `<label class="w3fld"><small>Distanz (km)</small><input data-w3in="run.km" inputmode="decimal" value="${esc(r.km || "")}"></label>
+        <label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3in="run.minutes" inputmode="numeric" placeholder="mm:ss" value="${esc(r.minutes || "")}"></label>
+        <div class="w3pace">Pace <b id="w3pace">${paceOf(r.km, r.minutes) || "–"}</b> /km</div><label class="w3fld"><small>Notiz</small><textarea data-w3in="run.note">${esc(r.note || "")}</textarea></label>`
+      : `<label class="w3fld"><small>Dauer (Minuten)</small><input data-w3in="session.minutes" inputmode="numeric" value="${esc(r.minutes || "")}"></label><label class="w3fld"><small>Notiz</small><textarea data-w3in="session.note">${esc(r.note || "")}</textarea></label>`;
+    return ""; }
+  const e = w.exercises[it.i], m = exMode(e), c = W3.cur;
+  if (g === "edit") {
+    const modes = `<div class="gw-chips">${Object.entries(MODE_SHORT).map(([k, l]) => `<button class="${k === m ? "on" : ""}" data-w3a="mode" data-v="${k}">${l}</button>`).join("")}</div>`;
+    const fields = m === "weight" ? w3Step("kg", "Gewicht", c.kg, 2.5, "kg") + w3Step("reps", "Wiederholungen", c.reps, 1)
+      : m === "band" ? `<label class="w3fld"><small>Band / Stufe</small><input data-w3f="band" value="${esc(c.band)}" placeholder="z. B. Grün"></label>` + w3Step("reps", "Wiederholungen", c.reps, 1)
+      : m === "reps" ? w3Step("reps", "Wiederholungen", c.reps, 1) : m === "time" ? w3Step("sec", "Zeit", c.sec, 5, "Sek.")
+      : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (mm:ss)</small><input data-w3f="min" placeholder="mm:ss" value="${esc(c.min)}"></label>`;
+    return `${modes}${fields}<button class="gw-main acc" data-w3a="saveset">✓ Satz ${e.sets.filter(setFilled).length + 1} speichern</button>`;
+  }
+  if (g === "count") return `<button class="gw-tap" data-w3a="tap"><b id="w3cnt">${W3T.cnt}</b><small>Tippen = +1</small></button>
+      <div class="gw-row"><button data-w3a="tapdec">−1</button><button data-w3a="tapreset">↺</button></div>
+      <button class="gw-main acc" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Als Satz (${W3T.cnt}${m === "weight" && c.kg ? ` × ${c.kg} kg` : ""})</button>`;
+  if (g === "sets") { const s = e.sets.map((x, j) => [x, j]).filter(([x]) => setFilled(x));
+    return s.length ? `<div class="gw-sets">${s.map(([x, j], n) => `<div><b>${n + 1}</b><span>${esc(setTxt(x, m))}</span><button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button></div>`).join("")}</div>`
+      : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`; }
+  return "";
+}
+// Zusätzliche Zähler (beliebig viele)
+function w3TabHTML(t) {
+  return `<div class="gw w3tab ${t.min ? "min" : ""}" data-tab="${t.id}" style="left:${t.x}px;top:${t.y}px;width:150px"><div class="gw-h" data-drag="tab:${t.id}"><span>👆 Zähler</span><button data-w3a="tmin" data-id="${t.id}">${t.min ? "▢" : "–"}</button><button data-w3a="tdel" data-id="${t.id}">✕</button></div>
+    ${t.min ? "" : `<div class="gw-b"><button class="gw-tap sm" data-w3a="ttap" data-id="${t.id}"><b data-live3="${t.id}">${t.n || 0}</b></button><div class="gw-row"><button data-w3a="tdec" data-id="${t.id}">−</button><button data-w3a="tzero" data-id="${t.id}">↺</button></div></div>`}</div>`;
+}
+// Ziehen: Fenster, Zusatz-Zähler und Gadget-Leiste
 function w3DragStart(e) {
-  const g = e.target.closest("[data-tooldrag]");
-  if (g) { const col = g.closest(".w3tools"); e.preventDefault(); const r0 = col.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top; g.setPointerCapture(e.pointerId); col.classList.add("drag");
-    const mv = ev => { const x = Math.max(4, Math.min(innerWidth - col.offsetWidth - 4, ev.clientX - ox)), y = Math.max(4, Math.min(innerHeight - col.offsetHeight - 4, ev.clientY - oy)); col.style.left = x + "px"; col.style.top = y + "px"; W3.toolPos = { x, y }; };
-    const up = () => { g.removeEventListener("pointermove", mv); g.removeEventListener("pointerup", up); g.removeEventListener("pointercancel", up); col.classList.remove("drag"); w3Save(); };
-    g.addEventListener("pointermove", mv); g.addEventListener("pointerup", up); g.addEventListener("pointercancel", up); return; }
-  const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button")) return;
-  const tab = h.closest(".w3tab"), t = W3.tabs.find(x => x.id === h.dataset.drag); if (!t) return;
-  e.preventDefault(); const ox = e.clientX - t.x, oy = e.clientY - t.y; h.setPointerCapture(e.pointerId); tab.classList.add("drag");
-  const mv = ev => { t.x = Math.max(4, Math.min(innerWidth - tab.offsetWidth - 4, ev.clientX - ox)); t.y = Math.max(4, Math.min(innerHeight - 50, ev.clientY - oy)); tab.style.left = t.x + "px"; tab.style.top = t.y + "px"; };
-  const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); tab.classList.remove("drag"); w3Save(); };
+  const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button, input, select, textarea")) return;
+  const el = h.closest(".gw, .gbar"); if (!el) return;
+  e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top; h.setPointerCapture(e.pointerId); el.classList.add("drag");
+  let x = r0.left, y = r0.top;
+  const mv = ev => { x = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, ev.clientX - ox)); y = Math.max(4, Math.min(innerHeight - 44, ev.clientY - oy)); el.style.left = x + "px"; el.style.top = y + "px"; };
+  const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); el.classList.remove("drag");
+    const [kind, id] = h.dataset.drag.split(":"), it = w3It();
+    if (kind === "bar") W3.bar = { ...(W3.bar || {}), x, y }; else if (kind === "win") Object.assign(w3Wins(it)[id], { x, y }); else { const t = W3.tabs.find(q => q.id === id); if (t) Object.assign(t, { x, y }); }
+    w3Save(); };
   h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
 }
-async function w3AddTab() {
-  const box = document.createElement("div"); box.className = "pg-pick";
-  box.innerHTML = `<div class="card"><b>Mini-Tab hinzufügen</b><small class="muted">Kleines Fenster, das du überall hinschieben kannst.</small>${Object.entries(W3_TABT).map(([k, n]) => `<button class="btn block" data-tt="${k}">${{ count: "👆", sw: "⏱", timer: "⏳" }[k]} ${n}</button>`).join("")}<button class="btn block" data-tt="">Abbrechen</button></div>`;
-  box.addEventListener("click", ev => { const b = ev.target.closest("[data-tt]"); if (!b) return; ev.stopPropagation(); box.remove(); if (!b.dataset.tt) return;
-    W3.tabs.push({ id: pgId(), type: b.dataset.tt, x: innerWidth - 170 - (W3.tabs.length % 3) * 14, y: 120 + (W3.tabs.length % 4) * 60, n: 0 }); w3Save(); w3Render(); });
-  $("#w3").appendChild(box);
-}
 // ---------- Aktionen ----------
+const w3Live = () => { const el = $("#w3sw"); if (el) el.textContent = fmtMs(w3SwMs()); const t = $("#w3tm"); if (t) t.textContent = fmtMs(w3TmLeft(), false); };
 async function w3Click(e) {
   const b = e.target.closest("[data-w3a]"); if (!b) return;
   const a = b.dataset.w3a, it = w3It(), w = S.workout, ex = it?.kind === "ex" ? w.exercises[it.i] : null, m = ex ? exMode(ex) : null;
   const re = () => { w3TSave(); w3Render(); };
   if (a === "close") return w3Close();
-  if (a === "center") { W3.center[it.kind === "ex" ? m : it.kind] = b.dataset.v; w3Save(); return re(); }
-  if (a === "addtab") return w3AddTab();
+  if (a === "win") { const ws = w3Wins(it), g = ws[b.dataset.v]; g.on = !g.on; g.min = false; w3Save(); return re(); }
+  if (a === "wmin") { const g = w3Wins(it)[b.dataset.v]; g.min = !g.min; w3Save(); return re(); }
+  if (a === "barrot") { W3.bar = { ...(W3.bar || { x: innerWidth - 62, y: 90 }), h: !(W3.bar || {}).h }; w3Save(); return re(); }
+  if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
   if (a === "inc" || a === "dec") { const f = b.dataset.f, s = +b.dataset.s * (a === "inc" ? 1 : -1); W3.cur[f] = Math.max(0, Math.round((numv(W3.cur[f]) + s) * 100) / 100); const inp = $(`#w3 [data-w3f="${f}"]`); if (inp) inp.value = W3.cur[f]; pgBuzz(8); return; }
   if (a === "saveset" && ex) return w3AddSet(ex, m, W3.cur.reps);
-  if (a === "rest") { W3.autoRest = +b.dataset.v; w3Save(); return re(); }
   if (a === "delset" && ex) { ex.sets.splice(+b.dataset.j, 1); if (!ex.sets.length) ex.sets = [emptySet(m)]; saveWorkout(false); return re(); }
-  if (a === "tap") { W3T.cnt++; pgBuzz(15); w3TSave(); const el = $("#w3cnt"); if (el) { el.textContent = W3T.cnt; el.classList.remove("pgpop"); void el.offsetWidth; el.classList.add("pgpop"); } const sv = $('#w3 [data-w3a="tapsave"]'); if (sv) { sv.disabled = false; sv.textContent = `✓ Satz speichern (${W3T.cnt}${m === "weight" && W3.cur.kg ? ` × ${W3.cur.kg} kg` : ""})`; } return; }
+  if (a === "tap") { W3T.cnt++; pgBuzz(15); w3TSave(); const el = $("#w3cnt"); if (el) el.textContent = W3T.cnt; const sv = $('#w3 [data-w3a="tapsave"]'); if (sv) { sv.disabled = false; sv.textContent = `✓ Als Satz (${W3T.cnt}${m === "weight" && W3.cur.kg ? ` × ${W3.cur.kg} kg` : ""})`; } return; }
   if (a === "tapdec") { W3T.cnt = Math.max(0, W3T.cnt - 1); return re(); }
   if (a === "tapreset") { W3T.cnt = 0; return re(); }
   if (a === "tapsave" && ex) { const n = W3T.cnt; W3T.cnt = 0; w3TSave(); return w3AddSet(ex, m, n); }
-  if (a === "swgo") { W3T.sw.t0 = Date.now(); W3T.sw.run = true; return re(); }
+  if (a === "swgo") { W3T.sw.t0 = Date.now(); W3T.sw.run = true; w3Tick(); return re(); }
   if (a === "swstop") { W3T.sw.acc = w3SwMs(); W3T.sw.run = false; return re(); }
   if (a === "swreset") { W3T.sw = { run: false, t0: 0, acc: 0 }; return re(); }
   if (a === "swtake") { const ms = w3SwMs(), mmss = fmtMs(ms, false);
-    if (it.kind === "run") { w.run = { ...(w.run || {}), minutes: mmss }; W3.center.run = "edit"; }
-    else if (it.kind === "session") { w.session = { ...(w.session || {}), minutes: String(Math.max(1, Math.round(ms / 60000))) }; W3.center.session = "edit"; }
-    else if (m === "time") { W3.cur.sec = Math.round(ms / 1000); W3.center.time = "edit"; } else if (m === "cardio") { W3.cur.min = mmss; W3.center.cardio = "edit"; }
-    else { toast("Zeit passt zu „Zeit“ oder „Ausdauer“ – stell die Übung oben um."); return; }
-    W3T.sw = { run: false, t0: 0, acc: 0 }; saveWorkout(false); w3Save(); toast(`✓ ${mmss} übernommen`); return re(); }
+    if (it.kind === "run") w.run = { ...(w.run || {}), minutes: mmss };
+    else if (it.kind === "session") w.session = { ...(w.session || {}), minutes: String(Math.max(1, Math.round(ms / 60000))) };
+    else if (m === "time") W3.cur.sec = Math.round(ms / 1000); else if (m === "cardio") W3.cur.min = mmss;
+    else { toast("Zeit passt zu „Zeit“ oder „Ausdauer“ – stell die Übung im Eingabe-Fenster um."); return; }
+    W3T.sw = { run: false, t0: 0, acc: 0 }; saveWorkout(false); toast(`✓ ${mmss} übernommen`); return re(); }
   if (a === "tmset") { W3T.tm = { dur: +b.dataset.v, run: false, end: 0, left: +b.dataset.v * 1000, done: false }; return re(); }
   if (a === "tmgo") { if (W3T.tm.done || W3T.tm.left <= 0) W3T.tm.left = W3T.tm.dur * 1000; W3T.tm.end = Date.now() + W3T.tm.left; W3T.tm.run = true; W3T.tm.done = false; w3Tick(); return re(); }
   if (a === "tmpause") { W3T.tm.left = w3TmLeft(); W3T.tm.run = false; return re(); }
@@ -3894,11 +4010,13 @@ async function w3Click(e) {
 }
 function w3Input(e) {
   const t = e.target;
+  if (t.dataset.w3sel === "rest") { W3.autoRest = +t.value; w3Save(); return; }
   if (t.dataset.w3f) { W3.cur[t.dataset.w3f] = t.value; return; }
   if (t.dataset.w3in) { const [o, f] = t.dataset.w3in.split("."), w = S.workout; let v = t.value;
     if (f === "minutes" && o === "run") { const nv = fmtDurTyping(v); if (nv !== v) { t.value = nv; v = nv; } }
     w[o] = { ...(w[o] || {}), [f]: v }; saveWorkout(false); const p = $("#w3pace"); if (p) p.textContent = paceOf(w.run?.km, w.run?.minutes) || "–"; }
 }
+document.addEventListener("change", e => { if (e.target.dataset?.w3sel === "rest") { W3.autoRest = +e.target.value; w3Save(); } });
 function w3AddSet(ex, m, reps) {
   const c = W3.cur, ns = emptySet(m);
   if (m === "weight") { ns.kg = c.kg ? String(c.kg).replace(".", ",") : ""; ns.reps = String(reps || ""); }
@@ -3907,7 +4025,7 @@ function w3AddSet(ex, m, reps) {
   if (!setFilled(ns)) { toast("Bitte erst einen Wert eintragen."); return; }
   ex.sets = ex.sets.filter(setFilled); ex.sets.push(ns); saveWorkout(false); pgBeep(1046, 90); pgBuzz(30);
   toast(`✓ Satz ${ex.sets.length} gespeichert`);
-  if (W3.autoRest && m !== "cardio") { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false }; w3Tick(); }
+  if (W3.autoRest && m !== "cardio") { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false }; const ws = w3Wins(w3It()); if (ws.timer) ws.timer.on = 1; w3Tick(); }
   w3TSave(); w3Render();
 }
 async function w3Finish() {
@@ -3921,16 +4039,15 @@ async function w3Finish() {
     <button class="btn primary block" data-w3a="close">Fertig</button></div></div>`);
   pgBeep(784, 140, 3, 90); pgBuzz([80, 60, 80, 60, 200]);
 }
-// Uhren aktualisieren + Pausen-Ende melden
+// Uhren: nur 4× pro Sekunde und nur die Zahlen
 let w3TickT = 0;
 function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   const on = $("#w3")?.classList.contains("on");
   if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]); toast("⏳ Pause vorbei – nächster Satz!"); if (on) w3Render(); }
-  if (!on) { if (!W3T.tm.run && !W3T.sw.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
+  if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
   const el = $("#w3el"); if (el) el.textContent = fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false);
-  const sw = $("#w3sw"); if (sw) sw.textContent = fmtMs(w3SwMs()); const tm = $("#w3tm"); if (tm) tm.textContent = fmtMs(w3TmLeft(), false);
-  W3.tabs.forEach(t => { const x = $(`#w3 [data-live3="${t.id}"]`); if (x && t.type === "sw") x.textContent = fmtMs(w3SwMs(), false); if (x && t.type === "timer") x.textContent = fmtMs(w3TmLeft(), false); });
-}, 100); }
+  w3Live();
+}, 250); }
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
    Eigene: users/{uid}/walls (Vorschau) + users/{uid}/wallImgs (Bild) – nur du siehst sie, auf allen Geräten.
@@ -8205,7 +8322,7 @@ function setTabAnim(t, dir) {
   let sx = 0, sy = 0, horiz = null, sec = null;
   const app = $("#app");
   app.addEventListener("touchstart", e => {
-    sec = null; if (document.documentElement.classList.contains("ui3")) return;
+    sec = null;
     if (e.touches.length !== 1 || !$("#sheet").classList.contains("hidden") || document.querySelector(".ex.dragging")) return;
     if (e.target.closest("input, textarea, select, .groups, .seg, .tw, .dial, .chart, .noswipe")) return;
     sx = e.touches[0].clientX; sy = e.touches[0].clientY; horiz = null; sec = $("#view-" + S.tab);
