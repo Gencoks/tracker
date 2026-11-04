@@ -4013,7 +4013,7 @@ function w3Wins(it) {
 }
 function w3Render() {
   const o = $("#w3"), items = w3Items(), it = w3It(); if (!it) return w3Close();
-  const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || (W3.bar = { x: innerWidth - 66, y: 90, h: 0 }); if (bar.v2 !== 1) { bar.h = 0; bar.v2 = 1; bar.x = Math.min(bar.x ?? innerWidth - 66, innerWidth - 66); bar.y = bar.y ?? 90; }
+  const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || (W3.bar = { x: innerWidth - 66, y: 90, h: 0 }); bar.h = 0; if (bar.v2 !== 1) { bar.v2 = 1; bar.x = Math.min(bar.x ?? innerWidth - 66, innerWidth - 66); bar.y = bar.y ?? 90; }
   const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, now = new Date();
   const k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
   o.innerHTML = `
@@ -4025,7 +4025,7 @@ function w3Render() {
     ${W3.tabs.map(w3TabHTML).join("")}
     <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       ${bar.c ? "" : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}
-      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen">${W3I.rot}<small>${bar.h ? "Senkrecht" : "Waagerecht"}</small></button>`}</div>
+      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button>`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
       <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>`;
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
