@@ -1966,6 +1966,41 @@
   .h3hint { flex-direction: column; align-items: flex-end; gap: 6px; max-width: calc(100vw - min(68vw, 360px) - 22px); font-size: 9.5px; line-height: 1.35; bottom: calc(100px + env(safe-area-inset-bottom)); }
   #w3 .pg-pick { z-index: 10; }
 
+  /* Rangkarte: Rangfarbe strahlt etwas stärker aus der linken oberen Ecke */
+  :root[data-ui=v2] .rank-card:not(.god) { background-image: radial-gradient(130% 100% at 0% 0%, color-mix(in srgb, var(--rc) 26%, transparent) 0%, color-mix(in srgb, var(--rc) 10%, transparent) 38%, transparent 68%) !important; }
+  /* Erfolge: Linien-Symbole */
+  :root[data-ui=v2] .ach-ico { color: var(--tc); }
+  :root[data-ui=v2] .ach-ico .ach-svg { width: 24px; height: 24px; display: block; }
+  :root[data-ui=v2] .ach-ico.off .ach-svg { color: var(--muted); }
+  .tiw { display: inline-flex; vertical-align: -2px; margin-right: 3px; } .tiw .ti { width: 1em; height: 1em; }
+  /* Trainingsarten-Katalog */
+  .pe-add { border-style: dashed !important; color: var(--accent-text) !important; }
+  .pe-ti { display: inline-flex; vertical-align: -4px; margin-right: 8px; color: var(--accent-text); } .pe-ti .ach-svg { width: 18px; height: 18px; }
+  .pe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .pe-grid button { display: grid; justify-items: center; gap: 4px; padding: 12px 6px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-align: center; }
+  .pe-grid button .ach-svg { width: 26px; height: 26px; color: var(--accent-text); }
+  .pe-grid button b { font-size: 13px; line-height: 1.15; overflow-wrap: anywhere; } .pe-grid button small { font-size: 10.5px; color: var(--muted); }
+  .pe-grid button.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .pe-grid button.have { opacity: .55; }
+  /* Aufgaben-Vorschläge */
+  .ts-sug { display: grid; gap: 6px; }
+  .ts-sug button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .ts-sug button .ach-svg { width: 20px; height: 20px; color: var(--accent-text); flex: none; } .ts-sug button span { flex: 1; font-weight: 600; font-size: 14px; }
+  .ts-sug button i { font-style: normal; font-size: 20px; color: var(--accent-text); font-weight: 600; }
+  .ts-or { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; margin: 14px 0 0; } .ts-or::before, .ts-or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .pe-day { cursor: pointer; } .pe-day > div:first-child { margin-bottom: 6px !important; }
+  .pe-cur { display: flex; align-items: center; gap: 12px; } .pe-cur .ach-svg { width: 24px; height: 24px; color: var(--accent-text); flex: none; }
+  .pe-cur span { flex: 1; min-width: 0; display: grid; } .pe-cur b { font-size: 16px; } .pe-cur small { color: var(--muted); font-size: 12px; }
+  .pe-cur em { font-style: normal; font-size: 12px; color: var(--accent-text); font-weight: 600; } .pe-cur svg:last-child { width: 16px; height: 16px; color: var(--muted); }
+  :root[data-ui=v2] :is(small, .s):has(> .tiw) { display: block !important; }
+  :root[data-ui=v2] .menu small .tiw { display: none; }
+  .w3mode2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .w3mode2 button { display: grid; gap: 2px; text-align: left; padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+  .w3mode2 button small { color: var(--muted); font-size: 11.5px; } .w3mode2 button.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  /* Unten: „Neuer Satz“ & „Nächste Übung“ beide gefüllt in Akzentfarbe, Inhalt optisch mittig */
+  #w3 .w3next, #w3 .w3next.fin { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+  #w3 .w3nset svg { margin-left: -6px; } #w3 .w3next svg { margin-right: -6px; width: 17px; height: 17px; }
+  #w3 .w3bot { padding-left: 10px; padding-right: 10px; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2507,10 +2542,13 @@ function copyPrevious() {
   if (document.documentElement.classList.contains("ui3")) {
     S.workout.exercises.forEach(e => { const m = exMode(e), filled = (e.sets || []).filter(setFilled); delete e.note;
       e.sets = (filled.length ? filled : [{}]).map(st => { const ph = {}; ["kg", "reps", "band", "sec", "km", "min"].forEach(f => { if (st[f]) ph[f] = st[f]; }); return { ...emptySet(m), _ph: ph }; }); });
-    S.workout.run = { km: "", minutes: "" }; S.workout.session = { minutes: "" };
+    S.workout.run = { km: "", minutes: "" };
+    // Einheit (z. B. Kickboxen): "Bestätigen & übernehmen" = heute erledigt, Dauer wie beim letzten Mal
+    if (planByName(S.workout.plan)?.type === "session") { S.workout.session = { minutes: p.session?.minutes || "60", done: true }; saveWorkout(true); toast(`✓ ${S.workout.plan} erledigt`); return; }
+    S.workout.session = { minutes: "" };
   }
   loadLastFor(S.workout.exercises.map(e => e.name)).then(() => saveWorkout(true));
-  toast("Übernommen – passe an, was heute anders ist");
+  toast(document.documentElement.classList.contains("ui3") ? "Übernommen – trag deine Werte ein" : "Übernommen – passe an, was heute anders ist");
 }
 const lastCache = {};   // Übungsname -> Text "60 kg × 8 · 8 · 7"
 async function loadLastFor(names) {
@@ -2952,7 +2990,7 @@ async function savePlan() {
   writePushCfg();
   renderStart(); renderTrain();
 }
-function openPlanEditor() {
+function openPlanEditorV1() {
   const f = S.planForm;
   let html = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
       <b style="font-size:18px">${f ? (f.i < 0 ? "Neue Trainingsart" : "Trainingsart bearbeiten") : "Trainingsplan"}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div></div>`;
@@ -2985,7 +3023,7 @@ async function saveTypeForm() {
   const f = S.planForm, name = $("#typeName").value.trim();
   if (!name) { $("#typeName").focus(); return; }
   if (TYPES.some((t, i) => t.name === name && i !== f.i)) { toast("Diesen Namen gibt es schon"); return; }
-  const t = { name, type: f.type }; if (f.type === "gym") t.groups = f.groups;
+  const t = { name, type: f.type }; if (f.type === "gym") t.groups = f.groups; if (f.check && f.type === "session") t.check = true;
   if (f.i < 0) TYPES.push(t);
   else {
     const old = TYPES[f.i].name; TYPES[f.i] = t;
@@ -3827,7 +3865,7 @@ const V3_ICONS = {
   out: V3I('<path d="M15 4h4v16h-4M10 17l5-5-5-5M15 12H3"/>'),
 };
 // Funktionen: [key, Name, Icon, Aktion]
-const V3_APPS = [["tasks", "Heute", "tasks", () => { if (S.tab === "start" && $("#h3today")) { v3Drawer(false); $("#h3today").scrollIntoView({ behavior: "smooth" }); } else v3Drawer(true); }], ["train", "Training", "train", () => v3Go("train")], ["play", "Workout", "play", () => { v3Go("train"); setTimeout(() => w3Open(), 60); }],
+const V3_APPS = [["tasks", "Heute", "tasks", () => v3ShowToday()], ["train", "Training", "train", () => v3Go("train")], ["play", "Workout", "play", () => { v3Go("train"); setTimeout(() => w3Open(), 60); }],
   ["cal", "Überblick", "cal", () => v3Go("cal")], ["perf", "Leistung", "perf", () => v3Go("perf")], ["rank", "Rang", "rank", () => v3Go("perf", "rank")],
   ["todo", "To-Do", "todo", () => { S.todoView = "list"; v3Go("todo"); }], ["notes", "Notizen", "note", () => { S.todoView = "notes"; v3Go("todo"); }], ["dates", "Termine", "cal2", () => { S.todoView = "cal"; v3Go("todo"); }],
   ["awards", "Erfolge", "medal", () => v3Go("perf", "awards")], ["friends", "Freunde", "friends", () => v3Go("perf", "friends")], ["walls", "Hintergründe", "image", () => { v3Drawer(false); openWalls(); }],
@@ -3917,11 +3955,12 @@ function v3DrawerFill() {
     </div>`;
   d.querySelector(".d3in").scrollTop = y;
 }
-function v3Drawer(on) {
-  let d = $("#d3"); if (!d) { if (!on) return; d = document.createElement("div"); d.id = "d3"; document.body.appendChild(d); }
-  if (on) { v3DrawerFill(); requestAnimationFrame(() => d.classList.add("on")); document.documentElement.classList.add("d3on"); }
-  else { d.classList.remove("on"); document.documentElement.classList.remove("d3on"); }
+// Kein schwarzes Overlay mehr – „Heute“ lebt nur noch als Abschnitt auf der Startseite
+function v3ShowToday() {
+  const go = () => $("#h3today")?.scrollIntoView({ behavior: "smooth" });
+  if (S.tab === "start" && $("#h3today")) go(); else { setTab("start"); setTimeout(go, 120); }
 }
+function v3Drawer(on) { $("#d3")?.remove(); document.documentElement.classList.remove("d3on"); if (on) v3ShowToday(); }
 // ---------- Seitenleiste (von rechts reinwischen) ----------
 function v3DockEnsure() { let k = $("#k3");
   if (!k) { k = document.createElement("div"); k.id = "k3"; document.body.appendChild(k);
@@ -3940,9 +3979,6 @@ function v3Dock(on) {
   document.addEventListener("touchstart", e => { if (!isV3()) return; const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); edge = sx > innerWidth - 28; }, { passive: true });
   document.addEventListener("touchend", e => { if (!isV3() || !st) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, fast = Date.now() - st < 700; st = 0;
     if (document.documentElement.classList.contains("pg-on") || $("#w3")?.classList.contains("on")) return;
-    const dOn = $("#d3")?.classList.contains("on");
-    if (!dOn && S.tab === "start" && dy < -60 && Math.abs(dx) < 70 && fast && !e.target.closest(".h3grid")) return v3Drawer(true);
-    if (dOn && dy > 70 && Math.abs(dx) < 70 && fast && ($("#d3 .d3in").scrollTop < 5)) return v3Drawer(false);
   }, { passive: true });
 })();
 document.addEventListener("click", e => {
@@ -3963,34 +3999,50 @@ function w3Items() {
   const w = S.workout, p = w3Plan();
   if (p.type === "gym") return (w.exercises || []).map((e, i) => ({ kind: "ex", i, name: e.name, sub: e.group }));
   if (p.type === "run") return [{ kind: "run", i: 0, name: "Laufen", sub: "Distanz & Zeit" }];
-  if (p.type === "session") return [{ kind: "session", i: 0, name: p.name, sub: "Dauer & Notiz" }];
+  if (p.type === "session") return [{ kind: "session", i: 0, name: p.name, sub: "Dauer & Notiz", check: !!p.check }];
   return [];
 }
 function w3Summary(it) {
   const w = S.workout;
   if (it.kind === "run") return w.run?.km || w.run?.minutes ? `${w.run.km || "–"} km · ${w.run.minutes || "–"}${paceOf(w.run.km, w.run.minutes) ? ` · ${paceOf(w.run.km, w.run.minutes)}/km` : ""}` : "noch leer";
-  if (it.kind === "session") return w.session?.minutes ? `${w.session.minutes} min` : "noch leer";
+  if (it.kind === "session") return it.check ? (w.session?.minutes || w.session?.done ? "✓ erledigt" : "Zum Abhaken antippen") : w.session?.minutes ? `${w.session.minutes} min` : "noch leer";
   const e = w.exercises[it.i], m = exMode(e), s = e.sets.filter(setFilled);
   return s.length ? `${s.length} ${m === "cardio" ? "Abschnitt" + (s.length > 1 ? "e" : "") : "Sätze"} · ${esc(setTxt(s[s.length - 1], m))}` : (lastCache[e.name] ? esc(lastCache[e.name]) : "noch leer");
 }
-const w3Done = it => it.kind === "ex" ? S.workout.exercises[it.i].sets.some(setFilled) : !!w3Summary(it).match(/\d/);
+const w3Done = it => it.kind === "ex" ? S.workout.exercises[it.i].sets.some(setFilled) : it.kind === "session" ? !!(S.workout.session?.minutes || S.workout.session?.done) : !!w3Summary(it).match(/\d/);
 // Trainings-Übersicht: grobe Liste als Mini-Blöcke
 function w3Overview() {
   const v = $("#view-train"), w = S.workout; if (!w) return;
   const p = w3Plan(), items = w3Items(), locked = S.trainDate < todayKey();
   const exList = v.querySelector("#exList"), runCard = v.querySelector('[data-in="run.km"]')?.closest(".card"), sesCard = v.querySelector('[data-in="session.minutes"]')?.closest(".card");
-  const blocks = `<div class="w3list" ${p.type === "gym" ? 'id="exList"' : ""}>${items.map((it, n) => `<div role="button" tabindex="0" class="w3blk ${it.kind === "ex" ? "ex" : ""} ${w3Done(it) ? "done" : ""}" data-w3="open" data-n="${n}" ${it.kind === "ex" ? `data-ex="${it.i}"` : ""}>
+  const blocks = `<div class="w3list" ${p.type === "gym" ? 'id="exList"' : ""}>${items.map((it, n) => `<div role="button" tabindex="0" class="w3blk ${it.kind === "ex" ? "ex" : ""} ${w3Done(it) ? "done" : ""}" data-w3="${it.check ? "tick" : "open"}" data-n="${n}" ${it.kind === "ex" ? `data-ex="${it.i}"` : ""}>
       <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}${it.kind === "ex" && S.workout.exercises[it.i].note ? ` <i class="w3hasnote">${W3I.notes}</i>` : ""}</b><small>${w3Summary(it)}</small></span><button class="w3more" ${it.kind === "ex" ? `data-action="exmenu" data-i="${it.i}"` : `data-w3menu="${it.kind}"`} aria-label="Bearbeiten">${ICON.dots}</button><span class="box-check">${CHECK}</span></div>`).join("")}</div>
     ${items.length > 1 ? `<div class="w3tip">Block 1,5 Sek. gedrückt halten und ziehen, um die Reihenfolge zu ändern.</div>` : ""}`;
   if (exList) exList.outerHTML = blocks; else if (runCard) runCard.outerHTML = blocks; else if (sesCard) sesCard.outerHTML = blocks;
   v.querySelector(".note")?.remove();
-  if (items.length && !locked) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
+  if (items.length && !locked && !items[0].check) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
     if (h2) h2.insertAdjacentHTML("afterend", `<button class="btn primary block w3start2" data-w3="start">${V3_ICONS.play}${W3.start[S.trainDate] ? "Training fortsetzen" : "Training starten"}</button>`); }
 }
+// Einheit nur abhaken (z. B. Kickboxen): Dauer wird vom letzten Mal übernommen, sonst 60 Min.
+function w3Tick2() { const w = S.workout, on = !!(w.session?.minutes || w.session?.done);
+  w.session = on ? { minutes: "", note: w.session?.note || "" } : { ...(w.session || {}), minutes: String(S.prevSame?.session?.minutes || 60), done: true };
+  saveWorkout(true); pgBuzz(20); if (!on) toast(`✓ ${w.plan} erledigt`); }
+function w3TypeMenu(k) { const p = w3Plan(), ti = TYPES.findIndex(t => t.name === p.name), chk = !!p.check;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">${esc(p.name)}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    ${k === "session" && ti >= 0 ? `<div class="field" style="margin-top:0"><label>Wie willst du „${esc(p.name)}“ eintragen?</label><div class="w3mode2">
+      <button class="${chk ? "" : "on"}" data-w3m="vals"><b>Mit Werten</b><small>Dauer, Stoppuhr, Notiz</small></button>
+      <button class="${chk ? "on" : ""}" data-w3m="check"><b>Nur abhaken</b><small>Ein Tipp = erledigt</small></button></div></div>` : ""}
+    <div class="menu" style="margin-top:12px"><button data-w3m="del" class="danger">${ICON.x}<span>Eintrag von heute löschen<small>${k === "run" ? "Distanz, Zeit und Notiz" : "Dauer und Notiz"}</small></span></button></div>`;
+  showSheet(); }
+document.addEventListener("click", async e => { const b = e.target.closest("[data-w3m]"); if (!b) return; const m = b.dataset.w3m, w = S.workout, p = w3Plan();
+  if (m === "del") { closeSheet(); if (await askYesNo(p.type === "run" ? "Lauf-Eintrag (Distanz, Zeit, Notiz) löschen?" : "Eintrag (Dauer, Notiz) löschen?", "Löschen")) { if (p.type === "run") w.run = { km: "", minutes: "", note: "" }; else w.session = { minutes: "", note: "" }; saveWorkout(true); } return; }
+  const t = TYPES.find(x => x.name === p.name); if (!t) return; if (m === "check") t.check = true; else delete t.check;
+  closeSheet(); await savePlan(); toast(m === "check" ? `„${t.name}“ wird jetzt nur abgehakt ✓` : `„${t.name}“ mit Werten ✓`); });
 function renderTrainV3Hook() { if (isV3() && S.workout) w3Overview(); }
 document.addEventListener("click", async e => {
   const mm = e.target.closest("[data-w3menu]"); if (mm && isV3()) { e.stopPropagation(); const k = mm.dataset.w3menu, w = S.workout;
-    if (await askYesNo(k === "run" ? "Lauf-Eintrag (Distanz, Zeit, Notiz) löschen?" : "Eintrag (Dauer, Notiz) löschen?", "Löschen")) { if (k === "run") w.run = { km: "", minutes: "", note: "" }; else w.session = { minutes: "", note: "" }; saveWorkout(true); } return; }
+    w3TypeMenu(k); return; }
+  const tk = e.target.closest('[data-w3="tick"]'); if (tk && isV3()) { if (S.trainDate < todayKey()) { toast("🔒 Vergangene Trainings sind gesperrt."); return; } w3Tick2(); return; }
   if (e.target.closest("[data-action]")) return;
   const b = e.target.closest("[data-w3]"); if (!b || !isV3()) return;
   try { if (b.dataset.w3 === "open") w3Open(+b.dataset.n); else if (b.dataset.w3 === "start") { const items = w3Items(), n = items.findIndex(it => !w3Done(it)); w3Open(n < 0 ? 0 : n); } }
@@ -4006,19 +4058,24 @@ function w3Open(n = null) {
   W3.i = Math.max(0, Math.min(items.length - 1, n));
   if (!W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); }
   let o = $("#w3"); if (!o) { o = document.createElement("div"); o.id = "w3"; document.body.appendChild(o); o.addEventListener("click", w3Click); o.addEventListener("input", w3Input); o.addEventListener("pointerdown", w3DragStart); }
-  w3Form();
+  w3WinsOff(); w3Form();
   w3Cur(true); o.classList.add("on"); document.documentElement.classList.add("pg-on"); w3Render(); w3Tick();
 }
 function w3Close() { $("#w3")?.classList.remove("on"); document.documentElement.classList.remove("pg-on"); renderTrain(); }
 const w3It = () => w3Items()[W3.i];
 // Übung merkt sich ihre Form (z. B. Tabata 20/10 mit Zähler) und startet beim nächsten Mal so
 function w3Form() { const it = w3It(); if (!it || it.kind !== "ex") return; const f = S.workout.exercises[it.i].form; if (!f) return; const ws = w3Wins(it);
-  if (f.via === "tabata") { if (!W3T.tb.run && !W3T.tb.acc) Object.assign(W3T.tb, { work: f.work, rest: f.rest, rounds: f.rounds }); ws.tabata.on = 1; ws.count.on = 1; }
-  if (f.via === "timer") { if (!W3T.tm.run) W3T.tm = { dur: f.dur, run: false, end: 0, left: f.dur * 1000, done: false, rest: false }; ws.timer.on = 1; ws.count.on = 1; } w3TSave(); }
+  if (f.via === "tabata") { if (!W3T.tb.run && !W3T.tb.acc) Object.assign(W3T.tb, { work: f.work, rest: f.rest, rounds: f.rounds }); }
+  if (f.via === "timer") { if (!W3T.tm.run) W3T.tm = { dur: f.dur, run: false, end: 0, left: f.dur * 1000, done: false, rest: false }; } w3TSave(); }
+// Beim Start einer Übung ist nichts offen – Fenster öffnest du selbst über die Leiste (Positionen bleiben gespeichert)
+function w3WinsOff() { Object.values(W3.win || {}).forEach(ws => Object.entries(ws).forEach(([k, w]) => { if (!(k === "timer" && W3T.tm.run) && !(k === "sw" && W3T.sw.run) && !(k === "tabata" && W3T.tb.run)) w.on = 0; })); w3Save(); }
 // aktueller Satz (W3.si): zuerst der nächste offene, sonst ein neuer
 const w3SiDef = e => { const k = e.sets.findIndex(x => !setFilled(x)); return k >= 0 ? k : e.sets.length; };
-function w3Load(e) { const st = e.sets[W3.si], src = st && setFilled(st) ? st : (st?._ph && Object.keys(st._ph).length ? st._ph : e.sets.filter(setFilled).slice(-1)[0] || {});
-  W3.cur = { ex: e.name, kg: numv(src.kg) || 0, reps: numv(src.reps) || 8, band: src.band || "", sec: numv(src.sec) || 30, km: numv(src.km) || 0, min: src.min || "" }; }
+// Offener Satz = leere Felder; die Werte vom letzten Mal / letzten Satz stehen nur grau als Platzhalter drin
+function w3Load(e) { const st = e.sets[W3.si], filled = st && setFilled(st), ph = st?._ph && Object.keys(st._ph).length ? st._ph : e.sets.filter(setFilled).slice(-1)[0] || {};
+  const src = filled ? st : {};
+  W3.ph = { kg: numv(ph.kg) || "", reps: numv(ph.reps) || "", band: ph.band || "", sec: numv(ph.sec) || "", km: numv(ph.km) || "", min: ph.min || "" };
+  W3.cur = { ex: e.name, kg: filled ? numv(src.kg) || "" : "", reps: filled ? numv(src.reps) || "" : "", band: src.band || "", sec: filled ? numv(src.sec) || "" : "", km: filled ? numv(src.km) || "" : "", min: src.min || "" }; }
 function w3Cur(reset) {
   const it = w3It(); if (!it || it.kind !== "ex") return;
   const e = S.workout.exercises[it.i];
@@ -4046,8 +4103,8 @@ const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 236], sw
 function w3Wins(it) {
   W3.win = W3.win || {}; const k = it.kind === "ex" ? "ex" : "run";
   if (!W3.win[k]) { const W = innerWidth, H = innerHeight;
-    W3.win[k] = it.kind === "ex" ? { edit: { on: 1, x: 70, y: 96 }, sets: { on: 1, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: Math.max(8, W - 230), y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
-      : { edit: { on: 1, x: 70, y: 96 }, sw: { on: 1, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
+    W3.win[k] = it.kind === "ex" ? { edit: { on: 0, x: 70, y: 96 }, sets: { on: 0, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: Math.max(8, W - 230), y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
+      : { edit: { on: 0, x: 70, y: 96 }, sw: { on: 0, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
   const ws = W3.win[k]; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 };
   return ws;
 }
@@ -4079,7 +4136,7 @@ function w3WinHTML(it, g, w) {
   return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${W3I[g]}${title}</span>${g === "count" || g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
 }
 function w3Step(field, label, val, step, unit = "") {
-  return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
+  return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val === 0 || val ? val : ""}" placeholder="${esc(String(W3.ph?.[field] ?? ""))}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
 }
 function w3Body(it, g) {
   const w = S.workout;
@@ -4109,16 +4166,16 @@ function w3Body(it, g) {
   if (g === "edit") {
     const modes = `<div class="gw-chips">${Object.entries(MODE_SHORT).map(([k, l]) => `<button class="${k === m ? "on" : ""}" data-w3a="mode" data-v="${k}">${l}</button>`).join("")}</div>`;
     const fields = m === "weight" ? w3Step("kg", "Gewicht", c.kg, 2.5, "kg") + w3Step("reps", "Wiederholungen", c.reps, 1)
-      : m === "band" ? `<label class="w3fld"><small>Band / Stufe</small><input data-w3f="band" value="${esc(c.band)}" placeholder="z. B. Grün"></label>` + w3Step("reps", "Wiederholungen", c.reps, 1)
+      : m === "band" ? `<label class="w3fld"><small>Band / Stufe</small><input data-w3f="band" value="${esc(c.band)}" placeholder="${esc(W3.ph?.band || "z. B. Grün")}"></label>` + w3Step("reps", "Wiederholungen", c.reps, 1)
       : m === "reps" ? w3Step("reps", "Wiederholungen", c.reps, 1) : m === "time" ? w3Step("sec", "Zeit", c.sec, 5, "Sek.")
-      : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (Min:Sek)</small><input data-w3f="min" placeholder="Min:Sek" value="${esc(c.min)}"></label>`;
+      : w3Step("km", "Distanz", c.km, .5, "km") + `<label class="w3fld"><small>Zeit (Min:Sek)</small><input data-w3f="min" placeholder="${esc(W3.ph?.min || "Min:Sek")}" value="${esc(c.min)}"></label>`;
     const nr = Math.min(W3.si ?? w3SiDef(e), e.sets.length) + 1;
     return `${lastCache[e.name] ? `<div class="gw-last"><b>${esc(/^Letztes Mal/.test(lastCache[e.name]) ? lastCache[e.name] : "Letztes Mal: " + lastCache[e.name])}</b></div>` : ""}${modes}${fields}<button class="gw-main acc" data-w3a="saveset">✓ Satz ${nr} speichern</button>`;
   }
   if (g === "count") return `${W3T.cset ? `<div class="gw-set"><small>Pro Klick</small><div class="gw-chips">${[1, 2, 5, 10].map(v => `<button class="${W3T.step === v ? "on" : ""}" data-w3a="cstep" data-v="${v}">+${v}</button>`).join("")}</div>
         <label class="w3fld"><small>Eigener Wert pro Klick</small><input data-w3c="step" inputmode="numeric" value="${W3T.step}"></label><label class="w3fld"><small>Zählerstand von Hand</small><input data-w3c="cnt" inputmode="numeric" value="${W3T.cnt}"></label></div>` : ""}
       <button class="gw-tap" data-w3a="tap"><b id="w3cnt">${W3T.cnt}</b><small>Tippen = +${W3T.step}</small></button>
-      ${m === "weight" ? `<div class="gw-kg"><span>Gewicht</span><button data-w3a="dec" data-f="kg" data-s="2.5">−</button><input data-w3f="kg" inputmode="decimal" value="${c.kg}"><button data-w3a="inc" data-f="kg" data-s="2.5">+</button><span>kg</span></div>` : ""}
+      ${m === "weight" ? `<div class="gw-kg"><span>Gewicht</span><button data-w3a="dec" data-f="kg" data-s="2.5">−</button><input data-w3f="kg" inputmode="decimal" value="${c.kg === 0 || c.kg ? c.kg : ""}" placeholder="${esc(String(W3.ph?.kg ?? ""))}"><button data-w3a="inc" data-f="kg" data-s="2.5">+</button><span>kg</span></div>` : ""}
       <div class="gw-row"><button data-w3a="tapdec">−${W3T.step}</button><button data-w3a="tapreset">↺ 0</button></div>
       <button class="gw-main acc" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig → nächster Satz</button>`;
   if (g === "sets") { const F = { weight: [["kg", "kg"], ["reps", "Wdh."]], band: [["band", "Band"], ["reps", "Wdh."]], reps: [["reps", "Wdh."]], time: [["sec", "Sek."]], cardio: [["km", "km"], ["min", "Zeit"]] }[m] || [["reps", "Wdh."]];
@@ -4187,7 +4244,7 @@ async function w3Click(e) {
   if (a === "barrot") { const nb = { ...(W3.bar || {}), h: !(W3.bar || {}).h }; if (nb.h) { nb.x = 8; nb.y = Math.max(90, innerHeight - 260); } else { nb.x = innerWidth - 66; nb.y = 90; } W3.bar = nb; w3Save(); return re(); }
   if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
-  if (a === "inc" || a === "dec") { const f = b.dataset.f, s = +b.dataset.s * (a === "inc" ? 1 : -1); W3.cur[f] = Math.max(0, Math.round((numv(W3.cur[f]) + s) * 100) / 100); const inp = $(`#w3 [data-w3f="${f}"]`); if (inp) inp.value = W3.cur[f]; pgBuzz(8); return; }
+  if (a === "inc" || a === "dec") { const f = b.dataset.f, s = +b.dataset.s * (a === "inc" ? 1 : -1); const base = W3.cur[f] === "" || W3.cur[f] == null ? numv(W3.ph?.[f]) || 0 : numv(W3.cur[f]); W3.cur[f] = Math.max(0, Math.round((base + (W3.cur[f] === "" && W3.ph?.[f] ? 0 : s)) * 100) / 100); const inp = $(`#w3 [data-w3f="${f}"]`); if (inp) inp.value = W3.cur[f]; pgBuzz(8); return; }
   if (a === "saveset" && ex) return w3AddSet(ex, m, W3.cur.reps);
   if (a === "addset" && ex) { const ns = emptySet(m), c = W3.cur; if (m === "weight") { ns.kg = c.kg ? String(c.kg).replace(".", ",") : ""; ns.reps = String(c.reps || ""); } else if (m === "band") { ns.band = c.band || ""; ns.reps = String(c.reps || ""); } else if (m === "reps") ns.reps = String(c.reps || ""); else if (m === "time") ns.sec = String(c.sec || ""); else { ns.km = c.km ? String(c.km) : ""; ns.min = c.min || ""; }
     ex.sets = ex.sets.filter(setFilled); ex.sets.push(ns); saveWorkout(false); toast(`✓ Satz ${ex.sets.length} hinzugefügt`); return re(); }
@@ -4225,7 +4282,7 @@ async function w3Click(e) {
   if (a === "selset" && ex) { W3.si = +b.dataset.j; w3Load(ex); return re(); }
   if (a === "nextset" && ex) { if (W3T.cnt > 0 && (m === "reps" || m === "weight" || m === "band")) { const n = W3T.cnt; W3T.cnt = 0; return w3AddSet(ex, m, n); } return w3AddSet(ex, m, W3.cur.reps); }
   if (a === "next") { const nx = w3Items()[W3.i + 1]; if (!nx) return;
-    if (await askYesNo(`Weiter zur nächsten Übung: „${nx.name}“?`, "Weiter")) { W3.i++; w3Cur(true); W3T.cnt = 0; w3Form(); re(); } return; }
+    if (await askYesNo(`Weiter zur nächsten Übung: „${nx.name}“?`, "Weiter")) { W3.i++; w3Cur(true); W3T.cnt = 0; w3WinsOff(); w3Form(); re(); } return; }
   if (a === "finish") return w3Finish();
 }
 function w3Input(e) {
@@ -4253,7 +4310,7 @@ function w3AddSet(ex, m, reps, extra = null) {
   W3.si = extra ? w3SiDef(ex) : ei + 1;
   saveWorkout(false); pgBeep(1046, 90); pgBuzz(30);
   toast(extra ? `✓ Satz ${nr}: ${ns.reps ? ns.reps + " Wdh." : fmtSec(ns.sec)} in ${fmtMs((extra.dur || 0) * 1000, false)} gespeichert` : `✓ Satz ${nr} gespeichert`);
-  { const keepKg = W3.cur.kg; w3Load(ex); if (!ex.sets[W3.si] && keepKg) W3.cur.kg = keepKg; }
+  w3Load(ex);
   if (W3.autoRest && m !== "cardio" && !extra) { W3T.tm = { dur: W3.autoRest, run: true, end: Date.now() + W3.autoRest * 1000, left: W3.autoRest * 1000, done: false, rest: true }; const ws = w3Wins(w3It()); if (ws.timer) ws.timer.on = 1; w3Tick(); }
   w3TSave(); w3Render();
 }
@@ -4439,6 +4496,156 @@ document.addEventListener("click", async e => {
   try { await setDoc(dayRef(k), { wnote: cur.wnote || "" }, { merge: true }); toast(cur.wnote ? "✓ Notiz gespeichert" : "Notiz entfernt"); } catch { toast("Speichern fehlgeschlagen"); }
   renderStart(); if ($("#d3")?.classList.contains("on")) v3DrawerFill();
 }, true);
+
+// ---------- Glocke: überall als Linien-Symbol statt Emoji (Sheets, Toasts, Listen) ----------
+function v2BellFix(root) {
+  if (!root || !isV2()) return;
+  const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.nodeValue.includes("🔔") && !n.parentElement?.closest("svg, script, style, textarea, input, #meadow, .meadow") ? 1 : 3 });
+  const hits = []; while (tw.nextNode()) hits.push(tw.currentNode);
+  hits.forEach(n => { const parts = n.nodeValue.split(/🔔\s?/), frag = document.createDocumentFragment();
+    parts.forEach((p, i) => { if (i) { const sp = document.createElement("span"); sp.className = "tiw"; sp.innerHTML = TI.bell; frag.appendChild(sp); } if (p) frag.appendChild(document.createTextNode(p)); });
+    n.replaceWith(frag); });
+}
+{ let q = false; new MutationObserver(() => { if (q || !isV2()) return; q = true; requestAnimationFrame(() => { q = false; ["#sheetInner", "#toast", "main", "#w3"].forEach(s => document.querySelectorAll(s).forEach(v2BellFix)); }); })
+    .observe(document.documentElement, { childList: true, subtree: true, characterData: true }); }
+
+// ---------- Erfolge: Linien-Symbole statt Emojis ----------
+const AI2 = {
+  runs: '<circle cx="14.5" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v5M6 12l3-4 4 1 3 4 3 1M11 15l1.5-5"/>',
+  longrun: '<circle cx="6" cy="18" r="2"/><path d="M8 18h6.5a3.5 3.5 0 000-7h-5a3.5 3.5 0 010-7H16"/><path d="M18 2.5l2.5 1.5L18 5.5"/>',
+  clock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/>',
+  heavy: '<path d="M8.6 10.6V7a3.4 3.4 0 016.8 0v3.6"/><path d="M6.6 21a6.4 6.4 0 1110.8 0z"/><path d="M10 15.5h4"/>',
+  manyreps: '<path d="M4 17.5l4-4 3 3 6.5-7.5"/><path d="M14 9h3.5v3.5"/><path d="M4 21h16"/>',
+  hold: '<circle cx="12" cy="13" r="8"/><path d="M12 13l3-3M10 2.5h4M19 5.5l1.5 1.5"/>',
+  bigday: '<rect x="4" y="14" width="16" height="6" rx="1.5"/><rect x="6" y="8" width="12" height="6" rx="1.5"/><rect x="8" y="2.5" width="8" height="5.5" rx="1.5"/>',
+  bigvol: '<path d="M2 12h20"/><rect x="4.5" y="6" width="3" height="12" rx="1"/><rect x="16.5" y="6" width="3" height="12" rx="1"/><path d="M8.5 8.5v7M15.5 8.5v7"/>',
+  prday: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
+  strongweek: '<path d="M3 17l5.5-5.5 4 4L21 7"/><path d="M15 7h6v6"/>',
+  weekstreak: '<rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7 14.5h2M11 14.5h2M15 14.5h2"/>',
+  month: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 010 17"/><path d="M8.5 9h.01M9.5 14.5h.01M14.5 7.5h.01"/>',
+  scale2: '<path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/>',
+  pull: '<path d="M3 4h18"/><path d="M8 4v4M16 4v4"/><circle cx="12" cy="10.5" r="2"/><path d="M8 8l2.5 4.5h3L16 8M12 12.5v4.5M10 21l2-4 2 4"/>',
+  push: '<path d="M3 19h18"/><circle cx="18" cy="11.5" r="2"/><path d="M4 16l12-3.5M6.5 15.3V19M16 12.5V19"/>',
+  glove: '<path d="M7 11V7a4 4 0 014-4h2a4 4 0 014 4v5a5 5 0 01-5 5H10a3 3 0 01-3-3z"/><path d="M7 11H5.5a1.5 1.5 0 000 3H7M8 17v3.5h8V17"/>',
+  rings: '<path d="M7 2v8M17 2v8"/><circle cx="7" cy="14" r="4"/><circle cx="17" cy="14" r="4"/>',
+  leg: '<path d="M10 2.5v8l-2 5.5 2.5 5.5H16"/><path d="M14 2.5v7l2 5"/>',
+  puzzle: '<path d="M4 8h3.5a2 2 0 114 0H15v3.5a2 2 0 110 4V19H4v-3.5a2 2 0 100-4z"/>',
+  swim: '<circle cx="16" cy="6" r="2"/><path d="M3 12l5-3 4 2.5 3-2M2 17c2 0 2-1.5 4-1.5S8 17 10 17s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 21c2 0 2-1.5 4-1.5S8 21 10 21s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>',
+  bike: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5L9 9h6l3.5 7.5M9 9l3 7.5h-6.5M12 6h3"/>',
+  climb: '<path d="M4 21L10 3h4l6 18"/><circle cx="10.5" cy="9" r="1"/><circle cx="13.5" cy="13" r="1"/><circle cx="10" cy="17" r="1"/>',
+  hike: '<path d="M2 20l6.5-10 4 6 3-4.5L22 20z"/><path d="M8.5 10l2 3"/>',
+  yoga: '<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M5 10l7 3 7-3M7 20c1.5-3 3-4.5 5-4.5s3.5 1.5 5 4.5M4 20h16"/>',
+  row: '<path d="M3 19c3-1 6-1 9 0s6 1 9 0"/><path d="M4 7l14 9M18 16l2.5 1.5"/>',
+  ball: '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 4.5h-5L8 10zM12 3v4M16 10l4.5-1.5M14.5 14.5l2.5 4M9.5 14.5L7 18.5M8 10L3.5 8.5"/>',
+  stopwatch: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4h3M9.5 2.5h5M12 2.5V5"/>',
+  medal: '<circle cx="12" cy="15" r="6"/><path d="M8.5 10.2L5 2.5h4l3 6M15.5 10.2L19 2.5h-4l-2 4.5"/><path d="M12 12.5l.9 1.8 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z"/>',
+  drop: '<path d="M12 2.5s6.5 7 6.5 11.5a6.5 6.5 0 01-13 0C5.5 9.5 12 2.5 12 2.5z"/>',
+  moon: '<path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>',
+  pill: '<rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/>',
+  lotus: '<path d="M12 20c-4 0-8-2-9-6 3 0 6 1.5 9 6zM12 20c4 0 8-2 9-6-3 0-6 1.5-9 6zM12 20c-2.5-2.5-3.5-6-0-11 3.5 5 2.5 8.5 0 11z"/>',
+  cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/>',
+  bowl: '<path d="M3 11h18a9 9 0 01-18 0zM8 7c0-2 2-2 2-4M12 7c0-2 2-2 2-4"/>',
+  chess: '<path d="M8 21h8M9 18h6l-1-5h-4zM10 13c-2-2-1-6 2-8 1 1 2 2 2 4h-2l3 4"/>',
+  star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.5 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  tooth: '<path d="M7 3c-2 0-3.5 1.7-3.5 4 0 3 1.5 4 2 7s1 7 2.5 7 1.5-4 4-4 2.5 4 4 4 2-4 2.5-7 2-4 2-7c0-2.3-1.5-4-3.5-4-2 0-3 1-5 1S9 3 7 3z"/>',
+};
+function actIcon(name, type) { const n = (name || "").toLowerCase();
+  const M = [[/schwimm|swim/, "swim"], [/rad|bike|fahrrad|cycl|spinning/, "bike"], [/kletter|boulder|climb/, "climb"], [/wander|hike/, "hike"], [/yoga|pilates|mobil|dehn|stretch/, "yoga"], [/ruder|row/, "row"],
+    [/fußball|fussball|basket|tennis|volley|hand|ball|squash|padel|badminton/, "ball"], [/kick|box|mma|kampf|judo|karate|bjj/, "glove"], [/calisth|street|ringe/, "rings"], [/pull|zieh|rücken|klimm/, "pull"],
+    [/push|drück|brust/, "push"], [/bein|leg|squat|knie/, "leg"], [/ergänz|zusatz/, "puzzle"], [/lauf|jogg|run|sprint/, "runs"]];
+  const f = M.find(([re]) => re.test(n)); if (f) return f[1]; if (type === "run") return "runs"; if (type === "rest" || /rest|ruhe|pause|frei/.test(n)) return "moon"; return type === "session" ? "stopwatch" : "medal"; }
+function taskIcon(name) { const n = (name || "").toLowerCase();
+  const M = [[/gewicht|waage|wiegen/, "scale"], [/lese|lesen|buch/, "book"], [/schach|chess/, "chess"], [/duolingo|englisch|spanisch|sprach|vokabel/, "speech"], [/kreatin|vitamin|supplement|tablette|pille/, "pill"],
+    [/wasser|trinken/, "drop"], [/medit|atem/, "lotus"], [/lauf|joggen|km|schritt/, "shoe"], [/schlaf|bett/, "moon"], [/dehn|yoga|mobil/, "yoga"], [/zähne|zahn/, "tooth"], [/lern|uni|studi/, "cap"], [/kochen|essen|mahlzeit|protein|eiweiß/, "bowl"], [/train|sport|gym/, "dumbbell"]];
+  return (M.find(([re]) => re.test(n)) || [0, "check"])[1]; }
+function achKey(c) { const k = c.icon || "";
+  if (k.startsWith("type_")) { const ty = (typeof TYPES !== "undefined" ? TYPES : []).find(t => "type_" + t.name === k); return actIcon(k.slice(5), ty?.type); }
+  if (k.startsWith("task_")) return taskIcon(c.n || ""); return k; }
+function achIco(c) {
+  if (!isV2()) return c.emo || AEMO[c.icon] || "🏅";
+  const k = achKey(c), p = AI2[k] || AICON[k] || AI2.medal;
+  return `<svg class="ach-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+}
+
+/* ===================== V2/V3: Trainingsarten-Katalog & Aufgaben-Vorschläge =====================
+   Jeder stellt seinen eigenen Wochenplan zusammen: pro Wochentag „+ Trainingsart“ → Katalog (Schwimmen, Klettern …). */
+const ACT_CAT = [
+  ["Kraft", [["Push", "gym", "push", ["Brust", "Schultern", "Trizeps"]], ["Pull", "gym", "pull", ["Rücken", "Bizeps", "Hintere Schulter"]], ["Beine", "gym", "leg", ["Beine", "Bauch"]],
+    ["Oberkörper", "gym", "dumbbell", ["Brust", "Rücken", "Schultern", "Bizeps", "Trizeps"]], ["Unterkörper", "gym", "leg", ["Beine", "Bauch"]], ["Ganzkörper", "gym", "dumbbell", ["Brust", "Rücken", "Beine", "Schultern", "Bauch"]],
+    ["Calisthenics", "gym", "rings", ["Calisthenics Push", "Calisthenics Pull", "Calisthenics Beine", "Core"]]]],
+  ["Ausdauer", [["Laufen", "run", "runs"], ["Radfahren", "session", "bike"], ["Schwimmen", "session", "swim"], ["Rudern", "session", "row"], ["Wandern", "session", "hike"], ["Spinning", "session", "bike"]]],
+  ["Sport & Kampfsport", [["Klettern", "session", "climb"], ["Bouldern", "session", "climb"], ["Kickboxen", "session", "glove"], ["Boxen", "session", "glove"], ["Kampfsport", "session", "glove"],
+    ["Fußball", "session", "ball"], ["Basketball", "session", "ball"], ["Tennis", "session", "ball"], ["Tanzen", "session", "star"]]],
+  ["Ausgleich", [["Yoga", "session", "yoga"], ["Pilates", "session", "yoga"], ["Mobility", "session", "yoga"], ["Rest Day", "rest", "moon"]]],
+];
+const peIco = k => `<svg class="ach-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${AI2[k] || AICON[k] || AI2.medal}</svg>`;
+function openPlanEditor() {
+  openPlanEditorV1();
+  if (!isV2()) return;
+  if (S.planForm) { const f = S.planForm; if (f.type !== "session") return;
+    const art = [...$("#sheetInner").querySelectorAll(".field")][1]; art?.insertAdjacentHTML("afterend", `<div class="field"><label>Eintragen</label><div class="w3mode2">
+      <button class="${f.check ? "" : "on"}" data-pe="chk" data-v="0"><b>Mit Werten</b><small>Dauer, Stoppuhr, Notiz</small></button>
+      <button class="${f.check ? "on" : ""}" data-pe="chk" data-v="1"><b>Nur abhaken</b><small>Ein Tipp = erledigt</small></button></div></div>`); return; }
+  const box = $("#sheetInner"), order = [1, 2, 3, 4, 5, 6, 0];
+  // pro Tag nur die gewählte Trainingsart zeigen – Tippen öffnet Auswahl & Katalog
+  box.querySelectorAll(".tasks > .card").forEach((c, i) => { const seg = c.querySelector(".seg"); if (!seg) return; const d = order[i], p = planFor(d);
+    c.classList.add("pe-day"); c.dataset.pe = "cat"; c.dataset.d = d; c.setAttribute("role", "button");
+    seg.outerHTML = `<div class="pe-cur">${peIco(actIcon(p.name, p.type === "rest" ? "rest" : p.type))}<span><b>${esc(p.name)}</b><small>${KIND_LABEL[p.type] || ""}</small></span><em>Ändern</em>${W3ARR.r}</div>`; });
+  const nb = box.querySelector('[data-action="typenew"]'); if (nb) { nb.removeAttribute("data-action"); nb.dataset.pe = "cat"; nb.dataset.d = ""; }
+  box.querySelectorAll('.todo [data-action="typeedit"].tap .t').forEach(t => { const ty = TYPES.find(x => x.name === t.textContent); if (ty) t.insertAdjacentHTML("afterbegin", `<span class="pe-ti">${peIco(actIcon(ty.name, ty.type === "rest" ? "rest" : ty.type))}</span>`); });
+  const h = box.querySelector("h2"); if (h) h.insertAdjacentHTML("afterend", `<p class="muted" style="font-size:13px;margin:-4px 0 10px">Tippe auf einen Tag, um seine Trainingsart zu wählen – aus deinen eigenen oder dem Katalog (Schwimmen, Klettern, Radfahren …).</p>`);
+}
+function openActCatalog(d) {
+  const day = d === "" || d == null ? null : +d, has = n => TYPES.some(t => t.name === n);
+  $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-size:18px">${day == null ? "Trainingsart hinzufügen" : `Trainingsart für ${WD_LONG[day]}`}</b><button class="mini" data-pe="back">${ICON.x}</button></div></div>
+    ${day != null ? `<p class="muted" style="font-size:13px;margin:6px 0 0">Ein Training pro Tag – die Auswahl ersetzt „${esc(WEEK[day] || "Frei")}“.</p>` : ""}
+    ${TYPES.length && day != null ? `<h2>Deine Trainingsarten</h2><div class="pe-grid">${TYPES.map(t => `<button class="${WEEK[day] === t.name ? "on" : ""}" data-pe="pick" data-n="${esc(t.name)}" data-d="${day}">${peIco(actIcon(t.name, t.type))}<b>${esc(t.name)}</b><small>${KIND_LABEL[t.type] || ""}</small></button>`).join("")}</div>` : ""}
+    ${ACT_CAT.map(([g, list]) => `<h2>${g}</h2><div class="pe-grid">${list.map(([n, ty, ic]) => `<button class="${has(n) ? "have" : ""}" data-pe="pick" data-n="${esc(n)}" data-d="${day ?? ""}" data-cat="1">${peIco(ic)}<b>${esc(n)}</b><small>${has(n) ? "schon dabei" : KIND_LABEL[ty]}</small></button>`).join("")}</div>`).join("")}
+    <button class="btn block" style="margin-top:14px;border-style:dashed;color:var(--accent-text)" data-pe="own">+ Eigene Trainingsart …</button>
+    <button class="btn block" style="margin-top:8px" data-pe="back">Zurück</button>`;
+  showSheet(true); $("#sheetInner").scrollTop = 0;
+}
+async function peAdd(name, day) {
+  if (!TYPES.some(t => t.name === name)) { const c = ACT_CAT.flatMap(g => g[1]).find(x => x[0] === name); if (!c) return;
+    const t = { name, type: c[1] }; if (c[1] === "gym") t.groups = [...(c[3] || [])]; TYPES.push(t); }
+  if (day != null) WEEK[day] = name;
+  await savePlan(); openPlanEditor(); toast(day != null ? `${WD_LONG[day]}: ${name} ✓` : `„${name}“ hinzugefügt ✓`);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pe]"); if (!b) return; e.preventDefault();
+  const a = b.dataset.pe, d = b.dataset.d === "" || b.dataset.d == null ? null : +b.dataset.d;
+  if (a === "cat") openActCatalog(d);
+  else if (a === "back") openPlanEditor();
+  else if (a === "pick") peAdd(b.dataset.n, d).catch(() => toast("Speichern fehlgeschlagen"));
+  else if (a === "chk") { S.planForm.name = $("#typeName")?.value ?? S.planForm.name; S.planForm.check = b.dataset.v === "1"; openPlanEditor(); }
+  else if (a === "own") { S.planForm = { i: -1, name: "", type: "session", groups: [] }; openPlanEditorV1(); }
+});
+
+// ---------- Tägliche Aufgaben: Vorschläge mit „+“ (u. a. Gewicht morgens/abends) ----------
+const TASK_SUG = [
+  { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", reminds: ["07:00"] }, { key: "gewicht_pm", t: "Gewicht abends", kind: "weight", slot: "pm", reminds: ["21:00"] },
+  { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "schritte", t: "10.000 Schritte" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
+  { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" }, { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" },
+  { key: "schlaf", t: "Vor 23 Uhr im Bett" },
+];
+function openNewTask() {
+  openNewTaskV1();
+  if (!isV2() || S.editKey) return;
+  const cfg = S.taskCfg || DEFAULT_TASKS, have = new Set(cfg.map(t => t.key)), names = new Set(cfg.map(t => (t.t || "").toLowerCase()));
+  const sug = TASK_SUG.filter(t => !have.has(t.key) && !names.has(t.t.toLowerCase())); if (!sug.length) return;
+  const f = $("#sheetInner .field"); if (!f) return;
+  f.insertAdjacentHTML("beforebegin", `<div class="field" style="margin-top:0"><label>Schnell hinzufügen</label><div class="ts-sug">${sug.map(t => `<button data-tsug="${t.key}">${peIco(t.kind === "weight" ? "scale" : taskIcon(t.t))}<span>${esc(t.t)}</span><i>+</i></button>`).join("")}</div></div>
+    <div class="ts-or"><span>oder eigene Aufgabe</span></div>`);
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-tsug]"); if (!b) return;
+  const t = TASK_SUG.find(x => x.key === b.dataset.tsug); if (!t) return;
+  const cfg = S.taskCfg || DEFAULT_TASKS; if (cfg.some(x => x.key === t.key)) return;
+  const task = JSON.parse(JSON.stringify(t)), ti = cfg.findIndex(x => x.training);
+  S.taskCfg = t.kind === "weight" ? [task, ...cfg] : ti >= 0 ? [...cfg.slice(0, ti), task, ...cfg.slice(ti)] : [...cfg, task];
+  b.remove(); await saveTaskCfg(); toast(`„${t.t}“ hinzugefügt ✓`);
+});
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -4699,7 +4906,7 @@ function renderAwards(all, part) {
       const sh = god ? "shine god-shine" : ti >= 8 ? "shine" : "";   // ab Legende schimmert der Hintergrund
       return `<div class="card ach ${c.lvl ? "unl" : "lock"} ${god ? "god" : ""} ${sh}" style="--tc:${c.lvl ? col : "transparent"}">
         <div class="ach-top">
-          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${c.emo || AEMO[c.icon] || "🏅"}</div>
+          <div class="ach-ico ${c.lvl ? "" : "off"} ${god ? "god ico-god" : ti >= 8 ? "ico-shine" : ""}" style="--tc:${c.lvl ? col : "var(--muted)"}">${achIco(c)}</div>
           <div style="min-width:0;flex:1">
             <div class="ach-n">${esc(c.n)}</div>
             <div class="ach-l" style="color:${c.lvl ? col : "var(--muted)"}">${c.lvl ? (c.fmt ? `Stufe ${c.lvl}/${c.goals.length}` : `${RANKS[c.lvl - 1].i} <span class="${TIER[c.lvl - 1] === "GOD-LEVEL" ? "god-text" : ""}">${TIER[c.lvl - 1]}</span> · Stufe ${c.lvl}/${c.goals.length}`) : "Noch keine Stufe"}</div>
@@ -5058,7 +5265,7 @@ function openTaskMenu(key) {
     </div>`;
   showSheet();
 }
-function openNewTask() {
+function openNewTaskV1() {
   const order = [1, 2, 3, 4, 5, 6, 0];
   const all = S.newDays.length === 7;
   const edit = !!S.editKey;
@@ -8774,7 +8981,7 @@ document.addEventListener("click", async e => {
   else if (a === "plansel") { S.workout.plan = el.dataset.v; findPrevSame(); saveWorkout(true); }
   else if (a === "planedit") { S.planForm = null; openPlanEditor(); }
   else if (a === "wkset") { WEEK[el.dataset.d] = el.dataset.v; savePlan(); openPlanEditor(); }
-  else if (a === "typeedit") { const t = TYPES[+el.dataset.i]; S.planForm = { i: +el.dataset.i, name: t.name, type: t.type, groups: [...(t.groups || [])] }; openPlanEditor(); }
+  else if (a === "typeedit") { const t = TYPES[+el.dataset.i]; S.planForm = { i: +el.dataset.i, name: t.name, type: t.type, groups: [...(t.groups || [])], check: !!t.check }; openPlanEditor(); }
   else if (a === "typenew") { S.planForm = { i: -1, name: "", type: "gym", groups: [] }; openPlanEditor(); }
   else if (a === "typekind") { S.planForm.name = $("#typeName").value; S.planForm.type = el.dataset.v; openPlanEditor(); }
   else if (a === "typegroup") { S.planForm.name = $("#typeName").value; const g = el.dataset.v, f = S.planForm; f.groups = f.groups.includes(g) ? f.groups.filter(x => x !== g) : [...f.groups, g]; openPlanEditor(); }
