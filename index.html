@@ -1909,6 +1909,15 @@
   :root.ui3 .h3panel { padding-top: calc(40px + env(safe-area-inset-top)); } :root.ui3 .h3side { height: calc(100dvh - 318px); }
   .chart .sc-tog svg { width: 12px !important; height: 12px !important; display: inline-block; } .chart .sc-n svg { width: 12px !important; height: 12px !important; display: block; }
 
+  /* v49: feste Ziffernbreite, Leiste unten angedockt, Gewichts-Notiz */
+  .fx { display: flex; justify-content: center; } .fx i { font-style: normal; display: inline-block; text-align: center; } .fx .fd { width: .64em; } .fx .fs { width: .3em; }
+  .gbar.dock { position: absolute; left: 8px; right: 8px; top: auto; bottom: calc(82px + env(safe-area-inset-bottom)); width: auto; flex-direction: row; align-items: center; overflow-x: auto; scrollbar-width: none; }
+  .gbar.dock::-webkit-scrollbar { display: none; } .gbar.dock button { flex: 0 0 auto; min-width: 52px; } .gbar.dock .gb-sep { width: 1px; height: 30px; margin: 0 2px; }
+  .gbar.dock .gb-grip { writing-mode: horizontal-tb; grid-template-columns: repeat(3, 5px); padding: 0 10px; flex: none; align-self: stretch; align-content: center; cursor: pointer; }
+  .gbar.dock.c { left: auto; right: 12px; width: auto; padding: 8px 6px; }
+  .wn-btn { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); flex: none; } .wn-btn.on { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .wn-pick { z-index: 80; } .wn-pick textarea { min-height: 90px; font-size: 15px; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2228,7 +2237,7 @@ async function toggleTask(k, key) {
   const done = { ...(cur.done || {}) };
   done[key] = !done[key];
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: false };
+  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length, autoTrain: false };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) quotaDone();
@@ -2271,7 +2280,7 @@ async function setWeight(k, key, slot, raw) {
   const done = { ...(cur.done || {}) }, weight = { ...(cur.weight || {}) };
   if (num === "") { delete weight[slot]; done[key] = false; } else { weight[slot] = num; done[key] = true; }
   const count = tasks.filter(t => done[t.key]).length;
-  const data = { date: k, done, weight, count, total: tasks.length, complete: count === tasks.length };
+  const data = { ...(cur.wnote ? { wnote: cur.wnote } : {}), date: k, done, weight, count, total: tasks.length, complete: count === tasks.length };
   S.days[k] = data;
   renderStart(); if (S.tab === "cal") renderCal();
   if (data.complete && !cur.complete) quotaDone();
@@ -2355,7 +2364,7 @@ const taskHTML = (t, isDone, k, editable = false) => {
   if (t.kind === "weight") {
     const val = S.days[k]?.weight?.[t.slot] ?? "";
     main = `<div class="task-main"><span class="box-check">${CHECK}</span>${text}
-      <span class="kg-in"><input class="num-in" inputmode="decimal" placeholder="–" data-weight="${t.slot}" data-key="${t.key}" data-day="${k}" value="${esc(val)}"><small>kg</small></span></div>`;
+      <span class="kg-in"><input class="num-in" inputmode="decimal" placeholder="–" data-weight="${t.slot}" data-key="${t.key}" data-day="${k}" value="${esc(val)}"><small>kg</small></span>${document.documentElement.dataset.ui === "v2" && editable ? `<button class="wn-btn ${S.days[k]?.wnote ? "on" : ""}" data-wnote="${k}" title="Notiz zum Gewicht"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button>` : ""}</div>`;
   } else {
     main = `<button class="task-main" data-action="toggle" data-key="${t.key}" data-day="${k}"><span class="box-check">${CHECK}</span>${text}</button>`;
   }
@@ -3954,13 +3963,14 @@ function tbState() { const b = W3T.tb, cyc = (b.work + b.rest) * 1000, total = b
   const r = Math.floor(ms / cyc), inC = ms - r * cyc, work = inC < b.work * 1000;
   return { done: false, round: r + 1, work, left: work ? b.work * 1000 - inC : cyc - inC, idx: r * 2 + (work ? 0 : 1) }; }
 const w3TSave = () => { try { localStorage.setItem("tracker-w3t", JSON.stringify(W3T)); } catch {} };
+const fixD = t => String(t).replace(/./g, ch => /\d/.test(ch) ? `<i class="fd">${ch}</i>` : `<i class="fs">${ch}</i>`);
 const w3SwMs = () => W3T.sw.acc + (W3T.sw.run ? Date.now() - W3T.sw.t0 : 0);
 const w3TmLeft = () => W3T.tm.run ? Math.max(0, W3T.tm.end - Date.now()) : W3T.tm.left;
 // Gadgets (Fenster), wie die Werkzeugleiste bei TradingView
 const W3I = {
   edit: V3I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>'), sets: V3I('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>'),
-  count: V3I('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 9.5l2-1.5v8M14.5 8v8"/>'), sw: V3I('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5V6M18.5 6.5l1.5-1.5"/>'),
-  timer: V3I('<path d="M6.5 3h11M6.5 21h11M7.5 3c0 5 9 6 9 9s-9 4-9 9M16.5 3c0 5-9 6-9 9"/>'), tabata: V3I('<path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/>'),
+  count: V3I('<path d="M6 5v14M10 5v14M14 5v14M18 5v14"/><path d="M3.5 16.5L20.5 7.5"/>'), sw: V3I('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5V6M18.5 6.5l1.5-1.5"/>'),
+  timer: V3I('<path d="M6.5 3h11M6.5 21h11M8 3c0 4.5 4 5.5 4 9s-4 4.5-4 9M16 3c0 4.5-4 5.5-4 9s4 4.5 4 9"/><path d="M10 18.5h4" stroke-width="2.2"/>'), tabata: V3I('<path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/>'),
   notes: V3I('<path d="M5 3.5h10l4 4v13H5z"/><path d="M15 3.5v4h4M8.5 12h7M8.5 15.5h5"/>'), plus: V3I('<path d="M12 5v14M5 12h14"/>'), rot: V3I('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
 };
 const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 236], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], sets: ["☰", "Sätze", 252], notes: ["📝", "Notiz", 256] };
@@ -3974,7 +3984,7 @@ function w3Wins(it) {
 }
 function w3Render() {
   const o = $("#w3"), items = w3Items(), it = w3It(); if (!it) return w3Close();
-  const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || { x: innerWidth - 62, y: 90, h: 0 };
+  const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || (W3.bar = { x: innerWidth - 62, y: 90, h: 1 });
   const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, now = new Date();
   const k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
   o.innerHTML = `
@@ -3984,15 +3994,15 @@ function w3Render() {
     <div class="w3vert" aria-hidden="true"><b style="font-size:${Math.max(28, Math.min(54, Math.round(560 / Math.max(6, it.name.length))))}px">${esc(it.name)}</b><span>${nSets ? `${nSets} ${nSets === 1 ? "Satz" : "Sätze"} · ` : ""}${WD_FULL[now.getDay()]}, ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</span></div>
     ${Object.entries(wins).filter(([, w]) => w.on).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
     ${W3.tabs.map(w3TabHTML).join("")}
-    <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="gbar ${bar.h ? "h dock" : ""} ${bar.c ? "c" : ""}" style="${bar.h ? "" : `left:${bar.x}px;top:${bar.y}px`}"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       ${bar.c ? "" : `${Object.keys(wins).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}
-      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen">${W3I.rot}<small>Drehen</small></button>`}</div>
+      <span class="gb-sep"></span><button data-w3a="addcnt" title="Weiterer Zähler">${W3I.plus}<small>Zähler</small></button><button data-w3a="barrot" title="Leiste drehen">${W3I.rot}<small>${bar.h ? "Seitlich" : "Unten"}</small></button>`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="prev" ${W3.i ? "" : "disabled"}>‹</button>
       <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Training abschließen ✓" : `Nächste Übung · ${esc(items[W3.i + 1].name)} ›`}</button></div>`;
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
 }
 // Fenster im Bild halten
-function w3Clamp() { document.querySelectorAll("#w3 .gw, #w3 .gbar, #w3 .w3tab").forEach(el => { const r = el.getBoundingClientRect(); let x = r.left, y = r.top;
+function w3Clamp() { document.querySelectorAll("#w3 .gw, #w3 .gbar:not(.dock), #w3 .w3tab").forEach(el => { const r = el.getBoundingClientRect(); let x = r.left, y = r.top;
   x = Math.max(4, Math.min(innerWidth - r.width - 4, x)); y = Math.max(4, Math.min(innerHeight - Math.min(r.height, 120) - 4, y)); if (x !== r.left || y !== r.top) { el.style.left = x + "px"; el.style.top = y + "px"; } }); }
 function w3WinHTML(it, g, w) {
   const [, title, width] = W3G[g];
@@ -4003,9 +4013,9 @@ function w3Step(field, label, val, step, unit = "") {
 }
 function w3Body(it, g) {
   const w = S.workout;
-  if (g === "sw") return `<div class="gw-big" id="w3sw">${fmtMs(w3SwMs())}</div><button class="gw-main ${W3T.sw.run ? "stop" : ""}" data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "Anhalten" : w3SwMs() ? "Weiter" : "Start"}</button>
+  if (g === "sw") return `<div class="gw-big fx" id="w3sw">${fixD(fmtMs(w3SwMs()))}</div><button class="gw-main ${W3T.sw.run ? "stop" : ""}" data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "Anhalten" : w3SwMs() ? "Weiter" : "Start"}</button>
       <div class="gw-row wrap"><button data-w3a="swreset">↺ Zurück</button>${w3SwMs() && !W3T.sw.run ? `<button class="acc" data-w3a="swtake">Übernehmen</button>` : ""}</div>`;
-  if (g === "timer") return `<div class="gw-big ${W3T.tm.done ? "pg-done" : ""}" id="w3tm">${fmtMs(w3TmLeft(), false)}</div>
+  if (g === "timer") return `<div class="gw-big fx ${W3T.tm.done ? "pg-done" : ""}" id="w3tm">${fixD(fmtMs(w3TmLeft(), false))}</div>
       <div class="gw-chips">${[30, 60, 90, 120, 180].map(s => `<button class="${W3T.tm.dur === s ? "on" : ""}" data-w3a="tmset" data-v="${s}">${s < 120 ? s + "s" : s / 60 + "m"}</button>`).join("")}<button class="${[30, 60, 90, 120, 180].includes(W3T.tm.dur) ? "" : "on"}" data-w3a="tmcustom">${[30, 60, 90, 120, 180].includes(W3T.tm.dur) ? "eigene" : fmtMs(W3T.tm.dur * 1000, false)}</button></div>
       <button class="gw-main ${W3T.tm.run ? "stop" : ""}" data-w3a="${W3T.tm.run ? "tmpause" : "tmgo"}">${W3T.tm.run ? "Pause" : "Start"}</button>
       <div class="gw-row"><button data-w3a="tmplus" data-v="-15">−15</button><button data-w3a="tmreset">↺</button><button data-w3a="tmplus" data-v="15">+15</button></div>
@@ -4013,7 +4023,7 @@ function w3Body(it, g) {
   if (g === "tabata") { const b = W3T.tb, t = tbState();
     return `${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tb3"><label class="w3fld"><small>Arbeit s</small><input data-w3t="work" inputmode="numeric" value="${b.work}"></label><label class="w3fld"><small>Pause s</small><input data-w3t="rest" inputmode="numeric" value="${b.rest}"></label><label class="w3fld"><small>Runden</small><input data-w3t="rounds" inputmode="numeric" value="${b.rounds}"></label></div>` : ""}
       <div class="gw-tbph ${t.done ? "done" : t.work ? "work" : "rest"}" id="w3tbph">${t.done ? "Geschafft! 💪" : !b.run && !b.acc ? "Bereit" : t.work ? "Belastung" : "Pause"}</div>
-      <div class="gw-big" id="w3tb">${fmtMs(t.left || (!b.acc ? b.work * 1000 : 0), false)}</div>
+      <div class="gw-big fx" id="w3tb">${fixD(fmtMs(t.left || (!b.acc ? b.work * 1000 : 0), false))}</div>
       <div class="gw-tbr" id="w3tbr">Runde ${t.round} / ${b.rounds} · gesamt ${fmtMs(b.rounds * (b.work + b.rest) * 1000 - b.rest * 1000, false)}</div>
       <button class="gw-main ${b.run ? "stop" : ""}" data-w3a="${b.run ? "tbstop" : "tbgo"}">${b.run ? "Pause" : b.acc && !t.done ? "Weiter" : "Start"}</button>
       <div class="gw-row"><button data-w3a="tbreset">↺ Neu</button></div>`; }
@@ -4058,6 +4068,7 @@ function w3TabHTML(t) {
 function w3DragStart(e) {
   const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button, input, select, textarea")) return;
   const el = h.closest(".gw, .gbar"); if (!el) return;
+  if (el.classList.contains("dock")) { e.preventDefault(); h.addEventListener("pointerup", () => { W3.bar = { ...(W3.bar || {}), c: !(W3.bar || {}).c }; w3Save(); w3Render(); }, { once: true }); return; }
   e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top; h.setPointerCapture(e.pointerId); el.classList.add("drag");
   let x = r0.left, y = r0.top;
   const mv = ev => { x = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, ev.clientX - ox)); y = Math.max(4, Math.min(innerHeight - 44, ev.clientY - oy)); el.style.left = x + "px"; el.style.top = y + "px"; };
@@ -4070,10 +4081,10 @@ function w3DragStart(e) {
   h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
 }
 // ---------- Aktionen ----------
-const w3Live = () => { const t = $("#w3tm"); if (t) t.textContent = fmtMs(w3TmLeft(), false); if (!W3T.sw.run) { const el = $("#w3sw"); if (el) el.textContent = fmtMs(w3SwMs()); } };
+const w3Live = () => { const t = $("#w3tm"); if (t) t.innerHTML = fixD(fmtMs(w3TmLeft(), false)); if (!W3T.sw.run) { const el = $("#w3sw"); if (el) el.innerHTML = fixD(fmtMs(w3SwMs())); } };
 // Stoppuhr flüssig (nur solange sie läuft und sichtbar ist)
 let w3Raf = 0;
-function w3SwLoop() { const el = $("#w3sw"); if (!W3T.sw.run || !el || document.hidden || !$("#w3")?.classList.contains("on")) { w3Raf = 0; return; } el.textContent = fmtMs(w3SwMs()); w3Raf = requestAnimationFrame(w3SwLoop); }
+function w3SwLoop() { const el = $("#w3sw"); if (!W3T.sw.run || !el || document.hidden || !$("#w3")?.classList.contains("on")) { w3Raf = 0; return; } el.innerHTML = fixD(fmtMs(w3SwMs())); w3Raf = requestAnimationFrame(w3SwLoop); }
 async function w3Click(e) {
   const b = e.target.closest("[data-w3a]"); if (!b) return;
   const a = b.dataset.w3a, it = w3It(), w = S.workout, ex = it?.kind === "ex" ? w.exercises[it.i] : null, m = ex ? exMode(ex) : null;
@@ -4089,7 +4100,7 @@ async function w3Click(e) {
   if (a === "tbgo") { const t = tbState(); if (t.done) { W3T.tb.acc = 0; } W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
   if (a === "tbstop") { W3T.tb.acc = tbMs(); W3T.tb.run = false; return re(); }
   if (a === "tbreset") { W3T.tb = { ...W3T.tb, run: false, t0: 0, acc: 0, done: false, ph: -1 }; return re(); }
-  if (a === "barrot") { W3.bar = { ...(W3.bar || { x: innerWidth - 62, y: 90 }), h: !(W3.bar || {}).h }; w3Save(); return re(); }
+  if (a === "barrot") { const nb = { ...(W3.bar || {}), h: !(W3.bar || {}).h }; if (!nb.h) { nb.x = innerWidth - 66; nb.y = 90; } W3.bar = nb; w3Save(); return re(); }
   if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
   if (a === "inc" || a === "dec") { const f = b.dataset.f, s = +b.dataset.s * (a === "inc" ? 1 : -1); W3.cur[f] = Math.max(0, Math.round((numv(W3.cur[f]) + s) * 100) / 100); const inp = $(`#w3 [data-w3f="${f}"]`); if (inp) inp.value = W3.cur[f]; pgBuzz(8); return; }
@@ -4171,7 +4182,7 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
   if (W3T.tb.run || W3T.tb.acc) { const t = tbState(), el = $("#w3tb"), ph = $("#w3tbph"), r = $("#w3tbr");
-    if (el) el.textContent = fmtMs(t.left, false); if (ph) { ph.textContent = t.done ? "Geschafft! 💪" : t.work ? "Belastung" : "Pause"; ph.className = "gw-tbph " + (t.done ? "done" : t.work ? "work" : "rest"); }
+    if (el) el.innerHTML = fixD(fmtMs(t.left, false)); if (ph) { ph.textContent = t.done ? "Geschafft! 💪" : t.work ? "Belastung" : "Pause"; ph.className = "gw-tbph " + (t.done ? "done" : t.work ? "work" : "rest"); }
     if (r) r.textContent = `Runde ${t.round} / ${W3T.tb.rounds} · gesamt ${fmtMs(W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000 - W3T.tb.rest * 1000, false)}`; }
   const el = $("#w3el"); if (el) el.textContent = fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false);
   w3Live();
@@ -4270,6 +4281,7 @@ function renderTodo() {
 // ---------- Auswertung: rote gestrichelte Linie zum Abfahren ----------
 function scrubNotes(k) {
   const w = (S.allWo || []).find(x => x.date === k), out = [];
+  if (S.days[k]?.wnote) out.push(["Gewicht", S.days[k].wnote]);
   if (!w) return out;
   if (w.extra?.note) out.push(["Training", w.extra.note]); if (w.run?.note) out.push(["Lauf", w.run.note]); if (w.session?.note) out.push([w.plan || "Einheit", w.session.note]);
   (w.exercises || []).forEach(e => { if (e.note) out.push([e.name, e.note]); });
@@ -4280,7 +4292,7 @@ const scPref = (() => { let p = {}; try { p = JSON.parse(localStorage.getItem("t
 const scSave = () => { try { localStorage.setItem("tracker-scrub", JSON.stringify(scPref)); } catch {} };
 const scCol = () => (SC_COLS.find(c => c[0] === scPref.col) || SC_COLS[0])[1];
 function scrubInit(ch) {
-  if (ch.dataset.scrubOn || !isV2()) return; let d; try { d = JSON.parse(ch.dataset.scrub); } catch { return; } if (!d.keys?.length) return;
+  if (ch.dataset.scrubOn || !isV2() || ch.closest(".rank-card")) return; let d; try { d = JSON.parse(ch.dataset.scrub); } catch { return; } if (!d.keys?.length) return;
   ch.dataset.scrubOn = 1; ch.classList.add("scrub-ready");
   ch.insertAdjacentHTML("beforeend", `<button class="sc-tog" aria-label="Markierung ein/aus">${TI.note}<span>Notizen</span></button><div class="sc-line"></div><div class="sc-handle" title="Ziehen"></div>
     <div class="sc-pop"><button class="sc-grip" aria-label="Auf- oder zuklappen"><i></i><i></i><i></i><i></i><i></i><i></i></button><div class="sc-body"></div>
@@ -4303,6 +4315,21 @@ function scrubInit(ch) {
     document.querySelectorAll(".chart.scrub-ready").forEach(c => { c.style.setProperty("--sc", scCol()); c.querySelectorAll("[data-sc]").forEach(x => x.classList.toggle("on", x.dataset.sc === scPref.col)); }); });
 }
 new MutationObserver(() => { if (!isV2()) return; document.querySelectorAll("#view-perf .chart[data-scrub]:not([data-scrub-on])").forEach(scrubInit); }).observe(document.documentElement, { childList: true, subtree: true });
+
+// ---------- Notiz zum Gewicht (Startseite / Heute) ----------
+function wnoteAsk(k) {
+  return new Promise(ok => { const box = document.createElement("div"); box.className = "pg-pick wn-pick";
+    box.innerHTML = `<div class="card"><b>Notiz zum Gewicht</b><small class="muted">z. B. spät gegessen, viel Salz, nach dem Training …</small><textarea class="text-in" rows="4">${esc(S.days[k]?.wnote || "")}</textarea><div class="pg-row two"><button class="btn" data-wn="0">Abbrechen</button><button class="btn primary" data-wn="1">Speichern</button></div></div>`;
+    box.addEventListener("click", e => { const b = e.target.closest("[data-wn]"); if (!b && e.target !== box) return; const v = box.querySelector("textarea").value; box.remove(); ok(b?.dataset.wn === "1" ? v : null); });
+    document.body.appendChild(box); setTimeout(() => box.querySelector("textarea").focus(), 30); });
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-wnote]"); if (!b) return; e.preventDefault(); e.stopPropagation();
+  const k = b.dataset.wnote, v = await wnoteAsk(k); if (v === null) return;
+  const cur = S.days[k] || { date: k, done: {} }; cur.wnote = v.trim(); if (!cur.wnote) delete cur.wnote; S.days[k] = cur;
+  try { await setDoc(dayRef(k), { wnote: cur.wnote || "" }, { merge: true }); toast(cur.wnote ? "✓ Notiz gespeichert" : "Notiz entfernt"); } catch { toast("Speichern fehlgeschlagen"); }
+  renderStart(); if ($("#d3")?.classList.contains("on")) v3DrawerFill();
+}, true);
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
