@@ -3537,6 +3537,7 @@ function renderTrain() {
   renderTrainV1();
   if (!isV2()) return;
   const hd = $("#view-train header.top"); if (!hd || hd.querySelector(".pg-open")) return renderTrainV3Hook();
+  if (isV3()) return renderTrainV3Hook();
   const b = document.createElement("button"); b.className = "pg-open"; b.dataset.pg = "open";
   b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6M12 2v3"/></svg>Spielwiese${PG.w.some(pgRunning) ? '<span class="dot"></span>' : ""}`;
   hd.appendChild(b);
@@ -3903,7 +3904,7 @@ function v3TodayHTML() {
     <div class="t3week"><div class="cal">${["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map(w => `<div class="wd">${w}</div>`).join("")}${week}</div></div>
     ${notif}
     <h2>Offen${openT.length ? ` · ${openT.length}` : ""}</h2>
-    <div class="tasks">${openT.length ? openT.map(t => taskHTML(t, false, k, true)).join("") : `<div class="t3empty">Alles erledigt – stark! 💪</div>`}</div>
+    <div class="tasks">${openT.length ? openT.map(t => taskHTML(t, false, k, true)).join("") : `<div class="t3empty">Alles erledigt – stark!</div>`}</div>
     <button class="btn block t3add" data-action="newtask">+ Aufgabe hinzufügen</button>
     ${doneT.length ? `<details class="t3done" ${S.t3doneOpen ? "open" : ""}><summary><h2>Erledigt · ${doneT.length}</h2></summary><div class="tasks">${doneT.map(t => taskHTML(t, true, k, true)).join("")}</div></details>` : ""}`;
 }
@@ -4829,7 +4830,7 @@ function renderTodoList() {
   const open = today.filter(t => !t.done), doneToday = today.filter(t => t.done);
   const later = S.todos.filter(t => !t.done && t.due && t.due > tk).sort((a, b) => a.due.localeCompare(b.due));
   return `<h2>Heute · ${open.length} offen</h2>
-    <div class="tasks">${open.length ? open.map(todoHTML).join("") : `<div class="card empty">Nichts offen – stark! 💪</div>`}</div>
+    <div class="tasks">${open.length ? open.map(todoHTML).join("") : `<div class="card empty">Nichts offen – stark!${document.documentElement.dataset.ui === "v2" ? "" : " 💪"}</div>`}</div>
     ${later.length ? `<h2>Demnächst</h2><div class="tasks">${later.map(todoHTML).join("")}</div>` : ""}
     ${doneToday.length ? `<h2>Heute erledigt</h2><div class="tasks">${doneToday.map(todoHTML).join("")}</div>` : ""}`;
 }
