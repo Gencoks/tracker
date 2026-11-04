@@ -2045,6 +2045,13 @@
   .f3sh { position: absolute; left: 0; right: 0; top: calc(42% + 100px); text-align: center; color: #fff; font-size: 14px; padding: 0 24px; }
   .f3sx { position: absolute; top: calc(14px + env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; display: grid; place-items: center; } .f3sx svg { width: 20px; height: 20px; }
   .f3sm { position: absolute; left: 16px; right: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); display: flex; gap: 8px; } .f3sm input { flex: 1; min-width: 0; padding: 14px; border-radius: 14px; border: 0; background: rgba(255,255,255,.14); color: #fff; font: inherit; font-size: 16px; }
+  /* Heute-Karte: Zahlen gleich groß, nicht übertrieben */
+  :root[data-ui=v2] .t3big, :root[data-ui=v2] .t3big span, :root[data-ui=v2] .t3pct { font-size: 30px; line-height: 1.05; letter-spacing: -.02em; font-weight: 800; }
+  :root[data-ui=v2] .t3big span { color: var(--muted); } :root[data-ui=v2] .t3pct small { font-size: 30px; margin-left: 1px; }
+  /* Erfolge: Stufenfarbe strahlt aus der linken oberen Ecke – wie bei der Rangkarte */
+  :root[data-ui=v2] .ach.unl:not(.god) { background-image: radial-gradient(130% 100% at 0% 0%, color-mix(in srgb, var(--tc) 26%, transparent) 0%, color-mix(in srgb, var(--tc) 10%, transparent) 38%, transparent 68%) !important; }
+  /* Ernährung: Datum groß, „Ernährung“ klein darüber */
+  .f3top h1 span { color: var(--muted); font-weight: 600; font-size: 22px; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3995,7 +4002,7 @@ function v3TodayHTML() {
     <h2>Offen${openT.length ? ` · ${openT.length}` : ""}</h2>
     <div class="tasks">${openT.length ? openT.map(t => taskHTML(t, false, k, true)).join("") : `<div class="t3empty">Alles erledigt – stark!</div>`}</div>
     <button class="btn block t3add" data-action="newtask">+ Aufgabe hinzufügen</button>
-    ${doneT.length ? `<details class="t3done" ${S.t3doneOpen ? "open" : ""}><summary><h2>Erledigt · ${doneT.length}</h2></summary><div class="tasks">${doneT.map(t => taskHTML(t, true, k, true)).join("")}</div></details>` : ""}`;
+    ${doneT.length ? `<details class="t3done" ${S.t3doneOpen !== false ? "open" : ""}><summary><h2>Erledigt · ${doneT.length}</h2></summary><div class="tasks">${doneT.map(t => taskHTML(t, true, k, true)).join("")}</div></details>` : ""}`;
 }
 document.addEventListener("toggle", e => { if (e.target.classList?.contains("t3done")) S.t3doneOpen = e.target.open; }, true);
 function v3DrawerFill() {
@@ -4836,7 +4843,7 @@ function foodRender() {
   const bar = (n, v, gv, u) => `<div class="f3m"><div><small>${n}</small><b>${fmtN(v, 0)}<em>/${fmtN(gv, 0)} ${u}</em></b></div><i><i style="width:${Math.min(100, gv ? v / gv * 100 : 0)}%"></i></i></div>`;
   let recent = []; try { recent = JSON.parse(localStorage.getItem("tracker-foodrecent") || "[]"); } catch {}
   o.innerHTML = `<div class="f3in">
-    <div class="f3top"><button class="f3x" data-f3="close" aria-label="Schließen">${ICON.x}</button><div><small>${k === todayKey() ? "Heute" : WD_FULL[d.getDay()]}, ${d.getDate()}. ${MON_SHORT[d.getMonth()]}</small><h1>Ernährung</h1></div>
+    <div class="f3top"><button class="f3x" data-f3="close" aria-label="Schließen">${ICON.x}</button><div><small>Ernährung</small><h1>${k === todayKey() ? "Heute" : WD_FULL[d.getDay()]}<span>, ${d.getDate()}. ${MON_SHORT[d.getMonth()]}</span></h1></div>
       <div class="f3nav"><button data-f3="day" data-v="-1">${W3ARR.l}</button><button data-f3="day" data-v="1" ${k >= todayKey() ? "disabled" : ""}>${W3ARR.r}</button></div></div>
     <div class="card f3sum">
       <div class="f3kc"><div><small>${left >= 0 ? "Noch übrig" : "Darüber"}</small><b>${fmtN(Math.abs(left), 0)}<em> kcal</em></b></div><div class="f3eat"><b>${fmtN(s.kcal, 0)}</b><small>gegessen</small></div></div>
@@ -4986,7 +4993,7 @@ function rankCard() {
     ${chartPts.length > 1 ? lineChart([{ color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#FFC400", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
     <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
       <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote (für alle gleich – volle Punkte ab ${RANK_MIN_TASKS} Aufgaben, mehr Aufgaben bringen nicht mehr Punkte), ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
-      ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${rIco(x)}</span><b style="${isV2() && !x.god ? `color:${x.c}` : ""}">${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
+      ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${rIco(x)}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
     </details>
   </div>`;
 }
