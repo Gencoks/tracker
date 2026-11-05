@@ -19,6 +19,7 @@
     var V3 = t.ui !== "v1", V2 = V3, PAL2 = { graphit: ["dark", "#f5f5f2", "#111111"], papier: ["light", "#111111", "#f5f5f2"], rose: ["dark", "#ead7dd", "#0f0e10"], sand: ["light", "#29241f", "#eee8df"], salbei: ["dark", "#bcd6c3", "#0f1311"], nacht: ["dark", "#aab8ff", "#0b0d14"] };
     var pal2 = PAL2[t.pal] ? t.pal : (V3 ? "rose" : "graphit"), wall2 = ["fels", "nebel", "korn", "custom", "grad"].indexOf(t.wall) >= 0 ? t.wall : "korn";
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
+    r.dataset.wfx = V2 && wall2 === "grad" && t.wallFx ? t.wallFx : "";
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
       mode = PAL2[pal2][0]; accent = t.v2acc || PAL2[pal2][1];
@@ -2113,6 +2114,38 @@
   /* Freunde: Fortschritt zum nächsten Rang */
   .fr-bar { display: block; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--text) 10%, transparent); margin-top: 6px; overflow: hidden; max-width: 180px; } .fr-bar b { display: block; height: 100%; background: var(--rc); border-radius: 4px; }
   .fr-nx { display: block; font-size: 11px !important; color: var(--muted); margin-top: 3px; }
+  /* Bestwert-Karte größer, Wellen nicht mehr in der Schrift */
+  .pr3-card { width: min(380px, 100%); padding: 40px 26px 24px; border-radius: 32px; }
+  .pr3-ring { width: 120px; height: 120px; margin: 6px auto 34px; } .pr3-ring svg { width: 56px; height: 56px; }
+  @keyframes pr3wave { 0% { transform: scale(.92); opacity: .7; } 100% { transform: scale(1.45); opacity: 0; } }
+  .pr3-n { font-size: 22px; } .pr3-v { font-size: 32px; }
+  /* Profilrahmen in den Einstellungen */
+  .fr3 .tp-t { padding: 12px 4px 10px; } .fr3 .tp-t.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .fr3-av { display: grid; place-items: center; height: 62px; }
+  /* Rang-Hintergründe mit Bewegung */
+  :root[data-ui=v2][data-wfx=galaxy] body::after, :root[data-ui=v2][data-wfx=myth] body::after { content: ""; position: fixed; z-index: -1; pointer-events: none; }
+  :root[data-ui=v2][data-wfx=galaxy] body::after { left: 50%; top: 50%; width: 230vmax; height: 230vmax; margin: -115vmax 0 0 -115vmax;
+    background-image: radial-gradient(1.3px 1.3px at 23px 41px, rgba(255,255,255,.95), transparent), radial-gradient(1px 1px at 87px 113px, rgba(255,255,255,.8), transparent), radial-gradient(1.7px 1.7px at 151px 67px, rgba(220,230,255,.95), transparent),
+      radial-gradient(1px 1px at 190px 170px, rgba(255,220,240,.75), transparent), radial-gradient(.9px .9px at 40px 180px, rgba(255,255,255,.6), transparent), radial-gradient(1.3px 1.3px at 120px 20px, rgba(200,220,255,.85), transparent), radial-gradient(2.2px 2.2px at 60px 60px, rgba(255,255,255,.9), rgba(180,170,255,.25) 60%, transparent);
+    background-size: 210px 210px, 170px 170px, 260px 260px, 230px 230px, 120px 120px, 310px 310px, 590px 590px;
+    animation: wfxspin 480s linear infinite, wfxtw 7s ease-in-out infinite alternate; }
+  :root[data-ui=v2][data-wfx=myth] body::after { inset: -40%;
+    background: linear-gradient(115deg, transparent 38%, rgba(255,120,230,.16) 46%, rgba(170,120,255,.24) 50%, rgba(90,200,255,.12) 54%, transparent 62%),
+      radial-gradient(1.2px 1.2px at 40px 60px, rgba(255,220,255,.8), transparent) 0 0 / 190px 190px, radial-gradient(1px 1px at 120px 150px, rgba(220,200,255,.7), transparent) 0 0 / 230px 230px;
+    animation: wfxsweep 11s ease-in-out infinite alternate, wfxtw 5s ease-in-out infinite alternate; }
+  @keyframes wfxspin { to { transform: rotate(360deg); } } @keyframes wfxtw { from { opacity: .62; } to { opacity: 1; } } @keyframes wfxsweep { from { transform: translateX(-28%); } to { transform: translateX(28%); } }
+  :root.pw-pause body::after { animation-play-state: paused !important; } @media (prefers-reduced-motion: reduce) { body::after { animation: none !important; } }
+  .wpfx-galaxy, .wpfx-myth { position: relative; overflow: hidden; } .wpfx-galaxy::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12px 10px, #fff, transparent), radial-gradient(1px 1px at 40px 26px, #fff, transparent), radial-gradient(1.4px 1.4px at 26px 40px, #dfe6ff, transparent); background-size: 54px 50px; opacity: .85; }
+  .wpfx-myth::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,140,235,.35) 48%, transparent 62%) 0 0 / 250% 100%; animation: wpfxsh 3.5s ease-in-out infinite alternate; } @keyframes wpfxsh { to { background-position: 100% 0; } }
+  /* Erklärungen (einmalig) */
+  #tip3 { position: fixed; inset: 0; z-index: 97; display: none; } #tip3.on { display: block; }
+  .tip3-spot { position: fixed; border-radius: 18px; box-shadow: 0 0 0 2px var(--accent), 0 0 0 100vmax rgba(0,0,0,.62); pointer-events: none; transition: all .3s ease; }
+  .tip3-box { position: fixed; left: 16px; right: 16px; max-width: 420px; margin: 0 auto; padding: 16px; border-radius: 20px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); box-shadow: 0 12px 40px rgba(0,0,0,.5); animation: tip3in .3s ease; }
+  @keyframes tip3in { from { opacity: 0; transform: translateY(8px); } }
+  .tip3-h { display: flex; align-items: center; gap: 10px; } .tip3-h b { flex: 1; font-size: 16px; } .tip3-h small { color: var(--muted); font-size: 11px; }
+  .tip3-i { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font: italic 700 14px/1 Georgia, serif; flex: none; }
+  .tip3-box p { margin: 8px 0 12px; font-size: 14px; line-height: 1.45; color: var(--text); opacity: .9; } .tip3-a { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pr3-ring { margin-bottom: 46px; }
+  :root[data-ui=v2][data-wfx=galaxy] body::after { filter: brightness(1.35); }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3732,8 +3765,9 @@ function v2PrefsHTML(th) {
     <input type="file" accept="image/*" id="v2wallIn" hidden>
     <div class="v2row"><div><b>Glas-Effekt</b><small>Kästchen werden milchig durchsichtig und verwischen den Hintergrund</small></div><button class="v2tog ${th.glass2 !== false ? "on" : ""}" data-v2a="glass"></button></div>
     <div class="v2row"><div><b>Tierwelt unten anzeigen</b><small>Die Szenen aus Version 1 – Auswahl der Welt bleibt gleich</small></div><button class="v2tog ${th.v2meadow ? "on" : ""}" data-v2a="meadow"></button></div>
-    ${trophyPrefsHTML(th)}
-    <h2>Support</h2><button class="v2row fb-row" data-support="1"><div><b>💬 Wünsche & Verbesserungen</b><small>Design-Ideen, neue Funktionen oder Fehler direkt an den Entwickler schicken</small></div><span class="fb-go">›</span></button>`;
+    ${trophyPrefsHTML(th)}${framePrefsHTML()}
+    <h2>Support</h2><button class="v2row fb-row" data-support="1"><div><b>💬 Wünsche & Verbesserungen</b><small>Design-Ideen, neue Funktionen oder Fehler direkt an den Entwickler schicken</small></div><span class="fb-go">›</span></button>
+    <button class="v2row fb-row" data-tipsreset="1"><div><b>ℹ️ Erklärungen erneut zeigen</b><small>Die kurzen Hinweise beim ersten Besuch jeder Seite noch einmal anzeigen</small></div><span class="fb-go">›</span></button>`;
 }
 // Vorschaubilder der Wallpaper in den Kacheln (nutzen dieselben Bilder wie die App)
 function v2WallPreviews() {
@@ -3769,7 +3803,7 @@ document.addEventListener("click", e => {
   else if (a === "font") { setTheme({ font: el.dataset.v }); v2Reprefs(); }
   else if (a === "wall") { if (el.dataset.v === "custom") { openWalls(); return; } setTheme({ wall: el.dataset.v, wallId: null }); v2Reprefs(); }
   else if (a === "glass") { setTheme({ glass2: th.glass2 === false }); if (el.dataset.back === "walls") openWalls(); else v2Reprefs(); }
-  else if (a === "snd") { setTheme({ snd: !th.snd }); v2Reprefs(); }
+  else if (a === "snd") { setTheme({ snd: th.snd === false }); v2Reprefs(); }
   else if (a === "meadow") { setTheme({ v2meadow: !th.v2meadow }); v2Reprefs(); }
 });
 document.addEventListener("change", e => { if (e.target.id === "v2wallIn" && e.target.files[0]) v2WallUpload(e.target.files[0]).catch(() => toast("Bild konnte nicht geladen werden.")); });
@@ -3788,6 +3822,8 @@ async function appSetCfg(patch) {
   catch { toast("Speichern fehlgeschlagen – sind die neuen Firestore-Regeln veröffentlicht?"); }
 }
 { const go = setInterval(() => { if (S.uid) { clearInterval(go); appLoad(); } }, 500); }
+
+document.addEventListener("click", e => { if (e.target.closest("[data-tipsreset]")) { tipsReset(); closeSheet(); } });
 
 /* ===================== SPIELWIESE (Training, Version 2) =====================
    Mini-Fenster nach Wahl: Klick-Zähler, Stoppuhr, Timer, Intervall („X pro Minute“).
@@ -4566,7 +4602,7 @@ function openWalls() {
     <div class="v2walls wl-grid">${builtin}${shared}${WL.admin ? `<button class="wl-add" data-wladd="s"><span>＋</span><small>Für alle hinzufügen</small></button>` : ""}</div>
     ${WL.all === null ? `<p class="muted wl-note">Lädt …</p>` : ""}
     <h2>Rang-Hintergründe</h2><p class="muted wl-note">Die Farbverläufe der Ränge – jeder Rang schaltet einen frei.</p>
-    <div class="v2walls wl-grid">${rankWallTiles(th)}</div>
+    <div class="v2walls wl-grid">${fxWallTiles(th)}${rankWallTiles(th)}</div>
     <h2>Meine Hintergründe</h2><p class="muted wl-note">Nur für dich – auf all deinen Geräten.</p>
     <div class="v2walls wl-grid">${mine}<button class="wl-add" data-wladd="u"><span>＋</span><small>Bild hinzufügen</small></button></div>
     <input type="file" accept="image/*" id="wlIn" hidden>
@@ -4579,7 +4615,7 @@ let wlAddShared = false;
 document.addEventListener("click", e => {
   const del = e.target.closest("[data-wldel]"); if (del) { e.stopPropagation(); wlDel(del.dataset.wldel); return; }
   const rg = e.target.closest("[data-wlg]"); if (rg) { if (rg.classList.contains("lock")) { const u = UNLOCKS.find(x => x.k === "g" + rg.dataset.wlg); toast(`🔒 Wird mit ${RANKS[u?.tier ?? 0].n} freigeschaltet`); return; }
-    const g = GRADS[+rg.dataset.wlg]; setTheme({ wall: "grad", wallId: null, wallGrad: +rg.dataset.wlg, wallCss: rankWallCss(g) }); openWalls(); return; }
+    const g = GRADS[+rg.dataset.wlg]; setTheme({ wall: "grad", wallId: null, wallGrad: +rg.dataset.wlg, wallFx: null, wallCss: rankWallCss(g) }); openWalls(); return; }
   const t = e.target.closest("[data-wl]"); if (t) { const k = t.dataset.wl; if (k.includes(":")) wlUse(k).then(openWalls); else { setTheme({ wall: k, wallId: null }); openWalls(); } return; }
   const add = e.target.closest("[data-wladd]"); if (add) { wlAddShared = add.dataset.wladd === "s"; $("#wlIn").click(); return; }
   if (e.target.closest("[data-wluid]")) { navigator.clipboard?.writeText(S.uid).then(() => toast("Nutzer-ID kopiert ✓")).catch(() => {}); }
@@ -4590,7 +4626,7 @@ document.addEventListener("change", e => { if (e.target.id === "wlIn" && e.targe
 function rankWallCss(g) { const [c1, c2, c3, c4] = g.c, A = rgba;
   return `radial-gradient(120% 70% at 18% 12%, ${A(c1, .62)}, transparent 62%), radial-gradient(110% 70% at 88% 82%, ${A(c3, .38)}, transparent 60%), radial-gradient(90% 60% at 85% 18%, ${A(c2, .55)}, transparent 66%), radial-gradient(80% 60% at 10% 90%, ${A(c4, .5)}, transparent 70%), linear-gradient(165deg, ${g.base}, #050507)`; }
 function rankWallTiles(th) {
-  return GRADS.map((g, i) => { const u = UNLOCKS.find(x => x.k === "g" + i), open = !u || unlocked(u), on = th.wall === "grad" && th.wallGrad === i;
+  return GRADS.map((g, i) => { const u = UNLOCKS.find(x => x.k === "g" + i), open = !u || unlocked(u), on = th.wall === "grad" && !th.wallFx && th.wallGrad === i;
     return `<button class="wl-t ${on ? "on" : ""} ${open ? "" : "lock"}" data-wlg="${i}"><span class="wp" style="--wp:${g.flow ? gradSwatch(g) : rankWallCss(g)}">${open ? "" : "🔒"}</span><small>${g.n}</small></button>`; }).join("");
 }
 
@@ -4821,7 +4857,7 @@ function fpal2(t) { return [null, null, null, null, null, ["#d6ffe9", "#2ecf7a",
 function rankSvg2(i) {
   const g = (id, a, b, c) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".5" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs>`;
   if (i === 5) return `<svg viewBox="0 0 36 36">${g("rkm", "#bff7d6", "#2ecf7a", "#0d6a3a")}<path d="M10 2h7l3 11h-7z" fill="#1c8f52"/><path d="M26 2h-7l-3 11h7z" fill="#57e39a"/><circle cx="18" cy="23" r="10.5" fill="url(#rkm)" stroke="#0a4a2a" stroke-width="1.4"/><circle cx="18" cy="23" r="7.2" fill="none" stroke="#d6ffe9" stroke-width="1" opacity=".7"/><path d="M18 17.6l1.7 3.5 3.8.5-2.8 2.6.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z" fill="#eafff2"/><path d="M11.5 19a7.5 7.5 0 014-3.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>`;
-  if (i === 7) return `<svg viewBox="0 0 36 36">${g("rkc", "#ffd0d8", "#ff3355", "#7a0618")}<g stroke="#3f4a5a" stroke-width=".9"><path d="M4.5 3.5l3 .3L27 23.3l-2.2 2.2L5.3 6z" fill="#eef1f6"/><path d="M31.5 3.5l-3 .3L9 23.3l2.2 2.2L30.7 6z" fill="#eef1f6"/></g><path d="M23.5 25.5l4-4 2 2-4 4zM12.5 25.5l-4-4-2 2 4 4z" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><circle cx="28.6" cy="28.6" r="2.2" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><circle cx="7.4" cy="28.6" r="2.2" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><path d="M18 9.5l8 3v6.5c0 5-3.6 8.6-8 10-4.4-1.4-8-5-8-10v-6.5z" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 13.5l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#ffe680" stroke="#7a4a00" stroke-width=".6"/><path d="M12.6 13.6v4.6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg>`;
+  if (i === 7) return `<svg viewBox="0 0 36 36"><defs><linearGradient id="rkc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b85"/><stop offset=".55" stop-color="#e01f45"/><stop offset="1" stop-color="#8e0822"/></linearGradient><linearGradient id="rkb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b9c2d0"/></linearGradient><linearGradient id="rkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#d99a14"/></linearGradient></defs><g transform="rotate(-42 18 18)"><path d="M16.6 1.5h2.8l.6 3.2v18.8h-4V4.7z" fill="url(#rkb)" stroke="#5b6577" stroke-width=".9"/><rect x="12.3" y="23.2" width="11.4" height="2.8" rx="1.4" fill="url(#rkg)" stroke="#8a5a00" stroke-width=".9"/><rect x="16.6" y="26" width="2.8" height="5.6" rx="1" fill="#7a4a12" stroke="#4a2a06" stroke-width=".7"/><circle cx="18" cy="33" r="1.9" fill="url(#rkg)" stroke="#8a5a00" stroke-width=".8"/></g><g transform="rotate(42 18 18)"><path d="M16.6 1.5h2.8l.6 3.2v18.8h-4V4.7z" fill="url(#rkb)" stroke="#5b6577" stroke-width=".9"/><rect x="12.3" y="23.2" width="11.4" height="2.8" rx="1.4" fill="url(#rkg)" stroke="#8a5a00" stroke-width=".9"/><rect x="16.6" y="26" width="2.8" height="5.6" rx="1" fill="#7a4a12" stroke="#4a2a06" stroke-width=".7"/><circle cx="18" cy="33" r="1.9" fill="url(#rkg)" stroke="#8a5a00" stroke-width=".8"/></g><path d="M18 7.5l9.5 3.4v7.4c0 6-4.2 10.2-9.5 12-5.3-1.8-9.5-6-9.5-12v-7.4z" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.3" stroke-linejoin="round"/><path d="M18 9.6l7.4 2.7v6c0 4.8-3.2 8.2-7.4 9.7" fill="none" stroke="#ff9db0" stroke-width=".9" opacity=".7"/><path d="M18 12.6l1.6 3.3 3.6.5-2.6 2.5.6 3.6-3.2-1.7-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="url(#rkg)" stroke="#8a5a00" stroke-width=".7" stroke-linejoin="round"/><path d="M11.5 12.6c0 3 .3 5.4 1.3 7.4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".5" fill="none"/></svg>`;
   if (i === 8) return `<svg viewBox="0 0 36 36">${g("rkl", "#e6e6ff", "#6a6bff", "#1a1680")}<path d="M18 2.5l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L18 26.2 8.7 31l1.8-10.3L3 13.4l10.4-1.5z" fill="url(#rkl)" stroke="#14125e" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 9l2.4 4.9 5.4.8-3.9 3.8.9 5.4L18 21.4" fill="#fff" opacity=".22"/><path d="M13 13.5l2.6-.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/><path d="M30 2.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="#fff"/></svg>`;
   return null;
 }
@@ -4913,7 +4949,7 @@ function backTop() {
 })();
 
 // ---------- Schritte-Seite (Schuh-Symbol auf dem Homescreen) ----------
-V3_ICONS.steps = V3I('<path d="M3 15.5c0-1.4.9-2.3 2.2-2.6l3.3-.8c.8-.2 1.4-.8 1.6-1.6l.7-3a1 1 0 011.3-.7l1.2.4c.6.2.9.9.6 1.5l-.3.6c1 .8 2.4 1.2 3.7 1.2h.3a3 3 0 013 3v1.7a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 15.7z"/><path d="M3 18.5h18M12.6 9.4l1.4 1M11.6 11.3l1.4 1"/>');
+V3_ICONS.steps = V3I('<g transform="rotate(14 13 14)"><path d="M4.6 17.2v-4.1c0-.8.6-1.4 1.4-1.4h1.3l2.6-3.6c.4-.6 1.2-.7 1.8-.3l1.5 1.1c1.2 1.3 2.9 2.1 4.8 2.3l1.3.2c1.7.2 2.9 1.7 2.9 3.4v.2c0 1.2-.9 2.2-2.1 2.2z"/><path d="M4.6 15.1h16.3"/><path d="M11 10.3l1.5 1M9.9 11.8l1.5 1"/></g><path d="M.8 10.2h2.2M.6 13.2h1.6"/>');
 V3_APPS.push(["steps", "Schritte", "steps", () => stepsOpen()]);
 async function stepsEnsure() {
   let t = (S.taskCfg || DEFAULT_TASKS).find(x => x.kind === "steps"); if (t) return t;
@@ -5215,7 +5251,7 @@ navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type ===
 
 /* ===================== V1 (neu): Pokale & Animationen aus der Klassik – leiser, im neuen Design =====================
    Rang-Aufstieg: Pokal wie gehabt (nur beim ersten Erreichen). Neuer Bestwert: kein Pokal, sondern eine eigene „Rekord“-Animation. */
-const sndOn = () => !isV2() || !!curTheme().snd;
+const sndOn = () => !isV2() || curTheme().snd !== false;
 // Neuer Bestwert im neuen Design – Strahlenkranz + Symbol, ohne Pokal
 const PR3_ICO = {
   weight: '<path d="M2 12h20"/><rect x="4.5" y="7" width="3" height="10" rx="1"/><rect x="16.5" y="7" width="3" height="10" rx="1"/><path d="M8.5 9v6M15.5 9v6"/>',
@@ -5233,25 +5269,109 @@ function pr3Show(name, mode, txt, prevTxt, label) {
     <button class="btn primary block" data-pr3="ok">Weiter so</button></div>`;
   document.body.appendChild(w); requestAnimationFrame(() => w.classList.add("on"));
   if (navigator.vibrate) try { navigator.vibrate([30, 40, 60]); } catch {}
-  if (sndOn()) pr3Chime();
+  if (sndOn()) softTone(.9); setTimeout(() => confettiBurst(1), 250);
   w.addEventListener("click", e => { if (e.target === w || e.target.closest("[data-pr3]")) { w.classList.remove("on"); setTimeout(() => w.remove(), 260); } });
 }
-// ganz leiser, kurzer Glockenton – nur wenn „Töne“ an ist
-function pr3Chime() { const a = audio(); if (!a) return; const t = a.currentTime + .03;
-  [[784, 0], [1175, .09]].forEach(([f, d]) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.08, t + d + .02); g.gain.exponentialRampToValueAtTime(.0005, t + d + .7); o.connect(g).connect(a.destination); o.start(t + d); o.stop(t + d + .75); }); }
+// Ein warmer, tiefer Akkord-Ton (keine aufsteigende Melodie, nichts Schrilles) – für Bestwert und Rang-Aufstieg
+function softTone(len = 1.2, vol = 1) {
+  const a = audio(); if (!a) return; const t = a.currentTime + .04, out = a.createGain(), lp = a.createBiquadFilter();
+  lp.type = "lowpass"; lp.frequency.value = 1800; out.gain.value = .9 * vol; out.connect(lp).connect(a.destination);
+  // G-Dur-Akkord in mittlerer Lage + weicher Grundton – wie eine sanfte Glocke
+  [[196, .09, "triangle"], [293.7, .07, "sine"], [392, .07, "sine"], [493.9, .045, "sine"], [587.3, .03, "sine"]].forEach(([f, v, type]) => {
+    const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .03); g.gain.exponentialRampToValueAtTime(v * .35, t + .25); g.gain.exponentialRampToValueAtTime(.0004, t + len);
+    o.connect(g).connect(out); o.start(t); o.stop(t + len + .05); });
+}
 
 // Einstellungen: Pokale ansehen, Animationen testen, Töne
 function trophyPrefsHTML(th) {
   return `<h2>Pokale & Animationen</h2>
-    <div class="v2row"><div><b>Töne bei Animationen</b><small>Fanfare beim Rang-Aufstieg, leiser Ton beim Bestwert – standardmäßig aus</small></div><button class="v2tog ${th.snd ? "on" : ""}" data-v2a="snd"></button></div>
+    <div class="v2row"><div><b>Töne bei Animationen</b><small>Ein warmer, ruhiger Ton beim Rang-Aufstieg und bei neuen Bestwerten</small></div><button class="v2tog ${th.snd !== false ? "on" : ""}" data-v2a="snd"></button></div>
     <div class="tp-acts"><button class="btn" data-action="rankuptest">Rang-Aufstieg testen</button><button class="btn" data-pr3test="1">Bestwert testen</button></div>
     <div class="tp-grid">${RANKS.map((r, i) => { const got = (S.rankBest ?? 0) >= i || COSM_TEST_UNLOCK;
       return `<button class="tp-t ${got ? "" : "lock"}" data-action="${got ? "rutest" : ""}" data-t="${i}" ${got ? "" : `data-tplock="${i}"`}><span>${rIco(r)}</span><b>${r.n}</b><small>${got ? "Pokal ansehen" : "🔒 noch nicht erreicht"}</small></button>`; }).join("")}</div>`;
 }
+// Profilrahmen direkt hier wählen (gleiche wie unter Leistung → Freunde)
+function framePrefsHTML() {
+  const me = myProfile();
+  return `<h2>Profilrahmen</h2><p class="muted" style="font-size:12.5px;margin:-4px 0 10px">Jeder Rang schaltet einen Rahmen frei – Freunde sehen ihn in der Rangliste.</p>
+    <div class="tp-grid fr3">${RANKS.map((r, i) => { const ok = myFrameOk(i);
+      return `<button class="tp-t ${ok ? "" : "lock"} ${me.frame === i ? "on" : ""}" data-fr3="${i}"><span class="fr3-av">${pAvatar({ ...me, frame: i }, 46)}</span><b>${FRAME_N[i]}</b><small>${me.frame === i ? "✓ aktiv" : ok ? "Auswählen" : "🔒 " + r.n}</small></button>`; }).join("")}</div>`;
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-fr3]"); if (!b) return; const t = +b.dataset.fr3;
+  if (!myFrameOk(t)) { toast(`🔒 Schaltest du mit ${RANKS[t].n} frei`); return; }
+  S.frame = t; setDoc(userRef(), { frame: t }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); v2Reprefs(); toast(`Rahmen „${FRAME_N[t]}“ aktiv ✓`); });
+
+// ---------- Besondere Rang-Hintergründe mit leichter Bewegung: Mythos-Schimmer & Galaxie (GOD-LEVEL) ----------
+const FX_WALLS = [
+  { k: "myth", n: "Mythos-Schimmer", tier: 9, css: "radial-gradient(90% 60% at 20% 15%, rgba(192,77,255,.55), transparent 62%), radial-gradient(80% 60% at 85% 80%, rgba(255,79,216,.35), transparent 62%), radial-gradient(70% 50% at 80% 15%, rgba(90,120,255,.35), transparent 66%), linear-gradient(165deg, #12061f, #07030d)" },
+  { k: "galaxy", n: "Galaxie", tier: 10, css: "radial-gradient(40% 22% at 62% 40%, rgba(255,180,230,.16), transparent 70%), radial-gradient(55% 30% at 35% 58%, rgba(120,110,255,.22), transparent 72%), radial-gradient(35% 20% at 75% 25%, rgba(80,170,255,.16), transparent 70%), linear-gradient(128deg, transparent 28%, rgba(110,90,230,.20) 44%, rgba(255,170,220,.12) 51%, rgba(90,150,255,.18) 58%, transparent 74%), linear-gradient(180deg, #04030b, #0a0820 55%, #030208)" },
+];
+const fxOk = w => COSM_TEST_UNLOCK || (S.rankBest ?? 0) >= w.tier;
+function fxWallTiles(th) {
+  return FX_WALLS.map(w => { const ok = fxOk(w), on = th.wall === "grad" && th.wallFx === w.k;
+    return `<button class="wl-t ${on ? "on" : ""} ${ok ? "" : "lock"}" data-wlfx="${w.k}"><span class="wp wpfx-${w.k}" style="--wp:${w.css}">${ok ? "" : "🔒"}</span><small>${w.n}</small></button>`; }).join("");
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-wlfx]"); if (!b) return; const w = FX_WALLS.find(x => x.k === b.dataset.wlfx);
+  if (!fxOk(w)) { toast(`🔒 Wird mit ${RANKS[w.tier].n} freigeschaltet`); return; }
+  setTheme({ wall: "grad", wallId: null, wallGrad: null, wallFx: w.k, wallCss: w.css }); openWalls(); });
+// Für die „Neu freigeschaltet“-Liste beim Rang-Aufstieg
+function rankFxUnlocks(tier) { return FX_WALLS.filter(w => w.tier === tier).map(w => ({ icon: `<span style="width:30px;height:30px;border-radius:9px;background:${w.css};display:inline-block"></span>`, n: `Hintergrund „${w.n}“`, d: "Mit leichter Bewegung – unter Hintergründe → Rang-Hintergründe." })); }
+
 document.addEventListener("click", e => {
   if (e.target.closest("[data-pr3test]")) { closeSheet(); setTimeout(() => pr3Show("Bankdrücken", "weight", "70 kg × 8", "67,5 kg × 8", "REKORD"), 150); return; }
   const l = e.target.closest("[data-tplock]"); if (l) toast(`🔒 Den ${RANKS[+l.dataset.tplock].n}-Pokal bekommst du, sobald du ${RANKS[+l.dataset.tplock].n} erreichst`);
 });
+
+/* ===================== Kurze Erklärungen beim ersten Besuch jeder Seite (einmalig, mit „i“) =====================
+   Gemerkt in localStorage + im Nutzerprofil (tipsSeen), damit es auf allen Geräten nur einmal kommt. */
+const TIPS = {
+  start: [[".h3panel", "Dein Homescreen", "Datum, Fortschritt und Rang auf einen Blick. Die große Schrift zeigt den Wochentag."],
+    [".h3row", "Schnellzugriff", "Heute, Essen, Notizen, Schritte und Einstellungen – ein Tipp genügt."],
+    [".h3hint", "Heutige Aufgaben", "Nach oben wischen: darunter stehen deine Aufgaben für heute zum Abhaken."]],
+  cal: [["#view-cal .card", "Überblick", "Jeder Tag zeigt, wie viel du geschafft hast. Tippe auf einen Tag für die Details."]],
+  train: [["#view-train .w3blk", "Dein Training", "Tippe auf eine Übung, um den Trainingsmodus zu öffnen – mit Eingabe, Zähler, Stoppuhr und Timer."],
+    ["#view-train [data-action=repeat]", "Wie letztes Mal?", "Übernimmt die Übungen vom letzten gleichen Training – die Werte trägst du selbst ein."],
+    ["#view-train .w3more", "Mehr Optionen", "Über ⋯ bearbeitest oder löschst du Übungen. Lange drücken und ziehen sortiert sie um."]],
+  perf: [["#view-perf [data-action=pview]", "Leistung", "Hier wechselst du zwischen Rang, Erfolgen, Bestwerten, Auswertung und Freunden."],
+    ["#view-perf .rank-card", "Dein Rang", "Für Aufgaben und Training bekommst du täglich RP, jeder Rang kostet RP pro Tag. Nach einem Aufstieg schützt dich ein Puffer."]],
+  todo: [["#view-todo [data-action=todoadd]", "To-Dos", "Einmalige Aufgaben mit Datum und Erinnerung – unabhängig von deinen täglichen Aufgaben."]],
+  w3: [["#w3 .gbar", "Werkzeugleiste", "Hier öffnest du Eingabe, Sätze, Zähler, Stoppuhr, Timer und Notizen. Die Leiste und jedes Fenster kannst du verschieben."],
+    ["#w3 .w3nset", "Nächster Satz", "Speichert den Satz und springt weiter. Lange drücken öffnet alle Sätze zum Wechseln oder Bearbeiten."],
+    ["#w3 .w3next", "Nächste Übung", "Weiter zur nächsten Übung – bei der letzten schließt du das Training hier ab."]],
+  food: [["#f3 .f3sum", "Ernährung", "Kalorien und Nährwerte des Tages. Unter „Ziele anpassen“ stellst du deine Tagesziele ein."],
+    ["#f3 .f3acts", "Essen eintragen", "Barcode scannen, in der Datenbank suchen oder selbst eintragen."]],
+  steps: [["#s3 .s3card", "Schritte", "Trag hier deine Schritte ein – bis 3 Uhr nachts noch für den Vortag. Abends um 23 Uhr kommt eine Erinnerung."]],
+};
+const tipSeen = () => { let s = {}; try { s = JSON.parse(localStorage.getItem("tracker-tips") || "{}"); } catch {} return { ...(S.tipsSeen || {}), ...s }; };
+function tipMark(page) { const s = tipSeen(); s[page] = 1; try { localStorage.setItem("tracker-tips", JSON.stringify(s)); } catch {} S.tipsSeen = s; if (S.uid) setDoc(userRef(), { tipsSeen: s }, { merge: true }).catch(() => {}); }
+function tipShow(page, i = 0) {
+  const steps = (TIPS[page] || []).filter(([sel]) => { const el = document.querySelector(sel); return el && el.getBoundingClientRect().height > 0; });
+  if (!steps.length) return; if (i >= steps.length) { tipClose(); tipMark(page); return; }
+  const [sel, title, text] = steps[i], el = document.querySelector(sel);
+  el.scrollIntoView({ block: "nearest" });
+  let o = $("#tip3"); if (!o) { o = document.createElement("div"); o.id = "tip3"; document.body.appendChild(o); }
+  const r = el.getBoundingClientRect(), pad = 6, below = r.top + r.height / 2 < innerHeight / 2;
+  o.innerHTML = `<div class="tip3-spot" style="left:${r.left - pad}px;top:${r.top - pad}px;width:${r.width + pad * 2}px;height:${Math.min(r.height, innerHeight * .6) + pad * 2}px"></div>
+    <div class="tip3-box" style="${r.height > innerHeight * .45 ? "bottom:120px" : below ? `top:${Math.min(innerHeight - 200, r.top + Math.min(r.height, innerHeight * .6) + 16)}px` : `bottom:${Math.min(innerHeight - 200, innerHeight - r.top + 16)}px`}">
+      <div class="tip3-h"><span class="tip3-i">i</span><b>${esc(title)}</b><small>${i + 1}/${steps.length}</small></div><p>${esc(text)}</p>
+      <div class="tip3-a"><button class="btn" data-tip3="skip">Überspringen</button><button class="btn primary" data-tip3="next">${i + 1 < steps.length ? "Weiter" : "Verstanden"}</button></div></div>`;
+  o.dataset.page = page; o.dataset.i = i; o.classList.add("on");
+}
+function tipClose() { $("#tip3")?.classList.remove("on"); }
+document.addEventListener("click", e => { const b = e.target.closest("[data-tip3]"); if (!b) return; const o = $("#tip3"), page = o.dataset.page;
+  if (b.dataset.tip3 === "skip") { tipClose(); tipMark(page); } else tipShow(page, +o.dataset.i + 1); }, true);
+// Welche Seite ist gerade offen? Einmal pro Seite, kurz nachdem sie fertig aufgebaut ist
+function tipPage() { if ($("#w3")?.classList.contains("on")) return "w3"; if ($("#f3")?.classList.contains("on")) return "food"; if ($("#s3")?.classList.contains("on")) return "steps"; return S.tab; }
+setInterval(() => {
+  if (!isV2() || !S.uid || !S.daysFull || $("#tip3")?.classList.contains("on") || !$("#sheet")?.classList.contains("hidden") || $("#rankup") || $("#pr3") || $("#onb:not(.hidden)")) return;
+  const p = tipPage(); if (!TIPS[p] || tipSeen()[p]) return;
+  if (S._tipWait !== p) { S._tipWait = p; S._tipT = Date.now(); return; } if (Date.now() - S._tipT < 900) return;
+  tipShow(p);
+}, 600);
+// Nach dem Anmelden: schon gesehene Erklärungen aus dem Profil holen
+{ const go = setInterval(async () => { if (!S.uid) return; clearInterval(go); try { const u = await getDoc(userRef()); if (u.exists() && u.data().tipsSeen) S.tipsSeen = u.data().tipsSeen; } catch {} }, 500); }
+function tipsReset() { try { localStorage.removeItem("tracker-tips"); } catch {} S.tipsSeen = {}; if (S.uid) setDoc(userRef(), { tipsSeen: {} }, { mergeFields: ["tipsSeen"] }).catch(() => {}); toast("Erklärungen werden wieder angezeigt ✓"); }
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
@@ -7364,7 +7484,7 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
   document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
-  if (sndOn()) partySound(tier); setTimeout(() => confettiBurst(2), 450);
+  if (isV2()) { if (sndOn()) setTimeout(() => softTone(2.2), 600); } else partySound(tier); setTimeout(() => confettiBurst(2), 450);
   setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 650);
   if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 650); } catch {}
   return wrap;
@@ -7383,7 +7503,7 @@ function prShow(name, mode, txt, prevTxt, label = "REKORD") {
 function rankUpNext() {
   const wrap = $("#rankup"); if (!wrap) return; const tier = wrap._tier, card = wrap.querySelector(".ru-card");
   const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 28)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && (!isV2() || u.cat === "bg") && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
-    ...ANIMALS.filter(a => !isV2() && a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => !isV2() && propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
+    ...(isV2() ? rankFxUnlocks(tier) : []), ...ANIMALS.filter(a => !isV2() && a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => !isV2() && propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
   if (card.dataset.step === "2") { wrap.remove(); return; }
   card.dataset.step = "2"; wrap.classList.add("step2"); card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
   setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${rIco(RANKS[tier])} ${RANKS[tier].n} kannst du jetzt benutzen:</div>

@@ -1,5 +1,5 @@
 // Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um Benachrichtigungen
-const CACHE = "tracker-v11";
+const CACHE = "tracker-v12";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./badge-96.png"];
 const PROJECT = "fir-8213f";
 
@@ -98,13 +98,13 @@ async function showItems(p) {
     const progress = total ? ` · ${Math.max(0, total - open)}/${total} erledigt` : "";
     await self.registration.showNotification((it.kind === "todo" ? "📝 " : steps ? "👟 " : weight ? "⚖️ " : "☐ ") + it.t, {
       body: (it.kind === "todo" ? "To-Do – noch offen" : steps ? "Wie viele Schritte waren es heute? Eintragen geht bis 3 Uhr nachts." : weight ? "Noch nicht eingetragen" : "Noch offen") + progress,
-      tag: it.id, renotify: true, icon: "./icon-192.png", badge: "./badge-96.png", ...(image ? { image } : {}),
+      tag: it.id, renotify: true, badge: "./badge-96.png", ...(image ? { image } : {}),
       data: { ...it, date: p.date, total: p.total },
       actions: weight ? [{ action: "open", title: "Eintragen" }] : [{ action: "done", title: "✓ Erledigt" }],
     });
   }
   const rest = (p.items || []).length - items.length;
-  if (rest > 0) await self.registration.showNotification(`… und ${rest} weitere offen`, { tag: "more", icon: "./icon-192.png", badge: "./badge-96.png", data: {} });
+  if (rest > 0) await self.registration.showNotification(`… und ${rest} weitere offen`, { tag: "more", badge: "./badge-96.png", data: {} });
 }
 
 // Push vom Server (kommt auch, wenn die App geschlossen ist)
@@ -116,9 +116,9 @@ self.addEventListener("push", e => {
     p = raw ? (typeof raw === "string" ? JSON.parse(raw) : raw) : j;
   } catch (err) { p = {}; }
   // Nachricht an den Admin (z. B. neuer Wunsch über „Support“)
-  if (p.msg) { e.waitUntil(self.registration.showNotification(p.msg.title || "Tracker", { body: p.msg.body || "", icon: "./icon-192.png", badge: "./badge-96.png", tag: p.msg.tag || "msg", data: { open: p.msg.open || "" } })); return; }
+  if (p.msg) { e.waitUntil(self.registration.showNotification(p.msg.title || "Tracker", { body: p.msg.body || "", badge: "./badge-96.png", tag: p.msg.tag || "msg", data: { open: p.msg.open || "" } })); return; }
   e.waitUntil((p.items && p.items.length) ? showItems(p)
-    : self.registration.showNotification("Tracker", { body: "Schau mal in deine Aufgaben.", icon: "./icon-192.png", badge: "./badge-96.png", tag: "tracker" }));
+    : self.registration.showNotification("Tracker", { body: "Schau mal in deine Aufgaben.", badge: "./badge-96.png", tag: "tracker" }));
 });
 
 // Lokale Erinnerung aus der geöffneten App
