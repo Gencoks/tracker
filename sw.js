@@ -1,5 +1,5 @@
 // Service Worker: macht die App installierbar, offline nutzbar und kümmert sich um Benachrichtigungen
-const CACHE = "tracker-v10";
+const CACHE = "tracker-v11";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./badge-96.png"];
 const PROJECT = "fir-8213f";
 
@@ -20,7 +20,8 @@ try {
 } catch (e) { auth = null; }
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // einzeln laden: fehlt eine Datei, klappt die Installation trotzdem
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(
@@ -91,12 +92,12 @@ async function showItems(p) {
   try { const { st } = await readState(); if (st.accent) accent = st.accent; } catch {}
   const open = (p.items || []).filter(i => i.kind !== "todo").length, total = p.total || 0;
   for (const it of items) {
-    const weight = it.kind === "weight";
+    const weight = it.kind === "weight" || it.kind === "steps", steps = it.kind === "steps";
     let image = null;
     try { image = await cardImage(p, it, accent); } catch (e) { image = null; }
     const progress = total ? ` · ${Math.max(0, total - open)}/${total} erledigt` : "";
-    await self.registration.showNotification((it.kind === "todo" ? "📝 " : weight ? "⚖️ " : "☐ ") + it.t, {
-      body: (it.kind === "todo" ? "To-Do – noch offen" : weight ? "Noch nicht eingetragen" : "Noch offen") + progress,
+    await self.registration.showNotification((it.kind === "todo" ? "📝 " : steps ? "👟 " : weight ? "⚖️ " : "☐ ") + it.t, {
+      body: (it.kind === "todo" ? "To-Do – noch offen" : steps ? "Wie viele Schritte waren es heute? Eintragen geht bis 3 Uhr nachts." : weight ? "Noch nicht eingetragen" : "Noch offen") + progress,
       tag: it.id, renotify: true, icon: "./icon-192.png", badge: "./badge-96.png", ...(image ? { image } : {}),
       data: { ...it, date: p.date, total: p.total },
       actions: weight ? [{ action: "open", title: "Eintragen" }] : [{ action: "done", title: "✓ Erledigt" }],
@@ -114,6 +115,8 @@ self.addEventListener("push", e => {
     const raw = j.data?.payload ?? j.payload ?? null;
     p = raw ? (typeof raw === "string" ? JSON.parse(raw) : raw) : j;
   } catch (err) { p = {}; }
+  // Nachricht an den Admin (z. B. neuer Wunsch über „Support“)
+  if (p.msg) { e.waitUntil(self.registration.showNotification(p.msg.title || "Tracker", { body: p.msg.body || "", icon: "./icon-192.png", badge: "./badge-96.png", tag: p.msg.tag || "msg", data: { open: p.msg.open || "" } })); return; }
   e.waitUntil((p.items && p.items.length) ? showItems(p)
     : self.registration.showNotification("Tracker", { body: "Schau mal in deine Aufgaben.", icon: "./icon-192.png", badge: "./badge-96.png", tag: "tracker" }));
 });
@@ -128,9 +131,10 @@ self.addEventListener("notificationclick", e => {
   const d = e.notification.data || {};
   e.notification.close();
   if (e.action === "done") { e.waitUntil(markDone(d)); return; }
+  const what = d.kind === "steps" ? "steps" : d.open || "";
   e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(list => {
-    for (const w of list) if ("focus" in w) return w.focus();
-    return self.clients.openWindow("./");
+    for (const w of list) if ("focus" in w) { if (what) w.postMessage({ type: "open", what }); return w.focus(); }
+    return self.clients.openWindow(what ? "./?open=" + what : "./");
   }));
 });
 

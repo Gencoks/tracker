@@ -16,8 +16,8 @@
     t = t || {};
     var mode = t.mode || "dark", accent = t.accent || "#FFC400", r = document.documentElement;
     // ===== Version 2 („Minimal“): eigene Paletten, Schrift, Wallpaper – alle Daten bleiben gleich =====
-    var V3 = t.ui === "v3", V2 = t.ui === "v2" || V3, PAL2 = { graphit: ["dark", "#f5f5f2", "#111111"], papier: ["light", "#111111", "#f5f5f2"], rose: ["dark", "#ead7dd", "#0f0e10"], sand: ["light", "#29241f", "#eee8df"], salbei: ["dark", "#bcd6c3", "#0f1311"], nacht: ["dark", "#aab8ff", "#0b0d14"] };
-    var pal2 = PAL2[t.pal] ? t.pal : (V3 ? "rose" : "graphit"), wall2 = t.wall || (V3 ? "stein" : "asphalt");
+    var V3 = t.ui !== "v1", V2 = V3, PAL2 = { graphit: ["dark", "#f5f5f2", "#111111"], papier: ["light", "#111111", "#f5f5f2"], rose: ["dark", "#ead7dd", "#0f0e10"], sand: ["light", "#29241f", "#eee8df"], salbei: ["dark", "#bcd6c3", "#0f1311"], nacht: ["dark", "#aab8ff", "#0b0d14"] };
+    var pal2 = PAL2[t.pal] ? t.pal : (V3 ? "rose" : "graphit"), wall2 = ["fels", "nebel", "korn", "custom"].indexOf(t.wall) >= 0 ? t.wall : "korn";
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
@@ -2052,6 +2052,44 @@
   :root[data-ui=v2] .ach.unl:not(.god) { background-image: radial-gradient(130% 100% at 0% 0%, color-mix(in srgb, var(--tc) 26%, transparent) 0%, color-mix(in srgb, var(--tc) 10%, transparent) 38%, transparent 68%) !important; }
   /* Ernährung: Datum groß, „Ernährung“ klein darüber */
   .f3top h1 span { color: var(--muted); font-weight: 600; font-size: 22px; }
+  /* Versionen: 3.1 · 1 (gesperrt) · 4 (bald) */
+  .uiver button { position: relative; } .uiver button.lock { opacity: .62; } .uiver button.lock.soon { border-style: dashed; }
+  .uiver .pv.v4 { background: linear-gradient(150deg, #1a1a1d, #0c0c0d); display: grid; align-content: center; gap: 6px; padding: 0 12px; }
+  .uiver .pv.v4 i { display: block; height: 7px; border-radius: 4px; background: rgba(255,255,255,.1); } .uiver .pv.v4 i:nth-child(2) { width: 70%; } .uiver .pv.v4 i:nth-child(3) { width: 45%; background: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .uiver .pvlock { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.45); color: #fff; } .uiver .pvlock svg { width: 22px; height: 22px; }
+  .uiv-adm { margin-top: 2px; border-style: dashed !important; color: var(--accent-text) !important; }
+  /* Startseite: seitliche Schrift von unten nach oben lesbar (180° gedreht) */
+  :root.ui3 .h3side { transform: rotate(180deg); align-items: flex-end; }
+  /* Banner läuft unten weich aus statt mit harter Kante */
+  :root.ui3 .h3panel { -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 140px), transparent 100%); mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 140px), transparent 100%); border-right-color: transparent !important; }
+  /* Schritte-Seite */
+  #s3 { position: fixed; inset: 0; z-index: 35; display: none; overflow-y: auto; background: var(--bg); background-image: var(--wall-img, none); background-size: cover; background-attachment: fixed; color: var(--text); }
+  #s3.on { display: block; }
+  .s3card input { width: 6.2ch; min-width: 0; background: none; border: 0; border-bottom: 2px dashed color-mix(in srgb, var(--text) 25%, transparent); color: var(--text); font: inherit; font-size: inherit; padding: 0; outline: none; }
+  .s3card input:focus { border-bottom-color: var(--accent); }
+  .s3week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 14px 12px 10px; }
+  .s3week > div { display: grid; justify-items: center; gap: 4px; } .s3week i { position: relative; display: block; width: 100%; max-width: 30px; height: 110px; border-radius: 9px; background: color-mix(in srgb, var(--text) 7%, transparent); overflow: hidden; }
+  .s3week i b { position: absolute; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 9px; } .s3week i b.ok { background: var(--accent); }
+  .s3week i s { position: absolute; left: 0; right: 0; height: 0; border-top: 1px dashed color-mix(in srgb, var(--text) 45%, transparent); }
+  .s3week small { color: var(--muted); font-size: 11px; text-transform: uppercase; } .s3week em { font-style: normal; font-size: 11px; font-weight: 600; } .s3week .now small { color: var(--accent-text); font-weight: 700; }
+  .s3stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; } .s3stats > div { padding: 12px 14px; border-radius: 18px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); }
+  .s3stats small { color: var(--muted); font-size: 11px; display: block; } .s3stats b { font-size: 20px; }
+  .s3auto { padding: 16px; } .s3auto p { color: var(--muted); font-size: 13px; margin: 6px 0 12px; line-height: 1.45; }
+  /* Support */
+  .fb-row { width: 100%; text-align: left; font: inherit; color: var(--text); cursor: pointer; } .fb-go { font-size: 22px; color: var(--muted); }
+  .fb-thx { text-align: center; padding: 18px 6px 4px; } .fb-thx > b { display: block; font-size: 22px; margin-top: 12px; } .fb-thx p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 8px 0 18px; }
+  .fb-ok { width: 64px; height: 64px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); } .fb-ok svg { width: 30px; height: 30px; }
+  .fb-it { padding: 12px 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); margin-bottom: 8px; } .fb-it.done { opacity: .55; }
+  .fb-h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; } .fb-h small { color: var(--muted); font-size: 11px; margin-left: auto; } .fb-h .chip { font-size: 11px; padding: 3px 8px; }
+  .fb-it p { margin: 8px 0; font-size: 14px; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; } .fb-a { display: flex; gap: 6px; }
+  .f3acts { grid-template-columns: repeat(4, minmax(0, 1fr)); } .f3acts button { padding: 12px 4px; font-size: 12px; } .f3acts button:first-child { background: var(--accent); color: var(--accent-ink); } .f3acts button:nth-child(2) { background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--text); border-color: var(--border); }
+  .f3ph { width: 100%; max-height: 220px; object-fit: cover; border-radius: 16px; display: block; }
+  .f3ai-load { display: flex; align-items: center; gap: 10px; justify-content: center; padding: 18px; color: var(--muted); font-size: 14px; }
+  .f3ai-load span { width: 18px; height: 18px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); border-top-color: var(--accent); animation: f3spin .8s linear infinite; } @keyframes f3spin { to { transform: rotate(360deg); } }
+  .f3ai { display: grid; gap: 6px; margin-top: 12px; } .f3ai-it { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); } .f3ai-it.off { opacity: .5; }
+  .f3ai-c { width: 26px; height: 26px; flex: none; border-radius: 8px; border: 2px solid var(--accent); background: transparent; color: var(--accent-ink); display: grid; place-items: center; padding: 0; } .f3ai-it:not(.off) .f3ai-c { background: var(--accent); } .f3ai-c svg { width: 16px; height: 16px; }
+  .f3ai-it span { flex: 1; min-width: 0; display: grid; } .f3ai-it b { font-size: 14px; } .f3ai-it small { color: var(--muted); font-size: 11px; }
+  .f3ai-it label { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 12px; } .f3ai-it input { width: 54px; padding: 7px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: 14px; text-align: right; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3225,7 +3263,7 @@ async function renameExercise(i) {
 // Rekordwert einer Übung je nach Messart (höher = besser)
 function prValue(e) {
   const m = exMode(e), sets = e.sets || [];
-  if (m === "cardio") return Math.max(0, ...sets.map(x => numv(x.km)));
+  if (m === "cardio") { if (document.documentElement.dataset.ui === "v2") return Math.max(0, ...sets.map(x => { const k = numv(x.km), t = parseDur(x.min); return k > 0 && t > 0 ? 1000 * k / t : k / 1000; })); return Math.max(0, ...sets.map(x => numv(x.km))); }
   if (m === "time") return Math.max(0, ...sets.map(x => numv(x.sec)));
   if (m === "weight") return Math.max(0, ...sets.map(setScore));
   return Math.max(0, ...sets.map(x => numv(x.reps)));
@@ -3234,6 +3272,7 @@ function prText(e) {
   const m = exMode(e), sets = (e.sets || []).filter(setFilled);
   if (!sets.length) return "";
   const best = [...sets].sort((a, b) => prValue({ ...e, sets: [b] }) - prValue({ ...e, sets: [a] }))[0];
+  if (m === "cardio" && document.documentElement.dataset.ui === "v2" && paceOf(best.km, best.min)) return `${paceOf(best.km, best.min)} /km`;
   return setTxt(best, m) + (m === "band" || m === "reps" ? (m === "band" ? " Wdh." : "") : "");
 }
 // Bester bisheriger Wert vor einem Datum (gleiche Übung, gleiche Messart)
@@ -3259,8 +3298,11 @@ function checkPR(i) {
 // Lauf-Rekorde: schnellstes Tempo (ab 1 km) und weiteste Strecke
 function runBest(date) { let km = 0, pace = Infinity, kmD = "", paceD = "";
   for (const w of S.allWo || []) { if (date && w.date >= date) continue; const k = numv(w.run?.km), m = parseDur(w.run?.minutes);
-    if (k > km) { km = k; kmD = w.date; } if (k >= 1 && m > 0 && m / k < pace) { pace = m / k; paceD = w.date; } } return { km, pace, kmD, paceD }; }
-const fmtPace = p => { let mm = Math.floor(p), ss = Math.round((p - mm) * 60); if (ss === 60) { mm++; ss = 0; } return `${mm}:${pad(ss)} min/km`; };
+    if (k > km) { km = k; kmD = w.date; } if (k >= 1 && m > 0 && m / k < pace) { pace = m / k; paceD = w.date; }
+    if (document.documentElement.dataset.ui === "v2") for (const e of w.exercises || []) { if (exMode(e) !== "cardio" || !/lauf|jogg|run/i.test(e.name)) continue;
+      for (const st of e.sets || []) { const k2 = numv(st.km), m2 = parseDur(st.min); if (k2 > km) { km = k2; kmD = w.date; } if (k2 >= 1 && m2 > 0 && m2 / k2 < pace) { pace = m2 / k2; paceD = w.date; } } } }
+  return { km, pace, kmD, paceD }; }
+const fmtPace = p => { let mm = Math.floor(p), ss = Math.round((p - mm) * 60); if (ss === 60) { mm++; ss = 0; } return `${mm}:${pad(ss)} ${document.documentElement.dataset.ui === "v2" ? "/km" : "min/km"}`; };
 function checkRunPR() {
   const w = S.workout; if (!w || !S.allWo) return; const k = numv(w.run?.km), m = parseDur(w.run?.minutes); if (!(k > 0)) return;
   const b = runBest(S.trainDate), prs = (w.prs ||= []);
@@ -3605,7 +3647,7 @@ const V2_PALS = [["graphit", "Graphit", ["#111111", "#2a2a2a", "#f5f5f2"]], ["pa
   ["sand", "Sand", ["#eee8df", "#c9bba6", "#29241f"]], ["salbei", "Salbei", ["#0f1311", "#2b3530", "#bcd6c3"]], ["nacht", "Mitternacht", ["#0b0d14", "#272d42", "#aab8ff"]]];
 const V2_FONTS = [["modern", "Modern", "Poppins", "Poppins"], ["klar", "Klar", "Inter", "Inter"], ["geo", "Geometrisch", "Montserrat", "Montserrat"],
   ["tech", "Technisch", "Space Grotesk", "'Space Grotesk'"], ["elegant", "Elegant", "Playfair Display", "'Playfair Display'"], ["mono", "Mono", "Space Mono", "'Space Mono'"]];
-const V2_WALLS = [["none", "Schlicht"], ["stein", "Gestein"], ["asphalt", "Asphalt"], ["korn", "Körnung"], ["fels", "Fels"], ["nebel", "Nebel"], ["custom", "Mehr & eigene ›"]];
+const V2_WALLS = [["korn", "Körnung"], ["fels", "Fels"], ["nebel", "Nebel"], ["custom", "Mehr & eigene ›"]];
 const WD_FULL = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"], MON_SHORT = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
 const kwOf = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())), n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y0) / 864e5 + 1) / 7); };
 
@@ -3640,17 +3682,20 @@ function renderTrain() {
 }
 
 // ---------- Einstellungen ----------
+// Version 3.1 = Standard für alle · Version 1 nur für Admins, bis sie freigeschaltet wird · dritter Platz = kommt bald
 function uiSwitchHTML(th) {
-  const v = th.ui === "v2" || th.ui === "v3" ? th.ui : "v1";
+  const v = th.ui === "v1" ? "v1" : "v3", adm = !!APP.admin, open1 = !!APP.cfg.v1Open, can1 = adm || open1;
   return `<div class="uiver">
-    <button class="${v === "v1" ? "on" : ""}" data-v2a="ui" data-v="v1"><div class="pv v1"><b></b><i style="top:50px"></i><i style="top:30px;left:50px"></i></div><b class="t">Version 1</b><small>Klassisch · Tierwelten & Rang-Designs</small></button>
-    <button class="${v === "v2" ? "on" : ""}" data-v2a="ui" data-v="v2"><div class="pv v2"><i></i><b>MO</b></div><b class="t">Version 2</b><small>Minimal · Glas, Schrift, Spielwiese</small></button>
-    <button class="${v === "v3" ? "on" : ""}" data-v2a="ui" data-v="v3"><div class="pv v3"><i></i><b>MO</b><em></em></div><b class="t">Version 3</b><small>Fokus · Homescreen, Gesten, Trainingsmodus</small></button></div>`;
+    <button class="${v === "v3" ? "on" : ""}" data-v2a="ui" data-v="v3"><div class="pv v3"><i></i><b>MO</b><em></em></div><b class="t">Version 3.1</b><small>Standard · Homescreen, Trainingsmodus</small></button>
+    <button class="${v === "v1" ? "on" : ""} ${can1 ? "" : "lock"}" data-v2a="ui" data-v="v1"><div class="pv v1"><b></b><i style="top:50px"></i><i style="top:30px;left:50px"></i>${can1 ? "" : `<span class="pvlock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>`}</div><b class="t">Version 1</b><small>${can1 ? (adm && !open1 ? "Klassisch · nur für dich" : "Klassisch · Tierwelten") : "Bald verfügbar"}</small></button>
+    <button class="lock soon" data-v2a="soon"><div class="pv v4"><i></i><i></i><i></i></div><b class="t">Version 4</b><small>In Arbeit · bald verfügbar</small></button></div>
+    ${adm ? `<button class="btn block uiv-adm" data-v2a="v1open">${open1 ? "Version 1 wieder sperren" : "Version 1 für alle freischalten"}</button><small class="muted" style="display:block;margin-top:6px;font-size:11.5px">Nur du als Admin siehst diesen Knopf.</small>
+      <div class="field"><label>KI-Adresse für Essen per Foto (Cloudflare-Worker)</label><div style="display:flex;gap:8px"><input class="text-in" id="aiUrlIn" placeholder="https://…workers.dev" value="${esc(APP.cfg.aiUrl || "")}"><button class="btn" data-v2a="aiurl">Speichern</button></div></div>` : ""}`;
 }
 function v2PrefsHTML(th) {
   // alle Schriften für die Vorschau laden
   if (!document.getElementById("v2fontsAll")) { const l = document.createElement("link"); l.id = "v2fontsAll"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@700&family=Space+Grotesk:wght@700&family=Playfair+Display:wght@700&family=Space+Mono:wght@700&display=swap"; document.head.appendChild(l); }
-  const v3 = th.ui === "v3", pal = th.pal || (v3 ? "rose" : "graphit"), font = th.font || "modern", wall = th.wall || (v3 ? "stein" : "asphalt"), cs = getComputedStyle(document.documentElement);
+  const v3 = th.ui !== "v1", pal = th.pal || (v3 ? "rose" : "graphit"), font = th.font || "modern", wall = ["fels", "nebel", "korn", "custom"].includes(th.wall) ? th.wall : "korn", cs = getComputedStyle(document.documentElement);
   return `<h2 style="margin-top:4px">Farben</h2>
     <div class="v2pals">${V2_PALS.map(([k, n, cols]) => `<button class="${pal === k ? "on" : ""}" data-v2a="pal" data-v="${k}"><div class="sw2">${cols.map(c => `<i style="background:${c}"></i>`).join("")}</div><small>${n}</small></button>`).join("")}</div>
     <h2>Akzentfarbe</h2>
@@ -3661,7 +3706,8 @@ function v2PrefsHTML(th) {
     <div class="v2walls">${V2_WALLS.map(([k, n]) => `<button class="${wall === k ? "on" : ""}" data-v2a="wall" data-v="${k}"><div class="wp" data-wp="${k}">${k === "custom" ? "📷" : ""}</div>${n}</button>`).join("")}</div>
     <input type="file" accept="image/*" id="v2wallIn" hidden>
     <div class="v2row"><div><b>Glas-Effekt</b><small>Kästchen werden milchig durchsichtig und verwischen den Hintergrund</small></div><button class="v2tog ${th.glass2 !== false ? "on" : ""}" data-v2a="glass"></button></div>
-    <div class="v2row"><div><b>Tierwelt unten anzeigen</b><small>Die Szenen aus Version 1 – Auswahl der Welt bleibt gleich</small></div><button class="v2tog ${th.v2meadow ? "on" : ""}" data-v2a="meadow"></button></div>`;
+    <div class="v2row"><div><b>Tierwelt unten anzeigen</b><small>Die Szenen aus Version 1 – Auswahl der Welt bleibt gleich</small></div><button class="v2tog ${th.v2meadow ? "on" : ""}" data-v2a="meadow"></button></div>
+    <h2>Support</h2><button class="v2row fb-row" data-support="1"><div><b>💬 Wünsche & Verbesserungen</b><small>Design-Ideen, neue Funktionen oder Fehler direkt an den Entwickler schicken</small></div><span class="fb-go">›</span></button>`;
 }
 // Vorschaubilder der Wallpaper in den Kacheln (nutzen dieselben Bilder wie die App)
 function v2WallPreviews() {
@@ -3686,7 +3732,12 @@ function v2Reprefs() { const y = $("#sheetInner").scrollTop; openPrefs(); $("#sh
 document.addEventListener("click", e => {
   const el = e.target.closest("[data-v2a]"); if (!el) return;
   const a = el.dataset.v2a, th = curTheme();
-  if (a === "ui") { if ((th.ui || "v1") === el.dataset.v) return; setTheme({ ui: el.dataset.v }); renderAll(); if (S.tab === "perf") loadPerf(); if (S.tab === "todo") renderTodo(); v2Reprefs(); closeSheet(); if (el.dataset.v === "v3") { S.v3intro = false; setTab("start"); } toast(`Version ${el.dataset.v.slice(1)} aktiv ✓`); }
+  if (a === "soon") { toast("Version 4 ist noch in Arbeit – bald verfügbar ✨"); return; }
+  if (a === "v1open") { appSetCfg({ v1Open: !APP.cfg.v1Open }); return; }
+  if (a === "aiurl") { const u = ($("#aiUrlIn")?.value || "").trim(); if (u && !/^https:\/\//.test(u)) { toast("Die Adresse muss mit https:// beginnen"); return; } appSetCfg({ aiUrl: u || null }); return; }
+  if (a === "ui") { const cur = th.ui === "v1" ? "v1" : "v3"; if (cur === el.dataset.v) return;
+    if (el.dataset.v === "v1" && !APP.admin && !APP.cfg.v1Open) { toast("🔒 Version 1 ist noch gesperrt – bald verfügbar"); return; }
+    setTheme({ ui: el.dataset.v }); renderAll(); if (S.tab === "perf") loadPerf(); if (S.tab === "todo") renderTodo(); v2Reprefs(); closeSheet(); if (el.dataset.v === "v3") { S.v3intro = false; setTab("start"); } toast(el.dataset.v === "v3" ? "Version 3.1 aktiv ✓" : "Version 1 aktiv ✓"); }
   else if (a === "pal") { setTheme({ pal: el.dataset.v }); renderStart(); v2Reprefs(); }
   else if (a === "acc") { setTheme({ v2acc: el.dataset.v || null }); renderStart(); v2Reprefs(); }
   else if (a === "font") { setTheme({ font: el.dataset.v }); v2Reprefs(); }
@@ -3695,6 +3746,21 @@ document.addEventListener("click", e => {
   else if (a === "meadow") { setTheme({ v2meadow: !th.v2meadow }); v2Reprefs(); }
 });
 document.addEventListener("change", e => { if (e.target.id === "v2wallIn" && e.target.files[0]) v2WallUpload(e.target.files[0]).catch(() => toast("Bild konnte nicht geladen werden.")); });
+
+// ---------- App-Einstellungen für alle (config/app) & Admin-Erkennung ----------
+const APP = { cfg: {}, admin: false, loaded: false };
+async function appLoad() {
+  try { const d = await getDoc(doc(db, "config", "app")); APP.cfg = d.exists() ? d.data() : {}; } catch { APP.cfg = {}; }
+  try { const a = await getDoc(doc(db, "admins", S.uid)); APP.admin = a.exists(); } catch { APP.admin = false; }
+  if (typeof WL !== "undefined") WL.admin = APP.admin; APP.loaded = true;
+  // Version 1 ist (noch) nur für Admins: alle anderen landen auf Version 3.1
+  if (curTheme().ui === "v1" && !APP.admin && !APP.cfg.v1Open) { setTheme({ ui: "v3" }); renderAll(); setTab("start"); toast("Version 3.1 ist jetzt die Standardversion ✓"); }
+}
+async function appSetCfg(patch) {
+  try { await setDoc(doc(db, "config", "app"), patch, { merge: true }); APP.cfg = { ...APP.cfg, ...patch }; toast("Gespeichert ✓"); if (!$("#sheet").classList.contains("hidden")) v2Reprefs(); }
+  catch { toast("Speichern fehlgeschlagen – sind die neuen Firestore-Regeln veröffentlicht?"); }
+}
+{ const go = setInterval(() => { if (S.uid) { clearInterval(go); appLoad(); } }, 500); }
 
 /* ===================== SPIELWIESE (Training, Version 2) =====================
    Mini-Fenster nach Wahl: Klick-Zähler, Stoppuhr, Timer, Intervall („X pro Minute“).
@@ -3940,7 +4006,7 @@ function v3Home() {
   const first = !document.querySelector("#view-start .h3home");
   { const v1 = $("#view-start").cloneNode(true); v1.querySelector("header.top")?.remove(); S.v3today = v1.innerHTML; }
   const day = WD_FULL[now.getDay()], fs = Math.round(Math.min(124, Math.max(44, (innerHeight - 300) * .9 / (day.length * .8))));
-  const HOME_APPS = ["tasks", "food", "notes", "timer", "gear"];
+  const HOME_APPS = ["tasks", "food", "notes", "steps", "gear"];
   $("#view-start").innerHTML = `<div class="h3home">
     <div class="h3panel">
       <div class="h3side" aria-hidden="true">
@@ -4443,7 +4509,7 @@ async function wlDel(key) {
   const [t, id] = key.split(":"), shared = t === "s";
   if (!(await askYesNo(shared ? "Diesen Grundhintergrund für alle löschen?" : "Diesen Hintergrund löschen?"))) return;
   try { await deleteDoc(doc(db, ...(shared ? ["walls"] : ["users", S.uid, "walls"]), id)); await deleteDoc(doc(db, ...(shared ? ["wallImgs"] : ["users", S.uid, "wallImgs"]), id)); } catch { toast("Löschen fehlgeschlagen."); }
-  if (curTheme().wallId === key) setTheme({ wall: "stein", wallId: null });
+  if (curTheme().wallId === key) setTheme({ wall: "korn", wallId: null });
   await wlLoad(true); openWalls();
 }
 // Bild holen (lokal zwischengespeichert, damit es beim Start sofort da ist)
@@ -4463,7 +4529,7 @@ async function wlEnsure() {
   if (have !== th.wallId) await wlUse(th.wallId);
 }
 function openWalls() {
-  const th = curTheme(), cur = th.wall === "custom" ? th.wallId || "custom" : (th.wall || (th.ui === "v3" ? "stein" : "asphalt"));
+  const th = curTheme(), cur = th.wall === "custom" ? th.wallId || "custom" : (["fels", "nebel", "korn"].includes(th.wall) ? th.wall : "korn");
   const tile = (key, label, bg, del) => `<button class="wl-t ${cur === key ? "on" : ""}" data-wl="${key}"><span class="wp" ${bg ? `style="--wp:${bg}"` : `data-wp="${key}"`}></span><small>${label}</small>${del ? `<i data-wldel="${key}">✕</i>` : ""}</button>`;
   const builtin = V2_WALLS.filter(([k]) => k !== "custom").map(([k, n]) => tile(k, n, "", false)).join("");
   const shared = (WL.all || []).map((w, i) => tile("s:" + w.id, w.by ? "von " + w.by : "Für alle " + (i + 1), `url(${w.thumb})`, WL.admin)).join("");
@@ -4518,11 +4584,14 @@ const scCol = () => (SC_COLS.find(c => c[0] === scPref.col) || SC_COLS[0])[1];
 function scrubInit(ch) {
   if (ch.dataset.scrubOn || !isV2() || ch.closest(".rank-card")) return; let d; try { d = JSON.parse(ch.dataset.scrub); } catch { return; } if (!d.keys?.length) return;
   ch.dataset.scrubOn = 1; ch.classList.add("scrub-ready");
+  // Notizen-Schalter gilt nur für dieses eine Diagramm (gemerkt pro Diagramm)
+  const sk = d.ctx && Object.keys(d.ctx).length ? JSON.stringify(d.ctx) : "i" + [...document.querySelectorAll(".chart[data-scrub]")].indexOf(ch);
+  scPref.ons = scPref.ons || {}; const isOn = () => !!scPref.ons[sk];
   ch.insertAdjacentHTML("beforeend", `<button class="sc-tog" aria-label="Markierung ein/aus">${TI.note}<span>Notizen</span></button><div class="sc-line"></div><div class="sc-handle" title="Ziehen"></div>
     <div class="sc-pop"><button class="sc-grip" aria-label="Auf- oder zuklappen"><i></i><i></i><i></i><i></i><i></i><i></i></button><div class="sc-body"></div>
       <div class="sc-cols">${SC_COLS.map(([k, c]) => `<button data-sc="${k}" style="background:${c}" class="${scPref.col === k ? "on" : ""}" aria-label="Farbe"></button>`).join("")}</div></div>`);
   const line = ch.querySelector(".sc-line"), hd = ch.querySelector(".sc-handle"), pop = ch.querySelector(".sc-pop"), body = pop.querySelector(".sc-body");
-  const apply = () => { ch.classList.toggle("scrub-on", scPref.on); pop.classList.toggle("closed", scPref.closed); ch.style.setProperty("--sc", scCol()); ch.querySelector(".sc-tog").classList.toggle("on", scPref.on); };
+  const apply = () => { ch.classList.toggle("scrub-on", isOn()); pop.classList.toggle("closed", scPref.closed); ch.style.setProperty("--sc", scCol()); ch.querySelector(".sc-tog").classList.toggle("on", isOn()); };
   const show = i => { const kk = d.keys[i]; ch.dataset.si = i; line.style.left = hd.style.left = kk.px + "%"; pop.classList.toggle("right", kk.px < 50);
     const notes = scrubNotes(kk.x, d.ctx || {}), dt = fromKey(kk.x);
     body.innerHTML = `<b>${WD_FULL[dt.getDay()]}, ${dt.getDate()}. ${MON_SHORT[dt.getMonth()]}</b>${kk.tips.map(t => `<div class="sc-v">${esc(t)}</div>`).join("")}
@@ -4533,7 +4602,7 @@ function scrubInit(ch) {
   hd.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); hd.setPointerCapture(e.pointerId); hd.classList.add("drag");
     const mv = ev => pick(ev.clientX), up = () => { hd.removeEventListener("pointermove", mv); hd.removeEventListener("pointerup", up); hd.removeEventListener("pointercancel", up); hd.classList.remove("drag"); };
     hd.addEventListener("pointermove", mv); hd.addEventListener("pointerup", up); hd.addEventListener("pointercancel", up); });
-  ch.querySelector(".sc-tog").addEventListener("click", e => { e.stopPropagation(); scPref.on = !scPref.on; scSave(); document.querySelectorAll(".chart.scrub-ready").forEach(c => { c.classList.toggle("scrub-on", scPref.on); c.querySelector(".sc-tog")?.classList.toggle("on", scPref.on); }); });
+  ch.querySelector(".sc-tog").addEventListener("click", e => { e.stopPropagation(); scPref.ons[sk] = !isOn(); if (!scPref.ons[sk]) delete scPref.ons[sk]; scSave(); ch.classList.toggle("scrub-on", isOn()); ch.querySelector(".sc-tog")?.classList.toggle("on", isOn()); });
   pop.querySelector(".sc-grip").addEventListener("click", e => { e.stopPropagation(); scPref.closed = !scPref.closed; scSave(); pop.classList.toggle("closed", scPref.closed); });
   pop.querySelector(".sc-cols").addEventListener("click", e => { const b = e.target.closest("[data-sc]"); if (!b) return; e.stopPropagation(); scPref.col = b.dataset.sc; scSave();
     document.querySelectorAll(".chart.scrub-ready").forEach(c => { c.style.setProperty("--sc", scCol()); c.querySelectorAll("[data-sc]").forEach(x => x.classList.toggle("on", x.dataset.sc === scPref.col)); }); });
@@ -4678,7 +4747,7 @@ document.addEventListener("click", e => {
 // ---------- Tägliche Aufgaben: Vorschläge mit „+“ (u. a. Gewicht morgens/abends) ----------
 const TASK_SUG = [
   { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", reminds: ["07:00"] }, { key: "gewicht_pm", t: "Gewicht abends", kind: "weight", slot: "pm", reminds: ["21:00"] },
-  { key: "schritte", t: "Schritte", s: "Ziel 10.000 · iPhone automatisch", kind: "steps", goal: 10000, reminds: ["22:00"] }, { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
+  { key: "schritte", t: "Schritte", s: "Ziel 10.000 · iPhone automatisch", kind: "steps", goal: 10000, reminds: ["23:00"] }, { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
   { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" }, { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" },
   { key: "schlaf", t: "Vor 23 Uhr im Bett" },
 ];
@@ -4713,7 +4782,7 @@ function fpal2(t) { return [null, null, null, null, null, ["#d6ffe9", "#2ecf7a",
 function rankSvg2(i) {
   const g = (id, a, b, c) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".5" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient></defs>`;
   if (i === 5) return `<svg viewBox="0 0 36 36">${g("rkm", "#bff7d6", "#2ecf7a", "#0d6a3a")}<path d="M10 2h7l3 11h-7z" fill="#1c8f52"/><path d="M26 2h-7l-3 11h7z" fill="#57e39a"/><circle cx="18" cy="23" r="10.5" fill="url(#rkm)" stroke="#0a4a2a" stroke-width="1.4"/><circle cx="18" cy="23" r="7.2" fill="none" stroke="#d6ffe9" stroke-width="1" opacity=".7"/><path d="M18 17.6l1.7 3.5 3.8.5-2.8 2.6.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z" fill="#eafff2"/><path d="M11.5 19a7.5 7.5 0 014-3.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/></svg>`;
-  if (i === 7) return `<svg viewBox="0 0 36 36">${g("rkc", "#ffd0d8", "#ff3355", "#7a0618")}<path d="M10 4h16v8a8 8 0 01-16 0z" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4"/><path d="M10 6.5H5.5a4.5 4.5 0 004.8 6.2M26 6.5h4.5a4.5 4.5 0 01-4.8 6.2" fill="none" stroke="#c81e3c" stroke-width="2.2"/><path d="M15.5 19h5l1 6h-7z" fill="#c81e3c" stroke="#5a0614" stroke-width="1.2"/><rect x="10.5" y="25" width="15" height="6" rx="1.6" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4"/><path d="M13.5 6.5v5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".55"/><circle cx="18" cy="10" r="2.3" fill="#ffe680" stroke="#7a4a00" stroke-width=".8"/></svg>`;
+  if (i === 7) return `<svg viewBox="0 0 36 36">${g("rkc", "#ffd0d8", "#ff3355", "#7a0618")}<g stroke="#3f4a5a" stroke-width=".9"><path d="M4.5 3.5l3 .3L27 23.3l-2.2 2.2L5.3 6z" fill="#eef1f6"/><path d="M31.5 3.5l-3 .3L9 23.3l2.2 2.2L30.7 6z" fill="#eef1f6"/></g><path d="M23.5 25.5l4-4 2 2-4 4zM12.5 25.5l-4-4-2 2 4 4z" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><circle cx="28.6" cy="28.6" r="2.2" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><circle cx="7.4" cy="28.6" r="2.2" fill="#ffc94d" stroke="#7a4a00" stroke-width=".9"/><path d="M18 9.5l8 3v6.5c0 5-3.6 8.6-8 10-4.4-1.4-8-5-8-10v-6.5z" fill="url(#rkc)" stroke="#5a0614" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 13.5l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#ffe680" stroke="#7a4a00" stroke-width=".6"/><path d="M12.6 13.6v4.6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg>`;
   if (i === 8) return `<svg viewBox="0 0 36 36">${g("rkl", "#e6e6ff", "#6a6bff", "#1a1680")}<path d="M18 2.5l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L18 26.2 8.7 31l1.8-10.3L3 13.4l10.4-1.5z" fill="url(#rkl)" stroke="#14125e" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 9l2.4 4.9 5.4.8-3.9 3.8.9 5.4L18 21.4" fill="#fff" opacity=".22"/><path d="M13 13.5l2.6-.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/><path d="M30 2.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="#fff"/></svg>`;
   return null;
 }
@@ -4739,15 +4808,18 @@ function stepsMain(t, k, text) {
   return `<div class="task-main"><span class="box-check">${CHECK}</span><span style="min-width:0;flex:1">${text}<i class="st-bar"><b style="width:${pct}%"></b></i></span>
     <span class="kg-in st-in"><input class="num-in" inputmode="numeric" placeholder="–" data-steps="${t.key}" data-day="${k}" value="${v === "" ? "" : esc(String(v))}"><small>/ ${fmtN(g / 1000, g % 1000 ? 1 : 0)}k</small></span></div>`;
 }
+// Schritte zählen bis Mitternacht – eintragen geht für „gestern“ noch bis 3 Uhr nachts
+const stepsKey = () => new Date().getHours() < 3 ? keyOf(addDays(new Date(), -1)) : todayKey();
+const stepsOk = k => k === todayKey() || k === stepsKey();
 async function setSteps(k, key, raw, quiet) {
-  if (k !== todayKey()) { toast("🔒 Schritte kannst du nur für heute eintragen."); return; }
+  if (!stepsOk(k)) { toast("🔒 Schritte kannst du nur für heute (bzw. gestern bis 3 Uhr) eintragen."); return; }
   const v = String(raw).replace(/[.\s]/g, "").trim(), n = v === "" ? null : parseInt(v, 10);
   if (n !== null && (isNaN(n) || n < 0 || n > 200000)) { toast("Bitte eine gültige Schrittzahl eingeben"); return; }
   const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key), tasks = tasksFor(fromKey(k)), cur = S.days[k] || { done: {} };
   const done = { ...(cur.done || {}) }; if (t) done[key] = n !== null && n >= stepGoal(t);
   const count = tasks.filter(x => done[x.key]).length, data = { ...cur, date: k, done, weight: cur.weight || {}, count, total: tasks.length, complete: count === tasks.length };
   if (n === null) delete data.steps; else data.steps = n;
-  S.days[k] = data; renderStart(); if (S.tab === "cal") renderCal();
+  S.days[k] = data; renderStart(); if (S.tab === "cal") renderCal(); if ($("#s3")?.classList.contains("on")) stepsRender();
   if (data.complete && !cur.complete) quotaDone(); else if (!quiet && n !== null) toast(done[key] ? `✓ ${fmtN(n, 0)} Schritte – Ziel geschafft!` : `${fmtN(n, 0)} Schritte gespeichert`);
   try { await setDoc(dayRef(k), data); } catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
 }
@@ -4757,17 +4829,17 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.ma
 (() => { let q; try { q = new URLSearchParams(location.search).get("steps"); } catch {} if (q == null) return;
   const go = setInterval(async () => { if (!S.uid || !S.days) return; clearInterval(go);
     let t = (S.taskCfg || DEFAULT_TASKS).find(x => x.kind === "steps");
-    if (!t) { t = { key: "schritte", t: "Schritte", kind: "steps", goal: 10000 }; S.taskCfg = [...(S.taskCfg || DEFAULT_TASKS), t]; await saveTaskCfg(); }
-    await setSteps(todayKey(), t.key, q, true); toast(`👟 ${fmtN(+q || 0, 0)} Schritte übernommen`);
+    t = t || await stepsEnsure();
+    await setSteps(stepsKey(), t.key, q, true); toast(`👟 ${fmtN(+q || 0, 0)} Schritte übernommen`); if (isV3()) stepsOpen();
     try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
 function openStepsHelp() {
   $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Schritte automatisch</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
     <p class="muted" style="font-size:13.5px;margin-top:0">Web-Apps dürfen den Schrittzähler nicht direkt auslesen. So klappt es trotzdem:</p>
-    <h2>iPhone – automatisch</h2><ol class="st-ol"><li>App <b>Kurzbefehle</b> → <b>Automation</b> → <b>+</b> → <b>Tageszeit</b>, z. B. 22:30, täglich, <b>„Sofort ausführen“</b>.</li>
+    <h2>iPhone – automatisch</h2><ol class="st-ol"><li>App <b>Kurzbefehle</b> → <b>Automation</b> → <b>+</b> → <b>Tageszeit</b>: <b>23:55</b>, täglich, <b>„Sofort ausführen“</b>.</li>
       <li>Aktion <b>„Health-Messwerte suchen“</b>: Schritte, Startdatum <b>heute</b>.</li><li>Aktion <b>„Statistik berechnen“</b> → <b>Summe</b>.</li>
       <li>Aktion <b>„URL öffnen“</b>: <code>${esc(location.origin + location.pathname)}?steps=</code> und dahinter die <b>Summe</b> einfügen.</li>
       <li>Einmal ausführen und Health-Zugriff <b>erlauben</b>. In Safari einmal anmelden – fertig.</li></ol>
-    <h2>Android</h2><p class="muted" style="font-size:13.5px">Die Aufgabe hat eine Erinnerung um 22:00 – Schrittzahl aus Google Fit / Samsung Health ablesen und eintippen.</p>
+    <h2>Android</h2><p class="muted" style="font-size:13.5px">Web-Apps dürfen auf Android den Schrittzähler nicht auslesen. Die Aufgabe erinnert dich um 23:00 – Schrittzahl aus Google Fit / Samsung Health ablesen und eintippen (bis 3 Uhr nachts noch für den Vortag).</p>
     <div class="field"><label>Tagesziel</label><input class="text-in" id="stGoal" inputmode="numeric" value="${stepGoal((S.taskCfg || []).find(x => x.kind === "steps") || {})}"></div>
     <button class="btn primary block" style="margin-top:12px" data-stgoal="1">Speichern</button>`;
   showSheet(true);
@@ -4780,6 +4852,7 @@ function backTop() {
   if (!$("#dlg")?.classList.contains("hidden")) { $("#dlgNo")?.click(); return true; }
   const pick = document.querySelector("#w3 .w3pick, .pg-pick"); if (pick) { pick.remove(); return true; }
   if ($("#f3")?.classList.contains("on")) { foodClose(); return true; }
+  if ($("#s3")?.classList.contains("on")) { stepsClose(); return true; }
   if (!$("#sheet")?.classList.contains("hidden")) { closeSheet(); return true; }
   if ($("#w3")?.classList.contains("on")) { w3Close(); return true; }
   if (PG?.open) { pgClose(); return true; }
@@ -4799,6 +4872,48 @@ function backTop() {
     // ganz am Anfang: nächstes Zurück verlässt die App
   });
 })();
+
+// ---------- Schritte-Seite (Schuh-Symbol auf dem Homescreen) ----------
+V3_ICONS.steps = V3I('<path d="M3 15.5c0-1.4.9-2.3 2.2-2.6l3.3-.8c.8-.2 1.4-.8 1.6-1.6l.7-3a1 1 0 011.3-.7l1.2.4c.6.2.9.9.6 1.5l-.3.6c1 .8 2.4 1.2 3.7 1.2h.3a3 3 0 013 3v1.7a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 15.7z"/><path d="M3 18.5h18M12.6 9.4l1.4 1M11.6 11.3l1.4 1"/>');
+V3_APPS.push(["steps", "Schritte", "steps", () => stepsOpen()]);
+async function stepsEnsure() {
+  let t = (S.taskCfg || DEFAULT_TASKS).find(x => x.kind === "steps"); if (t) return t;
+  t = { key: "schritte", t: "Schritte", s: "Ziel 10.000", kind: "steps", goal: 10000, reminds: ["23:00"] };
+  S.taskCfg = [...(S.taskCfg || DEFAULT_TASKS), t]; await saveTaskCfg(); return t;
+}
+function stepsOpen() {
+  let o = $("#s3"); if (!o) { o = document.createElement("div"); o.id = "s3"; o.className = "f3like"; document.body.appendChild(o); }
+  o.classList.add("on"); document.documentElement.classList.add("f3on"); stepsRender();
+}
+function stepsClose() { $("#s3")?.classList.remove("on"); document.documentElement.classList.remove("f3on"); if (S.tab === "start") renderStart(); }
+function stepsRender() {
+  const o = $("#s3"); if (!o) return; const k = stepsKey(), t = (S.taskCfg || DEFAULT_TASKS).find(x => x.kind === "steps") || { goal: 10000 }, g = stepGoal(t), v = S.days?.[k]?.steps, d = fromKey(k);
+  const pct = v ? Math.min(100, v / g * 100) : 0, days = [...Array(7)].map((_, i) => { const dk = keyOf(addDays(d, i - 6)); return { dk, n: S.days?.[dk]?.steps || 0, w: WD_FULL[fromKey(dk).getDay()].slice(0, 2) }; }), mx = Math.max(g, ...days.map(x => x.n));
+  const avg = days.filter(x => x.n).length ? Math.round(days.reduce((a, x) => a + x.n, 0) / days.filter(x => x.n).length) : 0, ios = /iP(hone|ad|od)/.test(navigator.userAgent);
+  o.innerHTML = `<div class="f3in">
+    <div class="f3top"><button class="f3x" data-s3="close" aria-label="Schließen">${ICON.x}</button><div><small>Schritte</small><h1>${k === todayKey() ? "Heute" : "Gestern"}<span>, ${d.getDate()}. ${MON_SHORT[d.getMonth()]}</span></h1></div></div>
+    <div class="card f3sum s3card">
+      <div class="f3kc"><div><small>${v != null ? (v >= g ? "Ziel geschafft ✓" : `Noch ${fmtN(g - v, 0)} bis zum Ziel`) : "Noch nicht eingetragen"}</small>
+        <b><input id="s3in" inputmode="numeric" placeholder="0" value="${v != null ? v : ""}"><em> Schritte</em></b></div><div class="f3eat"><b>${fmtN(g, 0)}</b><small>Ziel</small></div></div>
+      <div class="t3line"><i style="width:${pct}%"></i></div>
+      <button class="btn primary block" data-s3="save" style="margin-top:12px">Eintragen</button>
+      ${k !== todayKey() ? `<p class="muted" style="font-size:12px;margin:8px 0 0">Bis 3 Uhr nachts trägst du noch die Schritte von gestern ein.</p>` : ""}</div>
+    <h2>Letzte 7 Tage</h2><div class="card s3week">${days.map(x => `<div class="${x.dk === k ? "now" : ""}"><i><b style="height:${Math.round(x.n / mx * 100)}%" class="${x.n >= g ? "ok" : ""}"></b><s style="bottom:${g / mx * 100}%"></s></i><small>${x.w}</small><em>${x.n ? (x.n >= 1000 ? fmtN(x.n / 1000, 1) + "k" : x.n) : "–"}</em></div>`).join("")}</div>
+    <div class="s3stats"><div><small>Ø 7 Tage</small><b>${fmtN(avg, 0)}</b></div><div><small>Ziel erreicht</small><b>${days.filter(x => x.n >= g).length}/7</b></div></div>
+    <h2>Automatisch übernehmen</h2>
+    <div class="card s3auto">${ios ? `<b>iPhone: täglich automatisch</b><p>Ein Kurzbefehl liest jeden Abend die Schritte aus der Health-App und trägt sie hier ein – ganz ohne Akku-Verbrauch im Hintergrund.</p>`
+      : `<b>Android: Erinnerung um 23 Uhr</b><p>Web-Apps dürfen auf Android den Schrittzähler (Health Connect) leider nicht auslesen. Du bekommst um 23 Uhr eine Erinnerung und tippst die Zahl aus Google Fit / Samsung Health ein – bis 3 Uhr nachts noch für den Vortag.</p>`}
+      <button class="btn block" data-sthelp="1">${ios ? "Kurzbefehl einrichten" : "Ziel & Anleitung"}</button></div>
+  </div>`;
+}
+document.addEventListener("click", async e => { const b = e.target.closest("[data-s3]"); if (!b) return;
+  if (b.dataset.s3 === "close") return stepsClose();
+  if (b.dataset.s3 === "save") { const t = await stepsEnsure(); await setSteps(stepsKey(), t.key, $("#s3in").value); } });
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "s3in") $('[data-s3="save"]')?.click(); });
+// Aus einer Benachrichtigung geöffnet (…?open=steps oder Nachricht vom Service Worker)
+(() => { let q; try { q = new URLSearchParams(location.search).get("open"); } catch {} if (q !== "steps") return;
+  const go = setInterval(() => { if (!S.uid || !S.days) return; clearInterval(go); stepsOpen(); try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
+navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 /* ===================== V2/V3: Ernährung – Barcode scannen, suchen, Kalorien & Makros =====================
    Daten: users/{uid}/food/{Datum} = { items: [{ n, g, kcal, p, c, f, meal }] } · Nährwerte: Open Food Facts (frei, ohne Schlüssel) */
@@ -4850,14 +4965,14 @@ function foodRender() {
       <div class="t3line"><i style="width:${Math.min(100, s.kcal / g.kcal * 100)}%"></i></div>
       <div class="f3ms">${bar("Protein", s.p, g.p, "g")}${bar("Kohlenh.", s.c, g.c, "g")}${bar("Fett", s.f, g.f, "g")}</div>
       <button class="f3goal" data-f3="goal">Ziele anpassen</button></div>
-    <div class="f3acts"><button data-f3="scan">${V3I('<path d="M3 7V4.5A1.5 1.5 0 014.5 3H7M17 3h2.5A1.5 1.5 0 0121 4.5V7M21 17v2.5a1.5 1.5 0 01-1.5 1.5H17M7 21H4.5A1.5 1.5 0 013 19.5V17M7 8v8M10 8v8M13 8v8M16.5 8v8"/>')}<span>Barcode<br>scannen</span></button>
-      <button data-f3="search">${V3I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<span>Lebensmittel<br>suchen</span></button>
-      <button data-f3="manual">${V3I('<path d="M12 5v14M5 12h14"/>')}<span>Selbst<br>eintragen</span></button></div>
+    <div class="f3acts"><button data-f3="photo">${V3I('<path d="M4 8.5A2.5 2.5 0 016.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0120 8.5v9a2.5 2.5 0 01-2.5 2.5h-11A2.5 2.5 0 014 17.5z"/><circle cx="12" cy="13" r="3.6"/>')}<span>Foto<br>erkennen</span></button><button data-f3="scan">${V3I('<path d="M3 7V4.5A1.5 1.5 0 014.5 3H7M17 3h2.5A1.5 1.5 0 0121 4.5V7M21 17v2.5a1.5 1.5 0 01-1.5 1.5H17M7 21H4.5A1.5 1.5 0 013 19.5V17M7 8v8M10 8v8M13 8v8M16.5 8v8"/>')}<span>Barcode</span></button>
+      <button data-f3="search">${V3I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<span>Suchen</span></button>
+      <button data-f3="manual">${V3I('<path d="M12 5v14M5 12h14"/>')}<span>Selbst</span></button></div>
     ${recent.length ? `<h2>Zuletzt</h2><div class="f3rec">${recent.slice(0, 10).map((x, i) => `<button data-f3="rec" data-i="${i}">${esc(x.n)}<small>${fmtN(x.g, 0)} g · ${fmtN(x.kcal, 0)} kcal</small></button>`).join("")}</div>` : ""}
     ${!loaded ? `<div class="f3empty">Lädt …</div>` : FOOD_MEALS.map(([m, n]) => { const it = day.items.map((x, i) => ({ ...x, i })).filter(x => (x.meal || "sn") === m); const kc = it.reduce((a, x) => a + (+x.kcal || 0), 0);
       return `<div class="f3meal"><div class="f3mh"><h2>${n}</h2><span>${kc ? fmtN(kc, 0) + " kcal" : ""}</span><button data-f3="search" data-m="${m}" aria-label="Hinzufügen">${W3I.plus}</button></div>
         ${it.length ? it.map(x => `<div class="f3it"><span><b>${esc(x.n)}</b><small>${fmtN(x.g, 0)} g · ${fmtN(x.p, 0)} g P · ${fmtN(x.c, 0)} g K · ${fmtN(x.f, 0)} g F</small></span><em>${fmtN(x.kcal, 0)}</em><button data-f3="del" data-i="${rIco(x)}" aria-label="Löschen">${ICON.x}</button></div>`).join("") : ""}</div>`; }).join("")}
-    <p class="f3note">Nährwerte aus <b>Open Food Facts</b> (frei, von Nutzern gepflegt) bzw. Richtwerte – kurz prüfen lohnt sich. Foto-Erkennung per KI braucht einen kostenpflichtigen KI-Dienst und ist deshalb (noch) nicht drin.</p>
+    <p class="f3note">Nährwerte aus <b>Open Food Facts</b> (frei, von Nutzern gepflegt) bzw. Richtwerte – kurz prüfen lohnt sich. Foto-Erkennung per KI schätzt Mengen und Nährwerte – das ist eine Schätzung, kein Messwert.</p>
   </div>`;
 }
 const foodMealNow = () => { const h = new Date().getHours() + new Date().getMinutes() / 60; return h < 10.5 ? "fr" : h < 15 ? "mi" : h < 21 ? "ab" : "sn"; };
@@ -4901,6 +5016,7 @@ async function foodClick(e) {
   else if (a === "search") { FOOD.meal = b.dataset.m || null; foodSearch(); }
   else if (a === "manual") { FOOD.meal = null; foodManual(); }
   else if (a === "scan") foodScan();
+  else if (a === "photo") foodPhoto();
   else if (a === "goal") foodGoalEdit();
   else if (a === "rec") { let r = []; try { r = JSON.parse(localStorage.getItem("tracker-foodrecent") || "[]"); } catch {} const x = r[+b.dataset.i]; if (x) foodAdd({ ...x, meal: foodMealNow() }); }
 }
@@ -4967,6 +5083,96 @@ async function foodCode(code) {
   } catch { toast("Keine Verbindung zu Open Food Facts."); }
   FOOD.busy = false;
 }
+
+// ---------- Foto → KI erkennt das Essen und schätzt Kalorien & Makros (über einen kleinen Cloudflare-Worker mit Gemini) ----------
+function foodPhoto() {
+  const url = APP.cfg?.aiUrl;
+  if (!url) { if (APP.admin) { toast("Erst die KI-Adresse eintragen (Einstellungen → Admin)"); openPrefs(); } else toast("📷 Foto-Erkennung kommt bald!"); return; }
+  let inp = $("#f3photo"); if (!inp) { inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.capture = "environment"; inp.id = "f3photo"; inp.hidden = true; document.body.appendChild(inp);
+    inp.addEventListener("change", () => { const f = inp.files[0]; inp.value = ""; if (f) foodPhotoRun(f).catch(err => { console.error(err); foodAiSheet(null, "Das hat leider nicht geklappt – versuch es nochmal oder trag es selbst ein."); }); }); }
+  inp.click();
+}
+async function foodPhotoRun(file) {
+  const img = new Image(), u = URL.createObjectURL(file); await new Promise((ok, no) => { img.onload = ok; img.onerror = no; img.src = u; });
+  const sc = Math.min(1, 1024 / Math.max(img.width, img.height)), c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+  const data = c.toDataURL("image/jpeg", .8); FOOD.photo = data;
+  foodAiSheet("load");
+  const idToken = await auth.currentUser.getIdToken();
+  const r = await fetch(APP.cfg.aiUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: data.split(",")[1], idToken }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.status);
+  FOOD.ai = (j.items || []).filter(x => x && x.n).map(x => ({ n: String(x.n).slice(0, 60), g0: +x.g || 100, g: +x.g || 100, kcal: +x.kcal || 0, p: +x.p || 0, c: +x.c || 0, f: +x.f || 0, on: true }));
+  foodAiSheet(null, FOOD.ai.length ? j.note || "" : "Kein Essen erkannt – probier ein anderes Foto oder trag es selbst ein.");
+}
+function foodAiSheet(state, note = "") {
+  const it = FOOD.ai || [], sc = x => x.g0 ? x.g / x.g0 : 1;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Foto-Erkennung</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    ${FOOD.photo ? `<img class="f3ph" src="${FOOD.photo}" alt="">` : ""}
+    ${state === "load" ? `<div class="f3ai-load"><span></span>KI schaut sich dein Essen an …</div>` : `
+      ${note ? `<p class="muted" style="font-size:12.5px;margin:10px 0 0">${esc(note)}</p>` : ""}
+      ${it.length ? `<div class="f3ai">${it.map((x, i) => `<div class="f3ai-it ${x.on ? "" : "off"}"><button class="f3ai-c" data-f3ai="${i}">${x.on ? CHECK : ""}</button><span><b>${esc(x.n)}</b><small>${fmtN(x.kcal * sc(x), 0)} kcal · ${fmtN(x.p * sc(x), 0)} g P · ${fmtN(x.c * sc(x), 0)} g K · ${fmtN(x.f * sc(x), 0)} g F</small></span><label><input inputmode="numeric" data-f3aig="${i}" value="${Math.round(x.g)}"> g</label></div>`).join("")}</div>
+        <div class="groups" style="flex-wrap:wrap;margin-top:12px">${FOOD_MEALS.map(([m, n]) => `<button class="chip ${(FOOD.aiMeal || foodMealNow()) === m ? "accent" : ""}" data-f3aim="${m}">${n}</button>`).join("")}</div>
+        <button class="btn primary block" style="margin-top:12px" data-f3aiadd="1">Hinzufügen · ${fmtN(it.filter(x => x.on).reduce((a, x) => a + x.kcal * sc(x), 0), 0)} kcal</button>` : ""}
+      <button class="btn block" style="margin-top:8px" data-f3="photo">Neues Foto</button>`}`;
+  showSheet(true);
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-f3ai]"); if (c) { const x = FOOD.ai[+c.dataset.f3ai]; x.on = !x.on; foodAiSheet(); return; }
+  const m = e.target.closest("[data-f3aim]"); if (m) { FOOD.aiMeal = m.dataset.f3aim; foodAiSheet(); return; }
+  if (e.target.closest("#sheetInner [data-f3=photo]")) { closeSheet(); foodPhoto(); return; }
+  if (e.target.closest("[data-f3aiadd]")) { const meal = FOOD.aiMeal || foodMealNow(); closeSheet();
+    (async () => { for (const x of FOOD.ai.filter(y => y.on)) { const k = x.g0 ? x.g / x.g0 : 1; await foodAdd({ n: x.n, g: Math.round(x.g), kcal: Math.round(x.kcal * k), p: r1(x.p * k), c: r1(x.c * k), f: r1(x.f * k), meal, src: "ai" }); } FOOD.ai = []; })(); }
+});
+document.addEventListener("change", e => { const g = e.target.closest?.("[data-f3aig]"); if (!g) return; const x = FOOD.ai[+g.dataset.f3aig]; x.g = Math.max(0, numv(g.value)) || x.g; foodAiSheet(); });
+
+/* ===================== V3: Support – Wünsche & Verbesserungen an den Admin =====================
+   feedback/{id} = { uid, name, cat, text, at, ui, done, mailed } – der Admin bekommt eine E-Mail + Push (GitHub Action) und sieht alles im Postfach. */
+const FB_CATS = [["design", "Design"], ["idee", "Neue Funktion"], ["fehler", "Fehler"], ["sonst", "Sonstiges"]];
+function openSupport() {
+  S.fbCat = S.fbCat || "idee";
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="font-size:18px">Wünsche & Verbesserungen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <p class="muted" style="font-size:13px;margin:0 0 12px">Was fehlt dir, was stört, was wäre cool? Deine Nachricht geht direkt an den Entwickler der App.</p>
+    <div class="groups" style="flex-wrap:wrap">${FB_CATS.map(([k, n]) => `<button class="chip ${S.fbCat === k ? "accent" : ""}" data-fbcat="${k}">${n}</button>`).join("")}</div>
+    <textarea class="text-in" id="fbText" rows="6" maxlength="2000" placeholder="z. B. „Ein dunkleres Rosé als Farbe wäre schön“ oder „Beim Training fehlt mir …“" style="margin-top:12px;resize:vertical;min-height:130px"></textarea>
+    <button class="btn primary block" style="margin-top:12px" data-fbsend="1">Nachricht senden</button>
+    ${APP.admin ? `<button class="btn block" style="margin-top:8px" data-fbinbox="1">📥 Postfach öffnen (nur Admin)</button>` : ""}`;
+  showSheet(true);
+}
+function supportThanks() {
+  $("#sheetInner").innerHTML = `<div class="fb-thx"><div class="fb-ok">${CHECK}</div><b>Danke dir!</b>
+    <p>Deine Nachricht ist angekommen. Ich schau sie mir in Ruhe an – gute Ideen landen oft schon im nächsten Update. 💪</p>
+    <button class="btn primary block" data-action="closesheet">Schließen</button></div>`;
+}
+async function openInbox() {
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Postfach</b><button class="mini" data-action="closesheet">${ICON.x}</button></div><div class="muted">Lädt …</div>`;
+  showSheet(true);
+  try {
+    const snap = await getDocs(query(collection(db, "feedback"), orderBy("at", "desc"), limit(60)));
+    const list = snap.docs.map(d => ({ id: d.id, ...d.data() })), cat = k => (FB_CATS.find(c => c[0] === k) || [0, "Sonstiges"])[1];
+    $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Postfach · ${list.filter(x => !x.done).length} offen</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+      ${list.length ? list.map(x => `<div class="fb-it ${x.done ? "done" : ""}"><div class="fb-h"><b>${esc(x.name || "Unbekannt")}</b><span class="chip">${cat(x.cat)}</span><small>${x.at ? new Date(x.at).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""}</small></div>
+        <p>${esc(x.text || "").replace(/\n/g, "<br>")}</p><div class="fb-a"><button class="chip ${x.done ? "accent" : ""}" data-fbdone="${x.id}">${x.done ? "✓ Erledigt" : "Als erledigt markieren"}</button><button class="chip" data-fbdel="${x.id}">Löschen</button></div></div>`).join("")
+        : `<div class="card empty">Noch keine Nachrichten.</div>`}`;
+  } catch { $("#sheetInner").insertAdjacentHTML("beforeend", `<p class="muted">Konnte das Postfach nicht laden – sind die neuen Firestore-Regeln veröffentlicht?</p>`); }
+}
+document.addEventListener("click", async e => {
+  const c = e.target.closest("[data-fbcat]"); if (c) { S.fbCat = c.dataset.fbcat; document.querySelectorAll("[data-fbcat]").forEach(b => b.classList.toggle("accent", b === c)); return; }
+  if (e.target.closest("[data-fbinbox]")) return openInbox();
+  if (e.target.closest("[data-support]")) return openSupport();
+  const dn = e.target.closest("[data-fbdone]"); if (dn) { const on = !dn.classList.contains("accent"); try { await updateDoc(doc(db, "feedback", dn.dataset.fbdone), { done: on }); openInbox(); } catch { toast("Fehlgeschlagen"); } return; }
+  const dl = e.target.closest("[data-fbdel]"); if (dl) { if (!(await askYesNo("Nachricht löschen?", "Löschen"))) return; try { await deleteDoc(doc(db, "feedback", dl.dataset.fbdel)); openInbox(); } catch { toast("Fehlgeschlagen"); } return; }
+  const b = e.target.closest("[data-fbsend]"); if (!b) return;
+  const text = ($("#fbText")?.value || "").trim(); if (text.length < 3) { toast("Schreib kurz, worum es geht 🙂"); return; }
+  b.disabled = true; b.textContent = "Wird gesendet …";
+  try { await addDoc(collection(db, "feedback"), { uid: S.uid, name: S.name || auth.currentUser?.displayName || "", cat: S.fbCat || "sonst", text, at: Date.now(), ui: curTheme().ui || "v3", done: false, mailed: false });
+    supportThanks(); }
+  catch { b.disabled = false; b.textContent = "Nachricht senden"; toast("Senden fehlgeschlagen – bist du online?"); }
+});
+// Aus der Push-Nachricht „Neuer Wunsch“ geöffnet → Postfach
+(() => { let q; try { q = new URLSearchParams(location.search).get("open"); } catch {} if (q !== "inbox") return;
+  const go = setInterval(() => { if (!APP.loaded) return; clearInterval(go); if (APP.admin) openInbox(); try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
+navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "inbox" && APP.admin) openInbox(); });
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
