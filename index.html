@@ -2163,6 +2163,10 @@
   .tp-t.lock .tp-ic > :not(.tp-lock) { filter: grayscale(.85) brightness(.55); opacity: .7; }
   .tp-lock { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-size: 20px; line-height: 1; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
   .tp-t.lock b, .tp-t.lock small { opacity: .6; }
+  /* Rang-Hintergründe: deutlich sichtbare, aber ruhige Bewegung */
+  :root[data-ui=v2][data-wfx=glow] body::after { inset: -30%; animation: wfxdrift2 16s ease-in-out infinite alternate, wfxpulse 6s ease-in-out infinite alternate; }
+  @keyframes wfxdrift2 { 0% { transform: translate(-14%, -8%) scale(1) rotate(0deg); } 33% { transform: translate(10%, 6%) scale(1.22) rotate(6deg); } 66% { transform: translate(-6%, 11%) scale(1.1) rotate(-4deg); } 100% { transform: translate(13%, -7%) scale(1.28) rotate(3deg); } }
+  :root[data-ui=v2][data-wfx=galaxy] body::after { animation: wfxspin 75s linear infinite, wfxpulse 5s ease-in-out infinite alternate; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -5312,30 +5316,24 @@ function pr3Show(name, mode, txt, prevTxt, label) {
   if (sndOn()) softTone(2.8); setTimeout(() => confettiBurst(1), 250);
   w.addEventListener("click", e => { if (e.target === w || e.target.closest("[data-pr3]")) { w.classList.remove("on"); setTimeout(() => w.remove(), 260); } });
 }
-// Ein warmer, besonderer Klang: weicher Glockenschlag + Akkord-Fläche, die langsam anschwillt und mit Hall ausklingt
-// (keine aufsteigende Melodie, nichts Hohes). big = Rang-Aufstieg (länger, voller), sonst Bestwert.
-function softTone(len = 2.6, big = false) {
-  const a = audio(); if (!a) return; const t = a.currentTime + .05, L = big ? Math.max(len, 4.8) : Math.max(len, 2.8);
-  const out = a.createGain(), lp = a.createBiquadFilter(), comp = a.createDynamicsCompressor();
-  lp.type = "lowpass"; lp.frequency.value = 2100; lp.Q.value = .3; out.gain.value = big ? .95 : .85; out.connect(lp).connect(comp).connect(a.destination);
-  // Hall (selbst erzeugt)
-  const rv = a.createConvolver(), rl = big ? 3.4 : 2.4, ir = a.createBuffer(2, a.sampleRate * rl, a.sampleRate);
-  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let k = 0; k < d.length; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / d.length, 2.6); }
-  rv.buffer = ir; const wet = a.createGain(); wet.gain.value = .45; rv.connect(wet).connect(out);
-  const send = (node, dry = 1) => { const g = a.createGain(); g.gain.value = dry; node.connect(g).connect(out); node.connect(rv); };
-  // 1) Weicher Glockenschlag (Grundton G3 + leise Obertöne)
-  [[196, .16], [392, .07], [588, .035], [784 * 1.003, .018]].forEach(([f, v]) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .015); g.gain.exponentialRampToValueAtTime(.0003, t + L * .75); o.connect(g); send(g); o.start(t); o.stop(t + L); });
-  // 2) Akkord-Fläche (G-Dur mit None), leicht verstimmt = schwebender Chor-Effekt, schwillt an und klingt lang aus
-  const pad = big ? [98, 196, 246.9, 293.7, 440] : [196, 246.9, 293.7];
-  pad.forEach((f, idx) => [-6, 0, 6].forEach(dt => { const o = a.createOscillator(), fl = a.createBiquadFilter(), g = a.createGain(); o.type = idx === 0 && big ? "sine" : "triangle"; o.frequency.value = f; o.detune.value = dt;
-    fl.type = "lowpass"; fl.frequency.setValueAtTime(500, t); fl.frequency.linearRampToValueAtTime(1500, t + L * .4); fl.frequency.linearRampToValueAtTime(700, t + L);
-    const v = (big ? .03 : .026) / (idx === 0 && big ? 1 : 1.3); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + (big ? .9 : .5)); g.gain.setValueAtTime(v, t + L * .45); g.gain.exponentialRampToValueAtTime(.0003, t + L);
-    o.connect(fl).connect(g); send(g, .8); o.start(t); o.stop(t + L + .1); }));
-  // 3) Sanftes Schimmern (leises Tremolo auf einer mittleren Lage) – nur beim Aufstieg
-  if (big) { const o = a.createOscillator(), g = a.createGain(), lfo = a.createOscillator(), lg = a.createGain(); o.type = "sine"; o.frequency.value = 587.3; lfo.frequency.value = 5.2; lg.gain.value = .012;
-    g.gain.setValueAtTime(0, t + .4); g.gain.linearRampToValueAtTime(.02, t + 1.4); g.gain.exponentialRampToValueAtTime(.0003, t + L); lfo.connect(lg).connect(g.gain); o.connect(g); send(g, .6);
-    [o, lfo].forEach(x => { x.start(t + .4); x.stop(t + L + .1); }); }
+// Ruhiger, warmer Hintergrundklang: nur reine Sinustöne in tiefer/mittlerer Lage, sanft an- und abschwellend,
+// mit weichem Echo statt Rausch-Hall (kein Zischen, nichts Hohes). big = Rang-Aufstieg (länger, voller).
+function softTone(len = 3, big = false) {
+  const a = audio(); if (!a) return; const t = a.currentTime + .05, L = big ? Math.max(len, 5) : Math.max(len, 3.2);
+  const out = a.createGain(), lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1100; lp.Q.value = .2;
+  out.gain.value = big ? .9 : .8; out.connect(lp).connect(a.destination);
+  // weiches Echo (gefilterte Verzögerung) – klingt räumlich, ohne Rauschen
+  const dl = a.createDelay(1), fb = a.createGain(), dlp = a.createBiquadFilter(), wet = a.createGain();
+  dl.delayTime.value = .32; fb.gain.value = .32; dlp.type = "lowpass"; dlp.frequency.value = 700; wet.gain.value = .35;
+  dl.connect(dlp).connect(fb).connect(dl); dlp.connect(wet).connect(out);
+  const voice = (f, v, at, atk, dur, det = 0) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f; o.detune.value = det;
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(v, at + atk); g.gain.setValueAtTime(v, at + dur * .45); g.gain.exponentialRampToValueAtTime(.0002, at + dur);
+    o.connect(g); g.connect(out); g.connect(dl); o.start(at); o.stop(at + dur + .05); };
+  // warmer Akkord (G-Dur, tiefe Lage), leicht schwebend durch minimale Verstimmung
+  const notes = big ? [[98, .05], [146.8, .05], [196, .06], [246.9, .045], [293.7, .04]] : [[146.8, .045], [196, .06], [246.9, .045], [293.7, .035]];
+  notes.forEach(([f, v], k) => { voice(f, v, t + k * .04, big ? 1.1 : .7, L, -4); voice(f, v * .7, t + k * .04, big ? 1.1 : .7, L, 4); });
+  // ganz leiser, runder Anschlag am Anfang (tief, kein Klirren)
+  voice(392, .035, t, .02, big ? 2.2 : 1.6);
 }
 
 // Einstellungen: Pokale ansehen, Animationen testen, Töne
