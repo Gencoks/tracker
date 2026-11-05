@@ -21,6 +21,7 @@
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
     r.dataset.wfx = V2 && wall2 === "grad" && t.wallFx && t.wallGlow ? t.wallFx : "";
     if (V2 && wall2 === "grad" && t.wallGlow) r.style.setProperty("--wall-glow", t.wallGlow); else r.style.removeProperty("--wall-glow");
+    r.style.setProperty("--glass-a", (t.glassA ?? 80) + "%"); r.style.setProperty("--fz", V2 ? (t.fz ?? 100) / 100 : 1);
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
       mode = PAL2[pal2][0]; accent = t.v2acc || PAL2[pal2][1];
@@ -1740,7 +1741,7 @@
   .w3tools span { font-size: 18px; line-height: 1; } .w3tools small { font-size: 8.5px; font-weight: 600; letter-spacing: .04em; }
   .w3blk, .w3start { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
   /* Flüssiges Scrollen: kein Live-Weichzeichner auf scrollenden Kästchen */
-  :root[data-ui=v2].v2-glass :is(.card, .task, .todo, .kpi, .rec2, .w3blk) { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: color-mix(in srgb, var(--surface) 80%, transparent) !important; }
+  :root[data-ui=v2].v2-glass :is(.card, .task, .todo, .kpi, .rec2, .w3blk) { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: color-mix(in srgb, var(--surface) var(--glass-a, 80%), transparent) !important; }
 
   :root[data-ui=v2] .seg { padding-bottom: 12px; }
 
@@ -2123,7 +2124,7 @@
   /* Profilrahmen in den Einstellungen */
   .fr3 .tp-t { padding: 12px 4px 10px; } .fr3 .tp-t.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .fr3-av { display: grid; place-items: center; height: 62px; }
   /* Rang-Hintergründe mit Bewegung */
-  :root.pw-pause body::after { animation-play-state: paused !important; } @media (prefers-reduced-motion: reduce) { body::after { animation: none !important; } }
+ @media (prefers-reduced-motion: reduce) { body::after { animation: none !important; } }
   .wpfx-galaxy, .wpfx-myth { position: relative; overflow: hidden; } .wpfx-galaxy::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12px 10px, #fff, transparent), radial-gradient(1px 1px at 40px 26px, #fff, transparent), radial-gradient(1.4px 1.4px at 26px 40px, #dfe6ff, transparent); background-size: 54px 50px; opacity: .85; }
   /* Erklärungen (einmalig) */
   #tip3 { position: fixed; inset: 0; z-index: 97; display: none; } #tip3.on { display: block; }
@@ -2142,6 +2143,27 @@
   @keyframes wfxdrift { 0% { transform: translate(-3%, -2%) scale(1); } 50% { transform: translate(2%, 1.5%) scale(1.06); } 100% { transform: translate(3%, -1%) scale(1.02); } }
   @keyframes wfxpulse { from { opacity: .68; } to { opacity: 1; } } @keyframes wfxspin { to { transform: rotate(360deg); } }
   .wpfx-galaxy { position: relative; overflow: hidden; } .wpfx-galaxy::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12px 10px, #fff, transparent), radial-gradient(1px 1px at 40px 26px, #fff, transparent), radial-gradient(1.4px 1.4px at 26px 40px, #dfe6ff, transparent); background-size: 54px 50px; opacity: .85; }
+  /* Einstellungen: alle Zeilen als feste Kästchen */
+  :root[data-ui=v2] .v2row { background: color-mix(in srgb, var(--surface) 92%, transparent); }
+  :root[data-ui=v2] .v2row.fb-row { margin-top: 8px; }
+  .v2sl { flex-wrap: wrap; } .v2slw { display: flex; align-items: center; gap: 10px; flex: 1 1 100%; } .v2slw input { flex: 1; accent-color: var(--accent); } .v2slw output { font-size: 13px; font-weight: 700; min-width: 44px; text-align: right; }
+  .v2acc button { position: relative; } .v2acc em { position: absolute; top: -4px; right: -2px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); font-style: normal; font-size: 12px; line-height: 16px; text-align: center; color: var(--muted); }
+  .v2acc-add { display: grid; justify-items: center; gap: 4px; cursor: pointer; position: relative; } .v2acc-add i { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 1.5px dashed var(--muted); font-style: normal; color: var(--accent-text); }
+  .v2acc-add small { font-size: 10.5px; color: var(--muted); } .v2acc-add input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  /* Schriftgröße */
+  :root[data-ui=v2] .app > section, :root[data-ui=v2] #sheetInner { zoom: var(--fz, 1); }
+  /* Leuchten deutlich sichtbar und auch im Modus „Ausgewogen“ (nur „Akku sparen“ hält an) */
+  :root[data-ui=v2][data-wfx=glow] body::after { inset: -18%; animation: wfxdrift 11s ease-in-out infinite alternate, wfxpulse 5s ease-in-out infinite alternate; }
+  @keyframes wfxdrift { 0% { transform: translate(-7%, -4%) scale(1); } 50% { transform: translate(4%, 3%) scale(1.12); } 100% { transform: translate(7%, -2%) scale(1.04); } }
+  @keyframes wfxpulse { from { opacity: .55; } to { opacity: 1; } }
+  :root.pw-pause[data-wfx][data-ui] body::after { animation-play-state: running !important; }
+  :root.pw-saver.pw-saver[data-wfx][data-ui] body::after { animation-play-state: paused !important; }
+  /* Gesperrte Pokale & Rahmen: Schloss auf dem Bild (wie bei den Hintergründen) */
+  .tp-t.lock { opacity: 1; } .tp-ic { position: relative; display: grid; place-items: center; }
+  .tp-t.lock .tp-ic > :not(.tp-lock) { filter: grayscale(.85) brightness(.55); opacity: .7; }
+  .tp-lock { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-size: 20px; line-height: 1; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+  .tp-t.lock b, .tp-t.lock small { opacity: .6; }
+
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
 </head>
@@ -2412,8 +2434,7 @@ onAuthStateChanged(auth, async user => {
     S.pushOn = !!ud.push?.enabled && (ud.push?.tokens || []).length > 0;
     S.rankSeen = typeof ud.rankSeen === "number" ? ud.rankSeen : null; S.rankBest = typeof ud.rankBest === "number" ? ud.rankBest : null;
     S.dispName = ud.dispName || S.name; S.share = ud.shareStats === true; S.photo = ud.photo || ""; S.frame = typeof ud.frame === "number" ? ud.frame : 0;
-    if (u.exists() && ud.tester === undefined) setDoc(userRef(), { tester: true }, { merge: true }).catch(() => {});   // bestehende Konten behalten den Testmodus
-    COSM_TEST_UNLOCK = u.exists() ? ud.tester !== false : false;
+    COSM_TEST_UNLOCK = false;
     S.needOnb = !u.exists() || ud.onboarded === false;
     await ensureFriendCode(ud);
     if (Array.isArray(ud.remindTimes)) REMIND_TIMES = ud.remindTimes;
@@ -3752,29 +3773,32 @@ function v2PrefsHTML(th) {
   return `<h2 style="margin-top:4px">Farben</h2>
     <div class="v2pals">${V2_PALS.map(([k, n, cols]) => `<button class="${pal === k ? "on" : ""}" data-v2a="pal" data-v="${k}"><div class="sw2">${cols.map(c => `<i style="background:${c}"></i>`).join("")}</div><small>${n}</small></button>`).join("")}</div>
     <h2>Akzentfarbe</h2>
-    <div class="v2acc">${[["", "Palette"], ["#ead7dd", "Rosé"], ["#f5f5f2", "Weiß"], ["#FFC400", "Gold"], ["#ff8a3d", "Orange"], ["#ff5c7a", "Koralle"], ["#c04dff", "Violett"], ["#6c8cff", "Blau"], ["#4cc9f0", "Cyan"], ["#5fd38d", "Grün"], ["#bcd6c3", "Salbei"], ["#b9b9c2", "Grau"]].map(([c, n]) => `<button class="${(th.v2acc || "") === c ? "on" : ""}" data-v2a="acc" data-v="${c}" title="${n}"><i style="background:${c || "conic-gradient(from 0deg, var(--text) 0 50%, var(--bg) 0)"}"></i><small>${n}</small></button>`).join("")}</div>
+    <div class="v2acc">${[["", "Palette"], ["#ead7dd", "Rosé"], ["#f5f5f2", "Weiß"], ["#FFC400", "Gold"], ["#ff8a3d", "Orange"], ["#ff5c7a", "Koralle"], ["#c04dff", "Violett"], ["#6c8cff", "Blau"], ["#4cc9f0", "Cyan"], ["#5fd38d", "Grün"], ["#bcd6c3", "Salbei"], ["#b9b9c2", "Grau"], ...(th.accSaved || []).map(c => [c, "Eigene", 1])].map(([c, n, own]) => `<button class="${(th.v2acc || "") === c ? "on" : ""}" data-v2a="acc" data-v="${c}" title="${n}"><i style="background:${c || "conic-gradient(from 0deg, var(--text) 0 50%, var(--bg) 0)"}"></i><small>${n}</small>${own ? `<em data-accdel="${c}">×</em>` : ""}</button>`).join("")}
+      <label class="v2acc-add" title="Eigene Farbe"><i>＋</i><small>Eigene</small><input type="color" id="v2accPick" value="${th.v2acc || "#ead7dd"}"></label></div>
     <h2>Schrift</h2>
+    <div class="v2row v2sl" style="margin:0 0 10px"><div><b>Schriftgröße</b><small>Texte und Kästchen etwas kleiner oder größer</small></div><div class="v2slw"><input type="range" min="85" max="120" step="5" value="${th.fz ?? 100}" data-v2sl="fz"><output>${th.fz ?? 100} %</output></div></div>
     <div class="v2fonts">${V2_FONTS.map(([k, n, fam, css]) => `<button class="${font === k ? "on" : ""}" data-v2a="font" data-v="${k}"><b style="font-family:${css}">Aa Plan.</b><small>${n} · ${fam}</small></button>`).join("")}</div>
     <h2>Hintergrund</h2>
     <div class="v2walls">${V2_WALLS.map(([k, n]) => `<button class="${wall === k ? "on" : ""}" data-v2a="wall" data-v="${k}"><div class="wp" data-wp="${k}">${k === "custom" ? "📷" : ""}</div>${n}</button>`).join("")}</div>
     <h2>Rang-Hintergründe</h2><p class="muted" style="font-size:12.5px;margin:-4px 0 10px">Jeder Rang schaltet einen frei – sie leuchten und bewegen sich ganz leicht. Ab GOD-LEVEL gibt es Galaxien.</p>
     <div class="v2walls wl-grid" data-wctx="prefs">${fxWallTiles(th)}${rankWallTiles(th)}</div>
     <input type="file" accept="image/*" id="v2wallIn" hidden>
-    <div class="v2row"><div><b>Glas-Effekt</b><small>Kästchen werden milchig durchsichtig und verwischen den Hintergrund</small></div><button class="v2tog ${th.glass2 !== false ? "on" : ""}" data-v2a="glass"></button></div>
-    <div class="v2row"><div><b>Tierwelt unten anzeigen</b><small>Die Szenen aus Version 1 – Auswahl der Welt bleibt gleich</small></div><button class="v2tog ${th.v2meadow ? "on" : ""}" data-v2a="meadow"></button></div>
+    <div class="v2row"><div><b>Glas-Effekt</b><small>Kästchen lassen den Hintergrund durchscheinen</small></div><button class="v2tog ${th.glass2 !== false ? "on" : ""}" data-v2a="glass"></button></div>
+    ${th.glass2 !== false ? `<div class="v2row v2sl"><div><b>Durchsichtigkeit</b><small>Wie stark der Hintergrund durch die Kästchen scheint</small></div><div class="v2slw"><input type="range" min="0" max="60" step="5" value="${100 - (th.glassA ?? 80)}" data-v2sl="glassA"><output>${100 - (th.glassA ?? 80)} %</output></div></div>` : ""}
+
     ${trophyPrefsHTML(th)}${framePrefsHTML()}
     <h2>Support</h2><button class="v2row fb-row" data-support="1"><div><b>💬 Wünsche & Verbesserungen</b><small>Design-Ideen, neue Funktionen oder Fehler direkt an den Entwickler schicken</small></div><span class="fb-go">›</span></button>
     <button class="v2row fb-row" data-tipsreset="1"><div><b>ℹ️ Erklärungen erneut zeigen</b><small>Die kurzen Hinweise beim ersten Besuch jeder Seite noch einmal anzeigen</small></div><span class="fb-go">›</span></button>`;
 }
 // Vorschaubilder der Wallpaper in den Kacheln (nutzen dieselben Bilder wie die App)
 function v2WallPreviews() {
-  const r = document.documentElement, keep = r.dataset.wall;
+  const r = document.documentElement, keep = r.dataset.wall, inl = r.style.getPropertyValue("--wall-img"); r.style.removeProperty("--wall-img");
   document.querySelectorAll("[data-wp]").forEach(el => {
     const k = el.dataset.wp; if (k === "none") return;
     if (k === "custom") { let img = ""; try { img = localStorage.getItem("tracker-wall") || ""; } catch {} if (img) { el.style.setProperty("--wp", `url(${img})`); el.textContent = ""; } return; }
     r.dataset.wall = k; el.style.setProperty("--wp", getComputedStyle(r).getPropertyValue("--wall-img"));
   });
-  r.dataset.wall = keep;
+  r.dataset.wall = keep; if (inl) r.style.setProperty("--wall-img", inl);
 }
 async function v2WallUpload(file) {
   const img = new Image(), url = URL.createObjectURL(file);
@@ -3811,6 +3835,12 @@ async function appLoad() {
   try { const d = await getDoc(doc(db, "config", "app")); APP.cfg = d.exists() ? d.data() : {}; } catch { APP.cfg = {}; }
   try { const a = await getDoc(doc(db, "admins", S.uid)); APP.admin = a.exists(); } catch { APP.admin = false; }
   if (typeof WL !== "undefined") WL.admin = APP.admin; APP.loaded = true;
+  // Ohne Testmodus: nur was mit dem echten höchsten Rang freigeschaltet ist
+  const chk = setInterval(() => { if (S.rankBest == null) return; clearInterval(chk); try { const th = curTheme();
+    if (th.wall === "grad") { const fx = th.wallKey && FX_WALLS.find(w => w.k === th.wallKey), u = th.wallGrad != null && UNLOCKS.find(x => x.k === "g" + th.wallGrad);
+      if ((fx && !fxOk(fx)) || (u && !rankReached(u.tier))) setTheme({ wall: "korn", wallKey: null, wallGrad: null, wallFx: null, wallGlow: null, wallCss: null }); }
+    if (typeof S.frame === "number" && !myFrameOk(S.frame)) { S.frame = 0; setDoc(userRef(), { frame: 0 }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); }
+  } catch (e) { console.log(e); } }, 1500);
   // Version 1 ist (noch) nur für Admins: alle anderen landen auf Version 3.1
   if (curTheme().ui === "v1" && !APP.admin && !APP.cfg.v1Open) { setTheme({ ui: "v3" }); renderAll(); setTab("start"); toast("Version 1 ist jetzt die Standardversion ✓"); }
 }
@@ -3821,6 +3851,15 @@ async function appSetCfg(patch) {
 { const go = setInterval(() => { if (S.uid) { clearInterval(go); appLoad(); } }, 500); }
 
 document.addEventListener("click", e => { if (e.target.closest("[data-tipsreset]")) { tipsReset(); closeSheet(); } });
+
+// Schieberegler (Durchsichtigkeit, Schriftgröße) & eigene Akzentfarben
+document.addEventListener("input", e => { const r = e.target.closest?.("[data-v2sl]"); if (!r) return; const k = r.dataset.v2sl, v = +r.value;
+  r.nextElementSibling.textContent = v + " %"; const R = document.documentElement; if (k === "glassA") R.style.setProperty("--glass-a", (100 - v) + "%"); else if (k === "fz") R.style.setProperty("--fz", v / 100); });
+document.addEventListener("change", e => { const r = e.target.closest?.("[data-v2sl]"); if (!r) return; const v = +r.value; if (r.dataset.v2sl === "glassA") setTheme({ glassA: 100 - v }); else setTheme({ fz: v }); });
+document.addEventListener("change", e => { if (e.target.id !== "v2accPick") return; const c = e.target.value, th = curTheme();
+  setTheme({ v2acc: c, accSaved: [c, ...(th.accSaved || []).filter(x => x !== c)].slice(0, 8) }); renderStart(); v2Reprefs(); toast("Eigene Farbe gespeichert ✓"); });
+document.addEventListener("click", e => { const d = e.target.closest("[data-accdel]"); if (!d) return; e.stopPropagation(); e.preventDefault(); const th = curTheme(), c = d.dataset.accdel;
+  setTheme({ accSaved: (th.accSaved || []).filter(x => x !== c), ...(th.v2acc === c ? { v2acc: null } : {}) }); renderStart(); v2Reprefs(); }, true);
 
 /* ===================== SPIELWIESE (Training, Version 2) =====================
    Mini-Fenster nach Wahl: Klick-Zähler, Stoppuhr, Timer, Intervall („X pro Minute“).
@@ -5270,34 +5309,48 @@ function pr3Show(name, mode, txt, prevTxt, label) {
     <button class="btn primary block" data-pr3="ok">Weiter so</button></div>`;
   document.body.appendChild(w); requestAnimationFrame(() => w.classList.add("on"));
   if (navigator.vibrate) try { navigator.vibrate([30, 40, 60]); } catch {}
-  if (sndOn()) softTone(.9); setTimeout(() => confettiBurst(1), 250);
+  if (sndOn()) softTone(2.8); setTimeout(() => confettiBurst(1), 250);
   w.addEventListener("click", e => { if (e.target === w || e.target.closest("[data-pr3]")) { w.classList.remove("on"); setTimeout(() => w.remove(), 260); } });
 }
-// Ein warmer, tiefer Akkord-Ton (keine aufsteigende Melodie, nichts Schrilles) – für Bestwert und Rang-Aufstieg
-function softTone(len = 1.2, vol = 1) {
-  const a = audio(); if (!a) return; const t = a.currentTime + .04, out = a.createGain(), lp = a.createBiquadFilter();
-  lp.type = "lowpass"; lp.frequency.value = 1800; out.gain.value = .9 * vol; out.connect(lp).connect(a.destination);
-  // G-Dur-Akkord in mittlerer Lage + weicher Grundton – wie eine sanfte Glocke
-  [[196, .09, "triangle"], [293.7, .07, "sine"], [392, .07, "sine"], [493.9, .045, "sine"], [587.3, .03, "sine"]].forEach(([f, v, type]) => {
-    const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .03); g.gain.exponentialRampToValueAtTime(v * .35, t + .25); g.gain.exponentialRampToValueAtTime(.0004, t + len);
-    o.connect(g).connect(out); o.start(t); o.stop(t + len + .05); });
+// Ein warmer, besonderer Klang: weicher Glockenschlag + Akkord-Fläche, die langsam anschwillt und mit Hall ausklingt
+// (keine aufsteigende Melodie, nichts Hohes). big = Rang-Aufstieg (länger, voller), sonst Bestwert.
+function softTone(len = 2.6, big = false) {
+  const a = audio(); if (!a) return; const t = a.currentTime + .05, L = big ? Math.max(len, 4.8) : Math.max(len, 2.8);
+  const out = a.createGain(), lp = a.createBiquadFilter(), comp = a.createDynamicsCompressor();
+  lp.type = "lowpass"; lp.frequency.value = 2100; lp.Q.value = .3; out.gain.value = big ? .95 : .85; out.connect(lp).connect(comp).connect(a.destination);
+  // Hall (selbst erzeugt)
+  const rv = a.createConvolver(), rl = big ? 3.4 : 2.4, ir = a.createBuffer(2, a.sampleRate * rl, a.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let k = 0; k < d.length; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / d.length, 2.6); }
+  rv.buffer = ir; const wet = a.createGain(); wet.gain.value = .45; rv.connect(wet).connect(out);
+  const send = (node, dry = 1) => { const g = a.createGain(); g.gain.value = dry; node.connect(g).connect(out); node.connect(rv); };
+  // 1) Weicher Glockenschlag (Grundton G3 + leise Obertöne)
+  [[196, .16], [392, .07], [588, .035], [784 * 1.003, .018]].forEach(([f, v]) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .015); g.gain.exponentialRampToValueAtTime(.0003, t + L * .75); o.connect(g); send(g); o.start(t); o.stop(t + L); });
+  // 2) Akkord-Fläche (G-Dur mit None), leicht verstimmt = schwebender Chor-Effekt, schwillt an und klingt lang aus
+  const pad = big ? [98, 196, 246.9, 293.7, 440] : [196, 246.9, 293.7];
+  pad.forEach((f, idx) => [-6, 0, 6].forEach(dt => { const o = a.createOscillator(), fl = a.createBiquadFilter(), g = a.createGain(); o.type = idx === 0 && big ? "sine" : "triangle"; o.frequency.value = f; o.detune.value = dt;
+    fl.type = "lowpass"; fl.frequency.setValueAtTime(500, t); fl.frequency.linearRampToValueAtTime(1500, t + L * .4); fl.frequency.linearRampToValueAtTime(700, t + L);
+    const v = (big ? .03 : .026) / (idx === 0 && big ? 1 : 1.3); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + (big ? .9 : .5)); g.gain.setValueAtTime(v, t + L * .45); g.gain.exponentialRampToValueAtTime(.0003, t + L);
+    o.connect(fl).connect(g); send(g, .8); o.start(t); o.stop(t + L + .1); }));
+  // 3) Sanftes Schimmern (leises Tremolo auf einer mittleren Lage) – nur beim Aufstieg
+  if (big) { const o = a.createOscillator(), g = a.createGain(), lfo = a.createOscillator(), lg = a.createGain(); o.type = "sine"; o.frequency.value = 587.3; lfo.frequency.value = 5.2; lg.gain.value = .012;
+    g.gain.setValueAtTime(0, t + .4); g.gain.linearRampToValueAtTime(.02, t + 1.4); g.gain.exponentialRampToValueAtTime(.0003, t + L); lfo.connect(lg).connect(g.gain); o.connect(g); send(g, .6);
+    [o, lfo].forEach(x => { x.start(t + .4); x.stop(t + L + .1); }); }
 }
 
 // Einstellungen: Pokale ansehen, Animationen testen, Töne
 function trophyPrefsHTML(th) {
   return `<h2>Pokale & Animationen</h2>
     <div class="v2row"><div><b>Töne bei Animationen</b><small>Ein warmer, ruhiger Ton beim Rang-Aufstieg und bei neuen Bestwerten</small></div><button class="v2tog ${th.snd !== false ? "on" : ""}" data-v2a="snd"></button></div>
-    <div class="tp-acts"><button class="btn" data-action="rankuptest">Rang-Aufstieg testen</button><button class="btn" data-pr3test="1">Bestwert testen</button></div>
-    <div class="tp-grid">${RANKS.map((r, i) => { const got = (S.rankBest ?? 0) >= i || COSM_TEST_UNLOCK;
-      return `<button class="tp-t ${got ? "" : "lock"}" data-action="${got ? "rutest" : ""}" data-t="${i}" ${got ? "" : `data-tplock="${i}"`}><span>${rIco(r)}</span><b>${r.n}</b><small>${got ? "Pokal ansehen" : "🔒 noch nicht erreicht"}</small></button>`; }).join("")}</div>`;
+    <div class="tp-grid">${RANKS.map((r, i) => { const got = (S.rankBest ?? 0) >= i;
+      return `<button class="tp-t ${got ? "" : "lock"}" data-action="${got ? "rutest" : ""}" data-t="${i}" ${got ? "" : `data-tplock="${i}"`}><span class="tp-ic"><span>${rIco(r)}</span>${got ? "" : `<i class="tp-lock">🔒</i>`}</span><b>${r.n}</b><small>${got ? "Pokal ansehen" : "noch gesperrt"}</small></button>`; }).join("")}</div>`;
 }
 // Profilrahmen direkt hier wählen (gleiche wie unter Leistung → Freunde)
 function framePrefsHTML() {
   const me = myProfile();
   return `<h2>Profilrahmen</h2><p class="muted" style="font-size:12.5px;margin:-4px 0 10px">Jeder Rang schaltet einen Rahmen frei – Freunde sehen ihn in der Rangliste.</p>
     <div class="tp-grid fr3">${RANKS.map((r, i) => { const ok = myFrameOk(i);
-      return `<button class="tp-t ${ok ? "" : "lock"} ${me.frame === i ? "on" : ""}" data-fr3="${i}"><span class="fr3-av">${pAvatar({ ...me, frame: i }, 46)}</span><b>${FRAME_N[i]}</b><small>${me.frame === i ? "✓ aktiv" : ok ? "Auswählen" : "🔒 " + r.n}</small></button>`; }).join("")}</div>`;
+      return `<button class="tp-t ${ok ? "" : "lock"} ${me.frame === i ? "on" : ""}" data-fr3="${i}"><span class="fr3-av tp-ic">${pAvatar({ ...me, frame: i }, 46)}${ok ? "" : `<i class="tp-lock">🔒</i>`}</span><b>${FRAME_N[i]}</b><small>${me.frame === i ? "✓ aktiv" : ok ? "Auswählen" : "noch gesperrt"}</small></button>`; }).join("")}</div>`;
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-fr3]"); if (!b) return; const t = +b.dataset.fr3;
   if (!myFrameOk(t)) { toast(`🔒 Schaltest du mit ${RANKS[t].n} frei`); return; }
@@ -7501,7 +7554,7 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
   document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
-  if (isV2()) { if (sndOn()) setTimeout(() => softTone(2.2), 600); } else partySound(tier); setTimeout(() => confettiBurst(2), 450);
+  if (isV2()) { if (sndOn()) setTimeout(() => softTone(5, true), 500); } else partySound(tier); setTimeout(() => confettiBurst(2), 450);
   setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 650);
   if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 650); } catch {}
   return wrap;
@@ -9268,8 +9321,8 @@ function openPrefs() {
     <div class="note" style="margin:8px 0 0">Ausgewogen: Hintergrund und Tiere bewegen sich, die Karten-Deko steht still, und nach 2 Minuten ohne Berührung hält alles an, bis du wieder tippst. Bei unter 20 % Akku (ohne Ladekabel) wird automatisch gespart. Im Hintergrund oder bei ausgeschaltetem Bildschirm läuft nichts.${PWR.low ? " <b>Gerade aktiv: Akku fast leer → Sparmodus.</b>" : ""}</div>
     <h2>Erinnerung</h2>
     <button class="btn block" style="justify-content:space-between" data-action="settings"><span>${ICON.bell.replace("<svg", '<svg width="18" height="18"')} Erinnerungen</span><b>${remindTxt()}</b></button>
-    <h2>Tägliche Aufgaben</h2>
-    <button class="btn block" data-action="resettasks">Auf Standard-Aufgaben zurücksetzen</button>
+    ${isV2() ? "" : `<h2>Tägliche Aufgaben</h2>
+    <button class="btn block" data-action="resettasks">Auf Standard-Aufgaben zurücksetzen</button>`}
     <h2>Konto</h2>
     <button class="btn block" data-action="logout">${ICON.out.replace("<svg", '<svg width="18" height="18"')} Abmelden</button>
     <p class="muted" style="font-size:12px;text-align:center;margin:18px 0 4px" data-action="testtap">Tracker${S.code ? ` · Freundescode ${S.code}` : ""}</p>`;
@@ -9755,7 +9808,7 @@ document.addEventListener("click", async e => {
   else if (a === "onbback") { S.onb.step--; onbShow(); }
   else if (a === "onbnext") { if (S.onb.step === 0) S.onb.name = ($("#onbName")?.value || "").trim(); if (S.onb.step < 2) { S.onb.step++; onbShow(); } else onbFinish(); }
   else if (a === "testtap") { S.tapN = (S.tapN || 0) + 1; clearTimeout(S.tapT); S.tapT = setTimeout(() => S.tapN = 0, 1500);
-    if (S.tapN >= 7) { S.tapN = 0; COSM_TEST_UNLOCK = !COSM_TEST_UNLOCK; setDoc(userRef(), { tester: COSM_TEST_UNLOCK }, { merge: true }).catch(() => {}); toast(COSM_TEST_UNLOCK ? "🧪 Testmodus an – alles freigeschaltet" : "Testmodus aus"); window.applyTheme && window.applyTheme(curTheme()); } }
+    if (false && S.tapN >= 7) { S.tapN = 0; COSM_TEST_UNLOCK = !COSM_TEST_UNLOCK; setDoc(userRef(), { tester: COSM_TEST_UNLOCK }, { merge: true }).catch(() => {}); toast(COSM_TEST_UNLOCK ? "🧪 Testmodus an – alles freigeschaltet" : "Testmodus aus"); window.applyTheme && window.applyTheme(curTheme()); } }
   else if (a === "pview") { S.perfView = el.dataset.v; renderPerf(); window.scrollTo(0, 0); }
   else if (a === "ptype") { S.perfType = el.dataset.v; renderPerf(); }
   else if (a === "pweek") { S.perfWeek = Math.min(0, (S.perfWeek || 0) + +el.dataset.v); renderPerf(); }
