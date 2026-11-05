@@ -34,7 +34,7 @@ async function handleUser(userDoc) {
   const day = (await ref.collection("days").doc(now.date).get()).data() || {};
   const done = day.done || {};
   const openTasks = tasks.filter(t => !done[t.key])
-    .map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, kind: t.kind === "weight" ? "weight" : "task" }));
+    .map(t => ({ id: "task-" + t.key, key: t.key, t: t.t, kind: t.kind === "weight" ? "weight" : t.kind === "steps" ? "steps" : "task" }));
   const todoSnap = await ref.collection("todos").where("done", "==", false).get();
   const dueTodos = todoSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(t => !t.due || t.due <= now.date);
   const openTodos = dueTodos.map(t => ({ id: "todo-" + t.id, todoId: t.id, t: t.text, kind: "todo" }));
@@ -84,6 +84,38 @@ async function handleUser(userDoc) {
   if (bad.length) await ref.set({ push: { tokens: tokens.filter(t => !bad.includes(t)) } }, { merge: true });
   console.log(`${userDoc.id}: ${items.length} Erinnerung(en) geschickt`);
 }
+
+// ---------- Support: neue Wünsche per E-Mail + Push an alle Admins ----------
+// Secrets (optional für die E-Mail): GMAIL_USER, GMAIL_APP_PASSWORD, FEEDBACK_TO (Empfänger, sonst GMAIL_USER)
+async function handleFeedback() {
+  const snap = await db.collection("feedback").where("mailed", "==", false).limit(20).get();
+  if (snap.empty) return;
+  let mailer = null;
+  if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+    try { const nm = (await import("nodemailer")).default; mailer = nm.createTransport({ service: "gmail", auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD } }); }
+    catch (e) { console.log("nodemailer nicht verfügbar:", e.message); }
+  }
+  const admins = await db.collection("admins").get(), tokens = [];
+  for (const a of admins.docs) { const u = (await db.collection("users").doc(a.id).get()).data(); (u?.push?.tokens || []).forEach(t => tokens.push(t)); }
+  const CAT = { design: "Design", idee: "Neue Funktion", fehler: "Fehler", sonst: "Sonstiges" };
+  for (const d of snap.docs) {
+    const f = d.data(), cat = CAT[f.cat] || "Sonstiges", who = f.name || "Jemand";
+    let mailed = !mailer;   // ohne E-Mail-Zugang nur Push, damit nichts doppelt kommt
+    if (mailer) {
+      try {
+        await mailer.sendMail({ from: `"Tracker-App" <${process.env.GMAIL_USER}>`, to: process.env.FEEDBACK_TO || process.env.GMAIL_USER,
+          subject: `💡 Neuer Wunsch (${cat}) von ${who}`,
+          text: `${who} hat über die Tracker-App geschrieben:\n\nKategorie: ${cat}\n\n${f.text}\n\n—\nGesendet: ${new Date(f.at || Date.now()).toLocaleString("de-DE", { timeZone: "Europe/Berlin" })}\nAlle Nachrichten: App → Einstellungen → Support → Postfach` });
+        mailed = true;
+      } catch (e) { console.log("E-Mail fehlgeschlagen:", e.message); }
+    }
+    const payload = JSON.stringify({ msg: { title: `💡 Neuer Wunsch von ${who}`, body: `${cat}: ${String(f.text || "").slice(0, 140)}`, tag: "fb-" + d.id, open: "inbox" } });
+    if (!f.pushed) for (const token of tokens) { try { await messaging.send({ token, data: { payload }, webpush: { headers: { Urgency: "high", TTL: "86400" } } }); } catch (e) { console.log("Push an Admin fehlgeschlagen:", e.code); } }
+    await d.ref.update({ pushed: true, ...(mailed ? { mailed: true } : {}) });
+  }
+  console.log(`Support: ${snap.size} neue Nachricht(en) weitergeleitet`);
+}
+try { await handleFeedback(); } catch (e) { console.error("Support:", e); }
 
 const users = await db.collection("users").where("push.enabled", "==", true).get();
 for (const d of users.docs) {
