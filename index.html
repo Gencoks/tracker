@@ -17,7 +17,7 @@
     var mode = t.mode || "dark", accent = t.accent || "#FFC400", r = document.documentElement;
     // ===== Version 2 („Minimal“): eigene Paletten, Schrift, Wallpaper – alle Daten bleiben gleich =====
     var V3 = t.ui !== "v1", V2 = V3, PAL2 = { graphit: ["dark", "#f5f5f2", "#111111"], papier: ["light", "#111111", "#f5f5f2"], rose: ["dark", "#ead7dd", "#0f0e10"], sand: ["light", "#29241f", "#eee8df"], salbei: ["dark", "#bcd6c3", "#0f1311"], nacht: ["dark", "#aab8ff", "#0b0d14"] };
-    var pal2 = PAL2[t.pal] ? t.pal : (V3 ? "rose" : "graphit"), wall2 = ["fels", "nebel", "korn", "custom"].indexOf(t.wall) >= 0 ? t.wall : "korn";
+    var pal2 = PAL2[t.pal] ? t.pal : (V3 ? "rose" : "graphit"), wall2 = ["fels", "nebel", "korn", "custom", "grad"].indexOf(t.wall) >= 0 ? t.wall : "korn";
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
@@ -27,6 +27,7 @@
       if (!fl) { fl = document.createElement("link"); fl.id = "v2font"; fl.rel = "stylesheet"; document.head.appendChild(fl); }
       if (fl.href !== want) fl.href = want;
       if (wall2 === "custom") { var wimg = ""; try { wimg = localStorage.getItem("tracker-wall") || ""; } catch (e) {} if (wimg) r.style.setProperty("--wall-img", "url(" + wimg + ")"); else r.style.removeProperty("--wall-img"); }
+      else if (wall2 === "grad" && t.wallCss) r.style.setProperty("--wall-img", t.wallCss);
       else r.style.removeProperty("--wall-img");
     } else r.style.removeProperty("--wall-img");
 
@@ -2090,6 +2091,28 @@
   .f3ai-c { width: 26px; height: 26px; flex: none; border-radius: 8px; border: 2px solid var(--accent); background: transparent; color: var(--accent-ink); display: grid; place-items: center; padding: 0; } .f3ai-it:not(.off) .f3ai-c { background: var(--accent); } .f3ai-c svg { width: 16px; height: 16px; }
   .f3ai-it span { flex: 1; min-width: 0; display: grid; } .f3ai-it b { font-size: 14px; } .f3ai-it small { color: var(--muted); font-size: 11px; }
   .f3ai-it label { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 12px; } .f3ai-it input { width: 54px; padding: 7px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: 14px; text-align: right; }
+  .f3acts { grid-template-columns: repeat(3, minmax(0, 1fr)); } .f3acts button { padding: 14px 6px; font-size: 12.5px; }
+  .f3acts button:first-child { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  /* Bestwert-Animation (ohne Pokal) */
+  #pr3 { position: fixed; inset: 0; z-index: 96; display: grid; place-items: center; padding: 24px; background: rgba(0,0,0,0); transition: background .25s; }
+  #pr3.on { background: rgba(0,0,0,.62); }
+  .pr3-card { width: min(340px, 100%); text-align: center; padding: 26px 22px 20px; border-radius: 28px; background: color-mix(in srgb, var(--surface) 94%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border)); transform: translateY(24px) scale(.94); opacity: 0; transition: transform .45s cubic-bezier(.2,1.3,.4,1), opacity .25s; }
+  #pr3.on .pr3-card { transform: none; opacity: 1; }
+  .pr3-ring { position: relative; width: 108px; height: 108px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center; color: var(--accent-ink); background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 70%, #fff), var(--accent)); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 16%, transparent), 0 0 40px color-mix(in srgb, var(--accent) 45%, transparent); }
+  .pr3-ring svg { width: 50px; height: 50px; position: relative; z-index: 1; }
+  .pr3-ring i { position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0; animation: pr3wave 2s ease-out infinite; } .pr3-ring i:nth-child(2) { animation-delay: .6s; } .pr3-ring i:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes pr3wave { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.7); opacity: 0; } }
+  .pr3-k { display: block; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-text); font-weight: 700; }
+  .pr3-n { display: block; font-size: 20px; margin-top: 6px; } .pr3-v { font-size: 28px; font-weight: 800; margin: 6px 0 2px; font-family: var(--fh, inherit); } .pr3-p { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .pr3-card .btn { margin-top: 12px; }
+  /* Pokale in den Einstellungen */
+  .tp-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .tp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tp-t { display: grid; justify-items: center; gap: 2px; padding: 12px 6px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-align: center; }
+  .tp-t span { font-size: 26px; line-height: 1.2; } .tp-t b { font-size: 13px; } .tp-t small { font-size: 10.5px; color: var(--muted); } .tp-t.lock { opacity: .5; }
+  /* Freunde: Fortschritt zum nächsten Rang */
+  .fr-bar { display: block; height: 4px; border-radius: 4px; background: color-mix(in srgb, var(--text) 10%, transparent); margin-top: 6px; overflow: hidden; max-width: 180px; } .fr-bar b { display: block; height: 100%; background: var(--rc); border-radius: 4px; }
+  .fr-nx { display: block; font-size: 11px !important; color: var(--muted); margin-top: 3px; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3339,18 +3362,20 @@ function rankState() {
   const all = S.allWo || [], woByDate = Object.fromEntries(all.map(w => [w.date, w]));
   const tk = todayKey();
   const firsts = [Object.keys(S.days).filter(k => (S.days[k]?.count || 0) > 0).sort()[0], all.find(w => hasContent(w))?.date].filter(Boolean).sort();
-  let rp = 0, peak = 0; const hist = [];
+  let rp = 0, peak = 0, cur = 0; const hist = [];
   if (firsts.length) {
     for (let d = fromKey(firsts[0]); keyOf(d) <= tk; d = addDays(d, 1)) {
-      const k = keyOf(d), tier = rankOf(rp), g = dayGain(k, woByDate);
+      const k = keyOf(d), tier = cur, g = dayGain(k, woByDate);
       rp += g.total;
       if (k < tk) rp = Math.max(0, rp - RANKS[tier].cost);   // heutige Kosten erst um Mitternacht
-      peak = Math.max(peak, rankOf(rp));
-      hist.push({ x: k, y: rp });
+      while (RANKS[cur + 1] && rp >= RANKS[cur + 1].min) cur++;                                  // Aufstieg sofort
+      while (cur > 0 && rp < RANKS[cur].min - RANKS[cur].cost) cur--;                             // Abstieg erst unterhalb des Puffers
+      peak = Math.max(peak, cur);
+      hist.push({ x: k, y: rp, t: cur });
     }
   }
-  const tier = rankOf(rp), today = dayGain(tk, woByDate);
-  return { rp, tier, peak, hist, today, cost: RANKS[tier].cost, next: RANKS[tier + 1] || null };
+  const tier = cur, today = dayGain(tk, woByDate);
+  return { rp, tier, peak, hist, today, cost: RANKS[tier].cost, next: RANKS[tier + 1] || null, floor: tier > 0 ? RANKS[tier].min - RANKS[tier].cost : 0 };
 }
 // Auf-/Abstieg erkennen und einmal melden
 function checkRank() {
@@ -3452,7 +3477,8 @@ function friendsCard() {
     <h2>Rangliste unter Freunden</h2>
     <div class="card fr-list">${board.map((p, i) => { const r = RANKS[p.tier || 0];
       return `<div class="fr-item ${p.me ? "me" : ""}"><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${pAvatar(p, 42)}
-        <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small></span>
+        <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small>${isV2() && !(p.private && !p.me) ? (() => { const nx = RANKS[(p.tier || 0) + 1], pc = nx ? Math.max(0, Math.min(100, ((p.rp || 0) - r.min) / (nx.min - r.min) * 100)) : 100;
+          return `<i class="fr-bar" style="--rc:${r.c}"><b style="width:${pc}%"></b></i><small class="fr-nx">${nx ? `noch ${fmtN(Math.max(0, nx.min - (p.rp || 0)), 0)} RP bis ${nx.n}` : "Höchster Rang"}</small>`; })() : ""}</span>
         ${p.me ? "" : `<button class="mini ${FR.rmArm === p.uid ? "warn" : ""}" data-action="frrm" data-uid="${p.uid}" title="Entfernen">${FR.rmArm === p.uid ? "Sicher?" : "⋯"}</button>`}</div>`; }).join("")}
       ${fs.length ? "" : `<div class="empty" style="padding:14px 6px">Noch keine Freunde. Teile deinen Code – sobald jemand ihn eingibt, seht ihr euch hier und in euren Erfolgen.</div>`}</div>
     ${out.length ? `<h2>Gesendet</h2><div class="card fr-list">${out.map(f => `<div class="fr-item">${avatar(nm(f), "var(--muted)")}<span class="fr-n"><b>${esc(nm(f))}</b><small>wartet auf Bestätigung</small></span><button class="mini" data-action="frdel" data-id="${f.id}">Zurückziehen</button></div>`).join("")}</div>` : ""}
@@ -3686,11 +3712,10 @@ function renderTrain() {
 function uiSwitchHTML(th) {
   const v = th.ui === "v1" ? "v1" : "v3", adm = !!APP.admin, open1 = !!APP.cfg.v1Open, can1 = adm || open1;
   return `<div class="uiver">
-    <button class="${v === "v3" ? "on" : ""}" data-v2a="ui" data-v="v3"><div class="pv v3"><i></i><b>MO</b><em></em></div><b class="t">Version 3.1</b><small>Standard · Homescreen, Trainingsmodus</small></button>
-    <button class="${v === "v1" ? "on" : ""} ${can1 ? "" : "lock"}" data-v2a="ui" data-v="v1"><div class="pv v1"><b></b><i style="top:50px"></i><i style="top:30px;left:50px"></i>${can1 ? "" : `<span class="pvlock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>`}</div><b class="t">Version 1</b><small>${can1 ? (adm && !open1 ? "Klassisch · nur für dich" : "Klassisch · Tierwelten") : "Bald verfügbar"}</small></button>
-    <button class="lock soon" data-v2a="soon"><div class="pv v4"><i></i><i></i><i></i></div><b class="t">Version 4</b><small>In Arbeit · bald verfügbar</small></button></div>
-    ${adm ? `<button class="btn block uiv-adm" data-v2a="v1open">${open1 ? "Version 1 wieder sperren" : "Version 1 für alle freischalten"}</button><small class="muted" style="display:block;margin-top:6px;font-size:11.5px">Nur du als Admin siehst diesen Knopf.</small>
-      <div class="field"><label>KI-Adresse für Essen per Foto (Cloudflare-Worker)</label><div style="display:flex;gap:8px"><input class="text-in" id="aiUrlIn" placeholder="https://…workers.dev" value="${esc(APP.cfg.aiUrl || "")}"><button class="btn" data-v2a="aiurl">Speichern</button></div></div>` : ""}`;
+    <button class="${v === "v3" ? "on" : ""}" data-v2a="ui" data-v="v3"><div class="pv v3"><i></i><b>MO</b><em></em></div><b class="t">Version 1</b><small>Standard · für alle</small></button>
+    <button class="${v === "v1" ? "on" : ""} ${can1 ? "" : "lock"}" data-v2a="ui" data-v="v1"><div class="pv v1"><b></b><i style="top:50px"></i><i style="top:30px;left:50px"></i>${can1 ? "" : `<span class="pvlock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>`}</div><b class="t">Klassik</b><small>${can1 ? (adm && !open1 ? "Tierwelten · nur für dich" : "Tierwelten & Rang-Designs") : "🔒 Noch gesperrt"}</small></button>
+    <button class="lock soon" data-v2a="soon"><div class="pv v4"><i></i><i></i><i></i><span class="pvlock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span></div><b class="t">Version 2</b><small>🔒 In Arbeit · bald</small></button></div>
+    ${adm ? `<button class="btn block uiv-adm" data-v2a="v1open">${open1 ? "Klassik wieder sperren" : "Klassik für alle freischalten"}</button><small class="muted" style="display:block;margin-top:6px;font-size:11.5px">Nur du als Admin siehst diesen Knopf.</small>` : ""}`;
 }
 function v2PrefsHTML(th) {
   // alle Schriften für die Vorschau laden
@@ -3707,6 +3732,7 @@ function v2PrefsHTML(th) {
     <input type="file" accept="image/*" id="v2wallIn" hidden>
     <div class="v2row"><div><b>Glas-Effekt</b><small>Kästchen werden milchig durchsichtig und verwischen den Hintergrund</small></div><button class="v2tog ${th.glass2 !== false ? "on" : ""}" data-v2a="glass"></button></div>
     <div class="v2row"><div><b>Tierwelt unten anzeigen</b><small>Die Szenen aus Version 1 – Auswahl der Welt bleibt gleich</small></div><button class="v2tog ${th.v2meadow ? "on" : ""}" data-v2a="meadow"></button></div>
+    ${trophyPrefsHTML(th)}
     <h2>Support</h2><button class="v2row fb-row" data-support="1"><div><b>💬 Wünsche & Verbesserungen</b><small>Design-Ideen, neue Funktionen oder Fehler direkt an den Entwickler schicken</small></div><span class="fb-go">›</span></button>`;
 }
 // Vorschaubilder der Wallpaper in den Kacheln (nutzen dieselben Bilder wie die App)
@@ -3732,17 +3758,18 @@ function v2Reprefs() { const y = $("#sheetInner").scrollTop; openPrefs(); $("#sh
 document.addEventListener("click", e => {
   const el = e.target.closest("[data-v2a]"); if (!el) return;
   const a = el.dataset.v2a, th = curTheme();
-  if (a === "soon") { toast("Version 4 ist noch in Arbeit – bald verfügbar ✨"); return; }
+  if (a === "soon") { toast("🔒 Version 2 ist noch in Arbeit – bald verfügbar"); return; }
   if (a === "v1open") { appSetCfg({ v1Open: !APP.cfg.v1Open }); return; }
   if (a === "aiurl") { const u = ($("#aiUrlIn")?.value || "").trim(); if (u && !/^https:\/\//.test(u)) { toast("Die Adresse muss mit https:// beginnen"); return; } appSetCfg({ aiUrl: u || null }); return; }
   if (a === "ui") { const cur = th.ui === "v1" ? "v1" : "v3"; if (cur === el.dataset.v) return;
-    if (el.dataset.v === "v1" && !APP.admin && !APP.cfg.v1Open) { toast("🔒 Version 1 ist noch gesperrt – bald verfügbar"); return; }
-    setTheme({ ui: el.dataset.v }); renderAll(); if (S.tab === "perf") loadPerf(); if (S.tab === "todo") renderTodo(); v2Reprefs(); closeSheet(); if (el.dataset.v === "v3") { S.v3intro = false; setTab("start"); } toast(el.dataset.v === "v3" ? "Version 3.1 aktiv ✓" : "Version 1 aktiv ✓"); }
+    if (el.dataset.v === "v1" && !APP.admin && !APP.cfg.v1Open) { toast("🔒 Klassik ist noch gesperrt – bald verfügbar"); return; }
+    setTheme({ ui: el.dataset.v }); renderAll(); if (S.tab === "perf") loadPerf(); if (S.tab === "todo") renderTodo(); v2Reprefs(); closeSheet(); if (el.dataset.v === "v3") { S.v3intro = false; setTab("start"); } toast(el.dataset.v === "v3" ? "Version 1 aktiv ✓" : "Klassik aktiv ✓"); }
   else if (a === "pal") { setTheme({ pal: el.dataset.v }); renderStart(); v2Reprefs(); }
   else if (a === "acc") { setTheme({ v2acc: el.dataset.v || null }); renderStart(); v2Reprefs(); }
   else if (a === "font") { setTheme({ font: el.dataset.v }); v2Reprefs(); }
   else if (a === "wall") { if (el.dataset.v === "custom") { openWalls(); return; } setTheme({ wall: el.dataset.v, wallId: null }); v2Reprefs(); }
   else if (a === "glass") { setTheme({ glass2: th.glass2 === false }); if (el.dataset.back === "walls") openWalls(); else v2Reprefs(); }
+  else if (a === "snd") { setTheme({ snd: !th.snd }); v2Reprefs(); }
   else if (a === "meadow") { setTheme({ v2meadow: !th.v2meadow }); v2Reprefs(); }
 });
 document.addEventListener("change", e => { if (e.target.id === "v2wallIn" && e.target.files[0]) v2WallUpload(e.target.files[0]).catch(() => toast("Bild konnte nicht geladen werden.")); });
@@ -3754,7 +3781,7 @@ async function appLoad() {
   try { const a = await getDoc(doc(db, "admins", S.uid)); APP.admin = a.exists(); } catch { APP.admin = false; }
   if (typeof WL !== "undefined") WL.admin = APP.admin; APP.loaded = true;
   // Version 1 ist (noch) nur für Admins: alle anderen landen auf Version 3.1
-  if (curTheme().ui === "v1" && !APP.admin && !APP.cfg.v1Open) { setTheme({ ui: "v3" }); renderAll(); setTab("start"); toast("Version 3.1 ist jetzt die Standardversion ✓"); }
+  if (curTheme().ui === "v1" && !APP.admin && !APP.cfg.v1Open) { setTheme({ ui: "v3" }); renderAll(); setTab("start"); toast("Version 1 ist jetzt die Standardversion ✓"); }
 }
 async function appSetCfg(patch) {
   try { await setDoc(doc(db, "config", "app"), patch, { merge: true }); APP.cfg = { ...APP.cfg, ...patch }; toast("Gespeichert ✓"); if (!$("#sheet").classList.contains("hidden")) v2Reprefs(); }
@@ -4538,6 +4565,8 @@ function openWalls() {
     <h2 style="margin-top:6px">Grundhintergründe</h2><p class="muted wl-note">Für alle Nutzer – auch für deine Freunde.</p>
     <div class="v2walls wl-grid">${builtin}${shared}${WL.admin ? `<button class="wl-add" data-wladd="s"><span>＋</span><small>Für alle hinzufügen</small></button>` : ""}</div>
     ${WL.all === null ? `<p class="muted wl-note">Lädt …</p>` : ""}
+    <h2>Rang-Hintergründe</h2><p class="muted wl-note">Die Farbverläufe der Ränge – jeder Rang schaltet einen frei.</p>
+    <div class="v2walls wl-grid">${rankWallTiles(th)}</div>
     <h2>Meine Hintergründe</h2><p class="muted wl-note">Nur für dich – auf all deinen Geräten.</p>
     <div class="v2walls wl-grid">${mine}<button class="wl-add" data-wladd="u"><span>＋</span><small>Bild hinzufügen</small></button></div>
     <input type="file" accept="image/*" id="wlIn" hidden>
@@ -4549,11 +4578,21 @@ function openWalls() {
 let wlAddShared = false;
 document.addEventListener("click", e => {
   const del = e.target.closest("[data-wldel]"); if (del) { e.stopPropagation(); wlDel(del.dataset.wldel); return; }
+  const rg = e.target.closest("[data-wlg]"); if (rg) { if (rg.classList.contains("lock")) { const u = UNLOCKS.find(x => x.k === "g" + rg.dataset.wlg); toast(`🔒 Wird mit ${RANKS[u?.tier ?? 0].n} freigeschaltet`); return; }
+    const g = GRADS[+rg.dataset.wlg]; setTheme({ wall: "grad", wallId: null, wallGrad: +rg.dataset.wlg, wallCss: rankWallCss(g) }); openWalls(); return; }
   const t = e.target.closest("[data-wl]"); if (t) { const k = t.dataset.wl; if (k.includes(":")) wlUse(k).then(openWalls); else { setTheme({ wall: k, wallId: null }); openWalls(); } return; }
   const add = e.target.closest("[data-wladd]"); if (add) { wlAddShared = add.dataset.wladd === "s"; $("#wlIn").click(); return; }
   if (e.target.closest("[data-wluid]")) { navigator.clipboard?.writeText(S.uid).then(() => toast("Nutzer-ID kopiert ✓")).catch(() => {}); }
 });
 document.addEventListener("change", e => { if (e.target.id === "wlIn" && e.target.files[0]) wlAdd(e.target.files[0], wlAddShared); });
+
+// Rang-Farbverläufe (aus Version 1) als Hintergrund
+function rankWallCss(g) { const [c1, c2, c3, c4] = g.c, A = rgba;
+  return `radial-gradient(120% 70% at 18% 12%, ${A(c1, .62)}, transparent 62%), radial-gradient(110% 70% at 88% 82%, ${A(c3, .38)}, transparent 60%), radial-gradient(90% 60% at 85% 18%, ${A(c2, .55)}, transparent 66%), radial-gradient(80% 60% at 10% 90%, ${A(c4, .5)}, transparent 70%), linear-gradient(165deg, ${g.base}, #050507)`; }
+function rankWallTiles(th) {
+  return GRADS.map((g, i) => { const u = UNLOCKS.find(x => x.k === "g" + i), open = !u || unlocked(u), on = th.wall === "grad" && th.wallGrad === i;
+    return `<button class="wl-t ${on ? "on" : ""} ${open ? "" : "lock"}" data-wlg="${i}"><span class="wp" style="--wp:${g.flow ? gradSwatch(g) : rankWallCss(g)}">${open ? "" : "🔒"}</span><small>${g.n}</small></button>`; }).join("");
+}
 
 /* ===================== V2/V3: Symbole statt Emojis, Auswertungs-Linie mit Notizen ===================== */
 const TI = { cal: '<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>',
@@ -4965,14 +5004,14 @@ function foodRender() {
       <div class="t3line"><i style="width:${Math.min(100, s.kcal / g.kcal * 100)}%"></i></div>
       <div class="f3ms">${bar("Protein", s.p, g.p, "g")}${bar("Kohlenh.", s.c, g.c, "g")}${bar("Fett", s.f, g.f, "g")}</div>
       <button class="f3goal" data-f3="goal">Ziele anpassen</button></div>
-    <div class="f3acts"><button data-f3="photo">${V3I('<path d="M4 8.5A2.5 2.5 0 016.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0120 8.5v9a2.5 2.5 0 01-2.5 2.5h-11A2.5 2.5 0 014 17.5z"/><circle cx="12" cy="13" r="3.6"/>')}<span>Foto<br>erkennen</span></button><button data-f3="scan">${V3I('<path d="M3 7V4.5A1.5 1.5 0 014.5 3H7M17 3h2.5A1.5 1.5 0 0121 4.5V7M21 17v2.5a1.5 1.5 0 01-1.5 1.5H17M7 21H4.5A1.5 1.5 0 013 19.5V17M7 8v8M10 8v8M13 8v8M16.5 8v8"/>')}<span>Barcode</span></button>
-      <button data-f3="search">${V3I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<span>Suchen</span></button>
-      <button data-f3="manual">${V3I('<path d="M12 5v14M5 12h14"/>')}<span>Selbst</span></button></div>
+    <div class="f3acts"><button data-f3="scan">${V3I('<path d="M3 7V4.5A1.5 1.5 0 014.5 3H7M17 3h2.5A1.5 1.5 0 0121 4.5V7M21 17v2.5a1.5 1.5 0 01-1.5 1.5H17M7 21H4.5A1.5 1.5 0 013 19.5V17M7 8v8M10 8v8M13 8v8M16.5 8v8"/>')}<span>Barcode<br>scannen</span></button>
+      <button data-f3="search">${V3I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<span>Lebensmittel<br>suchen</span></button>
+      <button data-f3="manual">${V3I('<path d="M12 5v14M5 12h14"/>')}<span>Selbst<br>eintragen</span></button></div>
     ${recent.length ? `<h2>Zuletzt</h2><div class="f3rec">${recent.slice(0, 10).map((x, i) => `<button data-f3="rec" data-i="${i}">${esc(x.n)}<small>${fmtN(x.g, 0)} g · ${fmtN(x.kcal, 0)} kcal</small></button>`).join("")}</div>` : ""}
     ${!loaded ? `<div class="f3empty">Lädt …</div>` : FOOD_MEALS.map(([m, n]) => { const it = day.items.map((x, i) => ({ ...x, i })).filter(x => (x.meal || "sn") === m); const kc = it.reduce((a, x) => a + (+x.kcal || 0), 0);
       return `<div class="f3meal"><div class="f3mh"><h2>${n}</h2><span>${kc ? fmtN(kc, 0) + " kcal" : ""}</span><button data-f3="search" data-m="${m}" aria-label="Hinzufügen">${W3I.plus}</button></div>
         ${it.length ? it.map(x => `<div class="f3it"><span><b>${esc(x.n)}</b><small>${fmtN(x.g, 0)} g · ${fmtN(x.p, 0)} g P · ${fmtN(x.c, 0)} g K · ${fmtN(x.f, 0)} g F</small></span><em>${fmtN(x.kcal, 0)}</em><button data-f3="del" data-i="${rIco(x)}" aria-label="Löschen">${ICON.x}</button></div>`).join("") : ""}</div>`; }).join("")}
-    <p class="f3note">Nährwerte aus <b>Open Food Facts</b> (frei, von Nutzern gepflegt) bzw. Richtwerte – kurz prüfen lohnt sich. Foto-Erkennung per KI schätzt Mengen und Nährwerte – das ist eine Schätzung, kein Messwert.</p>
+    <p class="f3note">Nährwerte aus <b>Open Food Facts</b> (frei, von Nutzern gepflegt) bzw. Richtwerte – kurz prüfen lohnt sich.</p>
   </div>`;
 }
 const foodMealNow = () => { const h = new Date().getHours() + new Date().getMinutes() / 60; return h < 10.5 ? "fr" : h < 15 ? "mi" : h < 21 ? "ab" : "sn"; };
@@ -5174,10 +5213,50 @@ document.addEventListener("click", async e => {
   const go = setInterval(() => { if (!APP.loaded) return; clearInterval(go); if (APP.admin) openInbox(); try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "inbox" && APP.admin) openInbox(); });
 
+/* ===================== V1 (neu): Pokale & Animationen aus der Klassik – leiser, im neuen Design =====================
+   Rang-Aufstieg: Pokal wie gehabt (nur beim ersten Erreichen). Neuer Bestwert: kein Pokal, sondern eine eigene „Rekord“-Animation. */
+const sndOn = () => !isV2() || !!curTheme().snd;
+// Neuer Bestwert im neuen Design – Strahlenkranz + Symbol, ohne Pokal
+const PR3_ICO = {
+  weight: '<path d="M2 12h20"/><rect x="4.5" y="7" width="3" height="10" rx="1"/><rect x="16.5" y="7" width="3" height="10" rx="1"/><path d="M8.5 9v6M15.5 9v6"/>',
+  cardio: '<circle cx="14.5" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v5M6 12l3-4 4 1 3 4 3 1M11 15l1.5-5"/>',
+  run: '<circle cx="14.5" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v5M6 12l3-4 4 1 3 4 3 1M11 15l1.5-5"/>',
+  time: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/>', pace: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/>',
+  reps: '<path d="M12 2.5c1 3.5 5 5.5 5 10a5 5 0 01-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5.5 1-8.5z"/>',
+};
+function pr3Show(name, mode, txt, prevTxt, label) {
+  $("#pr3")?.remove();
+  const w = document.createElement("div"); w.id = "pr3";
+  w.innerHTML = `<div class="pr3-card"><div class="pr3-ring"><i></i><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PR3_ICO[mode] || PR3_ICO.reps}</svg></div>
+    <small class="pr3-k">${esc(label === "REKORD" ? "Neuer Bestwert" : label === "TEMPO" ? "Neues Bestes Tempo" : label === "STRECKE" ? "Neue Bestweite" : label)}</small>
+    <b class="pr3-n">${esc(name)}</b><div class="pr3-v">${esc(txt)}</div>${prevTxt ? `<div class="pr3-p">vorher ${esc(prevTxt)}</div>` : ""}
+    <button class="btn primary block" data-pr3="ok">Weiter so</button></div>`;
+  document.body.appendChild(w); requestAnimationFrame(() => w.classList.add("on"));
+  if (navigator.vibrate) try { navigator.vibrate([30, 40, 60]); } catch {}
+  if (sndOn()) pr3Chime();
+  w.addEventListener("click", e => { if (e.target === w || e.target.closest("[data-pr3]")) { w.classList.remove("on"); setTimeout(() => w.remove(), 260); } });
+}
+// ganz leiser, kurzer Glockenton – nur wenn „Töne“ an ist
+function pr3Chime() { const a = audio(); if (!a) return; const t = a.currentTime + .03;
+  [[784, 0], [1175, .09]].forEach(([f, d]) => { const o = a.createOscillator(), g = a.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.08, t + d + .02); g.gain.exponentialRampToValueAtTime(.0005, t + d + .7); o.connect(g).connect(a.destination); o.start(t + d); o.stop(t + d + .75); }); }
+
+// Einstellungen: Pokale ansehen, Animationen testen, Töne
+function trophyPrefsHTML(th) {
+  return `<h2>Pokale & Animationen</h2>
+    <div class="v2row"><div><b>Töne bei Animationen</b><small>Fanfare beim Rang-Aufstieg, leiser Ton beim Bestwert – standardmäßig aus</small></div><button class="v2tog ${th.snd ? "on" : ""}" data-v2a="snd"></button></div>
+    <div class="tp-acts"><button class="btn" data-action="rankuptest">Rang-Aufstieg testen</button><button class="btn" data-pr3test="1">Bestwert testen</button></div>
+    <div class="tp-grid">${RANKS.map((r, i) => { const got = (S.rankBest ?? 0) >= i || COSM_TEST_UNLOCK;
+      return `<button class="tp-t ${got ? "" : "lock"}" data-action="${got ? "rutest" : ""}" data-t="${i}" ${got ? "" : `data-tplock="${i}"`}><span>${rIco(r)}</span><b>${r.n}</b><small>${got ? "Pokal ansehen" : "🔒 noch nicht erreicht"}</small></button>`; }).join("")}</div>`;
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-pr3test]")) { closeSheet(); setTimeout(() => pr3Show("Bankdrücken", "weight", "70 kg × 8", "67,5 kg × 8", "REKORD"), 150); return; }
+  const l = e.target.closest("[data-tplock]"); if (l) toast(`🔒 Den ${RANKS[+l.dataset.tplock].n}-Pokal bekommst du, sobald du ${RANKS[+l.dataset.tplock].n} erreichst`);
+});
+
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
-  const pct = nx ? Math.min(100, (st.rp - r.min) / (nx.min - r.min) * 100) : 100;
-  const buffer = st.rp - r.min, danger = st.tier > 0 && st.rp - r.cost < r.min, need = Math.ceil(r.min - (st.rp - r.cost));
+  const pct = nx ? Math.max(0, Math.min(100, (st.rp - r.min) / (nx.min - r.min) * 100)) : 100;
+  const buffer = st.rp - r.min, danger = st.tier > 0 && st.rp - r.cost < st.floor, need = Math.ceil(st.floor - (st.rp - r.cost)), inBuf = st.tier > 0 && st.rp < r.min && !danger;
   const t = st.today, f1 = v => fmtN(v, 1);
   const chartPts = st.hist.slice(-90);
   return `<div class="card rank-card ${r.god ? "god shine god-shine" : st.tier >= 8 ? "shine" : ""}" style="--rc:${r.c};--tc:${r.c}">
@@ -5188,6 +5267,7 @@ function rankCard() {
     </div>
     <div class="ach-bar" style="margin-top:14px"><i class="rank-bar" style="width:${pct}%;background:${r.god ? "linear-gradient(90deg,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D,#FF8A00,#FF4FA3,#FF8A00,#FFD84D) 0 0 / 200% 100%;animation:godshine 3s linear infinite" : `linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #fff))`}"></i></div>
     <div class="ach-f"><span>${nx ? `Noch <b>${fmtN(nx.min - st.rp, 0)} RP</b> bis ${rIco(nx)} <span class="${nx.god ? "god-text" : ""}" style="font-weight:700">${nx.n}</span>` : `⚡ <span class="god-text" style="font-weight:800">Höchster Rang. Halte ihn!</span>`}</span><span>${nx ? fmtN(nx.min, 0) : ""}</span></div>
+    ${inBuf ? `<div class="rank-warn">🛡️ <b>Puffer aktiv:</b> Du bist noch ${r.n}. Erst unter ${fmtN(st.floor, 0)} RP steigst du ab – noch ${fmtN(st.rp - st.floor, 0)} RP Luft.</div>` : ""}
     ${danger ? `<div class="rank-warn danger">⚠️ <b>Gefahr: Abstieg!</b> Hol heute noch ${fmtN(need, 0)} RP, sonst bist du morgen ${rIco(RANKS[st.tier - 1])} ${RANKS[st.tier - 1].n}.</div>` : ""}
     <div class="rank-today">
       <div><span>Heute</span><b>+${f1(t.total)}</b></div>
@@ -5196,9 +5276,9 @@ function rankCard() {
       <div><span>Rekord</span><b>+${f1(t.pr)}</b></div>
       <div><span>Kosten</span><b class="neg">−${f1(st.cost)}</b></div>
     </div>
-    ${chartPts.length > 1 ? lineChart([{ color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#FFC400", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
+    ${chartPts.length > 1 ? lineChart([{ color: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#FFC400", label: false, pts: chartPts.map(p => ({ ...p, tip: `${dShort(p.x)}: ${fmtN(p.y, 0)} RP · ${RANKS[p.t ?? rankOf(p.y)].n}` })) }], { dec: 0, height: 130 }) : ""}
     <details class="rank-ladder"><summary>Alle Ränge & Regeln</summary>
-      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote (für alle gleich – volle Punkte ab ${RANK_MIN_TASKS} Aufgaben, mehr Aufgaben bringen nicht mehr Punkte), ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Die Abstände werden nach oben immer größer.</div>
+      <div class="note" style="margin:6px 0 10px">Pro Tag: bis zu ${GAIN.quota} RP für deine Tagesquote (für alle gleich – volle Punkte ab ${RANK_MIN_TASKS} Aufgaben, mehr Aufgaben bringen nicht mehr Punkte), ${GAIN.train} RP für ein vollständig eingetragenes Training (an Ruhetagen automatisch), ${GAIN.pr} RP bei einer Bestleistung. Jeder Rang kostet täglich RP – je höher, desto mehr. Bist du nicht konstant dabei, rutschst du Stufe für Stufe ab. Nach einem Aufstieg hast du einen Puffer in Höhe der Tageskosten – erst wenn du darunter fällst, steigst du ab. Die Abstände werden nach oben immer größer.</div>
       ${RANKS.map((x, i) => `<div class="rl ${i === st.tier ? "on" : ""} ${x.god ? "godrow" : ""}"><span>${rIco(x)}</span><b>${x.n}</b><small>ab ${fmtN(x.min, 0)} RP</small><small>−${String(x.cost).replace(".", ",")}/Tag</small></div>`).slice().reverse().join("")}
     </details>
   </div>`;
@@ -7284,7 +7364,7 @@ function celebrateShow({ trophy, color, title, titleCls = "", sub, emo = "", btn
     <div class="ru-card" style="border-color:${color}">${emo ? `<div class="ru-emo">${emo}</div>` : ""}<div class="ru-t ${titleCls}" style="${titleCls ? "" : `color:${color}`}">${title}</div>
       <div class="ru-s">${sub}</div><button class="btn primary block" data-action="${action}">${btn}</button></div></div>`;
   document.body.appendChild(wrap); wrap._tier = tier; if (tier >= 9) wrap.classList.add("hi");
-  partySound(tier); setTimeout(() => confettiBurst(2), 450);
+  if (sndOn()) partySound(tier); setTimeout(() => confettiBurst(2), 450);
   setTimeout(() => wrap.querySelector(".ru-card")?.classList.add("thud"), 650);
   if (navigator.vibrate) try { setTimeout(() => navigator.vibrate([40, 30, 120]), 650); } catch {}
   return wrap;
@@ -7295,14 +7375,15 @@ function rankUpShow(tier) {
     sub: (r.god ? "Ganz oben angekommen. Jetzt heißt es: halten!" : `Stark! Du bist aufgestiegen. Ab jetzt kostet dein Rang ${String(r.cost).replace(".", ",")} RP pro Tag – bleib dran.`) + `<br><small style="opacity:.7">Erreicht am ${tDate()}</small>` });
 }
 function prShow(name, mode, txt, prevTxt, label = "REKORD") {
+  if (isV2()) return pr3Show(name, mode, txt, prevTxt, label);
   const tier = Math.max(2, typeof rankState === "function" && S.allWo && S.daysFull ? rankState().tier : 2);
   celebrateShow({ trophy: trophySVG(tier, { sym: PR_SYM[mode] || "star", label, gem: getComputedStyle(document.documentElement).getPropertyValue("--accent-base").trim() || "#ffc400" }), color: "var(--accent)",
     title: "Neuer Rekord!", sub: `<b style="color:var(--text);font-size:16px">${esc(name)}</b><br>${esc(txt)}${prevTxt ? `<br><span style="opacity:.75">vorher: ${esc(prevTxt)}</span>` : ""}`, action: "ruclose", btn: "Weiter so!" });
 }
 function rankUpNext() {
   const wrap = $("#rankup"); if (!wrap) return; const tier = wrap._tier, card = wrap.querySelector(".ru-card");
-  const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 28)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
-    ...ANIMALS.filter(a => a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
+  const list = [{ icon: `<span class="ru-th pfr">${pAvatar({ ...myProfile(), frame: tier }, 28)}</span>`, n: `Profilrahmen „${FRAME_N[tier]}“`, d: "Für dein Profilbild – unter Leistung → Freunde einstellbar." }, ...UNLOCKS.filter(u => u.tier === tier && (!isV2() || u.cat === "bg") && !(!WORLD_BG && String(u.k).startsWith("w-"))).map(u => ({ icon: u.world ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.cat === "bg" ? `<span style="width:30px;height:30px;border-radius:9px;background:${gradSwatch(GRADS[+u.k.slice(1)])};display:inline-block"></span>` : u.cat === "strip" ? `<span class="ru-th">${WLD.THUMB[u.world]}</span>` : u.emo, n: u.n, d: u.d })),
+    ...ANIMALS.filter(a => !isV2() && a.tier === tier).map(a => ({ icon: a.emo, n: `${a.n} (${WORLD(a.w).n})`, d: a.d })), ...Object.entries(props()).filter(([k]) => !isV2() && propTier(k) === tier).map(([k, p]) => ({ icon: `<span class="ru-th prop">${propSVG(k)}</span>`, n: `Deko „${p.n}“ (${WORLD(p.w).n})`, d: "Für links oder rechts über der Leiste." }))];
   if (card.dataset.step === "2") { wrap.remove(); return; }
   card.dataset.step = "2"; wrap.classList.add("step2"); card.classList.remove("thud", "flip"); void card.offsetWidth; card.classList.add("flip");
   setTimeout(() => { card.innerHTML = `<div class="ru-emo">🎁</div><div class="ru-t">Neu freigeschaltet</div><div class="ru-s">Mit ${rIco(RANKS[tier])} ${RANKS[tier].n} kannst du jetzt benutzen:</div>
@@ -9484,7 +9565,7 @@ document.addEventListener("click", async e => {
   else if (a === "rankuptest") { closeSheet(); const t = Math.min(10, Math.max(1, (S.allWo && S.daysFull ? rankState().tier : 0) + 1)); setTimeout(() => rankUpShow(t), 300); }
   else if (a === "scene") { closeSheet(); const v = el.dataset.v; if (MD.busy) toast("Gerade läuft schon eine Szene – gleich nochmal versuchen"); else setTimeout(() => playScene(v), 400); }
   else if (a === "ruok") rankUpNext();
-  else if (a === "ruprefs") { $("#rankup")?.remove(); openPrefs(); }
+  else if (a === "ruprefs") { $("#rankup")?.remove(); if (isV2()) openWalls(); else openPrefs(); }
   else if (a === "mythadd") { const c = mythColorsNow(); c.push(["#FFD84D", "#2EE59D", "#FF8A00", "#4CC9F0"][c.length % 4]); setCosm({ mythColors: c }); reopenPrefs(); }
   else if (a === "mythrm") { const c = mythColorsNow(); c.pop(); setCosm({ mythColors: c }); reopenPrefs(); }
   else if (a === "mythpre") { setCosm({ mythColors: [...MYTH_PRESETS[+el.dataset.v]] }); reopenPrefs(); }
