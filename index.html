@@ -2167,6 +2167,7 @@
   :root[data-ui=v2][data-wfx=glow] body::after { inset: -30%; animation: wfxdrift2 16s ease-in-out infinite alternate, wfxpulse 6s ease-in-out infinite alternate; }
   @keyframes wfxdrift2 { 0% { transform: translate(-14%, -8%) scale(1) rotate(0deg); } 33% { transform: translate(10%, 6%) scale(1.22) rotate(6deg); } 66% { transform: translate(-6%, 11%) scale(1.1) rotate(-4deg); } 100% { transform: translate(13%, -7%) scale(1.28) rotate(3deg); } }
   :root[data-ui=v2][data-wfx=galaxy] body::after { animation: wfxspin 75s linear infinite, wfxpulse 5s ease-in-out infinite alternate; }
+  :root[data-ui=v2] .pf-fr.lock { opacity: 1; } :root[data-ui=v2] .pf-fr.lock .tp-ic > :not(.tp-lock) { filter: grayscale(.85) brightness(.55); opacity: .7; } :root[data-ui=v2] .pf-fr.lock small { opacity: .6; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3704,7 +3705,7 @@ function profileCard() {
       <div class="pf-btns"><label class="btn"><input type="file" accept="image/*" data-pfphoto hidden>📷 Foto</label>${me.photo ? `<button class="btn" data-action="pfnophoto">Entfernen</button>` : ""}</div></div></div>
     ${S.pfEditName ? `<div class="fr-add" style="margin-top:12px"><input id="pfNameIn" class="input" style="text-transform:none;letter-spacing:0" maxlength="20" value="${esc(me.name)}"><button class="btn primary" data-action="pfnamesave">Speichern</button></div>` : ""}
     <div class="sub-h" style="margin-top:14px">Profilrahmen – pro Rang einer</div>
-    <div class="pf-frames">${FRAME_N.map((n, t) => { const ok = myFrameOk(t); return `<button class="pf-fr ${me.frame === t ? "on" : ""} ${ok ? "" : "lock"}" data-action="pfframe" data-t="${t}">${pAvatar({ ...me, frame: t }, 46)}<small>${ok ? n : "🔒 " + n}</small></button>`; }).join("")}</div></div>`;
+    <div class="pf-frames">${FRAME_N.map((n, t) => { const ok = myFrameOk(t); return `<button class="pf-fr ${me.frame === t ? "on" : ""} ${ok ? "" : "lock"}" data-action="pfframe" data-t="${t}">${isV2() ? `<span class="tp-ic">${pAvatar({ ...me, frame: t }, 46)}${ok ? "" : `<i class="tp-lock">🔒</i>`}</span>` : pAvatar({ ...me, frame: t }, 46)}<small>${ok || isV2() ? n : "🔒 " + n}</small></button>`; }).join("")}</div></div>`;
 }
 // Foto verkleinern (quadratisch, 192 px) und speichern
 async function pfSetPhoto(file) {
