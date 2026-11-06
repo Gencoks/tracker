@@ -2197,6 +2197,9 @@
   #w3 .w3addbtn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; margin: 2px 0 8px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent); background: transparent; color: var(--accent); font: inherit; font-size: 13px; font-weight: 700; }
   #w3 .w3addbtn svg { width: 15px; height: 15px; } #w3 .w3addbtn.on { background: color-mix(in srgb, var(--accent) 12%, transparent); }
   #w3 .w3adds button { border-style: solid; }
+  /* Fenster ziehen: leichte Hervorhebung statt teurem Riesen-Schatten, GPU-Ebene nur während des Ziehens */
+  #w3 .gw.drag, #w3 .gbar.drag { box-shadow: 0 6px 16px rgba(0,0,0,.6) !important; outline: 1.5px solid var(--accent); will-change: transform; transition: none !important; }
+  #w3 .gw, #w3 .gbar { transition: none; } #w3 [data-drag] { touch-action: none; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -4467,16 +4470,21 @@ function w3TabHTML(t) {
 function w3DragStart(e) {
   const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button, input, select, textarea")) return;
   const el = h.closest(".gw, .gbar"); if (!el) return;
-  e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top; h.setPointerCapture(e.pointerId); el.classList.add("drag");
-  let x = r0.left, y = r0.top;
-  const mv = ev => { x = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, ev.clientX - ox)); y = Math.max(4, Math.min(innerHeight - 44, ev.clientY - oy)); el.style.left = x + "px"; el.style.top = y + "px"; };
-  const sx = e.clientX, sy = e.clientY; let lx = sx, ly = sy; h.addEventListener("pointermove", ev => { lx = ev.clientX; ly = ev.clientY; });
-  const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); el.classList.remove("drag");
+  e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top, W = el.offsetWidth;
+  try { h.setPointerCapture(e.pointerId); } catch {} el.classList.add("drag");
+  // flüssig & sparsam: während des Ziehens nur per GPU verschieben (transform), höchstens einmal pro Bildschirm-Frame;
+  // erst beim Loslassen wird die echte Position gesetzt
+  let x = r0.left, y = r0.top, px = e.clientX, py = e.clientY, raf = 0, moved = false;
+  const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - 44, py - oy)); el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
+  const mv = ev => { px = ev.clientX; py = ev.clientY; if (Math.hypot(px - e.clientX, py - e.clientY) > 3) moved = true; if (!raf) raf = requestAnimationFrame(paint); };
+  const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up);
+    if (raf) { cancelAnimationFrame(raf); paint(); }
+    el.classList.remove("drag"); el.style.transform = ""; el.style.left = x + "px"; el.style.top = y + "px";
     const [kind, id] = h.dataset.drag.split(":"), it = w3It();
-    if (kind === "bar" && Math.hypot(lx - sx, ly - sy) < 6) { W3.bar = { ...(W3.bar || {}), x: r0.left, y: r0.top, c: !(W3.bar || {}).c }; w3Save(); w3Render(); return; }
+    if (kind === "bar" && !moved) { W3.bar = { ...(W3.bar || {}), x: r0.left, y: r0.top, c: !(W3.bar || {}).c }; w3Save(); w3Render(); return; }
     if (kind === "bar") W3.bar = { ...(W3.bar || {}), x, y }; else if (kind === "win") Object.assign(w3Wins(it)[id], { x, y }); else { const t = W3.tabs.find(q => q.id === id); if (t) Object.assign(t, { x, y }); }
     w3Save(); };
-  h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
+  h.addEventListener("pointermove", mv, { passive: true }); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
 }
 // Gedrückthalten auf „Nächster Satz“: alle Sätze zum Springen, Ändern und Löschen
 function w3SetPicker() {
@@ -4610,6 +4618,7 @@ function w3AutoSet(via, dur, rd) {
   ex.form = via === "tabata" ? { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds } : { via, dur };
   w3AddSet(ex, m, n, { via, dur, ...(rd ? { rd } : {}) });
 }
+let w3Idle = 0;
 function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   const on = $("#w3")?.classList.contains("on");
   if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]);
@@ -4619,6 +4628,8 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
     else { if (t.idx !== W3T.tb.ph) { W3T.tb.ph = t.idx; w3TSave(); pgBeep(t.work ? 988 : 660, 220, t.work ? 2 : 1); pgBuzz(t.work ? [200, 80, 200] : 250); }
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
+  // Energie sparen: läuft kein Timer/Tabata, reicht eine Aktualisierung pro Sekunde
+  if (!W3T.tm.run && !W3T.tb.run && (w3Idle = (w3Idle + 1) % 4)) return;
   if (W3T.tb.run || W3T.tb.acc) { const t = tbState(), el = $("#w3tb"), ph = $("#w3tbph"), r = $("#w3tbr");
     if (el) el.innerHTML = fixD(fmtMs(t.left, false)); if (ph) { ph.textContent = t.done ? "Geschafft! 💪" : t.work ? "Belastung" : "Pause"; ph.className = "gw-tbph " + (t.done ? "done" : t.work ? "work" : "rest"); }
     if (r) r.textContent = `Runde ${t.round} / ${W3T.tb.rounds} · gesamt ${fmtMs(W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000 - W3T.tb.rest * 1000, false)}`; }
