@@ -2220,6 +2220,61 @@
   .pe-grid .tsel-it, .pe-grid .tsel-new { display: grid; justify-items: center; gap: 4px; padding: 12px 6px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-align: center; }
   .pe-grid .tsel-it .ach-svg, .pe-grid .tsel-new .ach-svg { width: 26px; height: 26px; color: var(--accent-text); } .pe-grid .tsel-it b, .pe-grid .tsel-new b { font-size: 13px; } .pe-grid .tsel-it small, .pe-grid .tsel-new small { font-size: 10.5px; color: var(--muted); }
   .pe-grid .tsel-it.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .pe-grid .tsel-new { border-style: dashed; }
+/* ---- Profile von Freunden (V3) ---- */
+.fr-item[data-frprof] { cursor: pointer; }
+.fr-item[data-frprof]:active { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.fr-go { color: var(--muted); font-size: 22px; padding: 0 6px; }
+.pf3-top { display: flex; justify-content: space-between; align-items: center; }
+.pf3-edit { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 14px; }
+.pf3-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; margin: 4px 0 14px; }
+.pf3-hero .pav { margin-bottom: 6px; }
+.pf3-name { font-size: 24px; line-height: 1.1; }
+.pf3-name small { font-size: 14px; color: var(--muted); font-weight: 600; }
+.pf3-motto { margin: 0; font-style: italic; color: var(--muted); font-size: 14px; max-width: 290px; }
+.pf3-motto.add { font-style: normal; background: none; border: 1px dashed var(--border); border-radius: 999px; padding: 5px 12px; color: var(--muted); }
+.pf3-rank { font-weight: 700; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.pf3-rank svg { width: 20px; height: 20px; }
+.pf3-rb { width: 220px; }
+.pf3-nx { color: var(--muted); font-size: 12px; }
+.pf3-priv { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.pf3-k .kpi b svg { width: 24px; height: 24px; }
+.pf3-h { display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 18px 2px 10px; }
+.pf3-h small { letter-spacing: 0; font-size: 12px; }
+.pf3-h .chip { text-transform: none; letter-spacing: 0; font-size: 12px; padding: 4px 12px; }
+.pf3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pf3-t { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; padding: 12px 6px 10px; border-radius: 18px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--tc) 45%, var(--border)); box-shadow: inset 0 -18px 30px -24px var(--tc); min-width: 0; }
+.pf3-t b { font-size: 12.5px; line-height: 1.2; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; max-width: 100%; }
+.pf3-t small { font-size: 11px; font-weight: 700; }
+.pf3-t em { font-style: normal; font-size: 12px; color: var(--muted); }
+.pf3-t.rec small { color: var(--muted); font-weight: 600; }
+.pf3-ti { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; color: var(--tc); background: color-mix(in srgb, var(--tc) 14%, transparent); margin-bottom: 4px; flex: none; }
+.pf3-ti svg { width: 26px; height: 26px; }
+.pf3-cmp { padding: 12px 14px; display: flex; flex-direction: column; gap: 14px; }
+.pf3-cn { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14px; }
+.pf3-cn small { color: var(--muted); font-size: 12px; }
+.pf3-cn .pf3-lead { color: var(--accent-text, var(--accent)); font-weight: 700; }
+.pf3-bar { position: relative; height: 22px; border-radius: 8px; background: var(--surface-2); overflow: hidden; margin-top: 4px; }
+.pf3-bar i { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--text) 22%, transparent); border-radius: 8px; transition: width .5s; }
+.pf3-bar.me i { background: color-mix(in srgb, var(--accent) 70%, transparent); }
+.pf3-bar span { position: relative; font-size: 12px; font-weight: 600; line-height: 22px; padding-left: 9px; }
+.pf3-cheer { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.pf3-cheer svg { width: 20px; height: 20px; }
+.pf3-picks { display: flex; flex-direction: column; gap: 6px; }
+.pf3-pick { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 12px 8px 8px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--border); }
+.pf3-pick .pf3-ti { width: 40px; height: 40px; margin: 0; font-size: 20px; }
+.pf3-pick > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pf3-pick b { font-size: 14px; }
+.pf3-pick small { font-size: 12px; color: var(--muted); }
+.pf3-chk { width: 24px; height: 24px; border-radius: 8px; border: 2px solid var(--border); display: grid; place-items: center; flex: none; }
+.pf3-chk svg { width: 14px; height: 14px; opacity: 0; }
+.pf3-pick.on { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); }
+.pf3-pick.on .pf3-chk { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.pf3-pick.on .pf3-chk svg { opacity: 1; }
+#cheer3 { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 14px); transform: translate(-50%, -140%); transition: transform .45s cubic-bezier(.2, 1.3, .4, 1); z-index: 9999; width: min(92vw, 380px); }
+#cheer3.on { transform: translate(-50%, 0); }
+.ch3-b { display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+.ch3-b > div { display: flex; flex-direction: column; gap: 2px; }
+.ch3-b small { color: var(--muted); font-size: 12.5px; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -2851,7 +2906,7 @@ function renderTrainV1() {
       <div class="mid"><b>${isToday ? "Heute" : fmtDate(date)}</b><div class="muted" style="font-size:12px">${isToday ? fmtDate(date) : "Plan: " + planFor(date.getDay()).name}</div></div>
       <button class="icon-btn" data-action="tnext">${ICON.right}</button>
     </div>
-    ${isV2() ? `<button class="tsel" data-tsel="1" ${S.trainDate < todayKey() ? "disabled" : ""}><span class="tsel-i">${peIco(actIcon(w.plan, plan.type))}</span><span class="tsel-t"><small>Training ${S.trainDate === todayKey() ? "heute" : "an diesem Tag"}</small><b>${esc(w.plan)}</b></span><em>Ändern</em><i>▾</i></button>` : ""}
+    ${isV2() ? `<button class="tsel" data-tsel="1"><span class="tsel-i">${peIco(actIcon(w.plan, plan.type))}</span><span class="tsel-t"><small>Training ${S.trainDate === todayKey() ? "heute" : "an diesem Tag"}</small><b>${esc(w.plan)}</b></span><em>Ändern</em><i>▾</i></button>` : ""}
     <div class="field" ${isV2() ? 'style="display:none"' : ""}><label style="display:flex;justify-content:space-between;align-items:center">Trainingsart (falls du tauschst)
         <button class="chip" data-action="planedit" style="font-size:12px;padding:4px 10px">✎ Bearbeiten</button></label>
       <div class="seg">${[...(planByName(w.plan) ? [] : [{ name: w.plan }]), ...TYPES].map(o =>
@@ -3538,8 +3593,8 @@ async function doPublish() {
       if (!recs[k] || v > recs[k].v) recs[k] = { n: e.name, v: Math.round(v * 100) / 100, t: prText(e), m: exMode(e) }; }
     const rb = runBest(null); if (rb.km > 0) recs["run|km"] = { n: "Laufen – weiteste Strecke", v: rb.km, t: `${fmtN(rb.km, 2)} km`, m: "run" };
     if (rb.pace < Infinity) recs["run|pace"] = { n: "Laufen – schnellstes Tempo", v: -rb.pace, t: fmtPace(rb.pace), m: "pace" };
-    const base = { name: S.dispName || S.name || "Sportler", code: S.code, photo: S.photo || "", frame: typeof S.frame === "number" ? S.frame : 0 };
-    const data = S.share ? { ...base, tier: st.tier, rp: Math.round(st.rp), peak: st.peak, stats, recs, private: false } : { ...base, private: true };
+    const base = { name: S.dispName || S.name || "Sportler", code: S.code, photo: S.photo || "", frame: typeof S.frame === "number" ? S.frame : 0, motto: S.motto || "" };
+    const data = S.share ? { ...base, tier: st.tier, rp: Math.round(st.rp), peak: st.peak, stats, recs, show: pfShow(a, recs), private: false } : { ...base, private: true };
     const js = JSON.stringify(data); if (js === FR.lastPub) return; FR.lastPub = js;
     await setDoc(profRef(S.uid), { ...data, updated: Date.now() });
   } catch (e) { console.log("profil", e); }
@@ -3578,7 +3633,7 @@ function friendsCard() {
   const st = rankState(), me = { uid: S.uid, ...myProfile(), tier: st.tier, rp: Math.round(st.rp), me: true };
   const fs = frFriends(), board = [me, ...fs].sort((a, b) => (!!a.private - !!b.private) || (b.rp || 0) - (a.rp || 0)), inc = frIncoming(), out = frOutgoing();
   const nm = f => f.names?.[f.members.find(m => m !== S.uid)] || "Jemand";
-  return `<details class="card fr-me" ${S.pfOpen ? "open" : ""}><summary>${pAvatar(myProfile(), 46)}<span class="fr-n"><b>Mein Profil & Freundescode</b><small>Profil bearbeiten · Code ${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</small></span><span class="fr-chev">▾</span></summary>` + profileCard() + `<div class="fr-card">
+  return `<details class="card fr-me" ${S.pfOpen ? "open" : ""}><summary>${pAvatar(myProfile(), 46)}<span class="fr-n"><b>Mein Profil & Freundescode</b><small>Profil bearbeiten · Code ${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</small></span><span class="fr-chev">▾</span></summary>` + profileCard() + (isV2() ? `<div class="fr-row2" style="margin:12px 0 0"><button class="btn" data-frprof="me">Profil ansehen</button><button class="btn primary" data-pfedit="1">Motto & Vitrine</button></div>` : "") + `<div class="fr-card">
       <div class="fr-code-k">Dein Freundescode</div>
       <div class="fr-code">${S.code ? S.code.replace(/(...)(...)/, "$1 $2") : "…"}</div>
       <div class="fr-row2"><button class="btn" data-action="frcopy">📋 Kopieren</button><button class="btn primary" data-action="frshare">📤 Teilen</button></div>
@@ -3589,10 +3644,10 @@ function friendsCard() {
       <button class="mini ok" data-action="fraccept" data-id="${f.id}">✓</button><button class="mini" data-action="frdel" data-id="${f.id}">✕</button></div>`).join("")}</div>` : ""}
     <h2>Rangliste unter Freunden</h2>
     <div class="card fr-list">${board.map((p, i) => { const r = RANKS[p.tier || 0];
-      return `<div class="fr-item ${p.me ? "me" : ""}"><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${pAvatar(p, 42)}
+      return `<div class="fr-item ${p.me ? "me" : ""}" ${isV2() ? `data-frprof="${p.me ? "me" : p.uid}"` : ""}><span class="fr-pos ${i < 3 && !p.private ? "top" + i : ""}">${p.private && !p.me ? "–" : i + 1}</span>${pAvatar(p, 42)}
         <span class="fr-n"><b>${esc(p.name)}${p.me ? " (du)" : ""}</b><small>${p.private && !p.me ? "🔒 hält seinen Fortschritt privat" : `${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP`}</small>${isV2() && !(p.private && !p.me) ? (() => { const nx = RANKS[(p.tier || 0) + 1], pc = nx ? Math.max(0, Math.min(100, ((p.rp || 0) - r.min) / (nx.min - r.min) * 100)) : 100;
           return `<i class="fr-bar" style="--rc:${r.c}"><b style="width:${pc}%"></b></i><small class="fr-nx">${nx ? `noch ${fmtN(Math.max(0, nx.min - (p.rp || 0)), 0)} RP bis ${nx.n}` : "Höchster Rang"}</small>`; })() : ""}</span>
-        ${p.me ? "" : `<button class="mini ${FR.rmArm === p.uid ? "warn" : ""}" data-action="frrm" data-uid="${p.uid}" title="Entfernen">${FR.rmArm === p.uid ? "Sicher?" : "⋯"}</button>`}</div>`; }).join("")}
+        ${p.me ? (isV2() ? `<span class="fr-go">›</span>` : "") : isV2() ? `<button class="mini" data-frmenu="${p.uid}" title="Optionen">⋯</button>` : `<button class="mini ${FR.rmArm === p.uid ? "warn" : ""}" data-action="frrm" data-uid="${p.uid}" title="Entfernen">${FR.rmArm === p.uid ? "Sicher?" : "⋯"}</button>`}</div>`; }).join("")}
       ${fs.length ? "" : `<div class="empty" style="padding:14px 6px">Noch keine Freunde. Teile deinen Code – sobald jemand ihn eingibt, seht ihr euch hier und in euren Erfolgen.</div>`}</div>
     ${out.length ? `<h2>Gesendet</h2><div class="card fr-list">${out.map(f => `<div class="fr-item">${avatar(nm(f), "var(--muted)")}<span class="fr-n"><b>${esc(nm(f))}</b><small>wartet auf Bestätigung</small></span><button class="mini" data-action="frdel" data-id="${f.id}">Zurückziehen</button></div>`).join("")}</div>` : ""}
     <div class="note" style="margin:10px 2px 0">Ohne Freigabe sehen Freunde nur deinen Namen. Tagesaufgaben, Notizen und To-Dos bleiben immer privat.</div>`;
@@ -4882,13 +4937,13 @@ function v2BellFix(root) {
 // ---------- Erfolge: Linien-Symbole statt Emojis ----------
 const AI2 = {
   padel: '<g transform="rotate(-40 11 11)"><path d="M11 1.5c3.3 0 5.5 2.4 5.5 5.7 0 2.7-1.5 4.6-3.3 5.6l-.9 1.2h-2.6l-.9-1.2C7 11.8 5.5 9.9 5.5 7.2c0-3.3 2.2-5.7 5.5-5.7z"/><path d="M9.7 14h2.6v5.5H9.7z"/><circle cx="9.2" cy="5.8" r=".6"/><circle cx="12.8" cy="5.8" r=".6"/><circle cx="11" cy="8.5" r=".6"/><circle cx="9.2" cy="11" r=".6"/><circle cx="12.8" cy="11" r=".6"/></g><circle cx="19.5" cy="19" r="1.8"/>',
-  kick: '<circle cx="7.5" cy="4" r="2"/><path d="M8 6.5l1.5 6-2.5 8.5M9.5 12.5l4.5-1.5 7-3.5"/><path d="M8.3 8.2L5.5 7.5 5.8 5M8.8 8.6l2.7-.6.2-2.4"/>',
+  kick: '<path d="M18 1.5V4"/><rect x="15.5" y="4" width="5" height="13" rx="2.5"/><circle cx="5.5" cy="4.5" r="1.8"/><path d="M6 6.8l1.5 5.2L6 21M7.5 12l3.8-1 3.9-1.2M6.2 8.2L9 7.2V5.4M6.2 8.2L3.8 9.6V7.6"/>',
   karate: '<circle cx="12" cy="4" r="2"/><path d="M8 8.5h8l-1 5.5H9z"/><path d="M8.5 12h7M12 12l-2 4.5M12 12l2 4.5"/><path d="M9 14l-2 7M15 14l2 7M8 8.5L4.5 12M16 8.5l3.5-3"/>',
-  tkd: '<circle cx="6" cy="8" r="2"/><path d="M7 10.5l2.5 3.5L8 21M9.5 14l11-9.5M7 10.5L3.5 14M7.5 10L11 8"/>',
+  tkd: '<circle cx="4.8" cy="10" r="1.8"/><path d="M6 12l3.5 3L8.5 21.5M9.5 15L21 3M6 12l-3.5 3M6.3 11.8l3.9-1.6"/><path d="M7 13.6l2.4-1.2M9 12.6l-.4 2.4M9 12.6l1.5 1.9"/>',
   judo: '<path d="M8 3l-4.5 3 1.5 5 2.5-1V21h9V10l2.5 1 1.5-5L16 3l-4 6z"/><path d="M7.5 14h9M12 14l-1.5 4M12 14l1.5 4"/>',
   wrestle: '<circle cx="7" cy="5" r="2"/><circle cx="17" cy="5" r="2"/><path d="M7 7.5l1 5-2 8M17 7.5l-1 5 2 8M8 9.5l4 2 4-2M8 12.5h8"/>',
   mma: '<path d="M8.3 2.5h7.4l5.3 5.3v7.4l-5.3 5.3H8.3L3 15.2V7.8z"/><path d="M9.5 9.5V8.2a1.7 1.7 0 013.4 0v.3a1.5 1.5 0 013 .6v3.4a3 3 0 01-3 3h-1.4a2 2 0 01-2-2z"/>',
-  fence: '<path d="M3.5 20.5L19 5"/><path d="M17 3l4 4"/><path d="M5.5 16l2.5 2.5"/><circle cx="4.5" cy="19.5" r="1.5"/>',
+  fence: '<circle cx="6" cy="5" r="2"/><path d="M6.5 7.3L8 12l5 3 .5 6M8 12l-3.5 9M7 9h5M12.4 7.6v2.8M12.5 9l9-2.5M6.6 8.4L4 6.3l.5-2.6"/>',
   fist: '<path d="M6 10V7.5a1.5 1.5 0 013 0V6.5a1.5 1.5 0 013 0v.5a1.5 1.5 0 013 0v1a1.5 1.5 0 013 0V13a6 6 0 01-6 6h-1a5 5 0 01-5-5z"/><path d="M6 11.5h4.5a1.5 1.5 0 010 3H8"/>',
   muay: '<circle cx="12" cy="4.5" r="2"/><path d="M9.5 3.6h5"/><path d="M12 7v6l4 2.5-3 5M12 13l-3 7.5M12 9l-4 2 1.5 2.5M12 9l4 1.5 1-3"/>',
   mountain: '<path d="M2 20l7-12 4 6 2.5-3.5L22 20z"/><path d="M9 8l1.6 2.6M7 20c2-2 3-4 6-5s4-2 5-4" stroke-dasharray="1.5 2.2"/>',
@@ -4896,12 +4951,12 @@ const AI2 = {
   summit: '<path d="M2 20l8-14 4 6 2-2.5L22 20z"/><path d="M10 6V2l4 1.5L10 5"/>',
   boulder: '<path d="M3 20c0-6 2.5-11 7-13s9-1 10.5 4 .5 9-1 9z"/><circle cx="9" cy="12" r="1"/><circle cx="13" cy="9" r="1"/><circle cx="15.5" cy="14" r="1"/><circle cx="11" cy="16.5" r="1"/>',
   mtb: '<circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17l3.5-6.5h5.5l4 6.5M9 10.5l3 6.5h-6.5M12 8h3"/><path d="M1.5 8l3-4 2 2.5 2-3 3 4.5"/>',
-  spin: '<circle cx="8" cy="16" r="3"/><path d="M8 16l5-7h4M13 9l-1-3h-3M15.5 9l2 11M5 21h14M17 6.5h3"/>',
+  spin: '<circle cx="15.6" cy="4.2" r="1.7"/><path d="M9 9.5l4.5-3 2.5 2.2M9 9.5l3.5 2.5-2 4M7.5 9.5H10"/><path d="M9 9.5l1 6.5h7M17 16l-1.4-7.3h3"/><circle cx="17" cy="16" r="3.2"/><path d="M10 16l-2.5 5M18.5 18.8L19.5 21M5 21h15.5"/>',
   walk: '<circle cx="12" cy="4" r="2"/><path d="M11.5 6.5l-1.5 6 2.5 3-1 5.5M10 12.5l-2.5 8M11.5 6.5l3.5 4 2-.5M11 8L8 10.5"/>',
   rope: '<circle cx="12" cy="5" r="2"/><path d="M12 7.5v6l-2 6.5M12 13.5l2 6.5M12 9l-4 2.5M12 9l4 2.5"/><path d="M8 11.5c-5 2-5 10 4 10s9-8 4-10"/>',
   kettle: '<path d="M8.6 10.6V7a3.4 3.4 0 016.8 0v3.6"/><path d="M6.6 21a6.4 6.4 0 1110.8 0z"/>',
   yoga2: '<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M7 10.5l5 2.5 5-2.5M5 18c2-1.8 4.5-2.8 7-2.8s5 1 7 2.8M4.5 18h15"/>',
-  pilates: '<circle cx="5" cy="14" r="2"/><path d="M7 15l7-1.5 3-6M14 13.5l6 2.5M2 19h20"/>',
+  pilates: '<circle cx="7" cy="7.4" r="1.8"/><path d="M8 9.6l3 5.9 8.5-7"/><path d="M8.4 10.6l7.5-3"/><path d="M2.5 17.5h19"/>',
   stretch: '<circle cx="10" cy="4" r="2"/><path d="M10.5 6.5l1.5 7-2 7.5M12 13.5l3 7M11 8.5c2-2 4-3 7-3M11 9l-3.5 4"/>',
   torso: '<path d="M4 14c0-4 2-7.5 4.5-9 1-.6 2.2-.4 2.7.5l.8 1.5c.4.8 0 1.7-.8 2l-2.2.9c.2 1.5.9 2.6 2 3.2 1.5-2.3 4-3.4 6.6-2.9 2.4.5 3.9 2.6 3.9 5v1.3c0 1.4-1.1 2.5-2.5 2.5H6.5A2.5 2.5 0 014 14z"/><path d="M13.5 13.5c1.2-.8 2.8-.9 4.2-.3"/>',
   squat: '<path d="M2.5 7h19"/><rect x="3.5" y="4.5" width="2.2" height="5" rx="1"/><rect x="18.3" y="4.5" width="2.2" height="5" rx="1"/><circle cx="12" cy="4.3" r="1.8"/><path d="M12 7v5M12 12l-4 2.5 1 6M12 12l4 2.5-1 6M9.5 7.5l2 1.5 2-1.5"/>',
@@ -4911,7 +4966,7 @@ const AI2 = {
   tennis: '<circle cx="12" cy="12" r="9"/><path d="M5.2 5.8c3 1.8 4.3 3.8 4.3 6.2s-1.3 4.4-4.3 6.2M18.8 5.8c-3 1.8-4.3 3.8-4.3 6.2s1.3 4.4 4.3 6.2"/>',
   soccer: '<circle cx="12" cy="12" r="9"/><path d="M12 7.6l3.6 2.6-1.4 4.2H9.8L8.4 10.2z"/><path d="M12 7.6V3.2M15.6 10.2l4.6-1.6M14.2 14.4l2.8 3.8M9.8 14.4L7 18.2M8.4 10.2L3.8 8.6"/>',
   shuttle: '<g transform="rotate(40 12 12)"><path d="M9.5 13.5l-3.5-9 3.5 1.8L12 2.5l2.5 3.8L18 4.5l-3.5 9z"/><path d="M10 6.5l.8 7M14 6.5l-.8 7"/><path d="M9.5 13.5h5v1.6a2.5 2.5 0 01-5 0z"/></g>',
-  volley: '<circle cx="12" cy="12" r="9"/><path d="M12 12C9 9.5 8 6.5 8.4 3.8"/><path d="M12 12c3.6-1.2 6.6-.6 8.9 1.4"/><path d="M12 12c.5 3.7-.7 6.6-3.2 8.6"/><path d="M12.2 3.1c-.8 3 0 6 2.2 8.4M20.4 15.6c-3 .4-5.8-.6-7.8-2.9M5.6 18.3c.7-3 2.8-5.2 5.8-6.1"/>',
+  volley: '<circle cx="12" cy="12" r="9"/><path d="M12 12a8 8 0 008 4"/><path d="M7.5 13.5a12 12 0 008.5 6.5"/><path d="M12 12a8 8 0 00-7.46 4.93"/><path d="M12.95 7.35a12 12 0 00-9.88 4.11"/><path d="M12 12a8 8 0 00-.54-8.93"/><path d="M15.55 15.15a12 12 0 001.38-10.61"/>',
   pingpong: '<circle cx="9.5" cy="9.5" r="6.5"/><path d="M14 14l5.5 5.5"/><path d="M13.4 15.6l1.2 1.2"/><circle cx="19" cy="6" r="1.8"/>',
   racket: '<ellipse cx="9.5" cy="8.5" rx="5.5" ry="6" transform="rotate(-35 9.5 8.5)"/><path d="M13 13l6.5 6.5M7 6.5l5 4M6 9.5l4.5 3.5M9 4.5l4.5 3.5"/><circle cx="18.5" cy="5.5" r="1.6"/>',
   glove2: '<path d="M6.5 11V7.5A4.5 4.5 0 0111 3h2.5A4.5 4.5 0 0118 7.5V12a5 5 0 01-5 5H9.5a3 3 0 01-3-3z"/><path d="M6.5 11H5a1.8 1.8 0 000 3.6h1.6M10 7.5h5M8 17v3.5h8.5V16"/>',
@@ -4940,7 +4995,7 @@ const AI2 = {
   rings: '<path d="M7 2v8M17 2v8"/><circle cx="7" cy="14" r="4"/><circle cx="17" cy="14" r="4"/>',
   leg: '<path d="M9 2.5h6.5l-.5 7-1.2 3.5.4 6-1 2h-3l.5-2-.5-6L9 9.5z"/><path d="M10.5 8.5c1 .6 2.4.6 3.5 0M11 14.5h2"/>',
   puzzle: '<path d="M4 8h3.5a2 2 0 114 0H15v3.5a2 2 0 110 4V19H4v-3.5a2 2 0 100-4z"/>',
-  swim: '<circle cx="16" cy="6" r="2"/><path d="M3 12l5-3 4 2.5 3-2M2 17c2 0 2-1.5 4-1.5S8 17 10 17s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 21c2 0 2-1.5 4-1.5S8 21 10 21s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>',
+  swim: '<circle cx="7" cy="9.5" r="1.8"/><path d="M9.5 11h7.5l3-1.5"/><path d="M10 10.5C11 6.5 7.5 4 3.5 6.5"/><path d="M2 15c2 0 2-1.5 4-1.5S8 15 10 15s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 19.5c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>',
   bike: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5L9 9h6l3.5 7.5M9 9l3 7.5h-6.5M12 6h3"/>',
   climb: '<path d="M4 21L10 3h4l6 18"/><circle cx="10.5" cy="9" r="1"/><circle cx="13.5" cy="13" r="1"/><circle cx="10" cy="17" r="1"/>',
   hike: '<path d="M2 20l6.5-10 4 6 3-4.5L22 20z"/><path d="M8.5 10l2 3"/>',
@@ -5030,7 +5085,7 @@ async function peAdd(name, day) {
     const t = { name, type: c[1] }; if (c[1] === "gym") t.groups = [...(c[3] || [])]; TYPES.push(t); }
   if (day != null) WEEK[day] = name;
   await savePlan();
-  if (S.peToday) { S.peToday = false; closeSheet(); S.workout.plan = name; findPrevSame(); saveWorkout(true); toast(`Heute: ${name} ✓`); return; }
+  if (S.peToday) { S.peToday = false; closeSheet(); setTrainType(name); return; }
   openPlanEditor(); toast(day != null ? `${WD_LONG[day]}: ${name} ✓` : `„${name}“ hinzugefügt ✓`);
 }
 document.addEventListener("click", e => {
@@ -5077,7 +5132,7 @@ document.addEventListener("click", e => { if (e.target.closest("[data-sthelp]"))
 function openTrainSel() {
   const w = S.workout, list = [...(planByName(w.plan) ? [] : [{ name: w.plan, type: "session" }]), ...TYPES];
   $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Training ${S.trainDate === todayKey() ? "heute" : "an diesem Tag"}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
-    <p class="muted" style="font-size:13px;margin:0 0 10px">Tauschen, ohne den Wochenplan zu ändern.</p>
+    <p class="muted" style="font-size:13px;margin:0 0 10px">${S.trainDate < todayKey() ? "Nur die Trainingsart wird korrigiert – Werte und Rang bleiben unverändert." : "Tauschen, ohne den Wochenplan zu ändern."}</p>
     <div class="pe-grid">${list.map(t => `<button class="tsel-it ${t.name === w.plan ? "on" : ""}" data-action="plansel" data-v="${esc(t.name)}">${peIco(actIcon(t.name, t.type))}<b>${esc(t.name)}</b><small>${KIND_LABEL[t.type] || ""}</small></button>`).join("")}
       <button class="tsel-new" data-pe="cat" data-today="1">${peIco("medal").replace(AI2.medal, '<path d="M12 5v14M5 12h14"/>')}<b>Neue Trainingsart</b><small>Schwimmen, Klettern, Padel …</small></button></div>
     <button class="btn block" style="margin-top:12px" data-action="planedit">Wochenplan bearbeiten</button>`;
@@ -5085,9 +5140,21 @@ function openTrainSel() {
 }
 document.addEventListener("click", e => {
   if (e.target.closest("[data-tsel]")) { openTrainSel(); return; }
-  if (e.target.closest(".tsel-it")) setTimeout(closeSheet, 0);
+  const it = e.target.closest(".tsel-it"); if (it) { e.stopImmediatePropagation(); closeSheet(); setTrainType(it.dataset.v); return; }
   const n = e.target.closest('[data-pe="cat"][data-today]'); if (n) { e.stopImmediatePropagation(); openActCatalog(null, true); }
 }, true);
+
+// Trainingsart eines Tages setzen – an vergangenen Tagen nur die Art (Werte bleiben gesperrt)
+async function setTrainType(name) {
+  const k = S.trainDate;
+  if (k >= todayKey()) { S.workout.plan = name; findPrevSame(); saveWorkout(true); toast(`${k === todayKey() ? "Heute" : "Training"}: ${name} ✓`); return; }
+  S.workout.plan = name; S.workout.date = k;
+  try { await setDoc(woRef(k), { date: k, plan: name }, { merge: true });
+    if (S.allWo) { const ix = S.allWo.findIndex(w => w.date === k); if (ix >= 0) S.allWo[ix].plan = name; else S.allWo.push({ id: k, ...JSON.parse(JSON.stringify(S.workout)) }); }
+    toast(`${fmtDate(fromKey(k))}: ${name} ✓`); }
+  catch { toast("Speichern fehlgeschlagen – bist du offline?"); }
+  findPrevSame(); renderTrain();
+}
 
 /* ===================== V2/V3: Rangfarben = Symbol = Profilrahmen, jede Stufe eigene Farbe ===================== */
 function rankCol2(i) { return ["#CD7F32", "#C3C9D4", "#FFC400", "#2FD4B4", "#5EC4FF", "#33D17A", "#FF7A3D", "#FF3355", "#6A6BFF", "#C04DFF", null][i]; }
@@ -5640,6 +5707,174 @@ setInterval(() => {
 // Nach dem Anmelden: schon gesehene Erklärungen aus dem Profil holen
 { const go = setInterval(async () => { if (!S.uid) return; clearInterval(go); try { const u = await getDoc(userRef()); if (u.exists() && u.data().tipsSeen) S.tipsSeen = u.data().tipsSeen; } catch {} }, 500); }
 function tipsReset() { try { localStorage.removeItem("tracker-tips"); } catch {} S.tipsSeen = {}; if (S.uid) setDoc(userRef(), { tipsSeen: {} }, { mergeFields: ["tipsSeen"] }).catch(() => {}); toast("Erklärungen werden wieder angezeigt ✓"); }
+
+/* ===================== V3: Profile von Freunden – ansehen, Vitrine, Anfeuern, Vergleich =====================
+   users/{uid}: motto, showcase ["a:<icon>", "r:<rekord>"] (max. 6, selbst gewählt)
+   profiles/{uid}: motto (immer), show [...] (nur bei Freigabe) – fertig aufbereitet, damit Freunde nichts nachrechnen müssen
+   friendships/{id}.cheer.{uid} = Zeitpunkt des letzten Anfeuerns */
+const PF_MAX = 6;
+const PF_I = {
+  eye: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg>',
+  fire: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4 0-7-2.8-7-6.6 0-3.4 2.4-5.4 3.6-8 .6 1.8 1.6 3 2.9 3.6C11.9 7 13.4 4.4 15.6 3c-.4 2.6.6 4.8 2.1 6.6 1.2 1.4 1.3 3 1.3 4.8C19 18.2 16 21 12 21z"/><path d="M12 21c-1.8 0-3-1.3-3-3 0-1.9 1.6-2.7 2.4-4.4.9 1.2 3.6 2.4 3.6 4.4 0 1.7-1.2 3-3 3z"/></svg>',
+  cmp: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 20V10M10 20V4M15 20v-7M20 20V8"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg>',
+  rm: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c.7-3.8 3.4-6 7-6s6.3 2.2 7 6M16 11h6"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 007.5 11M17 6h3v1.5a3.5 3.5 0 01-3.5 3.5M12 14v3M8 21h8M9.5 17h5l.5 4h-6z"/></svg>',
+};
+
+// ---------- Daten für das öffentliche Profil ----------
+function pfTi(c) { return c.lvl ? (c.fmt ? c.goals[c.lvl - 1] : c.lvl - 1) : -1; }
+function pfAchItem(c) { const ti = pfTi(c);
+  return { k: "a:" + c.icon, n: c.n, i: c.icon, e: c.emo || AEMO[c.icon] || "🏅", lvl: c.lvl, ti, tn: c.lvl ? (c.fmt ? RANKS[c.goals[c.lvl - 1]]?.n : TIER[c.lvl - 1]) : "", txt: c.fmt ? "" : fmtN(c.v, c.dec ? 1 : 0) + (c.u || "") }; }
+function pfRecItem(k, r) { return { k: "r:" + k, n: r.n, t: r.t, m: r.m }; }
+// Auswahl auflösen – ohne eigene Auswahl automatisch die drei stärksten Erfolge
+function pfShow(a, recs) {
+  const pick = Array.isArray(S.showcase) ? S.showcase : null, out = [];
+  if (!pick) { a.cats.filter(c => c.lvl > 0 && !c.fromFriend).slice(0, 3).forEach(c => out.push({ ...pfAchItem(c), auto: 1 })); return out; }
+  for (const k of pick.slice(0, PF_MAX)) {
+    if (k.startsWith("a:")) { const c = a.cats.find(x => "a:" + x.icon === k && !x.fromFriend); if (c && c.lvl > 0) out.push(pfAchItem(c)); }
+    else if (k.startsWith("r:")) { const r = recs[k.slice(2)]; if (r) out.push(pfRecItem(k.slice(2), r)); }
+  }
+  return out;
+}
+// Nach dem Anmelden Motto & Vitrine laden
+{ const go = setInterval(async () => { if (!S.uid) return; clearInterval(go); try { const u = await getDoc(userRef()); if (u.exists()) { const d = u.data(); S.motto = d.motto || ""; S.showcase = Array.isArray(d.showcase) ? d.showcase : null; } } catch {} }, 500); }
+
+// ---------- Darstellung ----------
+function pfTile(it) {
+  if (it.k?.startsWith("r:")) return `<div class="pf3-t rec"><span class="pf3-ti" style="--tc:var(--accent)">${PF_I.trophy}</span><b>${esc(it.n)}</b><small>Bestwert</small><em>${esc(it.t || "")}</em></div>`;
+  const col = it.ti >= 0 ? TIER_COL[it.ti] : "var(--muted)", god = it.ti === TIER.length - 1;
+  return `<div class="pf3-t ${god ? "god" : ""}" style="--tc:${col}"><span class="pf3-ti ach-ico ${god ? "god ico-god" : it.ti >= 8 ? "ico-shine" : ""}" style="--tc:${col}">${achIco({ icon: it.i, emo: it.e })}</span><b>${esc(it.n)}</b>
+    <small style="color:${col}" class="${god ? "god-text" : ""}">${esc(it.tn || "")}</small><em>${esc(it.txt || "")}</em></div>`;
+}
+function pfData(uid) {
+  if (uid === "me" || uid === S.uid) { const st = rankState(), a = achievements(S.allWo || []), recs = pfRecs();
+    return { me: true, uid: S.uid, ...myProfile(), motto: S.motto || "", tier: st.tier, rp: Math.round(st.rp), peak: st.peak, private: !S.share, show: pfShow(a, recs),
+      stats: Object.fromEntries(a.cats.filter(c => !c.fromFriend).map(c => [c.icon, { n: c.n, v: c.v, u: c.u || "", f: c.fmt ? 1 : 0 }])) }; }
+  const p = { uid, ...(FR.profs[uid] || {}) };
+  // Freund mit älterer App-Version: stärkste Erfolge selbst ermitteln
+  if (!Array.isArray(p.show) && p.stats) p.show = Object.entries(p.stats).filter(([, s]) => Array.isArray(s.g) && !s.f && s.v > 0)
+    .map(([k, s]) => { const lvl = s.g.filter(g => s.v >= g).length; return { k: "a:" + k, n: s.n, i: k, e: s.e, lvl, ti: lvl - 1, tn: TIER[lvl - 1] || "", txt: fmtN(s.v, s.v % 1 ? 1 : 0) + (s.u || ""), auto: 1 }; })
+    .filter(x => x.lvl > 0).sort((a, b) => b.lvl - a.lvl).slice(0, 3);
+  return p;
+}
+function pfRecs() { const recs = {};
+  for (const w of S.allWo || []) for (const e of w.exercises || []) { const v = prValue(e); if (!(v > 0)) continue; const k = e.name + "|" + exMode(e);
+    if (!recs[k] || v > recs[k].v) recs[k] = { n: e.name, v, t: prText(e), m: exMode(e) }; }
+  const rb = runBest(null); if (rb.km > 0) recs["run|km"] = { n: "Laufen – weiteste Strecke", v: rb.km, t: `${fmtN(rb.km, 2)} km`, m: "run" };
+  if (rb.pace < Infinity) recs["run|pace"] = { n: "Laufen – schnellstes Tempo", v: -rb.pace, t: fmtPace(rb.pace), m: "pace" };
+  return recs; }
+// Vergleich: gemeinsame Kategorien, meine Werte gegen seine
+function pfCompare(p) {
+  if (p.me || p.private || !p.stats) return "";
+  const mine = achievements(S.allWo || []).cats.filter(c => !c.fromFriend && !c.fmt);
+  const rows = mine.map(c => ({ c, o: p.stats[c.icon] })).filter(x => x.o && !x.o.f && (x.o.v > 0 || x.c.v > 0))
+    .sort((a, b) => (b.c.v + b.o.v > 0) - (a.c.v + a.o.v > 0) || (b.c.lvl - a.c.lvl)).slice(0, 6);
+  if (!rows.length) return "";
+  const nm = (p.name || "").split(" ")[0];
+  return `<div class="pf3-h">Ihr im Vergleich</div><div class="card pf3-cmp">${rows.map(({ c, o }) => { const mx = Math.max(c.v, o.v, 1), d = c.dec ? 1 : 0;
+    return `<div class="pf3-cr"><div class="pf3-cn"><b>${esc(c.n)}</b>${c.v > o.v ? `<small class="pf3-lead">du führst</small>` : o.v > c.v ? `<small>${esc(nm)} führt</small>` : `<small>gleichauf</small>`}</div>
+      <div class="pf3-bar me"><i style="width:${c.v / mx * 100}%"></i><span>Du · ${fmtN(c.v, d)}${c.u || ""}</span></div>
+      <div class="pf3-bar"><i style="width:${o.v / mx * 100}%"></i><span>${esc(nm)} · ${fmtN(o.v, d)}${o.u || ""}</span></div></div>`; }).join("")}</div>`;
+}
+function openFriendProfile(uid) {
+  const p = pfData(uid); if (!p.name) return;
+  const r = RANKS[p.tier || 0], nx = RANKS[(p.tier || 0) + 1], pc = nx ? Math.max(0, Math.min(100, ((p.rp || 0) - r.min) / (nx.min - r.min) * 100)) : 100;
+  const f = !p.me && FR.list.find(x => x.id === frId(S.uid, uid)), since = f?.created ? new Date(f.created).toLocaleDateString("de-DE", { month: "long", year: "numeric" }) : "";
+  const hide = p.private && !p.me, st = p.stats || {}, show = p.show || [];
+  const kp = (v, l) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`;
+  $("#sheetInner").innerHTML = `<div class="pf3">
+    <div class="pf3-top"><button class="mini" data-action="closesheet">${ICON.x}</button>${p.me ? `<button class="btn pf3-edit" data-pfedit="1">${PF_I.edit} Bearbeiten</button>` : `<button class="mini" data-frmenu="${uid}">⋯</button>`}</div>
+    <div class="pf3-hero" style="--rc:${r.c}">${pAvatar(p, 104)}<b class="pf3-name">${esc(p.name)}${p.me ? ` <small>(du)</small>` : ""}</b>
+      ${p.motto ? `<p class="pf3-motto">„${esc(p.motto)}“</p>` : p.me ? `<button class="pf3-motto add" data-pfedit="1">+ Motto hinzufügen</button>` : ""}
+      ${hide ? `<div class="pf3-priv">🔒 ${esc(p.name)} hält den Fortschritt privat.</div>` : `<div class="pf3-rank">${rIco(r)} <span class="${r.god ? "god-text" : ""}">${r.n}</span> · ${fmtN(p.rp || 0, 0)} RP</div>
+      <i class="fr-bar pf3-rb" style="--rc:${r.c}"><b style="width:${pc}%"></b></i><small class="pf3-nx">${nx ? `noch ${fmtN(Math.max(0, nx.min - (p.rp || 0)), 0)} RP bis ${nx.n}` : "Höchster Rang"}${since ? ` · Freunde seit ${since}` : ""}</small>`}</div>
+    ${hide ? "" : `<div class="kpis perf-card pf3-k">${kp(fmtN(st.dumbbell?.v || 0, 0), "Trainings")}${kp(fmtN(st.flame?.v || 0, 0), "längste Serie")}${kp(`${rIco(RANKS[p.peak || 0])}`, "höchster Rang")}</div>
+    <div class="pf3-h">${show.length && show[0].auto ? "Top-Erfolge" : "Vitrine"}${p.me ? `<button class="chip" data-pfedit="1">Auswählen</button>` : ""}</div>
+    ${show.length ? `<div class="pf3-grid">${show.map(pfTile).join("")}</div>` : `<div class="card empty" style="padding:16px">${p.me ? "Noch nichts ausgewählt – tippe auf „Auswählen“." : "Noch keine Erfolge ausgestellt."}</div>`}
+    ${pfCompare(p)}`}
+    ${p.me && !S.share ? `<div class="note" style="margin-top:12px">Freigabe ist aus: Freunde sehen nur Name, Bild und Motto. Einschalten unter „Mein Profil & Freundescode“.</div>` : ""}
+    ${!p.me ? `<button class="btn primary block pf3-cheer" data-frcheer="${uid}" style="margin-top:14px">${PF_I.fire} ${pfCheerOk(uid) ? `${esc((p.name || "").split(" ")[0])} anfeuern` : "Heute schon angefeuert ✓"}</button>` : ""}
+  </div>`;
+  showSheet(true);
+}
+// ---------- Drei-Punkte-Menü ----------
+function openFriendMenu(uid) {
+  const p = FR.profs[uid] || {}, n = esc(p.name || "Freund");
+  $("#sheetInner").innerHTML = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">${pAvatar({ uid, ...p }, 44)}<b style="font-size:18px;flex:1">${n}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="menu">
+      <button data-frprof="${uid}">${PF_I.eye}<span>Profil ansehen<small>Rang, Vitrine und euer Vergleich</small></span></button>
+      <button data-frcheer="${uid}">${PF_I.fire}<span>Anfeuern<small>${pfCheerOk(uid) ? `${n} bekommt eine kleine Motivation` : "Heute schon angefeuert ✓"}</small></span></button>
+      ${p.code ? `<button data-frcode="${esc(p.code)}">${PF_I.copy}<span>Freundescode kopieren<small>${esc(p.code.replace(/(...)(...)/, "$1 $2"))} – zum Weitergeben</small></span></button>` : ""}
+      <button class="danger" data-frunf="${uid}">${PF_I.rm}<span>Als Freund entfernen<small>Ihr seht euch dann nicht mehr</small></span></button>
+    </div>`;
+  showSheet(true);
+}
+// ---------- Anfeuern ----------
+const pfCheerOk = uid => { const f = FR.list.find(x => x.id === frId(S.uid, uid)); return !(f?.cheer?.[S.uid] > Date.now() - 6 * 3600e3); };
+async function pfCheer(uid) {
+  const id = frId(S.uid, uid), f = FR.list.find(x => x.id === id), n = FR.profs[uid]?.name || "Dein Freund";
+  if (!pfCheerOk(uid)) { toast("Du hast heute schon angefeuert 🔥"); return; }
+  try { const t = Date.now(); await updateDoc(doc(db, "friendships", id), { [`cheer.${S.uid}`]: t }); if (f) f.cheer = { ...(f.cheer || {}), [S.uid]: t };
+    pgBuzz?.(25); toast(`🔥 ${n} wurde angefeuert!`); } catch { toast("Hat nicht geklappt – bist du online?"); }
+}
+// Angefeuert worden? → kurz zeigen (einmal pro Anfeuern)
+setInterval(() => {
+  if (!S.uid || !FR.list.length) return; let seen = {}; try { seen = JSON.parse(localStorage.getItem("tracker-cheer-" + S.uid) || "{}"); } catch {}
+  let ch = false;
+  for (const f of FR.list) { if (f.status !== "accepted") continue; const o = f.members.find(m => m !== S.uid), t = f.cheer?.[o]; if (!t || t <= (seen[f.id] || 0)) continue;
+    seen[f.id] = t; ch = true; if (t < Date.now() - 3 * 864e5) continue;
+    const n = FR.profs[o]?.name || f.names?.[o] || "Ein Freund";
+    if (typeof cheerShow === "function") cheerShow(n, o); }
+  if (ch) try { localStorage.setItem("tracker-cheer-" + S.uid, JSON.stringify(seen)); } catch {}
+}, 2500);
+function cheerShow(name, uid) {
+  document.querySelector("#cheer3")?.remove();
+  const el = document.createElement("div"); el.id = "cheer3";
+  el.innerHTML = `<div class="ch3-b">${pAvatar({ uid, ...(FR.profs[uid] || { name }) }, 54)}<div><b>${esc(name)} feuert dich an! 🔥</b><small>Zeit fürs nächste Training.</small></div></div>`;
+  document.body.appendChild(el); requestAnimationFrame(() => el.classList.add("on"));
+  try { softTone?.(1.2, false); } catch {} try { navigator.vibrate?.([30, 60, 30]); } catch {}
+  el.addEventListener("click", () => el.remove()); setTimeout(() => { el.classList.remove("on"); setTimeout(() => el.remove(), 500); }, 4200);
+}
+// ---------- Profil bearbeiten: Motto + Vitrine ----------
+function openProfileEdit() {
+  const a = achievements(S.allWo || []), recs = pfRecs();
+  const cur = new Set(Array.isArray(S.showcase) ? S.showcase : pfShow(a, recs).map(x => x.k));
+  S.pfSel = [...cur];
+  const achs = a.cats.filter(c => c.lvl > 0 && !c.fromFriend), rl = Object.entries(recs).sort((x, y) => x[1].n.localeCompare(y[1].n, "de"));
+  const it = (k, inner) => `<button class="pf3-pick ${cur.has(k) ? "on" : ""}" data-pfpick="${esc(k)}">${inner}<i class="pf3-chk">${CHECK}</i></button>`;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Profil bearbeiten</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <div class="pf3-h" style="margin-top:4px">Motto</div>
+    <input id="pfMotto" class="input" style="text-transform:none;letter-spacing:0" maxlength="60" placeholder="z. B. „Jeden Tag ein bisschen besser“" value="${esc(S.motto || "")}">
+    <div class="pf3-h">Vitrine <small id="pfCnt">${S.pfSel.length}/${PF_MAX}</small></div>
+    <p class="muted" style="font-size:13px;margin:-4px 0 10px">Wähle bis zu ${PF_MAX} Erfolge oder Bestwerte, die deine Freunde in deinem Profil sehen.</p>
+    ${achs.length ? `<div class="sub-h">Erfolge</div><div class="pf3-picks">${achs.map(c => { const x = pfAchItem(c), col = TIER_COL[x.ti] || "var(--muted)";
+      return it(x.k, `<span class="pf3-ti ach-ico" style="--tc:${col}">${achIco(c)}</span><span><b>${esc(c.n)}</b><small style="color:${col}">${esc(x.tn)}${x.txt ? " · " + esc(x.txt) : ""}</small></span>`); }).join("")}</div>` : `<div class="note">Noch keine Erfolge freigeschaltet.</div>`}
+    ${rl.length ? `<div class="sub-h" style="margin-top:12px">Bestwerte</div><div class="pf3-picks">${rl.map(([k, r]) => it("r:" + k, `<span class="pf3-ti" style="--tc:var(--accent)">${PF_I.trophy}</span><span><b>${esc(r.n)}</b><small>${esc(r.t)}</small></span>`)).join("")}</div>` : ""}
+    <button class="btn primary block" style="margin-top:14px" data-pfsave="1">Speichern</button>`;
+  showSheet(true);
+}
+async function pfSave() {
+  S.motto = ($("#pfMotto")?.value || "").trim().slice(0, 60); S.showcase = (S.pfSel || []).slice(0, PF_MAX);
+  try { await setDoc(userRef(), { motto: S.motto, showcase: S.showcase }, { merge: true }); } catch {}
+  FR.lastPub = ""; doPublish(); toast("Profil gespeichert ✓"); openFriendProfile("me");
+}
+document.addEventListener("click", async e => {
+  if (!isV2()) return;
+  const m = e.target.closest("[data-frmenu]"); if (m) { e.stopImmediatePropagation(); openFriendMenu(m.dataset.frmenu); return; }
+  const pv = e.target.closest("[data-frprof]"); if (pv && !e.target.closest("button:not([data-frprof])")) { e.stopImmediatePropagation(); openFriendProfile(pv.dataset.frprof); return; }
+  const c = e.target.closest("[data-frcheer]"); if (c) { e.stopImmediatePropagation(); await pfCheer(c.dataset.frcheer); if ($("#sheetInner .pf3")) openFriendProfile(c.dataset.frcheer); else closeSheet(); return; }
+  const cd = e.target.closest("[data-frcode]"); if (cd) { try { await navigator.clipboard.writeText(cd.dataset.frcode); toast("Code kopiert ✓"); } catch { toast(cd.dataset.frcode); } closeSheet(); return; }
+  const u = e.target.closest("[data-frunf]"); if (u) { e.stopImmediatePropagation(); const id = u.dataset.frunf, n = FR.profs[id]?.name || "diesen Freund";
+    if (!(await askYesNo(`${n} wirklich als Freund entfernen? Ihr seht dann gegenseitig weder Rang noch Erfolge.`, "Entfernen"))) return;
+    try { await deleteDoc(doc(db, "friendships", frId(S.uid, id))); toast("Freund entfernt"); } catch { toast("Hat nicht geklappt"); } closeSheet(); return; }
+  if (e.target.closest("[data-pfedit]")) { e.stopImmediatePropagation(); openProfileEdit(); return; }
+  const pk = e.target.closest("[data-pfpick]"); if (pk) { const k = pk.dataset.pfpick, s = new Set(S.pfSel || []);
+    if (s.has(k)) s.delete(k); else { if (s.size >= PF_MAX) { toast(`Maximal ${PF_MAX} – nimm erst eins raus.`); return; } s.add(k); }
+    S.pfSel = [...s]; pk.classList.toggle("on", s.has(k)); const n = $("#pfCnt"); if (n) n.textContent = `${s.size}/${PF_MAX}`; return; }
+  if (e.target.closest("[data-pfsave]")) { e.stopImmediatePropagation(); pfSave(); }
+}, true);
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
