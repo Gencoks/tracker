@@ -2213,6 +2213,13 @@
   #w3 .gw[data-g=count] .gw-row button { padding: 8px 6px; font-size: 13px; } #w3 .gw[data-g=count] .gw-kg input { width: 56px; }
   #w3 .gw[data-g=count] .gw-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; } #w3 .gw[data-g=count] .gw-chips button { padding: 6px 0; min-width: 0; }
   #w3 .gw[data-g=count] .gw-kg { gap: 4px; font-size: 11px; } #w3 .gw[data-g=count] .gw-kg button { width: 30px; height: 30px; font-size: 16px; } #w3 .gw[data-g=count] .gw-kg input { width: 48px; font-size: 16px; }
+  /* Training: Auswahlknopf für das heutige Training */
+  .tsel { display: flex; align-items: center; gap: 12px; width: 100%; margin: 12px 0 4px; padding: 14px 16px; border-radius: 20px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) var(--glass-a, 80%), transparent); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .tsel:disabled { opacity: .6; } .tsel-i .ach-svg { width: 28px; height: 28px; color: var(--accent-text); display: block; } .tsel-t { flex: 1; min-width: 0; display: grid; } .tsel-t small { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; } .tsel-t b { font-size: 18px; }
+  .tsel em { font-style: normal; font-size: 12px; color: var(--accent-text); font-weight: 600; } .tsel i { font-style: normal; color: var(--muted); }
+  .pe-grid .tsel-it, .pe-grid .tsel-new { display: grid; justify-items: center; gap: 4px; padding: 12px 6px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-align: center; }
+  .pe-grid .tsel-it .ach-svg, .pe-grid .tsel-new .ach-svg { width: 26px; height: 26px; color: var(--accent-text); } .pe-grid .tsel-it b, .pe-grid .tsel-new b { font-size: 13px; } .pe-grid .tsel-it small, .pe-grid .tsel-new small { font-size: 10.5px; color: var(--muted); }
+  .pe-grid .tsel-it.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .pe-grid .tsel-new { border-style: dashed; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -2462,6 +2469,9 @@ getRedirectResult(auth).catch(() => {});
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
+    if (S.uid) {   // es war jemand angemeldet → Seite neu laden, damit keine Daten des alten Kontos im Speicher bleiben
+      ["tracker-foodrecent", "tracker-tips", "tracker-w3", "tracker-w3t", "tracker-scrub", "tracker-pg", "tracker-wall", "tracker-wallid", "tracker-theme"].forEach(k => { try { localStorage.removeItem(k); } catch {} });
+      S.uid = null; location.reload(); return; }
     S.uid = null;
     if (S.unsubToday) S.unsubToday();
     if (S.unsubTodos) S.unsubTodos();
@@ -2470,6 +2480,7 @@ onAuthStateChanged(auth, async user => {
     $("#login").classList.remove("hidden"); $("#app").classList.add("hidden"); $("#nav").classList.add("hidden");
     return;
   }
+  if (S.uid && S.uid !== user.uid) { location.reload(); return; }
   S.uid = user.uid; S.name = (user.displayName || "").split(" ")[0];
   $("#login").classList.add("hidden"); $("#app").classList.remove("hidden"); $("#nav").classList.remove("hidden");
   try {
@@ -2478,6 +2489,7 @@ onAuthStateChanged(auth, async user => {
     S.hidden = (u.exists() && u.data().hidden) || {};
     S.exModes = (u.exists() && u.data().exModes) || {};
     if (u.exists() && Array.isArray(u.data().tasks)) S.taskCfg = u.data().tasks;
+    else if (!u.exists() || u.data().onboarded === false) { S.taskCfg = [{ key: "training", training: true }]; TYPES = [{ name: "Rest Day", type: "rest" }]; WEEK = { 0: "Rest Day", 1: "Rest Day", 2: "Rest Day", 3: "Rest Day", 4: "Rest Day", 5: "Rest Day", 6: "Rest Day" }; }   // neues Konto: nichts Fremdes vorgeben
     if (u.exists() && u.data().theme) setTheme(u.data().theme, false);
     if (u.exists() && u.data().plan) { const pl = u.data().plan; if (Array.isArray(pl.types)) TYPES = pl.types; if (pl.week) WEEK = { ...DEFAULT_WEEK, ...pl.week }; }
     const ud = u.exists() ? u.data() : {};
@@ -2839,7 +2851,8 @@ function renderTrainV1() {
       <div class="mid"><b>${isToday ? "Heute" : fmtDate(date)}</b><div class="muted" style="font-size:12px">${isToday ? fmtDate(date) : "Plan: " + planFor(date.getDay()).name}</div></div>
       <button class="icon-btn" data-action="tnext">${ICON.right}</button>
     </div>
-    <div class="field"><label style="display:flex;justify-content:space-between;align-items:center">Trainingsart (falls du tauschst)
+    ${isV2() ? `<button class="tsel" data-tsel="1" ${S.trainDate < todayKey() ? "disabled" : ""}><span class="tsel-i">${peIco(actIcon(w.plan, plan.type))}</span><span class="tsel-t"><small>Training ${S.trainDate === todayKey() ? "heute" : "an diesem Tag"}</small><b>${esc(w.plan)}</b></span><em>Ändern</em><i>▾</i></button>` : ""}
+    <div class="field" ${isV2() ? 'style="display:none"' : ""}><label style="display:flex;justify-content:space-between;align-items:center">Trainingsart (falls du tauschst)
         <button class="chip" data-action="planedit" style="font-size:12px;padding:4px 10px">✎ Bearbeiten</button></label>
       <div class="seg">${[...(planByName(w.plan) ? [] : [{ name: w.plan }]), ...TYPES].map(o =>
         `<button class="chip ${o.name === w.plan ? "accent" : ""}" data-action="plansel" data-v="${esc(o.name)}">${esc(o.name)}</button>`).join("")}</div></div>
@@ -3632,7 +3645,7 @@ function exPickGroups(all, names) {
 // ---------- Erster Start: kurze Einrichtung für neue Nutzer ----------
 const ONB_TASKS = [
   { key: "wasser", t: "2 Liter Wasser getrunken", on: 1 }, { key: "lesen", t: "15 Minuten gelesen", on: 1 }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht", on: 1 },
-  { key: "schritte", t: "10.000 Schritte", on: 1 }, { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" },
+  { key: "schritte", t: "10.000 Schritte", on: 1 }, { key: "dehnen", t: "10 Minuten gedehnt" },
   { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" }, { key: "schlaf", t: "Vor 23 Uhr im Bett" },
   { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", remind: "07:00" },
 ];
@@ -3644,13 +3657,13 @@ const ONB_PLANS = {
   ul: { n: "Ober- / Unterkörper", d: "4 Tage pro Woche", types: [{ name: "Oberkörper", type: "gym", groups: ["Brust", "Rücken", "Schultern", "Bizeps", "Trizeps"] }, { name: "Unterkörper", type: "gym", groups: ["Beine", "Bauch"] }, { name: "Rest Day", type: "rest" }],
     week: { 1: "Oberkörper", 2: "Unterkörper", 3: "Rest Day", 4: "Oberkörper", 5: "Unterkörper", 6: "Rest Day", 0: "Rest Day" } },
   run: { n: "Laufen", d: "3 Läufe pro Woche", types: [{ name: "Laufen", type: "run" }, { name: "Rest Day", type: "rest" }], week: { 1: "Laufen", 2: "Rest Day", 3: "Laufen", 4: "Rest Day", 5: "Rest Day", 6: "Laufen", 0: "Rest Day" } },
-  none: { n: "Erstmal ohne Plan", d: "Später unter Training einrichten", types: JSON.parse(JSON.stringify(DEFAULT_TYPES)), week: { 1: "Rest Day", 2: "Rest Day", 3: "Rest Day", 4: "Rest Day", 5: "Rest Day", 6: "Rest Day", 0: "Rest Day" } },
+  none: { n: "Erstmal ohne Plan", d: "Später unter Training einrichten", types: [{ name: "Rest Day", type: "rest" }], week: { 1: "Rest Day", 2: "Rest Day", 3: "Rest Day", 4: "Rest Day", 5: "Rest Day", 6: "Rest Day", 0: "Rest Day" } },
 };
 function onbShow() {
   S.onb = S.onb || { step: 0, name: S.name || "", tasks: new Set(ONB_TASKS.filter(t => t.on).map(t => t.key)), plan: "full" };
   let el = $("#onb"); if (!el) { el = document.createElement("div"); el.id = "onb"; document.body.appendChild(el); }
   const o = S.onb, dots = [0, 1, 2].map(i => `<i class="${i === o.step ? "on" : ""}"></i>`).join("");
-  const body = o.step === 0 ? `<div class="onb-emo">👋</div><h1>Willkommen!</h1><p>Hake jeden Tag deine Aufgaben ab, trag dein Training ein, sammle Rangpunkte und schalte Pokale, Panoramen und Tiere frei.</p>
+  const body = o.step === 0 ? `<div class="onb-emo">👋</div><h1>Willkommen!</h1><p>Hake jeden Tag deine Aufgaben ab, trag dein Training ein, sammle Rangpunkte und schalte ${isV2() ? "Pokale, Profilrahmen und Hintergründe" : "Pokale, Panoramen und Tiere"} frei.</p>
       <label class="onb-l">Wie sollen dich deine Freunde sehen?</label><input id="onbName" class="input" maxlength="20" value="${esc(o.name)}" placeholder="Dein Vorname">`
     : o.step === 1 ? `<div class="onb-emo">✅</div><h1>Tägliche Aufgaben</h1><p>Was willst du jeden Tag schaffen? Du kannst das später jederzeit ändern. Für volle Rangpunkte zählen mindestens 4 Aufgaben – mehr bringt keinen Vorteil, damit es für alle fair bleibt.</p>
       <div class="onb-grid">${ONB_TASKS.map(t => `<button class="opt ${o.tasks.has(t.key) ? "on" : ""}" data-action="onbtask" data-k="${t.key}"><span><b>${esc(t.t)}</b>${t.s ? `<small>${esc(t.s)}</small>` : ""}</span></button>`).join("")}</div>`
@@ -4868,6 +4881,47 @@ function v2BellFix(root) {
 
 // ---------- Erfolge: Linien-Symbole statt Emojis ----------
 const AI2 = {
+  padel: '<path d="M12 2.5c3.6 0 6 2.6 6 6.2 0 2.9-1.6 5-3.6 6.1L13.5 16h-3l-.9-1.2C7.6 13.7 6 11.6 6 8.7c0-3.6 2.4-6.2 6-6.2z"/><path d="M10.5 16h3v5.5h-3z"/><circle cx="10" cy="7" r=".7"/><circle cx="14" cy="7" r=".7"/><circle cx="12" cy="10" r=".7"/><circle cx="10" cy="12.5" r=".7"/><circle cx="14" cy="12.5" r=".7"/>',
+  kick: '<circle cx="7" cy="4.5" r="2"/><path d="M7 7v6l-2 7.5M7 13l2.5 7M7 9.5l14-3M7 8.5L3.5 11"/>',
+  karate: '<circle cx="12" cy="4" r="2"/><path d="M8 8.5h8l-1 5.5H9z"/><path d="M8.5 12h7M12 12l-2 4.5M12 12l2 4.5"/><path d="M9 14l-2 7M15 14l2 7M8 8.5L4.5 12M16 8.5l3.5-3"/>',
+  tkd: '<circle cx="6" cy="8" r="2"/><path d="M7 10.5l2.5 3.5L8 21M9.5 14l11-9.5M7 10.5L3.5 14M7.5 10L11 8"/>',
+  judo: '<path d="M8 3l-4.5 3 1.5 5 2.5-1V21h9V10l2.5 1 1.5-5L16 3l-4 6z"/><path d="M7.5 14h9M12 14l-1.5 4M12 14l1.5 4"/>',
+  wrestle: '<circle cx="7" cy="5" r="2"/><circle cx="17" cy="5" r="2"/><path d="M7 7.5l1 5-2 8M17 7.5l-1 5 2 8M8 9.5l4 2 4-2M8 12.5h8"/>',
+  mma: '<path d="M8.3 2.5h7.4l5.3 5.3v7.4l-5.3 5.3H8.3L3 15.2V7.8z"/><path d="M9.5 9.5V8.2a1.7 1.7 0 013.4 0v.3a1.5 1.5 0 013 .6v3.4a3 3 0 01-3 3h-1.4a2 2 0 01-2-2z"/>',
+  fence: '<path d="M3.5 20.5L19 5"/><path d="M17 3l4 4"/><path d="M5.5 16l2.5 2.5"/><circle cx="4.5" cy="19.5" r="1.5"/>',
+  fist: '<path d="M6 10V7.5a1.5 1.5 0 013 0V6.5a1.5 1.5 0 013 0v.5a1.5 1.5 0 013 0v1a1.5 1.5 0 013 0V13a6 6 0 01-6 6h-1a5 5 0 01-5-5z"/><path d="M6 11.5h4.5a1.5 1.5 0 010 3H8"/>',
+  muay: '<circle cx="12" cy="4.5" r="2"/><path d="M9.5 3.6h5"/><path d="M12 7v6l4 2.5-3 5M12 13l-3 7.5M12 9l-4 2 1.5 2.5M12 9l4 1.5 1-3"/>',
+  mountain: '<path d="M2 20l7-12 4 6 2.5-3.5L22 20z"/><path d="M9 8l1.6 2.6M7 20c2-2 3-4 6-5s4-2 5-4" stroke-dasharray="1.5 2.2"/>',
+  hikeboot: '<circle cx="13" cy="4" r="2"/><path d="M12.5 6.5l-2 6 3 3-1 5.5M10.5 12.5L7 20.5M12.5 6.5l4 2.5"/><path d="M18 8.5V21"/><path d="M12 9l-3.5 1"/>',
+  summit: '<path d="M2 20l8-14 4 6 2-2.5L22 20z"/><path d="M10 6V2l4 1.5L10 5"/>',
+  boulder: '<path d="M3 20c0-6 2.5-11 7-13s9-1 10.5 4 .5 9-1 9z"/><circle cx="9" cy="12" r="1"/><circle cx="13" cy="9" r="1"/><circle cx="15.5" cy="14" r="1"/><circle cx="11" cy="16.5" r="1"/>',
+  mtb: '<circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17l3.5-6.5h5.5l4 6.5M9 10.5l3 6.5h-6.5M12 8h3"/><path d="M1.5 8l3-4 2 2.5 2-3 3 4.5"/>',
+  spin: '<circle cx="8" cy="16" r="3"/><path d="M8 16l5-7h4M13 9l-1-3h-3M15.5 9l2 11M5 21h14M17 6.5h3"/>',
+  walk: '<circle cx="12" cy="4" r="2"/><path d="M11.5 6.5l-1.5 6 2.5 3-1 5.5M10 12.5l-2.5 8M11.5 6.5l3.5 4 2-.5M11 8L8 10.5"/>',
+  rope: '<circle cx="12" cy="5" r="2"/><path d="M12 7.5v6l-2 6.5M12 13.5l2 6.5M12 9l-4 2.5M12 9l4 2.5"/><path d="M8 11.5c-5 2-5 10 4 10s9-8 4-10"/>',
+  kettle: '<path d="M8.6 10.6V7a3.4 3.4 0 016.8 0v3.6"/><path d="M6.6 21a6.4 6.4 0 1110.8 0z"/>',
+  yoga2: '<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M7 10.5l5 2.5 5-2.5M5 18c2-1.8 4.5-2.8 7-2.8s5 1 7 2.8M4.5 18h15"/>',
+  pilates: '<circle cx="5" cy="14" r="2"/><path d="M7 15l7-1.5 3-6M14 13.5l6 2.5M2 19h20"/>',
+  stretch: '<circle cx="10" cy="4" r="2"/><path d="M10.5 6.5l1.5 7-2 7.5M12 13.5l3 7M11 8.5c2-2 4-3 7-3M11 9l-3.5 4"/>',
+  torso: '<path d="M8 3l-4.5 3 2 4 2-1V21h9V9l2 1 2-4L16 3a4 4 0 01-8 0z"/>',
+  squat: '<circle cx="10" cy="4" r="2"/><path d="M10 6.5l1 6.5h-4.5l1 7.5M11 13l4 2-1 5.5M10 9h7M4 9h3"/><path d="M3.5 7v4M18 7v4"/>',
+  jump: '<circle cx="12" cy="4" r="2"/><path d="M12 6.5v7M12 9L6 5M12 9l6-4M12 13.5L8 21M12 13.5l4 7.5"/>',
+  bench2: '<path d="M3 8h18"/><rect x="4.5" y="5" width="2.4" height="6" rx="1"/><rect x="17.1" y="5" width="2.4" height="6" rx="1"/><path d="M5 16h14M8 16v4M16 16v4M7 13.5h10"/>',
+  basket: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.6 5.6c2.6 2.4 3.4 4.4 3.4 6.4s-.8 4-3.4 6.4M18.4 5.6c-2.6 2.4-3.4 4.4-3.4 6.4s.8 4 3.4 6.4"/>',
+  tennis: '<circle cx="12" cy="12" r="9"/><path d="M5.2 5.8c3 1.8 4.3 3.8 4.3 6.2s-1.3 4.4-4.3 6.2M18.8 5.8c-3 1.8-4.3 3.8-4.3 6.2s1.3 4.4 4.3 6.2"/>',
+  soccer: '<circle cx="12" cy="12" r="9"/><path d="M12 7.6l3.6 2.6-1.4 4.2H9.8L8.4 10.2z"/><path d="M12 7.6V3.2M15.6 10.2l4.6-1.6M14.2 14.4l2.8 3.8M9.8 14.4L7 18.2M8.4 10.2L3.8 8.6"/>',
+  shuttle: '<path d="M9.5 14.5l-4-9 4 2 2.5-4 2.5 4 4-2-4 9z"/><path d="M9.5 7.5l1 7M14.5 7.5l-1 7"/><path d="M9.5 14.5h5v1.5a2.5 2.5 0 01-5 0z"/>',
+  volley: '<circle cx="12" cy="12" r="9"/><path d="M12 3c-1 4 0 7 3 9M12 12c-3.5 1.5-6.5 1-8.6-1.5M12 12c.5 3.8 2.6 6.3 6 8M12 3c3.5.4 6.5 2.5 8 6M3.6 15.5c2 2.7 4.8 4.4 8.4 5.5"/>',
+  pingpong: '<circle cx="9.5" cy="9.5" r="6.5"/><path d="M14 14l5.5 5.5"/><path d="M13.4 15.6l1.2 1.2"/><circle cx="19" cy="6" r="1.8"/>',
+  racket: '<ellipse cx="9.5" cy="8.5" rx="5.5" ry="6" transform="rotate(-35 9.5 8.5)"/><path d="M13 13l6.5 6.5M7 6.5l5 4M6 9.5l4.5 3.5M9 4.5l4.5 3.5"/><circle cx="18.5" cy="5.5" r="1.6"/>',
+  padelOld: '<path d="M9 2.5c3.6 0 6.5 2.7 6.5 6.4 0 2.4-1.1 4.2-2.8 5.4l-.7 2.2H8.5l-.6-2.2C6.1 13.1 3 11.3 3 8.9 3 5.2 5.4 2.5 9 2.5z"/><path d="M10 16.5v5"/><circle cx="7.5" cy="7.5" r=".6"/><circle cx="10.5" cy="7.5" r=".6"/><circle cx="9" cy="10" r=".6"/><circle cx="19" cy="18" r="1.8"/>',
+  glove2: '<path d="M6.5 11V7.5A4.5 4.5 0 0111 3h2.5A4.5 4.5 0 0118 7.5V12a5 5 0 01-5 5H9.5a3 3 0 01-3-3z"/><path d="M6.5 11H5a1.8 1.8 0 000 3.6h1.6M10 7.5h5M8 17v3.5h8.5V16"/>',
+  ski: '<circle cx="15" cy="4.5" r="1.8"/><path d="M3 15l18 6M9 9l4.5-2 2 4-3 2 1 4.5M13.5 7l-4 7"/>',
+  surf: '<path d="M4.5 19.5c-1.5-1.5 3-9 8-12.5s8-4 8.5-3.5-.5 4-3.5 8.5-11.5 9-13 7.5z"/><path d="M8 16l8-8"/>',
+  skate: '<path d="M5 4h4.5l1.5 7h6a3 3 0 013 3v1.5H5z"/><circle cx="7" cy="19" r="1.8"/><circle cx="12" cy="19" r="1.8"/><circle cx="17" cy="19" r="1.8"/>',
+  dance: '<circle cx="13" cy="4" r="2"/><path d="M13 6.5l-1 6 3.5 3.5-1 5M12 12.5l-4 3-2.5 4M11.5 8.5L7 6.5M13 8l4.5-2.5"/>',
+  golf: '<path d="M12 18V3l7 3-7 3"/><ellipse cx="12" cy="19" rx="7" ry="2.2"/>',
+  hand: '<circle cx="12" cy="12" r="9"/><path d="M5.5 6.5c2.5 2 3.5 4 3.5 5.5M18.5 6.5c-2.5 2-3.5 4-3.5 5.5M9 12h6M6.5 18c1.8-2 3.6-3 5.5-3s3.7 1 5.5 3"/>',
   runs: '<circle cx="14.5" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v5M6 12l3-4 4 1 3 4 3 1M11 15l1.5-5"/>',
   longrun: '<circle cx="6" cy="18" r="2"/><path d="M8 18h6.5a3.5 3.5 0 000-7h-5a3.5 3.5 0 010-7H16"/><path d="M18 2.5l2.5 1.5L18 5.5"/>',
   clock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/>',
@@ -4907,9 +4961,14 @@ const AI2 = {
   tooth: '<path d="M7 3c-2 0-3.5 1.7-3.5 4 0 3 1.5 4 2 7s1 7 2.5 7 1.5-4 4-4 2.5 4 4 4 2-4 2.5-7 2-4 2-7c0-2.3-1.5-4-3.5-4-2 0-3 1-5 1S9 3 7 3z"/>',
 };
 function actIcon(name, type) { const n = (name || "").toLowerCase();
-  const M = [[/schwimm|swim/, "swim"], [/rad|bike|fahrrad|cycl|spinning/, "bike"], [/kletter|boulder|climb/, "climb"], [/wander|hike/, "hike"], [/yoga|pilates|mobil|dehn|stretch/, "yoga"], [/ruder|row/, "row"],
-    [/fußball|fussball|basket|tennis|volley|hand|ball|squash|padel|badminton/, "ball"], [/kick|box|mma|kampf|judo|karate|bjj/, "glove"], [/calisth|street|ringe/, "rings"], [/pull|zieh|rücken|klimm/, "pull"],
-    [/push|drück|brust/, "push"], [/bein|leg|squat|knie/, "leg"], [/ergänz|zusatz/, "puzzle"], [/lauf|jogg|run|sprint/, "runs"]];
+  const M = [[/schwimm|swim/, "swim"], [/mountainbike|mtb/, "mtb"], [/spinning|indoor ?cycl|ergometer/, "spin"], [/radfahr|^rad|bike|fahrrad|cycl/, "bike"], [/boulder/, "boulder"], [/kletter|climb/, "climb"],
+    [/bergsteig|alpin/, "summit"], [/bergwander|berg/, "mountain"], [/wander|hike|trekking/, "hikeboot"], [/walking|spazier/, "walk"], [/seil|rope/, "rope"], [/crossfit|kettlebell|hiit/, "kettle"],
+    [/yoga/, "yoga2"], [/pilates/, "pilates"], [/mobil|dehn|stretch/, "stretch"], [/ruder|row/, "row"],
+    [/basket/, "basket"], [/tischtennis|ping ?pong/, "pingpong"], [/tennis/, "tennis"], [/badminton|federball/, "shuttle"], [/volley/, "volley"], [/padel/, "padel"], [/squash/, "racket"], [/handball/, "hand"],
+    [/fußball|fussball|soccer|futsal/, "soccer"], [/golf/, "golf"], [/ski|snowboard/, "ski"], [/surf|wellenreit|sup\b/, "surf"], [/inline|skate|rollschuh/, "skate"], [/tanz|dance/, "dance"],
+    [/kickbox/, "kick"], [/taekwondo|tkd/, "tkd"], [/karate/, "karate"], [/judo|aikido/, "judo"], [/ringen|wrestl|bjj|jiu/, "wrestle"], [/mma|octagon/, "mma"], [/muay|thai/, "muay"], [/fecht|kendo/, "fence"],
+    [/box/, "glove2"], [/kampf|krav|selbstverteid|martial/, "fist"], [/ball/, "soccer"], [/calisth|street|ringe/, "rings"], [/oberkörper|upper/, "torso"], [/unterkörper|lower/, "squat"], [/ganzkörper|full/, "jump"],
+    [/pull|zieh|rücken|klimm/, "pull"], [/push|drück|brust/, "push"], [/bein|leg|squat|knie/, "leg"], [/ergänz|zusatz/, "puzzle"], [/lauf|jogg|run|sprint/, "runs"]];
   const f = M.find(([re]) => re.test(n)); if (f) return f[1]; if (type === "run") return "runs"; if (type === "rest" || /rest|ruhe|pause|frei/.test(n)) return "moon"; return type === "session" ? "stopwatch" : "medal"; }
 function taskIcon(name) { const n = (name || "").toLowerCase();
   const M = [[/gewicht|waage|wiegen/, "scale"], [/lese|lesen|buch/, "book"], [/schach|chess/, "chess"], [/duolingo|englisch|spanisch|sprach|vokabel/, "speech"], [/kreatin|vitamin|supplement|tablette|pille/, "pill"],
@@ -4927,12 +4986,17 @@ document.addEventListener("input", e => { if (e.target.matches?.("textarea.ck-in
    Jeder stellt seinen eigenen Wochenplan zusammen: pro Wochentag „+ Trainingsart“ → Katalog (Schwimmen, Klettern …). */
 const ACT_CAT = [
   ["Kraft", [["Push", "gym", "push", ["Brust", "Schultern", "Trizeps"]], ["Pull", "gym", "pull", ["Rücken", "Bizeps", "Hintere Schulter"]], ["Beine", "gym", "leg", ["Beine", "Bauch"]],
-    ["Oberkörper", "gym", "dumbbell", ["Brust", "Rücken", "Schultern", "Bizeps", "Trizeps"]], ["Unterkörper", "gym", "leg", ["Beine", "Bauch"]], ["Ganzkörper", "gym", "dumbbell", ["Brust", "Rücken", "Beine", "Schultern", "Bauch"]],
-    ["Calisthenics", "gym", "rings", ["Calisthenics Push", "Calisthenics Pull", "Calisthenics Beine", "Core"]]]],
-  ["Ausdauer", [["Laufen", "run", "runs"], ["Radfahren", "session", "bike"], ["Schwimmen", "session", "swim"], ["Rudern", "session", "row"], ["Wandern", "session", "hike"], ["Spinning", "session", "bike"]]],
-  ["Sport & Kampfsport", [["Klettern", "session", "climb"], ["Bouldern", "session", "climb"], ["Kickboxen", "session", "glove"], ["Boxen", "session", "glove"], ["Kampfsport", "session", "glove"],
-    ["Fußball", "session", "ball"], ["Basketball", "session", "ball"], ["Tennis", "session", "ball"], ["Tanzen", "session", "star"]]],
-  ["Ausgleich", [["Yoga", "session", "yoga"], ["Pilates", "session", "yoga"], ["Mobility", "session", "yoga"], ["Rest Day", "rest", "moon"]]],
+    ["Oberkörper", "gym", "torso", ["Brust", "Rücken", "Schultern", "Bizeps", "Trizeps"]], ["Unterkörper", "gym", "squat", ["Beine", "Bauch"]], ["Ganzkörper", "gym", "jump", ["Brust", "Rücken", "Beine", "Schultern", "Bauch"]],
+    ["Calisthenics", "gym", "rings", ["Calisthenics Push", "Calisthenics Pull", "Calisthenics Beine", "Core"]], ["Crossfit", "session", "kettle"]]],
+  ["Ausdauer", [["Laufen", "run", "runs"], ["Walking", "session", "walk"], ["Radfahren", "session", "bike"], ["Mountainbike", "session", "mtb"], ["Spinning", "session", "spin"], ["Schwimmen", "session", "swim"],
+    ["Rudern", "session", "row"], ["Seilspringen", "session", "rope"]]],
+  ["Draußen & Berg", [["Wandern", "session", "hikeboot"], ["Bergwandern", "session", "mountain"], ["Bergsteigen", "session", "summit"], ["Klettern", "session", "climb"], ["Bouldern", "session", "boulder"],
+    ["Skifahren", "session", "ski"], ["Surfen", "session", "surf"], ["Inlineskaten", "session", "skate"]]],
+  ["Kampfsport", [["Kickboxen", "session", "kick"], ["Boxen", "session", "glove2"], ["Muay Thai", "session", "muay"], ["Karate", "session", "karate"], ["Taekwondo", "session", "tkd"], ["Judo", "session", "judo"],
+    ["Ringen / BJJ", "session", "wrestle"], ["MMA", "session", "mma"], ["Fechten", "session", "fence"], ["Kampfsport", "session", "fist"]]],
+  ["Ballsport & Schläger", [["Fußball", "session", "soccer"], ["Basketball", "session", "basket"], ["Volleyball", "session", "volley"], ["Handball", "session", "hand"], ["Tennis", "session", "tennis"],
+    ["Padel", "session", "padel"], ["Badminton", "session", "shuttle"], ["Tischtennis", "session", "pingpong"], ["Squash", "session", "racket"], ["Golf", "session", "golf"]]],
+  ["Ausgleich", [["Yoga", "session", "yoga2"], ["Pilates", "session", "pilates"], ["Mobility", "session", "stretch"], ["Tanzen", "session", "dance"], ["Rest Day", "rest", "moon"]]],
 ];
 const peIco = k => `<svg class="ach-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${AI2[k] || AICON[k] || AI2.medal}</svg>`;
 function openPlanEditor() {
@@ -4951,8 +5015,8 @@ function openPlanEditor() {
   box.querySelectorAll('.todo [data-action="typeedit"].tap .t').forEach(t => { const ty = TYPES.find(x => x.name === t.textContent); if (ty) t.insertAdjacentHTML("afterbegin", `<span class="pe-ti">${peIco(actIcon(ty.name, ty.type === "rest" ? "rest" : ty.type))}</span>`); });
   const h = box.querySelector("h2"); if (h) h.insertAdjacentHTML("afterend", `<p class="muted" style="font-size:13px;margin:-4px 0 10px">Tippe auf einen Tag, um seine Trainingsart zu wählen – aus deinen eigenen oder dem Katalog (Schwimmen, Klettern, Radfahren …).</p>`);
 }
-function openActCatalog(d) {
-  const day = d === "" || d == null ? null : +d, has = n => TYPES.some(t => t.name === n);
+function openActCatalog(d, today = false) {
+  S.peToday = today; const day = d === "" || d == null ? null : +d, has = n => TYPES.some(t => t.name === n);
   $("#sheetInner").innerHTML = `<div class="sheet-top"><div style="display:flex;justify-content:space-between;align-items:center">
       <b style="font-size:18px">${day == null ? "Trainingsart hinzufügen" : `Trainingsart für ${WD_LONG[day]}`}</b><button class="mini" data-pe="back">${ICON.x}</button></div></div>
     ${day != null ? `<p class="muted" style="font-size:13px;margin:6px 0 0">Ein Training pro Tag – die Auswahl ersetzt „${esc(WEEK[day] || "Frei")}“.</p>` : ""}
@@ -4966,13 +5030,15 @@ async function peAdd(name, day) {
   if (!TYPES.some(t => t.name === name)) { const c = ACT_CAT.flatMap(g => g[1]).find(x => x[0] === name); if (!c) return;
     const t = { name, type: c[1] }; if (c[1] === "gym") t.groups = [...(c[3] || [])]; TYPES.push(t); }
   if (day != null) WEEK[day] = name;
-  await savePlan(); openPlanEditor(); toast(day != null ? `${WD_LONG[day]}: ${name} ✓` : `„${name}“ hinzugefügt ✓`);
+  await savePlan();
+  if (S.peToday) { S.peToday = false; closeSheet(); S.workout.plan = name; findPrevSame(); saveWorkout(true); toast(`Heute: ${name} ✓`); return; }
+  openPlanEditor(); toast(day != null ? `${WD_LONG[day]}: ${name} ✓` : `„${name}“ hinzugefügt ✓`);
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-pe]"); if (!b) return; e.preventDefault();
   const a = b.dataset.pe, d = b.dataset.d === "" || b.dataset.d == null ? null : +b.dataset.d;
   if (a === "cat") openActCatalog(d);
-  else if (a === "back") openPlanEditor();
+  else if (a === "back") { if (S.peToday) { S.peToday = false; openTrainSel(); } else openPlanEditor(); }
   else if (a === "pick") peAdd(b.dataset.n, d).catch(() => toast("Speichern fehlgeschlagen"));
   else if (a === "chk") { S.planForm.name = $("#typeName")?.value ?? S.planForm.name; S.planForm.check = b.dataset.v === "1"; openPlanEditor(); }
   else if (a === "own") { S.planForm = { i: -1, name: "", type: "session", groups: [] }; openPlanEditorV1(); }
@@ -4982,7 +5048,7 @@ document.addEventListener("click", e => {
 const TASK_SUG = [
   { key: "gewicht_am", t: "Gewicht morgens", kind: "weight", slot: "am", reminds: ["07:00"] }, { key: "gewicht_pm", t: "Gewicht abends", kind: "weight", slot: "pm", reminds: ["21:00"] },
   { key: "schritte", t: "Schritte", s: "Ziel 10.000 · iPhone automatisch", kind: "steps", goal: 10000, reminds: ["23:00"] }, { key: "wasser", t: "2 Liter Wasser getrunken" }, { key: "lesen", t: "15 Minuten gelesen" }, { key: "protein", t: "Proteinbedarf gedeckt", s: "Tagesziel erreicht" },
-  { key: "kreatin", t: "Kreatin genommen", s: "Tagesbedarf gedeckt" }, { key: "dehnen", t: "10 Minuten gedehnt" }, { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" },
+  { key: "dehnen", t: "10 Minuten gedehnt" }, { key: "meditation", t: "Meditiert" }, { key: "sprache", t: "Sprache gelernt", s: "z. B. Duolingo" },
   { key: "schlaf", t: "Vor 23 Uhr im Bett" },
 ];
 function openNewTask() {
@@ -5007,6 +5073,22 @@ document.addEventListener("click", async e => {
 function openTaskMenu(key) { openTaskMenuV1(key); const t = (S.taskCfg || DEFAULT_TASKS).find(x => x.key === key);
   if (isV2() && t?.kind === "steps") $("#sheetInner .menu")?.insertAdjacentHTML("afterbegin", `<button data-sthelp="1">${peIco("shoe")}<span>Ziel & automatisch übernehmen<small>Tagesziel ${fmtN(stepGoal(t), 0)} · iPhone-Kurzbefehl</small></span></button>`); }
 document.addEventListener("click", e => { if (e.target.closest("[data-sthelp]")) openStepsHelp(); });
+
+// Auswahl des heutigen Trainings (statt der langen Chip-Leiste)
+function openTrainSel() {
+  const w = S.workout, list = [...(planByName(w.plan) ? [] : [{ name: w.plan, type: "session" }]), ...TYPES];
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:18px">Training ${S.trainDate === todayKey() ? "heute" : "an diesem Tag"}</b><button class="mini" data-action="closesheet">${ICON.x}</button></div>
+    <p class="muted" style="font-size:13px;margin:0 0 10px">Tauschen, ohne den Wochenplan zu ändern.</p>
+    <div class="pe-grid">${list.map(t => `<button class="tsel-it ${t.name === w.plan ? "on" : ""}" data-action="plansel" data-v="${esc(t.name)}">${peIco(actIcon(t.name, t.type))}<b>${esc(t.name)}</b><small>${KIND_LABEL[t.type] || ""}</small></button>`).join("")}
+      <button class="tsel-new" data-pe="cat" data-today="1">${peIco("medal").replace(AI2.medal, '<path d="M12 5v14M5 12h14"/>')}<b>Neue Trainingsart</b><small>Schwimmen, Klettern, Padel …</small></button></div>
+    <button class="btn block" style="margin-top:12px" data-action="planedit">Wochenplan bearbeiten</button>`;
+  showSheet(true);
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-tsel]")) { openTrainSel(); return; }
+  if (e.target.closest(".tsel-it")) setTimeout(closeSheet, 0);
+  const n = e.target.closest('[data-pe="cat"][data-today]'); if (n) { e.stopImmediatePropagation(); openActCatalog(null, true); }
+}, true);
 
 /* ===================== V2/V3: Rangfarben = Symbol = Profilrahmen, jede Stufe eigene Farbe ===================== */
 function rankCol2(i) { return ["#CD7F32", "#C3C9D4", "#FFC400", "#2FD4B4", "#5EC4FF", "#33D17A", "#FF7A3D", "#FF3355", "#6A6BFF", "#C04DFF", null][i]; }
@@ -9796,7 +9878,9 @@ document.addEventListener("click", async e => {
   const el = e.target.closest("[data-action]"); if (!el) return;
   const a = el.dataset.action, w = S.workout;
   if (a === "toggle") toggleTask(el.dataset.day, el.dataset.key);
-  else if (a === "logout") { if (await askYesNo("Wirklich abmelden?", "Ja, abmelden")) { closeSheet(); signOut(auth); } }
+  else if (a === "logout") { if (await askYesNo("Wirklich abmelden?", "Ja, abmelden")) { closeSheet(); try { await signOut(auth); } catch {}
+    ["tracker-foodrecent", "tracker-tips", "tracker-w3", "tracker-w3t", "tracker-scrub", "tracker-pg", "tracker-wall", "tracker-wallid", "tracker-theme"].forEach(k => { try { localStorage.removeItem(k); } catch {} });
+    S.uid = null; location.reload(); } }
   else if (a === "notif") enableNotifications();
   else if (a === "settings") openSettings();
   else if (a === "prefs") openPrefs();
