@@ -4462,7 +4462,7 @@ function w3Summary(it) {
   const e = w.exercises[it.i], m = exMode(e), s = e.sets.filter(setFilled);
   return s.length ? `${s.length} ${m === "cardio" ? "Abschnitt" + (s.length > 1 ? "e" : "") : "Sätze"} · ${esc(setTxt(s[s.length - 1], m))}` : (lastCache[e.name] ? esc(lastCache[e.name]) : "noch leer");
 }
-const w3Done = it => it.kind === "ex" ? S.workout.exercises[it.i].sets.some(setFilled) : it.kind === "session" ? !!(S.workout.session?.minutes || S.workout.session?.done) : !!w3Summary(it).match(/\d/);
+const w3Done = it => it.kind === "ex" ? S.workout.exercises[it.i].sets.some(setFilled) : it.kind === "session" ? !!(S.workout.session?.minutes || S.workout.session?.done) : !!(S.workout.run?.km || S.workout.run?.minutes);
 // Trainings-Übersicht: grobe Liste als Mini-Blöcke
 function w3Overview() {
   const v = $("#view-train"), w = S.workout; if (!w) return;
@@ -5466,7 +5466,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794061171";
+const APP_VER = "1794061612";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
