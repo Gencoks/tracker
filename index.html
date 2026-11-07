@@ -2294,7 +2294,7 @@ html:root.ui3 .tsel b, html:root.ui3 .tsel-i { color: var(--accent); }
 /* Fenster liegen immer über den Bedienelementen (X, i, untere Tasten), die Werkzeugleiste ganz oben */
 #w3 .gw { z-index: 7; } #w3 .gbar { z-index: 8; }
 /* Kein „Nach unten ziehen = neu laden“ mehr */
-html:root.ui3, html:root.ui3 body { overscroll-behavior-y: none; }
+html:root.ui3 { overscroll-behavior-y: none; }
 /* Hinweis: neue Version */
 #upd3 { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 12px); transform: translate(-50%, -160%); transition: transform .45s cubic-bezier(.2, 1.3, .4, 1); z-index: 10000; width: min(92vw, 380px);
   display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 20px; background: var(--surface, #1a1a1c); color: var(--text, #f5f5f2); border: 1px solid var(--border, #333); box-shadow: 0 12px 40px rgba(0,0,0,.4); font-size: 14px; }
@@ -2303,8 +2303,10 @@ html:root.ui3, html:root.ui3 body { overscroll-behavior-y: none; }
 #upd3 .u3go { padding: 9px 14px; border-radius: 14px; background: var(--accent, #f5f5f2); color: var(--accent-ink, #111); font-weight: 700; font-size: 13px; border: 0; }
 #upd3 .u3x { background: none; border: 0; color: var(--muted, #999); font-size: 18px; padding: 4px 6px; }
 html:root.ui3 #view-perf [data-action=pview].on { background: color-mix(in srgb, var(--accent) 22%, transparent) !important; color: var(--accent) !important; box-shadow: inset 0 0 0 1.5px var(--accent); }
-/* Trainingsmodus bleibt in der Grundfarbe (Weiß), unabhängig von der Akzentfarbe */
-html:root.ui3 #w3 { --accent: #f5f5f2; --accent-ink: #111; --accent-text: #f5f5f2; }
+/* Trainingsmodus: Knöpfe in der Akzentfarbe, der große Übungsname bleibt weiß, Hintergrund schwarz */
+html:root.ui3 #w3 .w3vert b { color: #f5f5f2; }
+html:root.ui3 #w3 .gw-main:not(.stop) { background: var(--accent); color: var(--accent-ink, #111); }
+html:root.ui3 #w3 .gbar button.on { background: var(--accent); color: var(--accent-ink, #111); }
 /* Farbwähler für die eigene Akzentfarbe */
 button.v2acc-add { background: none; border: 0; padding: 6px 2px; color: inherit; font: inherit; }
 #acc3 { position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,.55); display: none; align-items: flex-end; justify-content: center; }
@@ -2328,6 +2330,19 @@ button.v2acc-add { background: none; border: 0; padding: 6px 2px; color: inherit
 .w3addx { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; border-style: dashed; }
 .w3addx svg { width: 18px; height: 18px; }
 #w3 .w3tgo { margin-left: 4px; padding: 2px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08); color: #f5f5f2; font: inherit; font-size: 11px; font-weight: 700; }
+/* Trainingsfenster: Hintergründe neutral grau – Akzentfarbe nur für Knöpfe, Rahmen und Schrift */
+html:root.ui3 #w3 { --wsurf: #121213; --wline: #2a2a2d; }
+html:root.ui3 #w3 .gw-row button { background: #1f1f22; }
+html:root.ui3 #w3 .gw-row button.acc { background: var(--accent); }
+html:root.ui3 #w3 .gw-set { background: #18181a; }
+html:root.ui3 #w3 .gw-tbph.rest { background: #1c1c1f; }
+html:root.ui3 #w3 .gw-sets.ed div.now { background: #1b1b1d; }
+html:root.ui3 #w3 .w3pk.on button:first-child { background: #1b1b1d; }
+html:root.ui3 #w3 .gw-tbsum { background: #18181a; border-color: #2c2c30; }
+html:root.ui3 #w3 .w3addbtn.on { background: #1b1b1d; }
+html:root.ui3 #w3 .gw-h span, html:root.ui3 #w3 .gw-sets b { color: #9a9aa0; }
+html:root.ui3 #w3 .gbar { background: #161618; border-color: #2c2c30; }
+html:root.ui3 #w3 .gw-tbph:not(.work):not(.rest):not(.done) { background: #1c1c1f; color: #9a9aa0; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -2878,7 +2893,7 @@ function copyPrevious() {
     S.workout.run = { km: "", minutes: "" };
     // Einheit (z. B. Kickboxen): "Bestätigen & übernehmen" = heute erledigt, Dauer wie beim letzten Mal
     if (planByName(S.workout.plan)?.type === "session") { S.workout.session = { minutes: p.session?.minutes || "60", done: true }; saveWorkout(true); toast(`✓ ${S.workout.plan} erledigt`); return; }
-    S.workout.session = { minutes: "" };
+    S.workout.session = { minutes: "" }; S.workout.adopted = true;
   }
   loadLastFor(S.workout.exercises.map(e => e.name)).then(() => saveWorkout(true));
   toast(document.documentElement.classList.contains("ui3") ? "Übernommen – trag deine Werte ein" : "Übernommen – passe an, was heute anders ist");
@@ -2915,7 +2930,7 @@ function renderTrainV1() {
   const isToday = S.trainDate === todayKey();
   let body = "";
   const p = S.prevSame;
-  if (p && plan.type !== "rest" && !hasContent(w)) {
+  if (p && plan.type !== "rest" && !hasContent(w) && !(w.adopted && plan.type !== "gym" && isV3())) {
     const pd = fromKey(p.date || p.id);
     const items = plan.type === "gym"
       ? (p.exercises || []).map(e => {
@@ -4442,7 +4457,7 @@ function w3Items() {
 }
 function w3Summary(it) {
   const w = S.workout;
-  if (it.kind === "run") return w.run?.km || w.run?.minutes ? `${w.run.km || "–"} km · ${w.run.minutes || "–"}${paceOf(w.run.km, w.run.minutes) ? ` · ${paceOf(w.run.km, w.run.minutes)}/km` : ""}` : "noch leer";
+  if (it.kind === "run") return w.run?.km || w.run?.minutes ? `${w.run.km || "–"} km · ${w.run.minutes || "–"}${paceOf(w.run.km, w.run.minutes) ? ` · ${paceOf(w.run.km, w.run.minutes)}/km` : ""}` : S.prevSame?.run?.km ? `Letztes Mal: ${esc(S.prevSame.run.km)} km · ${esc(S.prevSame.run.minutes || "–")}` : "noch leer";
   if (it.kind === "session") return it.check ? (w.session?.minutes || w.session?.done ? "✓ erledigt" : "Zum Abhaken antippen") : w.session?.minutes ? `${w.session.minutes} min` : "noch leer";
   const e = w.exercises[it.i], m = exMode(e), s = e.sets.filter(setFilled);
   return s.length ? `${s.length} ${m === "cardio" ? "Abschnitt" + (s.length > 1 ? "e" : "") : "Sätze"} · ${esc(setTxt(s[s.length - 1], m))}` : (lastCache[e.name] ? esc(lastCache[e.name]) : "noch leer");
@@ -4474,7 +4489,7 @@ function w3TypeMenu(k) { const p = w3Plan(), ti = TYPES.findIndex(t => t.name ==
     <div class="menu" style="margin-top:12px"><button data-w3m="del" class="danger">${ICON.x}<span>Eintrag von heute löschen<small>${k === "run" ? "Distanz, Zeit und Notiz" : "Dauer und Notiz"}</small></span></button></div>`;
   showSheet(); }
 document.addEventListener("click", async e => { const b = e.target.closest("[data-w3m]"); if (!b) return; const m = b.dataset.w3m, w = S.workout, p = w3Plan();
-  if (m === "del") { closeSheet(); if (await askYesNo(p.type === "run" ? "Lauf-Eintrag (Distanz, Zeit, Notiz) löschen?" : "Eintrag (Dauer, Notiz) löschen?", "Löschen")) { if (p.type === "run") w.run = { km: "", minutes: "", note: "" }; else w.session = { minutes: "", note: "" }; saveWorkout(true); } return; }
+  if (m === "del") { closeSheet(); if (await askYesNo(p.type === "run" ? "Lauf-Eintrag (Distanz, Zeit, Notiz) löschen?" : "Eintrag (Dauer, Notiz) löschen?", "Löschen")) { if (p.type === "run") w.run = { km: "", minutes: "", note: "" }; else w.session = { minutes: "", note: "" }; w.adopted = false; saveWorkout(true); } return; }
   const t = TYPES.find(x => x.name === p.name); if (!t) return; if (m === "check") t.check = true; else delete t.check;
   closeSheet(); await savePlan(); toast(m === "check" ? `„${t.name}“ wird jetzt nur abgehakt ✓` : `„${t.name}“ mit Werten ✓`); });
 function renderTrainV3Hook() { if (isV3() && S.workout) w3Overview(); }
@@ -5451,7 +5466,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794058340";
+const APP_VER = "1794061171";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
