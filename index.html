@@ -2275,6 +2275,59 @@
 .ch3-b { display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,.35); }
 .ch3-b > div { display: flex; flex-direction: column; gap: 2px; }
 .ch3-b small { color: var(--muted); font-size: 12.5px; }
+/* Tabata: Endlos-Schalter, Übersicht in der Eingabe */
+#w3 .gw-endless { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04); color: #fff; font: inherit; text-align: left; }
+#w3 .gw-endless i { width: 34px; height: 20px; border-radius: 999px; background: #333338; position: relative; flex: none; transition: background .2s; }
+#w3 .gw-endless i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #bbb; transition: transform .2s, background .2s; }
+#w3 .gw-endless.on i { background: var(--accent); } #w3 .gw-endless.on i::after { transform: translateX(14px); background: var(--accent-ink, #000); }
+#w3 .gw-endless span { display: flex; flex-direction: column; } #w3 .gw-endless b { font-size: 13px; } #w3 .gw-endless small { font-size: 10.5px; opacity: .6; }
+#w3 .gw-tb3 input:disabled { opacity: .5; }
+#w3 .gw-tbsum { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); font-size: 12px; margin-bottom: 4px; }
+#w3 .gw-tbsum b { font-size: 12px; } #w3 .gw-tbsum span { opacity: .8; }
+/* Akzentfarbe für die wichtigsten Auswahl-Elemente (Version 1) */
+html:root.ui3 .chip.accent, html:root.ui3 #view-perf .seg .chip.accent, html:root.ui3 #view-perf .switch button.on, html:root.ui3 #view-perf [data-action=pview].on,
+html:root.ui3 .w3rail button.on, html:root.ui3 .w3modes button.on, html:root.ui3 .w3rest button.on, html:root.ui3 .w3tools button.on {
+  background: var(--accent); color: var(--accent-ink, #111); border-color: var(--accent); }
+html:root.ui3 .v2tog.on { background: var(--accent); } html:root.ui3 .v2tog.on::after { background: var(--accent-ink, #111); }
+html:root.ui3 .t3pct { color: var(--accent); }
+html:root.ui3 .tsel b, html:root.ui3 .tsel-i { color: var(--accent); }
+/* Fenster liegen immer über den Bedienelementen (X, i, untere Tasten), die Werkzeugleiste ganz oben */
+#w3 .gw { z-index: 7; } #w3 .gbar { z-index: 8; }
+/* Kein „Nach unten ziehen = neu laden“ mehr */
+html:root.ui3, html:root.ui3 body { overscroll-behavior-y: none; }
+/* Hinweis: neue Version */
+#upd3 { position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 12px); transform: translate(-50%, -160%); transition: transform .45s cubic-bezier(.2, 1.3, .4, 1); z-index: 10000; width: min(92vw, 380px);
+  display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 20px; background: var(--surface, #1a1a1c); color: var(--text, #f5f5f2); border: 1px solid var(--border, #333); box-shadow: 0 12px 40px rgba(0,0,0,.4); font-size: 14px; }
+#upd3.on { transform: translate(-50%, 0); }
+#upd3 span { flex: 1; display: flex; flex-direction: column; } #upd3 small { color: var(--muted, #999); font-size: 12px; }
+#upd3 .u3go { padding: 9px 14px; border-radius: 14px; background: var(--accent, #f5f5f2); color: var(--accent-ink, #111); font-weight: 700; font-size: 13px; border: 0; }
+#upd3 .u3x { background: none; border: 0; color: var(--muted, #999); font-size: 18px; padding: 4px 6px; }
+html:root.ui3 #view-perf [data-action=pview].on { background: color-mix(in srgb, var(--accent) 22%, transparent) !important; color: var(--accent) !important; box-shadow: inset 0 0 0 1.5px var(--accent); }
+/* Trainingsmodus bleibt in der Grundfarbe (Weiß), unabhängig von der Akzentfarbe */
+html:root.ui3 #w3 { --accent: #f5f5f2; --accent-ink: #111; --accent-text: #f5f5f2; }
+/* Farbwähler für die eigene Akzentfarbe */
+button.v2acc-add { background: none; border: 0; padding: 6px 2px; color: inherit; font: inherit; }
+#acc3 { position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,.55); display: none; align-items: flex-end; justify-content: center; }
+#acc3.on { display: flex; }
+.ac3-card { width: min(100%, 520px); background: var(--surface); color: var(--text); border-radius: 26px 26px 0 0; border: 1px solid var(--border); padding: 16px 16px calc(18px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 14px; animation: ac3up .3s cubic-bezier(.2,1,.3,1); }
+@keyframes ac3up { from { transform: translateY(40px); opacity: 0; } }
+.ac3-top { display: flex; justify-content: space-between; align-items: center; } .ac3-top b { font-size: 18px; }
+.ac3-prev { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 18px; background: var(--surface-2); border: 1px solid var(--border); }
+.ac3-prev i { width: 42px; height: 42px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 30%, transparent); flex: none; }
+.ac3-prev > div { flex: 1; display: flex; flex-direction: column; } .ac3-prev small { color: var(--muted); font-size: 12px; }
+.ac3-chip { padding: 5px 12px; border-radius: 999px; background: var(--c); color: #111; font-weight: 700; font-size: 13px; }
+.ac3-btn { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--c); color: #111; font-weight: 800; }
+.ac3-grid { display: grid; gap: 4px; }
+.ac3-grid button { aspect-ratio: 1; border-radius: 8px; border: 0; padding: 0; box-shadow: inset 0 0 0 1px rgba(127,127,127,.25); transition: transform .12s; }
+.ac3-grid button.on { transform: scale(1.18); box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text); position: relative; z-index: 1; }
+.ac3-lbl { display: flex; justify-content: center; font-size: 11px; color: var(--muted); margin-top: -8px; }
+.ac3-sl small { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.ac3-sl > div { display: flex; align-items: center; gap: 10px; margin-top: 6px; } .ac3-sl span { font-size: 12px; color: var(--muted); }
+.ac3-sl input { flex: 1; accent-color: var(--text); } .ac3-sl input:disabled { opacity: .35; }
+.ac3-a { display: flex; gap: 10px; } .ac3-a .btn { flex: 1; }
+.w3addx { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; border-style: dashed; }
+.w3addx svg { width: 18px; height: 18px; }
+#w3 .w3tgo { margin-left: 4px; padding: 2px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08); color: #f5f5f2; font: inherit; font-size: 11px; font-weight: 700; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -3893,7 +3946,7 @@ function v2PrefsHTML(th) {
     <div class="v2pals">${V2_PALS.map(([k, n, cols]) => `<button class="${pal === k ? "on" : ""}" data-v2a="pal" data-v="${k}"><div class="sw2">${cols.map(c => `<i style="background:${c}"></i>`).join("")}</div><small>${n}</small></button>`).join("")}</div>
     <h2>Akzentfarbe</h2>
     <div class="v2acc">${[["", "Palette"], ["#ead7dd", "Rosé"], ["#f5f5f2", "Weiß"], ["#FFC400", "Gold"], ["#ff8a3d", "Orange"], ["#ff5c7a", "Koralle"], ["#c04dff", "Violett"], ["#6c8cff", "Blau"], ["#4cc9f0", "Cyan"], ["#5fd38d", "Grün"], ["#bcd6c3", "Salbei"], ["#b9b9c2", "Grau"], ...(th.accSaved || []).map(c => [c, "Eigene", 1])].map(([c, n, own]) => `<button class="${(th.v2acc || "") === c ? "on" : ""}" data-v2a="acc" data-v="${c}" title="${n}"><i style="background:${c || "conic-gradient(from 0deg, var(--text) 0 50%, var(--bg) 0)"}"></i><small>${n}</small>${own ? `<em data-accdel="${c}">×</em>` : ""}</button>`).join("")}
-      <label class="v2acc-add" title="Eigene Farbe"><i>＋</i><small>Eigene</small><input type="color" id="v2accPick" value="${th.v2acc || "#ead7dd"}"></label></div>
+      <button class="v2acc-add" data-accpick="1" title="Eigene Farbe"><i>＋</i><small>Eigene</small></button></div>
     <h2>Schrift</h2>
     <div class="v2row v2sl" style="margin:0 0 10px"><div><b>Schriftgröße</b><small>Texte und Kästchen etwas kleiner oder größer</small></div><div class="v2slw"><input type="range" min="85" max="120" step="5" value="${th.fz ?? 100}" data-v2sl="fz"><output>${th.fz ?? 100} %</output></div></div>
     <div class="v2fonts">${V2_FONTS.map(([k, n, fam, css]) => `<button class="${font === k ? "on" : ""}" data-v2a="font" data-v="${k}"><b style="font-family:${css}">Aa Plan.</b><small>${n} · ${fam}</small></button>`).join("")}</div>
@@ -3979,6 +4032,48 @@ document.addEventListener("change", e => { if (e.target.id !== "v2accPick") retu
   setTheme({ v2acc: c, accSaved: [c, ...(th.accSaved || []).filter(x => x !== c)].slice(0, 8) }); renderStart(); v2Reprefs(); toast("Eigene Farbe gespeichert ✓"); });
 document.addEventListener("click", e => { const d = e.target.closest("[data-accdel]"); if (!d) return; e.stopPropagation(); e.preventDefault(); const th = curTheme(), c = d.dataset.accdel;
   setTheme({ accSaved: (th.accSaved || []).filter(x => x !== c), ...(th.v2acc === c ? { v2acc: null } : {}) }); renderStart(); v2Reprefs(); }, true);
+
+// ---------- Eigene Akzentfarbe: Farbfeld (Farbton × Helligkeit) + Intensität ----------
+const ACC_H = [0, 20, 35, 50, 80, 130, 165, 190, 210, 235, 265, 290, 320, -1], ACC_L = [86, 76, 66, 56, 46, 36];
+const hsl2hex = (h, s, l) => { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); };
+function hex2hsl(hex) { const m = /^#?([0-9a-f]{6})$/i.exec(hex || ""); if (!m) return null; const n = parseInt(m[1], 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn; let h = 0, s = 0;
+  if (d) { s = d / (1 - Math.abs(2 * l - 1)); h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h = (h * 60 + 360) % 360; }
+  return { h, s: s * 100, l: l * 100 }; }
+function accPickOpen() {
+  const cur = hex2hsl(curTheme().v2acc || getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()) || { h: 50, s: 90, l: 56 };
+  const near = (arr, v, f = x => x) => arr.reduce((b, x) => Math.abs(f(x) - v) < Math.abs(f(b) - v) ? x : b, arr[0]);
+  const hueDist = x => x < 0 ? 999 : Math.min(Math.abs(x - cur.h), 360 - Math.abs(x - cur.h));
+  S.accP = { h: cur.s < 8 ? -1 : ACC_H.reduce((b, x) => hueDist(x) < hueDist(b) ? x : b, 0), l: near(ACC_L, cur.l), s: cur.s < 8 ? 85 : Math.round(Math.max(20, Math.min(100, cur.s))) };
+  let o = $("#acc3"); if (!o) { o = document.createElement("div"); o.id = "acc3"; document.body.appendChild(o); }
+  o.classList.add("on"); accPickDraw();
+}
+const accPickHex = (h = S.accP.h, l = S.accP.l) => hsl2hex(h < 0 ? 0 : h, h < 0 ? 0 : S.accP.s, l);
+function accPickDraw() {
+  const P = S.accP, c = accPickHex(), o = $("#acc3");
+  o.innerHTML = `<div class="ac3-card"><div class="ac3-top"><b>Eigene Akzentfarbe</b><button class="mini" data-acc3="x">${ICON.x}</button></div>
+    <div class="ac3-prev" style="--c:${c}"><i></i><div><b>${c.toUpperCase()}</b><small>So sieht's aus</small></div><span class="ac3-chip">Heute</span><span class="ac3-btn">＋</span></div>
+    <div class="ac3-grid" style="grid-template-columns:repeat(${ACC_H.length},1fr)">${ACC_L.map(l => ACC_H.map(h => { const x = accPickHex(h, l);
+      return `<button class="${h === P.h && l === P.l ? "on" : ""}" style="background:${x}" data-acc3h="${h}" data-acc3l="${l}" aria-label="${x}"></button>`; }).join("")).join("")}</div>
+    <div class="ac3-lbl"><span>↑ oben heller · unten dunkler ↓</span></div>
+    <div class="ac3-sl"><small>Intensität</small><div><span>schwächer</span><input type="range" min="20" max="100" step="5" value="${P.s}" data-acc3s="1" ${P.h < 0 ? "disabled" : ""}><span>stärker</span></div></div>
+    <div class="ac3-a"><button class="btn" data-acc3="x">Abbrechen</button><button class="btn primary" data-acc3="ok" style="background:${c};border-color:${c};color:${hex2hsl(c).l > 60 ? "#111" : "#fff"}">Übernehmen</button></div></div>`;
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-accpick]")) { e.preventDefault(); accPickOpen(); return; }
+  const o = $("#acc3"); if (!o?.classList.contains("on")) return;
+  if (e.target === o) { o.classList.remove("on"); return; }
+  const cell = e.target.closest("[data-acc3h]"); if (cell) { S.accP.h = +cell.dataset.acc3h; S.accP.l = +cell.dataset.acc3l; accPickDraw(); return; }
+  const b = e.target.closest("[data-acc3]"); if (!b) return;
+  if (b.dataset.acc3 === "ok") { const c = accPickHex(), th = curTheme(); setTheme({ v2acc: c, accSaved: [c, ...(th.accSaved || []).filter(x => x !== c)].slice(0, 8) }); renderStart(); v2Reprefs(); toast("Eigene Farbe gespeichert ✓"); }
+  o.classList.remove("on");
+});
+document.addEventListener("input", e => { const r = e.target.closest?.("[data-acc3s]"); if (!r) return; S.accP.s = +r.value;
+  // nur Farben & Vorschau neu – der Schieberegler bleibt in der Hand
+  document.querySelectorAll("#acc3 [data-acc3h]").forEach(x => x.style.background = accPickHex(+x.dataset.acc3h, +x.dataset.acc3l));
+  const c = accPickHex(), pv = $("#acc3 .ac3-prev"); if (pv) { pv.style.setProperty("--c", c); pv.querySelector("b").textContent = c.toUpperCase(); }
+  const ok = $('#acc3 [data-acc3="ok"]'); if (ok) { ok.style.background = c; ok.style.borderColor = c; ok.style.color = hex2hsl(c).l > 60 ? "#111" : "#fff"; } });
 
 /* ===================== SPIELWIESE (Training, Version 2) =====================
    Mini-Fenster nach Wahl: Klick-Zähler, Stoppuhr, Timer, Intervall („X pro Minute“).
@@ -4340,8 +4435,9 @@ const w3Plan = () => { const w = S.workout; return planByName(w.plan) || ((w.exe
 function w3Items() {
   const w = S.workout, p = w3Plan();
   if (p.type === "gym") return (w.exercises || []).map((e, i) => ({ kind: "ex", i, name: e.name, sub: e.group }));
-  if (p.type === "run") return [{ kind: "run", i: 0, name: "Laufen", sub: "Distanz & Zeit" }];
-  if (p.type === "session") return [{ kind: "session", i: 0, name: p.name, sub: "Dauer & Notiz", check: !!p.check }];
+  const extra = isV3() ? (w.exercises || []).map((e, i) => ({ kind: "ex", i, name: e.name, sub: e.group })) : [];
+  if (p.type === "run") return [{ kind: "run", i: 0, name: "Laufen", sub: "Distanz & Zeit" }, ...extra];
+  if (p.type === "session") return [{ kind: "session", i: 0, name: p.name, sub: "Dauer & Notiz", check: !!p.check }, ...extra];
   return [];
 }
 function w3Summary(it) {
@@ -4359,10 +4455,11 @@ function w3Overview() {
   const exList = v.querySelector("#exList"), runCard = v.querySelector('[data-in="run.km"]')?.closest(".card"), sesCard = v.querySelector('[data-in="session.minutes"]')?.closest(".card");
   const blocks = `<div class="w3list" ${p.type === "gym" ? 'id="exList"' : ""}>${items.map((it, n) => `<div role="button" tabindex="0" class="w3blk ${it.kind === "ex" ? "ex" : ""} ${w3Done(it) ? "done" : ""}" data-w3="${it.check ? "tick" : "open"}" data-n="${n}" ${it.kind === "ex" ? `data-ex="${it.i}"` : ""}>
       <span class="w3num">${String(n + 1).padStart(2, "0")}</span><span class="w3txt"><b>${esc(it.name)}${it.kind === "ex" && S.workout.exercises[it.i].note ? ` <i class="w3hasnote">${W3I.notes}</i>` : ""}</b><small>${w3Summary(it)}</small></span><button class="w3more" ${it.kind === "ex" ? `data-action="exmenu" data-i="${it.i}"` : `data-w3menu="${it.kind}"`} aria-label="Bearbeiten">${ICON.dots}</button><span class="box-check">${CHECK}</span></div>`).join("")}</div>
-    ${items.length > 1 ? `<div class="w3tip">Block 1,5 Sek. gedrückt halten und ziehen, um die Reihenfolge zu ändern.</div>` : ""}`;
-  if (exList) exList.outerHTML = blocks; else if (runCard) runCard.outerHTML = blocks; else if (sesCard) sesCard.outerHTML = blocks;
+    ${items.length > 1 && p.type === "gym" ? `<div class="w3tip">Block 1,5 Sek. gedrückt halten und ziehen, um die Reihenfolge zu ändern.</div>` : ""}`;
+  const more = p.type !== "gym" && !locked ? `<button class="btn block w3addx" data-action="addex">${W3I.plus} Weitere Übung hinzufügen</button><div class="w3tip" style="margin-top:6px">z. B. nach dem ${p.type === "run" ? "Laufen" : esc(p.name)} noch Liegestütze oder Bauch</div>` : "";
+  if (exList) exList.outerHTML = blocks; else if (runCard) runCard.outerHTML = blocks + more; else if (sesCard) sesCard.outerHTML = blocks + more;
   v.querySelector(".note")?.remove();
-  if (items.length && !locked && !items[0].check) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
+  if (items.length && !locked && (!items[0].check || items.length > 1)) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
     if (h2) h2.insertAdjacentHTML("afterend", `<button class="btn primary block w3start2" data-w3="start">${V3_ICONS.play}${W3.start[S.trainDate] ? "Training fortsetzen" : "Training starten"}</button>`); }
 }
 // Einheit nur abhaken (z. B. Kickboxen): Dauer wird vom letzten Mal übernommen, sonst 60 Min.
@@ -4387,18 +4484,18 @@ document.addEventListener("click", async e => {
   const tk = e.target.closest('[data-w3="tick"]'); if (tk && isV3()) { if (S.trainDate < todayKey()) { toast("🔒 Vergangene Trainings sind gesperrt."); return; } w3Tick2(); return; }
   if (e.target.closest("[data-action]")) return;
   const b = e.target.closest("[data-w3]"); if (!b || !isV3()) return;
-  try { if (b.dataset.w3 === "open") w3Open(+b.dataset.n); else if (b.dataset.w3 === "start") { const items = w3Items(), n = items.findIndex(it => !w3Done(it)); w3Open(n < 0 ? 0 : n); } }
+  try { if (b.dataset.w3 === "open") w3Open(+b.dataset.n); else if (b.dataset.w3 === "start") { const items = w3Items(), n = items.findIndex(it => !w3Done(it) && !it.check); w3Open(n < 0 ? 0 : n, true); } }
   catch (err) { console.error(err); toast("Konnte die Übung nicht öffnen: " + err.message); }
 });
 
 // ---------- Vollbild-Block pro Übung: schwarzer Bildschirm, verschiebbare Fenster + Gadget-Leiste ----------
-function w3Open(n = null) {
+function w3Open(n = null, startClock = false) {
   if (!S.workout) return;
   if (S.trainDate < todayKey()) { toast("🔒 Vergangene Trainings sind gesperrt."); return; }
   const items = w3Items(); if (!items.length) { toast(w3Plan().type === "gym" ? "Füg zuerst Übungen hinzu." : "Heute ist Ruhetag 😴"); return; }
   if (n === null) { n = items.findIndex(it => !w3Done(it)); if (n < 0) n = 0; }
   W3.i = Math.max(0, Math.min(items.length - 1, n));
-  if (!W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); }
+  if (startClock && !W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); toast("⏱ Trainingszeit läuft"); }
   let o = $("#w3"); if (!o) { o = document.createElement("div"); o.id = "w3"; document.body.appendChild(o); o.addEventListener("click", w3Click); o.addEventListener("input", w3Input); o.addEventListener("pointerdown", w3DragStart); }
   w3WinsOff(); w3Form();
   w3Cur(true); o.classList.add("on"); document.documentElement.classList.add("pg-on"); w3Render(); w3Tick();
@@ -4427,9 +4524,13 @@ function w3Cur(reset) {
   const e = S.workout.exercises[it.i];
   if (reset || W3.cur.ex !== e.name) { W3.si = w3SiDef(e); w3Load(e); }
 }
+const W3ZO = {}; let W3ZN = 0;
+// Antippen holt ein Fenster nach vorne
+document.addEventListener("pointerdown", e => { const w = e.target.closest?.("#w3 .gw"); if (!w) return; const g = w.dataset.g; if (W3ZO[g] === W3ZN && W3ZN) return; W3ZO[g] = ++W3ZN; if (w.nextElementSibling?.classList.contains("gw") || [...w.parentNode.children].some((x, i, a) => x.classList.contains("gw") && a.indexOf(x) > a.indexOf(w))) w.parentNode.appendChild(w); }, true);
 const W3T = (() => { let t = {}; try { t = JSON.parse(localStorage.getItem("tracker-w3t") || "{}"); } catch {} return Object.assign({ cnt: 0, step: 1, cset: false, sw: { run: false, t0: 0, acc: 0 }, tm: { dur: 90, run: false, end: 0, left: 90000, done: false }, tb: { work: 20, rest: 10, rounds: 8, run: false, t0: 0, acc: 0, done: false, ph: -1 } }, t); })();
 const tbMs = () => W3T.tb.acc + (W3T.tb.run ? Date.now() - W3T.tb.t0 : 0);
-function tbState() { const b = W3T.tb, cyc = (b.work + b.rest) * 1000, total = b.rounds * cyc - b.rest * 1000, ms = Math.min(tbMs(), total);
+function tbState() { const b = W3T.tb, cyc = (b.work + b.rest) * 1000, total = b.rounds ? b.rounds * cyc - b.rest * 1000 : Infinity, ms = Math.min(tbMs(), total);
+  if (b.done && b.ended) return { done: true, round: b.ended, work: false, left: 0, idx: b.ended * 2 };
   if (ms >= total) return { done: true, round: b.rounds, work: false, left: 0, idx: b.rounds * 2 };
   const r = Math.floor(ms / cyc), inC = ms - r * cyc, work = inC < b.work * 1000;
   return { done: false, round: r + 1, work, left: work ? b.work * 1000 - inC : cyc - inC, idx: r * 2 + (work ? 0 : 1) }; }
@@ -4460,11 +4561,11 @@ function w3Render() {
   const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, now = new Date();
   const k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
   o.innerHTML = `
-    <div class="w3info"><b>${esc(w3Plan().name)}</b><small>Block ${W3.i + 1} von ${items.length} · <span id="w3el">${fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false)}</span></small>
+    <div class="w3info"><b>${esc(w3Plan().name)}</b><small>Block ${W3.i + 1} von ${items.length} · ${W3.start[S.trainDate] ? `<span id="w3el">${fmtMs(Date.now() - W3.start[S.trainDate], false)}</span>` : `<button class="w3tgo" data-w3a="tgo">▶ Zeit starten</button>`}</small>
       <div class="w3prog">${items.map((x, n) => `<i class="${n === W3.i ? "on" : w3Done(x) ? "ok" : ""}"></i>`).join("")}</div><small>${cnt}/${tasks.length} Aufgaben heute</small></div>
     <button class="w3x" data-w3a="close" aria-label="Schließen">${ICON.x}</button><button class="w3i" data-w3a="help" aria-label="Erklärung">i</button>
     <div class="w3vert" aria-hidden="true"><b style="font-size:34px">${esc(it.name)}</b><span>${nSets ? `${nSets} ${nSets === 1 ? "Satz" : "Sätze"} · ` : ""}${WD_FULL[now.getDay()]}, ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</span></div>
-    ${Object.entries(wins).filter(([, w]) => w.on).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
+    ${Object.entries(wins).filter(([, w]) => w.on).sort((a, b) => (W3ZO[a[0]] || 0) - (W3ZO[b[0]] || 0)).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
     <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       ${bar.c ? "" : `${["edit", "sets", "sw", "timer", "count", "tabata", "notes"].filter(g => wins[g]).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${g === "count" ? W3I.plus : W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="close" aria-label="Zur Übersicht" title="Zur Trainingsübersicht">${W3ARR.l}</button>
@@ -4473,8 +4574,6 @@ function w3Render() {
   w3Clamp(); if (W3T.sw.run && !w3Raf) w3Raf = requestAnimationFrame(w3SwLoop);
 }
 // Fenster im Bild halten
-function w3Clamp() { document.querySelectorAll("#w3 .gw, #w3 .gbar, #w3 .w3tab").forEach(el => { const r = el.getBoundingClientRect(); let x = r.left, y = r.top;
-  x = Math.max(4, Math.min(innerWidth - r.width - 4, x)); y = Math.max(4, Math.min(innerHeight - Math.min(r.height, 120) - 4, y)); if (x !== r.left || y !== r.top) { el.style.left = x + "px"; el.style.top = y + "px"; } }); }
 function w3WinHTML(it, g, w) {
   const [, title, width] = W3G[g];
   return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${g === "count" ? W3I.plus : W3I[g]}${title}</span>${g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
@@ -4494,12 +4593,14 @@ function w3Body(it, g) {
   if (g === "tabata") { const b = W3T.tb, t = tbState(), its = w3Items(), fr = b.from ?? W3.i, to = b.to ?? W3.i;
     const sel = (k, v) => `<select data-w3sel="tb${k}">${its.map((x, n) => `<option value="${n}" ${n === v ? "selected" : ""}>${n + 1}. ${esc(x.name)}</option>`).join("")}</select>`;
     return `${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tbrange"><label><small>Ab Übung</small>${sel("from", fr)}</label><label><small>Bis Übung</small>${sel("to", to)}</label></div>` : `<div class="gw-tbr">Tabata für Übung ${fr + 1}${to !== fr ? `–${to + 1}` : ""}</div>`}
-      ${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tb3"><label class="w3fld"><small>Arbeit s</small><input data-w3t="work" inputmode="numeric" value="${b.work}"></label><label class="w3fld"><small>Pause s</small><input data-w3t="rest" inputmode="numeric" value="${b.rest}"></label><label class="w3fld"><small>Runden</small><input data-w3t="rounds" inputmode="numeric" value="${b.rounds}"></label></div>` : ""}
+      ${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tb3"><label class="w3fld"><small>Arbeit s</small><input data-w3t="work" inputmode="numeric" value="${b.work}"></label><label class="w3fld"><small>Pause s</small><input data-w3t="rest" inputmode="numeric" value="${b.rest}"></label><label class="w3fld"><small>Runden</small><input data-w3t="rounds" inputmode="numeric" value="${b.rounds || ""}" placeholder="∞" ${b.rounds ? "" : "disabled"}></label></div>
+      <button class="gw-endless ${b.rounds ? "" : "on"}" data-w3a="tbinf"><i></i><span><b>Endlos</b><small>Läuft, bis du „Beenden“ tippst</small></span></button>` : ""}
       <div class="gw-tbph ${t.done ? "done" : t.work ? "work" : "rest"}" id="w3tbph">${t.done ? "Geschafft! 💪" : !b.run && !b.acc ? "Bereit" : t.work ? "Belastung" : "Pause"}</div>
       <div class="gw-big fx" id="w3tb">${fixD(fmtMs(t.left || (!b.acc ? b.work * 1000 : 0), false))}</div>
-      <div class="gw-tbr" id="w3tbr">Runde ${t.round} / ${b.rounds} · gesamt ${fmtMs(b.rounds * (b.work + b.rest) * 1000 - b.rest * 1000, false)}</div>
+      <div class="gw-tbr" id="w3tbr">${tbLine(t)}</div>
       <button class="gw-main ${b.run ? "stop" : ""}" data-w3a="${b.run ? "tbstop" : "tbgo"}">${b.run ? "Pause" : b.acc && !t.done ? "Weiter" : "Start"}</button>
-      <div class="gw-row"><button data-w3a="tbreset">↺ Neu</button></div>`; }
+      <div class="gw-row">${(b.run || b.acc) && !t.done ? `<button class="acc" data-w3a="tbend">■ Beenden</button>` : ""}<button data-w3a="tbreset">↺ Neu</button></div>
+      ${(b.run || b.acc) && !t.done ? `<div class="gw-hint">Schaffst du nicht mehr? „Beenden“ übernimmt alle Runden bis jetzt.</div>` : t.done && b.saved ? `<div class="gw-hint">${b.saved} ${b.saved === 1 ? "Runde" : "Runden"} als Sätze übernommen ✓</div>` : ""}`; }
   if (g === "notes" && it.kind !== "ex") { const o = it.kind === "run" ? "run" : "session"; return `<label class="w3fld"><small>Notiz zum Training heute</small><textarea data-w3in="${o}.note" placeholder="Wie lief es? Wetter, Gefühl, Schmerzen …">${esc((w[o] || {}).note || "")}</textarea></label>`; }
   if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
     const prevR = S.prevSame?.run;
@@ -4522,7 +4623,7 @@ function w3Body(it, g) {
     const add = rest.length ? `<button class="w3addbtn ${W3.addOpen ? "on" : ""}" data-w3a="faddopen">${W3I.plus} Hinzufügen</button>${W3.addOpen ? `<div class="w3adds">${rest.map(([f, l]) => `<button data-w3a="fadd" data-v="${f}">${l}</button>`).join("")}</div>` : ""}` : "";
     const nr = Math.min(W3.si ?? w3SiDef(e), e.sets.length) + 1;
     return `${lastCache[e.name] ? `<div class="gw-last"><b>${esc(/^Letztes Mal/.test(lastCache[e.name]) ? lastCache[e.name] : "Letztes Mal: " + lastCache[e.name])}</b></div>` : ""}
-      ${F.length ? F.map(one).join("") : `<div class="gw-empty" style="padding:6px 0 10px">Was willst du eintragen? Tippe auf „Hinzufügen“.</div>`}${add}
+      ${w3TbSum(e)}${F.length ? F.map(one).join("") : `<div class="gw-empty" style="padding:6px 0 10px">Was willst du eintragen? Tippe auf „Hinzufügen“.</div>`}${add}
       ${F.length ? `<button class="gw-main acc" data-w3a="saveset">✓ Satz ${nr} speichern</button>` : ""}`;
   }
 
@@ -4535,7 +4636,7 @@ function w3Body(it, g) {
       <button class="gw-main acc sm" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig</button>`;
   if (g === "sets") { const LB = { reps: "Wdh.", kg: "kg", band: "Band", sec: "Sek.", km: "km", min: "Zeit" }, F = (w3Fields(e).length ? w3Fields(e) : ["reps"]).map(f => [f, LB[f]]);
     const rows = e.sets.map((x, j) => [x, j]);
-    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === W3.si ? "now" : ""}"><b data-w3a="selset" data-j="${j}">${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"}` : "Timer"} · ${fmtMs((x.dur || 0) * 1000, false)}</small>` : ""}</div>`).join("")}</div>`
+    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === W3.si ? "now" : ""}"><b data-w3a="selset" data-j="${j}">${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"} · ${x.dur || 0} s Arbeit${x.rest != null ? ` / ${x.rest} s Pause` : ""}` : `Timer · ${fmtMs((x.dur || 0) * 1000, false)}`}</small>` : ""}</div>`).join("")}</div>`
       : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`}
       <button class="gw-add" data-w3a="addset">${W3I.plus} Satz hinzufügen</button><div class="gw-hint">Tippe in einen Satz, um ihn zu ändern.</div>`; }
   if (g === "notes") { const tn = it.kind === "ex" ? (w.extra?.note || "") : "";
@@ -4557,7 +4658,7 @@ function w3DragStart(e) {
   // flüssig & sparsam: während des Ziehens nur per GPU verschieben (transform), höchstens einmal pro Bildschirm-Frame;
   // erst beim Loslassen wird die echte Position gesetzt
   let x = r0.left, y = r0.top, px = e.clientX, py = e.clientY, raf = 0, moved = false;
-  const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - 44, py - oy)); el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
+  const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - el.offsetHeight - 4, py - oy)); el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
   const mv = ev => { px = ev.clientX; py = ev.clientY; if (Math.hypot(px - e.clientX, py - e.clientY) > 3) moved = true; if (!raf) raf = requestAnimationFrame(paint); };
   const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up);
     if (raf) { cancelAnimationFrame(raf); paint(); }
@@ -4591,16 +4692,23 @@ async function w3Click(e) {
   const a = b.dataset.w3a, it = w3It(), w = S.workout, ex = it?.kind === "ex" ? w.exercises[it.i] : null, m = ex ? exMode(ex) : null;
   const re = () => { w3TSave(); w3Render(); };
   if (a === "close") return w3Close();
-  if (a === "win") { const ws = w3Wins(it), g = ws[b.dataset.v]; g.on = !g.on; g.min = false; w3Save(); return re(); }
+  if (a === "tgo") { if (!W3.start[S.trainDate]) { W3.start = { [S.trainDate]: Date.now() }; w3Save(); } return w3Render(); }
+  if (a === "win") { const ws = w3Wins(it), g = ws[b.dataset.v]; g.on = !g.on; g.min = false; if (g.on) W3ZO[b.dataset.v] = ++W3ZN; w3Save(); return re(); }
   if (a === "wmin") { const g = w3Wins(it)[b.dataset.v]; g.min = !g.min; w3Save(); return re(); }
   if (a === "barc") { W3.bar = { ...(W3.bar || { x: innerWidth - 62, y: 90 }), c: !(W3.bar || {}).c }; w3Save(); return re(); }
   if (a === "gset") { if (b.dataset.v === "count") W3T.cset = !W3T.cset; else W3T.tbset = !W3T.tbset; return re(); }
   if (a === "cstep") { W3T.step = +b.dataset.v; return re(); }
   if (a === "tmcustom") { const v = await pgAsk("Eigene Zeit", "", "Sekunden (z. B. 75) oder Min:Sek"); if (!v) return; const sec = v.includes(":") ? v.split(":").reduce((q, p) => q * 60 + (+p || 0), 0) : parseInt(v, 10);
     if (sec > 0 && sec < 36000) { W3T.tm = { dur: sec, run: false, end: 0, left: sec * 1000, done: false }; re(); } return; }
-  if (a === "tbgo") { if (W3T.tb.from == null || W3T.tb.from > W3.i || (W3T.tb.to ?? W3.i) < W3.i) { W3T.tb.from = W3.i; W3T.tb.to = Math.max(W3T.tb.to ?? W3.i, W3.i); } const t = tbState(); if (t.done) { W3T.tb.acc = 0; } W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
+  if (a === "tbgo") { if (W3T.tb.from == null || W3T.tb.from > W3.i || (W3T.tb.to ?? W3.i) < W3.i) { W3T.tb.from = W3.i; W3T.tb.to = Math.max(W3T.tb.to ?? W3.i, W3.i); } const t = tbState(); if (t.done) { W3T.tb.acc = 0; W3T.tb.ended = 0; } if (!W3T.tb.acc) W3T.tb.saved = 0; W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
   if (a === "tbstop") { W3T.tb.acc = tbMs(); W3T.tb.run = false; return re(); }
-  if (a === "tbreset") { W3T.tb = { ...W3T.tb, run: false, t0: 0, acc: 0, done: false, ph: -1, from: null, to: null }; return re(); }
+  if (a === "tbreset") { W3T.tb = { ...W3T.tb, run: false, t0: 0, acc: 0, done: false, ph: -1, from: null, to: null, ended: 0, saved: 0 }; return re(); }
+  if (a === "tbinf") { W3T.tb.rounds = W3T.tb.rounds ? 0 : (W3T.tb.lastRounds || 8); if (W3T.tb.rounds) W3T.tb.lastRounds = W3T.tb.rounds; w3TSave(); return re(); }
+  if (a === "tbend") { const t = tbState(), b2 = W3T.tb;
+    // laufende Arbeitsphase zählt mit, wenn schon ein paar Sekunden geschafft sind
+    if (!t.done && t.work && b2.ph % 2 === 0) { const done = b2.work - Math.ceil(t.left / 1000); if (done >= 3) w3AutoSet("tabata", done, t.round); }
+    b2.acc = tbMs(); b2.run = false; b2.done = true; b2.ended = Math.max(1, t.work ? t.round - 1 : t.round); b2.ph = -1; w3TSave();
+    pgBeep(784, 160, 2); pgBuzz([120, 60, 120]); toast(`🔁 Tabata beendet · ${b2.saved || 0} ${b2.saved === 1 ? "Runde" : "Runden"} übernommen`); return re(); }
   if (a === "barrot") { const nb = { ...(W3.bar || {}), h: !(W3.bar || {}).h }; if (nb.h) { nb.x = 8; nb.y = Math.max(90, innerHeight - 260); } else { nb.x = innerWidth - 66; nb.y = 90; } W3.bar = nb; w3Save(); return re(); }
   if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
@@ -4682,11 +4790,11 @@ function w3AddSet(ex, m, reps, extra = null) {
 async function w3Finish() {
   const w = S.workout, items = w3Items(), open = items.filter(it => !w3Done(it));
   if (open.length && !(await askYesNo(`${open.length} ${open.length === 1 ? "Block ist" : "Blöcke sind"} noch leer. Trotzdem abschließen?`, "Abschließen"))) return;
-  const mins = Math.max(1, Math.round((Date.now() - (W3.start[S.trainDate] || Date.now())) / 60000));
+  const st0 = W3.start[S.trainDate], mins = st0 ? Math.max(1, Math.round((Date.now() - st0) / 60000)) : 0;
   let sets = 0, vol = 0; (w.exercises || []).forEach(e => e.sets.filter(setFilled).forEach(s => { sets++; vol += numv(s.kg) * numv(s.reps); }));
-  w.duration = mins; w.finished = true; saveWorkout(false); delete W3.start[S.trainDate]; w3Save(); W3T.sw = { run: false, t0: 0, acc: 0 }; W3T.tm.run = false; w3TSave();
+  if (mins) w.duration = mins; w.finished = true; saveWorkout(false); delete W3.start[S.trainDate]; w3Save(); W3T.sw = { run: false, t0: 0, acc: 0 }; W3T.tm.run = false; w3TSave();
   $("#w3").insertAdjacentHTML("beforeend", `<div class="pg-pick w3fin"><div class="card"><div style="font-size:42px">🏁</div><b style="font-size:22px">Training abgeschlossen!</b>
-    <div class="w3stats"><span><b>${mins}</b><small>${mins === 1 ? "Minute" : "Minuten"}</small></span>${sets ? `<span><b>${sets}</b><small>Sätze</small></span>` : ""}${vol ? `<span><b>${Math.round(vol).toLocaleString("de-DE")}</b><small>kg bewegt</small></span>` : ""}${w.run?.km ? `<span><b>${esc(w.run.km)}</b><small>km</small></span>` : ""}</div>
+    <div class="w3stats">${mins ? `<span><b>${mins}</b><small>${mins === 1 ? "Minute" : "Minuten"}</small></span>` : ""}${sets ? `<span><b>${sets}</b><small>Sätze</small></span>` : ""}${vol ? `<span><b>${Math.round(vol).toLocaleString("de-DE")}</b><small>kg bewegt</small></span>` : ""}${w.run?.km ? `<span><b>${esc(w.run.km)}</b><small>km</small></span>` : ""}</div>
     <button class="btn primary block" data-w3a="close">Fertig</button></div></div>`);
   pgBeep(784, 140, 3, 90); pgBuzz([80, 60, 80, 60, 200]);
 }
@@ -4695,10 +4803,12 @@ let w3TickT = 0;
 // Ende einer Arbeitsphase: Zähler-Stand automatisch als Satz speichern
 function w3AutoSet(via, dur, rd) {
   const it = w3It(); if (!it || it.kind !== "ex") return; const ex = S.workout.exercises[it.i], m = exMode(ex);
-  if (m === "cardio") return; if (m !== "time" && !(W3T.cnt > 0)) return;
-  const n = W3T.cnt; W3T.cnt = 0;
+  if (m === "cardio") return; if (m !== "time" && !(W3T.cnt > 0) && via !== "tabata") return;
+  const n = W3T.cnt || (via === "tabata" ? numv(W3.cur?.reps) || numv(W3.ph?.reps) || "" : ""); W3T.cnt = 0;
+  if (via === "tabata" && m !== "time" && !n) { w3AddSet(ex, m, "", { via, dur, rd, rest: W3T.tb.rest, sec: String(dur) }); ex.form = { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds }; W3T.tb.saved = (W3T.tb.saved || 0) + 1; w3TSave(); return; }
   ex.form = via === "tabata" ? { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds } : { via, dur };
-  w3AddSet(ex, m, n, { via, dur, ...(rd ? { rd } : {}) });
+  w3AddSet(ex, m, n, { via, dur, ...(rd ? { rd } : {}), ...(via === "tabata" ? { rest: W3T.tb.rest } : {}) });
+  if (via === "tabata") { W3T.tb.saved = (W3T.tb.saved || 0) + 1; w3TSave(); }
 }
 let w3Idle = 0;
 function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
@@ -4706,7 +4816,7 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]);
     if (!W3T.tm.rest && W3T.cnt > 0) w3AutoSet("timer", W3T.tm.dur); else toast(W3T.tm.rest ? "⏳ Pause vorbei – nächster Satz!" : "⏳ Zeit ist um!"); if (on) w3Render(); }
   if (W3T.tb.run) { const t = tbState(); if ((t.done || t.idx !== W3T.tb.ph) && W3T.tb.ph >= 0 && W3T.tb.ph % 2 === 0) w3AutoSet("tabata", W3T.tb.work, W3T.tb.ph / 2 + 1);
-    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
+    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; toast(`🔁 Tabata geschafft · ${W3T.tb.saved || 0} Runden übernommen`); w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
     else { if (t.idx !== W3T.tb.ph) { W3T.tb.ph = t.idx; w3TSave(); pgBeep(t.work ? 988 : 660, 220, t.work ? 2 : 1); pgBuzz(t.work ? [200, 80, 200] : 250); }
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
@@ -4714,8 +4824,8 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   if (!W3T.tm.run && !W3T.tb.run && (w3Idle = (w3Idle + 1) % 4)) return;
   if (W3T.tb.run || W3T.tb.acc) { const t = tbState(), el = $("#w3tb"), ph = $("#w3tbph"), r = $("#w3tbr");
     if (el) el.innerHTML = fixD(fmtMs(t.left, false)); if (ph) { ph.textContent = t.done ? "Geschafft! 💪" : t.work ? "Belastung" : "Pause"; ph.className = "gw-tbph " + (t.done ? "done" : t.work ? "work" : "rest"); }
-    if (r) r.textContent = `Runde ${t.round} / ${W3T.tb.rounds} · gesamt ${fmtMs(W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000 - W3T.tb.rest * 1000, false)}`; }
-  const el = $("#w3el"); if (el) el.textContent = fmtMs(Date.now() - (W3.start[S.trainDate] || Date.now()), false);
+    if (r) r.textContent = tbLine(t); }
+  const el = $("#w3el"); if (el && W3.start[S.trainDate]) el.textContent = fmtMs(Date.now() - W3.start[S.trainDate], false);
   w3Live();
 }, 250); }
 
@@ -4749,13 +4859,33 @@ function setExtras(st, mode) { const x = [];
   if (mode !== "weight" && numv(st.kg)) x.push(`+ ${st.kg} kg`);
   if (mode !== "band" && st.band) x.push(st.band);
   if ((mode === "time" || mode === "cardio") && numv(st.reps)) x.push(`${st.reps} Wdh.`);
-  if (mode !== "time" && numv(st.sec)) x.push(`+ ${fmtSec(st.sec)}${mode === "cardio" ? "" : " halten"}`);
+  if (mode !== "time" && numv(st.sec)) x.push(st.via === "tabata" && !numv(st.reps) ? `Tabata ${fmtSec(st.sec)}` : `+ ${fmtSec(st.sec)}${mode === "cardio" ? "" : " halten"}`);
   if (mode !== "cardio" && numv(st.km)) x.push(`${st.km} km`);
   if (mode !== "cardio" && st.min) x.push(durTxt(st.min));
   return x.length ? " · " + x.join(" · ") : ""; }
 
 // Sekunden als „Min : Sek“ anzeigen (75 → 1 : 15)
 function secShow(v) { const n = Math.round(numv(v)); if (!n && n !== 0 || v === "" || v == null) return ""; return `${Math.floor(n / 60)} : ${String(n % 60).padStart(2, "0")}`; }
+
+// Zeile unter der Tabata-Uhr
+function tbLine(t) { const b = W3T.tb, run = b.run || b.acc;
+  if (!b.rounds) return `Runde ${run ? t.round : 1} / ∞ · ${b.work} s Arbeit · ${b.rest} s Pause${run ? ` · ${fmtMs(tbMs(), false)}` : ""}`;
+  return `Runde ${t.round} / ${b.rounds} · ${b.work} s / ${b.rest} s · gesamt ${fmtMs(b.rounds * (b.work + b.rest) * 1000 - b.rest * 1000, false)}`; }
+// Eingabe: Übersicht über die Tabata-Runden dieser Übung
+function w3TbSum(e) { const tb = (e.sets || []).filter(x => x.via === "tabata"); if (!tb.length && !(W3T.tb.run || W3T.tb.acc)) return "";
+  const f = e.form?.via === "tabata" ? e.form : W3T.tb, reps = tb.reduce((a, x) => a + numv(x.reps), 0);
+  return `<div class="gw-tbsum"><b>🔁 Tabata</b><span>${f.work} s Arbeit · ${f.rest} s Pause</span><span>${tb.length} ${tb.length === 1 ? "Runde" : "Runden"}${reps ? ` · ${reps} Wdh.` : ""}${tb.length ? ` · ${fmtMs(tb.reduce((a, x) => a + numv(x.dur), 0) * 1000, false)} Arbeit` : ""}</span></div>`; }
+
+// Fenster & Leiste immer vollständig im Bildschirm halten (auch nach Drehen oder alten gespeicherten Positionen)
+function w3Clamp() {
+  const o = $("#w3"); if (!o?.classList.contains("on")) return; let ch = false; const it = w3It();
+  o.querySelectorAll(".gw, .gbar, .w3tab").forEach(el => { const w = el.offsetWidth, h = el.offsetHeight, x0 = el.offsetLeft, y0 = el.offsetTop;
+    const x = Math.round(Math.max(4, Math.min(innerWidth - w - 4, x0))), y = Math.round(Math.max(4, Math.min(innerHeight - h - 4, y0)));
+    if (x === x0 && y === y0) return; el.style.left = x + "px"; el.style.top = y + "px"; ch = true;
+    if (el.classList.contains("w3tab")) return; if (el.classList.contains("gbar")) W3.bar = { ...(W3.bar || {}), x, y }; else if (it && el.dataset.g) { const ws = w3Wins(it); if (ws[el.dataset.g]) Object.assign(ws[el.dataset.g], { x, y }); } });
+  if (ch) w3Save();
+}
+addEventListener("resize", () => { clearTimeout(w3Clamp.t); w3Clamp.t = setTimeout(() => { try { w3Clamp(); } catch {} }, 150); });
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
    Eigene: users/{uid}/walls (Vorschau) + users/{uid}/wallImgs (Bild) – nur du siehst sie, auf allen Geräten.
@@ -5156,6 +5286,28 @@ async function setTrainType(name) {
   findPrevSame(); renderTrain();
 }
 
+// ---------- Neue Erfolge (nur Version 1/V3): Tabata, Sportarten, Bereiche, Allrounder ----------
+const ACT_GRP = n => { const k = String(n || "").toLowerCase(); for (const [g, xs] of ACT_CAT) if (xs.some(x => x[0].toLowerCase() === k)) return g; return null; };
+function moreAch3(all) {
+  const out = [], wos = all.filter(w => hasContent(w) && planByName(w.plan)?.type !== "rest");
+  const tb = all.reduce((a, w) => a + (w.exercises || []).reduce((b, e) => b + (e.sets || []).filter(x => x.via === "tabata" && setFilled(x)).length, 0), 0);
+  out.push({ icon: "tabata", emo: "🔁", n: "Tabata-Runden", v: tb, u: "", goals: [8, 24, 50, 100, 200, 350, 500, 750, 1000, 1500, 2500],
+    info: "Jede Arbeitsrunde, die du mit dem Tabata-Timer im Trainingsmodus geschafft hast – auch im Endlos-Modus." });
+  const kinds = new Set(wos.map(w => w.plan).filter(Boolean));
+  out.push({ icon: "sports", emo: "🧭", n: "Sportarten ausprobiert", v: kinds.size, u: "", goals: [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25],
+    info: "Wie viele verschiedene Trainingsarten du schon eingetragen hast – Push, Kickboxen, Schwimmen, Klettern …" });
+  // Allrounder: Wochen mit mindestens 3 verschiedenen Trainingsarten
+  const wk = {}; wos.forEach(w => { const d = fromKey(w.date), m = keyOf(addDays(d, -((d.getDay() + 6) % 7))); (wk[m] = wk[m] || new Set()).add(w.plan); });
+  out.push({ icon: "allround", emo: "🌈", n: "Allrounder-Wochen", v: Object.values(wk).filter(s => s.size >= 3).length, u: "", goals: [1, 2, 4, 8, 12, 20, 30, 40, 52, 78, 104],
+    info: "Wochen, in denen du mindestens drei verschiedene Trainingsarten gemacht hast." });
+  // Bereiche aus dem Katalog – erscheinen, sobald du etwas daraus im Plan oder eingetragen hast
+  const GRP = [["Kampfsport", "fight", "🥊", "Kampfsport-Einheiten"], ["Ballsport & Schläger", "ball", "🎾", "Ballsport-Einheiten"], ["Draußen & Berg", "outdoor", "⛰️", "Draußen & Berg"], ["Ausgleich", "balance", "🧘", "Ausgleich & Beweglichkeit"]];
+  for (const [g, k, e, n] of GRP) { const v = wos.filter(w => ACT_GRP(w.plan) === g).length;
+    if (!v && !TYPES.some(t => ACT_GRP(t.name) === g)) continue;
+    out.push({ icon: "grp_" + k, emo: e, n, v, u: "", goals: [1, 5, 10, 25, 50, 75, 100, 150, 200, 300, 500], info: `Alle Einheiten aus dem Bereich „${g}“ zusammengezählt.` }); }
+  return out;
+}
+
 /* ===================== V2/V3: Rangfarben = Symbol = Profilrahmen, jede Stufe eigene Farbe ===================== */
 function rankCol2(i) { return ["#CD7F32", "#C3C9D4", "#FFC400", "#2FD4B4", "#5EC4FF", "#33D17A", "#FF7A3D", "#FF3355", "#6A6BFF", "#C04DFF", null][i]; }
 // Rahmen-Farben (hell, mittel, dunkel) passend zur Rangfarbe – Mythos & GOD-LEVEL bleiben wie sie sind
@@ -5233,6 +5385,7 @@ document.addEventListener("click", async e => { if (!e.target.closest("[data-stg
 function backTop() {
   if (!$("#dlg")?.classList.contains("hidden")) { $("#dlgNo")?.click(); return true; }
   const pick = document.querySelector("#w3 .w3pick, .pg-pick"); if (pick) { pick.remove(); return true; }
+  if ($("#f3scan")?.classList.contains("on")) { foodScanStop(); return true; }
   if ($("#f3")?.classList.contains("on")) { foodClose(); return true; }
   if ($("#s3")?.classList.contains("on")) { stepsClose(); return true; }
   if (!$("#sheet")?.classList.contains("hidden")) { closeSheet(); return true; }
@@ -5296,6 +5449,28 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 (() => { let q; try { q = new URLSearchParams(location.search).get("open"); } catch {} if (q !== "steps") return;
   const go = setInterval(() => { if (!S.uid || !S.days) return; clearInterval(go); stepsOpen(); try { history.replaceState(history.state, "", location.pathname); } catch {} }, 400); })();
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
+
+// ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
+const APP_VER = "1794058340";
+async function updCheck() {
+  if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
+  try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
+    if (m && m[1] !== APP_VER && +m[1] > +APP_VER) updShow(); } catch {}
+}
+function updShow() {
+  const el = document.createElement("div"); el.id = "upd3";
+  el.innerHTML = `<span><b>Neue Version verfügbar</b><small>Jetzt aktualisieren – dauert nur kurz.</small></span><button class="u3go">Aktualisieren</button><button class="u3x" aria-label="Später">✕</button>`;
+  document.body.appendChild(el); requestAnimationFrame(() => el.classList.add("on"));
+  el.querySelector(".u3go").onclick = async () => { try { sessionStorage.setItem("tracker-reload-tab", S.tab || "start"); } catch {}
+    try { const r = await navigator.serviceWorker?.getRegistration(); await r?.update(); } catch {} location.reload(); };
+  el.querySelector(".u3x").onclick = () => { el.classList.remove("on"); setTimeout(() => el.remove(), 500); updCheck.snooze = Date.now(); };
+}
+setTimeout(updCheck, 8000);
+setInterval(() => { if (Date.now() - (updCheck.snooze || 0) > 30 * 60e3) updCheck(); }, 10 * 60e3);
+document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - (updCheck.snooze || 0) > 30 * 60e3) updCheck(); });
+// nach dem Aktualisieren wieder auf dem Reiter landen, auf dem man war
+(() => { let t; try { t = sessionStorage.getItem("tracker-reload-tab"); sessionStorage.removeItem("tracker-reload-tab"); } catch {} if (!t || t === "start") return;
+  const go = setInterval(() => { if (!APP.loaded || !S.daysFull) return; clearInterval(go); try { setTab(t); } catch {} }, 300); setTimeout(() => clearInterval(go), 15000); })();
 
 /* ===================== V2/V3: Ernährung – Barcode scannen, suchen, Kalorien & Makros =====================
    Daten: users/{uid}/food/{Datum} = { items: [{ n, g, kcal, p, c, f, meal }] } · Nährwerte: Open Food Facts (frei, ohne Schlüssel) */
@@ -5438,6 +5613,7 @@ function foodGoalEdit() { const g = foodGoal(), f = (id, l, v) => `<label class=
   showSheet(true); }
 // ---------- Barcode-Scanner: eingebaut (Android/Chrome) oder ZXing als Ersatz (iPhone) ----------
 async function foodScan() {
+  foodScanStop(); const id = FOOD.scanId = (FOOD.scanId || 0) + 1, live = () => FOOD.scanId === id && $("#f3scan")?.classList.contains("on");
   let s = $("#f3scan"); if (!s) { s = document.createElement("div"); s.id = "f3scan"; document.body.appendChild(s); }
   s.innerHTML = `<video playsinline muted autoplay></video><div class="f3frame"></div><div class="f3sh">Barcode in den Rahmen halten</div><button class="f3sx" aria-label="Schließen">${ICON.x}</button>
     <form class="f3sm"><input inputmode="numeric" placeholder="oder Nummer eintippen" id="f3code"><button class="btn primary">OK</button></form>`;
@@ -5446,17 +5622,23 @@ async function foodScan() {
   const v = s.querySelector("video");
   try {
     if ("BarcodeDetector" in window && (await BarcodeDetector.getSupportedFormats?.() || []).includes("ean_13")) {
-      FOOD.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); v.srcObject = FOOD.stream; await v.play();
+      if (!live()) return;
+      const st = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      // schon wieder geschlossen, während die Kamera startete? → sofort aus
+      if (!live()) { st.getTracks().forEach(t => t.stop()); return; }
+      FOOD.stream = st; v.srcObject = st; await v.play().catch(() => {}); if (!live()) return foodScanStop();
       const det = new BarcodeDetector({ formats: ["ean_13", "ean_8", "upc_a", "upc_e"] });
       const loop = async () => { if (!FOOD.stream) return; try { const r = await det.detect(v); if (r[0]?.rawValue) return foodCode(r[0].rawValue); } catch {} FOOD.raf = setTimeout(loop, 180); }; loop();
     } else {
       if (!window.ZXing) await new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
-      FOOD.zx = new ZXing.BrowserMultiFormatReader();
-      await FOOD.zx.decodeFromConstraints({ video: { facingMode: "environment" } }, v, res => { if (res && FOOD.zx) foodCode(res.getText()); });
+      if (!live()) return;
+      const zx = FOOD.zx = new ZXing.BrowserMultiFormatReader();
+      await zx.decodeFromConstraints({ video: { facingMode: "environment" } }, v, res => { if (res && FOOD.zx === zx && live()) foodCode(res.getText()); });
+      if (!live() || FOOD.zx !== zx) { try { zx.reset(); } catch {} }
     }
-  } catch (err) { s.querySelector(".f3sh").textContent = "Kamera nicht verfügbar – erlaube den Kamerazugriff oder tippe die Nummer unten ein."; }
+  } catch (err) { if (!live()) return; s.querySelector(".f3sh").textContent = "Kamera nicht verfügbar – erlaube den Kamerazugriff oder tippe die Nummer unten ein."; }
 }
-function foodScanStop() { clearTimeout(FOOD.raf); FOOD.stream?.getTracks().forEach(t => t.stop()); FOOD.stream = null; try { FOOD.zx?.reset(); } catch {} FOOD.zx = null; $("#f3scan")?.classList.remove("on"); }
+function foodScanStop() { FOOD.scanId = (FOOD.scanId || 0) + 1; clearTimeout(FOOD.raf); const v = $("#f3scan video"); try { v?.srcObject?.getTracks?.().forEach(t => t.stop()); if (v) v.srcObject = null; } catch {} FOOD.stream?.getTracks().forEach(t => t.stop()); FOOD.stream = null; try { FOOD.zx?.reset(); } catch {} FOOD.zx = null; $("#f3scan")?.classList.remove("on"); }
 async function foodCode(code) {
   if (FOOD.busy) return; FOOD.busy = true; foodScanStop(); pgBuzz(30); toast("Suche Produkt …");
   try { const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=code,product_name,product_name_de,brands,nutriments,serving_quantity`), j = await r.json();
@@ -5876,6 +6058,22 @@ document.addEventListener("click", async e => {
   if (e.target.closest("[data-pfsave]")) { e.stopImmediatePropagation(); pfSave(); }
 }, true);
 
+// ---------- Einladung per Link: …/tracker/?fr=ABC123 → nach dem Anmelden Anfrage senden ----------
+const frInviteLink = () => location.origin + location.pathname.replace(/index\.html$/, "") + "?fr=" + (S.code || "");
+const frInviteText = () => `Lass uns im Tracker zusammen trainieren! 💪\nMein Freundescode: ${(S.code || "").replace(/(...)(...)/, "$1 $2")}\n\nEinfach den Link öffnen, anmelden – dann sind wir verbunden:\n${frInviteLink()}`;
+(() => { let c; try { c = new URLSearchParams(location.search).get("fr"); } catch {}
+  if (c) { c = c.toUpperCase().replace(/[^A-Z0-9]/g, ""); if (c.length === 6) try { localStorage.setItem("tracker-frinv", c); } catch {}
+    try { const u = new URL(location.href); u.searchParams.delete("fr"); history.replaceState(history.state, "", u.pathname + (u.search || "") + u.hash); } catch {} } })();
+{ const go = setInterval(async () => {
+    let c; try { c = localStorage.getItem("tracker-frinv"); } catch {} if (!c) { clearInterval(go); return; }
+    if (!S.uid || !APP.loaded || !S.code || !S.daysFull || document.querySelector("#onb:not(.hidden)") || !$("#sheet")?.classList.contains("hidden")) return;
+    clearInterval(go); try { localStorage.removeItem("tracker-frinv"); } catch {}
+    if (c === S.code) return;
+    let name = ""; try { const q = await getDocs(query(collection(db, "profiles"), where("code", "==", c), limit(1))); if (!q.empty) name = q.docs[0].data().name || ""; } catch {}
+    if (FR.list.some(f => f.status === "accepted" && f.members.some(m => FR.profs[m]?.code === c))) return;
+    if (await askYesNo(name ? `${name} hat dich zum Tracker eingeladen. Als Freund hinzufügen?` : `Du wurdest zum Tracker eingeladen (Code ${c.replace(/(...)(...)/, "$1 $2")}). Als Freund hinzufügen?`, "Hinzufügen")) await addFriend(c);
+  }, 1000); }
+
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
   const pct = nx ? Math.max(0, Math.min(100, (st.rp - r.min) / (nx.min - r.min) * 100)) : 100;
@@ -6089,7 +6287,7 @@ function achievements(all) {
   if (keys.length) { for (let d = addDays(fromKey(keys[0]), -((fromKey(keys[0]).getDay() + 6) % 7)); keyOf(addDays(d, 6)) <= todayKey(); d = addDays(d, 7)) {
     let ok = true; for (let j = 0; j < 7 && ok; j++) ok = dayInfo(keyOf(addDays(d, j))).complete; if (ok) perfectWeeks++; } }
   const peak = (typeof rankState === "function" && S.daysFull) ? rankState().peak : 0;
-  const extraCats = moreAchievements(all, keys);
+  const extraCats = [...moreAchievements(all, keys), ...(isV2() && typeof moreAch3 === "function" ? moreAch3(all) : [])];
   const cats = [
     { icon: "dumbbell", n: "Trainings", v: trainings, u: "", goals: [1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000] },
     { icon: "flame", n: "Längste Serie", v: longest, u: " Tage", goals: [3, 7, 14, 30, 60, 100, 180, 365, 500, 730, 1000] },
@@ -10224,9 +10422,9 @@ document.addEventListener("click", async e => {
   else if (a === "typesave") saveTypeForm();
   else if (a === "typedel") deleteType(+el.dataset.i);
   else if (a === "prange") { S.perfRange = el.dataset.v; renderPerf(); }
-  else if (a === "frcopy") { try { await navigator.clipboard.writeText(S.code); toast("Code kopiert ✓"); } catch { toast(S.code); } }
-  else if (a === "frshare") { const t = `Lass uns im Tracker zusammen trainieren! Mein Freundescode: ${S.code}`, u = location.origin + location.pathname;
-    if (navigator.share) navigator.share({ title: "Tracker", text: t, url: u }).catch(() => {}); else { try { await navigator.clipboard.writeText(t + " " + u); toast("Einladung kopiert ✓"); } catch {} } }
+  else if (a === "frcopy") { try { await navigator.clipboard.writeText(frInviteText()); toast("Einladung mit Code kopiert ✓"); } catch { toast(S.code); } }
+  else if (a === "frshare") { const t = frInviteText();
+    if (navigator.share) navigator.share({ title: "Tracker", text: t }).catch(() => {}); else { try { await navigator.clipboard.writeText(t); toast("Einladung kopiert ✓"); } catch {} } }
   else if (a === "pfname") { S.pfEditName = !S.pfEditName; renderPerf(); setTimeout(() => $("#pfNameIn")?.focus(), 50); }
   else if (a === "pfnamesave") { const v = ($("#pfNameIn")?.value || "").trim().slice(0, 20); if (v) { S.dispName = v; setDoc(userRef(), { dispName: v }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); } S.pfEditName = false; renderPerf(); }
   else if (a === "pfnophoto") { S.photo = ""; setDoc(userRef(), { photo: "" }, { merge: true }).catch(() => {}); FR.lastPub = ""; doPublish(); renderPerf(); }
