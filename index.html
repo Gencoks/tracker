@@ -2368,6 +2368,9 @@ html:root.ui3 *:not(input):not(textarea):not([contenteditable="true"]) { -webkit
 html:root.ui3 input, html:root.ui3 textarea, html:root.ui3 [contenteditable="true"] { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
 html:root.ui3 img, html:root.ui3 svg { -webkit-user-drag: none; }
 html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: none; }
+#w3 .vc3-runs > div { display: grid; grid-template-columns: 52px repeat(3, 1fr); gap: 6px; align-items: center; padding: 7px 8px; border-radius: 10px; font-size: 13px; }
+#w3 .vc3-runs > div.now { background: #1b1b1d; box-shadow: inset 3px 0 0 var(--accent); }
+#w3 .vc3-runs > div b { font-size: 12px; color: #9a9aa0; } #w3 .vc3-runs .gs-hd span { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8a8a90; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -4594,7 +4597,7 @@ function w3Wins(it) {
   if (!W3.win[k]) { const W = innerWidth, H = innerHeight;
     W3.win[k] = it.kind === "ex" ? { edit: { on: 0, x: 70, y: 96 }, sets: { on: 0, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: 60, y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
       : { edit: { on: 0, x: 70, y: 96 }, sw: { on: 0, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
-  const ws = W3.win[k]; if (!ws.count) ws.count = { on: 0, x: 60, y: 140 }; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 }; if (!ws.voice) ws.voice = { on: 0, x: 64, y: 180 }; if (k === "ex" && !ws.sets) ws.sets = { on: 0, x: 70, y: Math.min(innerHeight - 300, 470) }; if (!ws.edit) ws.edit = { on: 0, x: 70, y: 96 }; if (!ws.sw) ws.sw = { on: 0, x: 80, y: 200 }; if (!ws.timer) ws.timer = { on: 0, x: Math.max(8, innerWidth - 236), y: Math.min(innerHeight - 330, 400) };
+  const ws = W3.win[k]; if (!ws.count) ws.count = { on: 0, x: 60, y: 140 }; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 }; if (!ws.voice) ws.voice = { on: 0, x: 64, y: 180 }; if (!ws.sets) ws.sets = { on: 0, x: 70, y: Math.min(innerHeight - 300, 470) }; if (!ws.edit) ws.edit = { on: 0, x: 70, y: 96 }; if (!ws.sw) ws.sw = { on: 0, x: 80, y: 200 }; if (!ws.timer) ws.timer = { on: 0, x: Math.max(8, innerWidth - 236), y: Math.min(innerHeight - 330, 400) };
   return ws;
 }
 function w3Render() {
@@ -4644,6 +4647,7 @@ function w3Body(it, g) {
       <button class="gw-main ${b.run ? "stop" : ""}" data-w3a="${b.run ? "tbstop" : "tbgo"}">${b.run ? "Pause" : b.acc && !t.done ? "Weiter" : "Start"}</button>
       <div class="gw-row">${(b.run || b.acc) && !t.done ? `<button class="acc" data-w3a="tbend">■ Beenden</button>` : ""}<button data-w3a="tbreset">↺ Neu</button></div>
       ${(b.run || b.acc) && !t.done ? `<div class="gw-hint">Schaffst du nicht mehr? „Beenden“ übernimmt alle Runden bis jetzt.</div>` : t.done && b.saved ? `<div class="gw-hint">${b.saved} ${b.saved === 1 ? "Runde" : "Runden"} als Sätze übernommen ✓</div>` : ""}`; }
+  if (g === "sets" && it.kind !== "ex") return w3SetsRun(it);
   if (g === "notes" && it.kind !== "ex") { const o = it.kind === "run" ? "run" : "session"; return `<label class="w3fld"><small>Notiz zum Training heute</small><textarea data-w3in="${o}.note" placeholder="Wie lief es? Wetter, Gefühl, Schmerzen …">${esc((w[o] || {}).note || "")}</textarea></label>`; }
   if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
     const prevR = S.prevSame?.run;
@@ -5002,6 +5006,17 @@ async function vcAsk() {
     <p class="vc3a-n">Gleich fragt dein Handy einmal nach – tippe dort auf <b>„Zulassen“</b> bzw. <b>„Bei Nutzung der App“</b>.</p>
     <div class="vc3a-a"><button data-w3a="vcno">Später</button><button class="acc" data-w3a="vcok">Weiter</button></div></div>`;
   $("#w3").appendChild(d);
+}
+
+// „Sätze“ bei Laufen / Einheiten: heutiger Eintrag + die letzten Male zum Vergleich
+function w3SetsRun(it) {
+  const w = S.workout, run = it.kind === "run", r = run ? (w.run || {}) : (w.session || {});
+  const prev = (S.allWo || []).filter(x => x.date < S.trainDate && x.plan === w.plan && (run ? x.run?.km || x.run?.minutes : x.session?.minutes)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
+  const row = (lbl, x, now) => { const p = run ? paceOf(x.km, x.minutes) : "";
+    return `<div class="${now ? "now" : ""}"><b>${lbl}</b>${run ? `<span>${x.km ? esc(String(x.km)) + " km" : "–"}</span><span>${x.minutes ? esc(String(x.minutes)) + (/^\d+$/.test(String(x.minutes)) ? " min" : "") : "–"}</span><span>${p ? p + "/km" : ""}</span>` : `<span>${x.minutes ? esc(String(x.minutes)) + " min" : "–"}</span>${x.done ? "<span>✓</span>" : ""}`}</div>`; };
+  return `<div class="gw-sets vc3-runs"><div class="gs-hd"><span></span>${run ? "<span>Strecke</span><span>Zeit</span><span>Tempo</span>" : "<span>Dauer</span>"}</div>
+    ${row("Heute", r, true)}${prev.map(x => row(new Date(fromKey(x.date)).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }), run ? x.run : x.session)).join("")}</div>
+    <div class="gw-hint">${prev.length ? "Heute oben, darunter deine letzten Male." : "Werte trägst du unter „Eingabe“ ein."}</div>`;
 }
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
@@ -5573,7 +5588,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794097372";
+const APP_VER = "1794098408";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
