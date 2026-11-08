@@ -2371,6 +2371,22 @@ html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: non
 #w3 .vc3-runs > div { display: grid; grid-template-columns: 52px repeat(3, 1fr); gap: 6px; align-items: center; padding: 7px 8px; border-radius: 10px; font-size: 13px; }
 #w3 .vc3-runs > div.now { background: #1b1b1d; box-shadow: inset 3px 0 0 var(--accent); }
 #w3 .vc3-runs > div b { font-size: 12px; color: #9a9aa0; } #w3 .vc3-runs .gs-hd span { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8a8a90; }
+/* Fenster einrasten / fixieren */
+#w3snap { position: absolute; z-index: 6; border-radius: 18px; border: 2px dashed color-mix(in srgb, var(--accent) 70%, transparent); background: color-mix(in srgb, var(--accent) 8%, transparent); pointer-events: none; opacity: 0; transition: opacity .12s; }
+#w3snap.on { opacity: 1; }
+#w3 .gw-h .gw-pin { opacity: .45; } #w3 .gw-h .gw-pin.on { opacity: 1; color: var(--accent); }
+#w3 .gw.pin { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), 0 10px 30px rgba(0,0,0,.45); }
+#w3 .gw.pin .gw-h { cursor: default; }
+/* Sprach-Stoppuhr: Modus, Pegel, Knöpfe */
+#w3 .vc3-md { display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #1b1b1d; }
+#w3 .vc3-md button { flex: 1; padding: 7px 4px; border-radius: 9px; border: 0; background: none; color: #9a9aa0; font: inherit; font-size: 12px; font-weight: 700; }
+#w3 .vc3-md button.on { background: #2a2a2e; color: #f5f5f2; }
+#w3 .vc3-meter { position: relative; height: 6px; border-radius: 4px; background: #232326; overflow: hidden; }
+#w3 .vc3-meter b { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); transition: width .05s linear; }
+#w3 .vc3-meter em { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #f5f5f2; }
+#w3 .vc3-pa { color: #9a9aa0; }
+#w3 .vc3-btns button:disabled { opacity: .35; }
+#w3 .vc3-sens > div { margin-top: 4px; } #w3 .vc3-sens small { font-size: 10px; color: #8a8a90; } #w3 .vc3-sens span { font-size: 11px; color: #8a8a90; } #w3 .vc3-sens input { accent-color: var(--accent); }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -4621,7 +4637,7 @@ function w3Render() {
 // Fenster im Bild halten
 function w3WinHTML(it, g, w) {
   const [, title, width] = W3G[g];
-  return `<div class="gw ${w.min ? "min" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${g === "count" ? W3I.plus : W3I[g]}${title}</span>${g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
+  return `<div class="gw ${w.min ? "min" : ""} ${w.pin ? "pin" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${g === "count" ? W3I.plus : W3I[g]}${title}</span><button class="gw-pin ${w.pin ? "on" : ""}" data-w3a="pin" data-v="${g}" title="${w.pin ? "Lösen" : "Fixieren"}">${W3PIN}</button>${g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
 }
 function w3Step(field, label, val, step, unit = "") {
   return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val === 0 || val ? val : ""}" placeholder="${esc(String(W3.ph?.[field] ?? ""))}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
@@ -4683,7 +4699,7 @@ function w3Body(it, g) {
       <button class="gw-main acc sm" data-w3a="tapsave" ${W3T.cnt ? "" : "disabled"}>✓ Satz fertig</button>`;
   if (g === "sets") { const LB = { reps: "Wdh.", kg: "kg", band: "Band", sec: "Sek.", km: "km", min: "Zeit" }, F = (w3Fields(e).length ? w3Fields(e) : ["reps"]).map(f => [f, LB[f]]);
     const rows = e.sets.map((x, j) => [x, j]);
-    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === W3.si ? "now" : ""}"><b data-w3a="selset" data-j="${j}">${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "voice" ? `🎤 Sprach-Stoppuhr · ${fmtMs((x.dur || 0) * 1000, false)}` : x.via === "tabata" ? `Tabata · Runde ${x.rd || "?"} · ${x.dur || 0} s Arbeit${x.rest != null ? ` / ${x.rest} s Pause` : ""}` : `Timer · ${fmtMs((x.dur || 0) * 1000, false)}`}</small>` : ""}</div>`).join("")}</div>`
+    return `${rows.length ? `<div class="gw-sets ed"><div class="gs-hd"><span>#</span>${F.map(([, l]) => `<span>${l}</span>`).join("")}<span></span></div>${rows.map(([x, j], n) => `<div class="${j === W3.si ? "now" : ""}"><b data-w3a="selset" data-j="${j}">${n + 1}</b>${F.map(([f]) => `<input data-w3set="${j}.${f}" inputmode="${f === "band" ? "text" : f === "min" ? "numeric" : "decimal"}" value="${esc(x[f] ?? "")}" placeholder="${esc(x._ph?.[f] || "–")}">`).join("")}<button data-w3a="delset" data-j="${j}" aria-label="Satz löschen">✕</button>${x.via ? `<small class="gs-tag">${x.via === "voice" ? `🎤 Haltezeit · ${fmtMs((x.dur || 0) * 1000, false)}` : x.via === "tabata" ? `Tabata · ${x.rd || 1} ${+x.rd === 1 ? "Runde" : "Runden"} · ${fmtMs((x.dur || 0) * 1000, false)} Arbeit${+x.rest ? ` · ${x.rest} s Pause` : " · ohne Pause"}` : `Timer · ${fmtMs((x.dur || 0) * 1000, false)}`}</small>` : ""}</div>`).join("")}</div>`
       : `<div class="gw-empty">Noch kein Satz – los geht's 💪${lastCache[e.name] ? `<br><small>Letztes Mal: ${esc(lastCache[e.name])}</small>` : ""}</div>`}
       <button class="gw-add" data-w3a="addset">${W3I.plus} Satz hinzufügen</button><div class="gw-hint">Tippe in einen Satz, um ihn zu ändern.</div>`; }
   if (g === "notes") { const tn = it.kind === "ex" ? (w.extra?.note || "") : "";
@@ -4700,15 +4716,20 @@ function w3TabHTML(t) {
 function w3DragStart(e) {
   const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button, input, select, textarea")) return;
   const el = h.closest(".gw, .gbar"); if (!el) return;
+  if (el.classList.contains("pin")) { pgBuzz(15); toast("📌 Fixiert – zum Verschieben erst lösen"); return; }
   e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top, W = el.offsetWidth;
   try { h.setPointerCapture(e.pointerId); } catch {} el.classList.add("drag");
   // flüssig & sparsam: während des Ziehens nur per GPU verschieben (transform), höchstens einmal pro Bildschirm-Frame;
   // erst beim Loslassen wird die echte Position gesetzt
   let x = r0.left, y = r0.top, px = e.clientX, py = e.clientY, raf = 0, moved = false;
-  const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - el.offsetHeight - 4, py - oy)); el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
+  let snap = null;
+  const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - el.offsetHeight - 4, py - oy));
+    snap = el.classList.contains("gw") ? w3SnapAt(x, y, W, el.offsetHeight) : null; w3SnapShow(snap, W, el.offsetHeight);
+    el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
   const mv = ev => { px = ev.clientX; py = ev.clientY; if (Math.hypot(px - e.clientX, py - e.clientY) > 3) moved = true; if (!raf) raf = requestAnimationFrame(paint); };
   const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up);
     if (raf) { cancelAnimationFrame(raf); paint(); }
+    if (snap && moved) { x = snap.x; y = snap.y; pgBuzz(20); } w3SnapShow(null);
     el.classList.remove("drag"); el.style.transform = ""; el.style.left = x + "px"; el.style.top = y + "px";
     const [kind, id] = h.dataset.drag.split(":"), it = w3It();
     if (kind === "bar" && !moved) { W3.bar = { ...(W3.bar || {}), x: r0.left, y: r0.top, c: !(W3.bar || {}).c }; w3Save(); w3Render(); return; }
@@ -4747,15 +4768,15 @@ async function w3Click(e) {
   if (a === "cstep") { W3T.step = +b.dataset.v; return re(); }
   if (a === "tmcustom") { const v = await pgAsk("Eigene Zeit", "", "Sekunden (z. B. 75) oder Min:Sek"); if (!v) return; const sec = v.includes(":") ? v.split(":").reduce((q, p) => q * 60 + (+p || 0), 0) : parseInt(v, 10);
     if (sec > 0 && sec < 36000) { W3T.tm = { dur: sec, run: false, end: 0, left: sec * 1000, done: false }; re(); } return; }
-  if (a === "tbgo") { if (W3T.tb.from == null || W3T.tb.from > W3.i || (W3T.tb.to ?? W3.i) < W3.i) { W3T.tb.from = W3.i; W3T.tb.to = Math.max(W3T.tb.to ?? W3.i, W3.i); } const t = tbState(); if (t.done) { W3T.tb.acc = 0; W3T.tb.ended = 0; } if (!W3T.tb.acc) W3T.tb.saved = 0; W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
+  if (a === "tbgo") { if (W3T.tb.from == null || W3T.tb.from > W3.i || (W3T.tb.to ?? W3.i) < W3.i) { W3T.tb.from = W3.i; W3T.tb.to = Math.max(W3T.tb.to ?? W3.i, W3.i); } const t = tbState(); if (t.done) { W3T.tb.acc = 0; W3T.tb.ended = 0; } if (!W3T.tb.acc) { W3T.tb.saved = 0; W3T.tb.ref = null; } W3T.tb.t0 = Date.now(); W3T.tb.run = true; W3T.tb.done = false; W3T.tbset = false; if (!W3T.tb.acc) { W3T.tb.ph = 0; pgBeep(880, 200, 2); } w3Tick(); return re(); }
   if (a === "tbstop") { W3T.tb.acc = tbMs(); W3T.tb.run = false; return re(); }
-  if (a === "tbreset") { W3T.tb = { ...W3T.tb, run: false, t0: 0, acc: 0, done: false, ph: -1, from: null, to: null, ended: 0, saved: 0 }; return re(); }
+  if (a === "tbreset") { W3T.tb = { ...W3T.tb, run: false, t0: 0, acc: 0, done: false, ph: -1, from: null, to: null, ended: 0, saved: 0, ref: null }; return re(); }
   if (a === "tbinf") { W3T.tb.rounds = W3T.tb.rounds ? 0 : (W3T.tb.lastRounds || 8); if (W3T.tb.rounds) W3T.tb.lastRounds = W3T.tb.rounds; w3TSave(); return re(); }
   if (a === "tbend") { const t = tbState(), b2 = W3T.tb;
     // laufende Arbeitsphase zählt mit, wenn schon ein paar Sekunden geschafft sind
     if (!t.done && t.work && b2.ph % 2 === 0) { const done = b2.work - Math.ceil(t.left / 1000); if (done >= 3) w3AutoSet("tabata", done, t.round); }
     b2.acc = tbMs(); b2.run = false; b2.done = true; b2.ended = Math.max(1, t.work ? t.round - 1 : t.round); b2.ph = -1; w3TSave();
-    pgBeep(784, 160, 2); pgBuzz([120, 60, 120]); toast(`🔁 Tabata beendet · ${b2.saved || 0} ${b2.saved === 1 ? "Runde" : "Runden"} übernommen`); return re(); }
+    pgBeep(784, 160, 2); pgBuzz([120, 60, 120]); toast(`🔁 Tabata beendet · ${b2.saved || 0} ${b2.saved === 1 ? "Runde" : "Runden"} in einem Satz gespeichert`); return re(); }
   if (a === "barrot") { const nb = { ...(W3.bar || {}), h: !(W3.bar || {}).h }; if (nb.h) { nb.x = 8; nb.y = Math.max(90, innerHeight - 260); } else { nb.x = innerWidth - 66; nb.y = 90; } W3.bar = nb; w3Save(); return re(); }
   if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
@@ -4810,7 +4831,7 @@ function w3Input(e) {
   if (t.dataset.w3set) { const [j, f] = t.dataset.w3set.split("."), it = w3It(), ex = S.workout.exercises[it.i]; if (ex?.sets[+j]) { ex.sets[+j][f] = f === "min" ? fmtDurTyping(t.value) : t.value; if (f === "min" && t.value !== ex.sets[+j][f]) t.value = ex.sets[+j][f]; saveWorkout(false); } return; }
   if (t.dataset.w3note) { const it = w3It(), w = S.workout; if (t.dataset.w3note === "ex") w.exercises[it.i].note = t.value; else w.extra = { ...(w.extra || {}), note: t.value }; saveWorkout(false); return; }
   if (t.dataset.w3c) { const v = Math.max(0, parseInt(t.value, 10) || 0); if (t.dataset.w3c === "step") W3T.step = Math.max(1, v); else W3T.cnt = v; w3TSave(); const el = $("#w3cnt"); if (el) el.textContent = W3T.cnt; return; }
-  if (t.dataset.w3t) { W3T.tb[t.dataset.w3t] = Math.max(1, parseInt(t.value, 10) || 1); w3TSave(); return; }
+  if (t.dataset.w3t) { const k = t.dataset.w3t, v = parseInt(t.value, 10); W3T.tb[k] = k === "rest" ? Math.max(0, isNaN(v) ? 0 : v) : Math.max(1, v || 1); w3TSave(); return; }
   if (t.dataset.w3sel === "rest") { W3.autoRest = +t.value; w3Save(); return; }
   if (t.dataset.w3f) { W3.cur[t.dataset.w3f] = t.value; return; }
   if (t.dataset.w3in) { const [o, f] = t.dataset.w3in.split("."), w = S.workout; let v = t.value;
@@ -4850,7 +4871,7 @@ let w3TickT = 0;
 // Ende einer Arbeitsphase: Zähler-Stand automatisch als Satz speichern
 function w3AutoSet(via, dur, rd) {
   const it = w3It(); if (!it || it.kind !== "ex") return; const ex = S.workout.exercises[it.i], m = exMode(ex);
-  if (m === "cardio") return; if (m !== "time" && !(W3T.cnt > 0) && via !== "tabata") return;
+  if (m === "cardio") return; if (via === "tabata") return w3TbAdd(it, ex, m, dur, rd); if (m !== "time" && !(W3T.cnt > 0)) return;
   const n = W3T.cnt || (via === "tabata" ? numv(W3.cur?.reps) || numv(W3.ph?.reps) || "" : ""); W3T.cnt = 0;
   if (via === "tabata" && m !== "time" && !n) { w3AddSet(ex, m, "", { via, dur, rd, rest: W3T.tb.rest, sec: String(dur) }); ex.form = { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds }; W3T.tb.saved = (W3T.tb.saved || 0) + 1; w3TSave(); return; }
   ex.form = via === "tabata" ? { via, work: W3T.tb.work, rest: W3T.tb.rest, rounds: W3T.tb.rounds } : { via, dur };
@@ -4863,7 +4884,7 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]);
     if (!W3T.tm.rest && W3T.cnt > 0) w3AutoSet("timer", W3T.tm.dur); else toast(W3T.tm.rest ? "⏳ Pause vorbei – nächster Satz!" : "⏳ Zeit ist um!"); if (on) w3Render(); }
   if (W3T.tb.run) { const t = tbState(); if ((t.done || t.idx !== W3T.tb.ph) && W3T.tb.ph >= 0 && W3T.tb.ph % 2 === 0) w3AutoSet("tabata", W3T.tb.work, W3T.tb.ph / 2 + 1);
-    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; toast(`🔁 Tabata geschafft · ${W3T.tb.saved || 0} Runden übernommen`); w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
+    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; toast(`🔁 Tabata geschafft · ${W3T.tb.saved || 0} Runden in einem Satz gespeichert`); w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
     else { if (t.idx !== W3T.tb.ph) { W3T.tb.ph = t.idx; w3TSave(); pgBeep(t.work ? 988 : 660, 220, t.work ? 2 : 1); pgBuzz(t.work ? [200, 80, 200] : 250); }
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
@@ -4920,8 +4941,8 @@ function tbLine(t) { const b = W3T.tb, run = b.run || b.acc;
   return `Runde ${t.round} / ${b.rounds} · ${b.work} s / ${b.rest} s · gesamt ${fmtMs(b.rounds * (b.work + b.rest) * 1000 - b.rest * 1000, false)}`; }
 // Eingabe: Übersicht über die Tabata-Runden dieser Übung
 function w3TbSum(e) { const tb = (e.sets || []).filter(x => x.via === "tabata"); if (!tb.length && !(W3T.tb.run || W3T.tb.acc)) return "";
-  const f = e.form?.via === "tabata" ? e.form : W3T.tb, reps = tb.reduce((a, x) => a + numv(x.reps), 0);
-  return `<div class="gw-tbsum"><b>🔁 Tabata</b><span>${f.work} s Arbeit · ${f.rest} s Pause</span><span>${tb.length} ${tb.length === 1 ? "Runde" : "Runden"}${reps ? ` · ${reps} Wdh.` : ""}${tb.length ? ` · ${fmtMs(tb.reduce((a, x) => a + numv(x.dur), 0) * 1000, false)} Arbeit` : ""}</span></div>`; }
+  const f = e.form?.via === "tabata" ? e.form : W3T.tb, reps = tb.reduce((a, x) => a + numv(x.reps), 0), rds = tb.reduce((a, x) => a + (numv(x.rd) || 1), 0);
+  return `<div class="gw-tbsum"><b>🔁 Tabata</b><span>${f.work} s Arbeit · ${+f.rest ? f.rest + " s Pause" : "ohne Pause"}</span><span>${rds} ${rds === 1 ? "Runde" : "Runden"}${reps ? ` · ${reps} Wdh.` : ""}${tb.length ? ` · ${fmtMs(tb.reduce((a, x) => a + numv(x.dur), 0) * 1000, false)} Arbeit` : ""}</span></div>`; }
 
 // Fenster & Leiste immer vollständig im Bildschirm halten (auch nach Drehen oder alten gespeicherten Positionen)
 function w3Clamp() {
@@ -4934,28 +4955,37 @@ function w3Clamp() {
 }
 addEventListener("resize", () => { clearTimeout(w3Clamp.t); w3Clamp.t = setTimeout(() => { try { w3Clamp(); } catch {} }, 150); });
 
-// ---------- Sprach-Stoppuhr: „Start“ sagen → Zeit läuft, „Stopp“ → Zeit wird gespeichert (z. B. Handstand halten) ----------
-const VC = { rec: null, on: false, run: false, t0: 0, last: 0, list: [], heard: "", err: "" };
+// ---------- Sprach-Stoppuhr (Haltezeit, z. B. Handstand) ----------
+// Zwei Arten: „Wörter“ (Start · Pause · Weiter · Stopp · Zurücksetzen) über die Spracherkennung,
+// oder „Geräusch“ – jeder kurze laute Laut (z. B. „Hep!“, Zungenschnalzen) reagiert sofort, ohne Erkennungs-Verzögerung.
+const VC = { rec: null, on: false, run: false, t0: 0, acc: 0, last: 0, list: [], err: "", lvl: 0 };
 const VC_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const VC_GO = /\b(start|starte|starten|los|go|jetzt|und los)\b/i, VC_STOP = /\b(stopp?|stoppen|halt|ende|fertig|aus|runter)\b/i;
+const VC_GO = /\b(start|starte|starten|los|go|weiter|jetzt)\b/i, VC_PAUSE = /\b(pause|pausieren|warte)\b/i,
+  VC_STOP = /\b(stopp?|stoppen|ende|fertig|aus|halt|runter)\b/i, VC_RESET = /\b(zurücksetzen|zurück|reset|neu|löschen)\b/i;
+const vcMode = () => W3T.vcMode === "sound" ? "sound" : "word";
+const vcMs = () => VC.acc + (VC.run ? Date.now() - VC.t0 : 0);
 function vcHTML(it) {
-  const ms = VC.run ? Date.now() - VC.t0 : VC.last, auto = W3T.vcAuto !== false;
-  return `<div class="vc3-st ${VC.on ? "on" : ""}"><i></i><span id="w3vcst">${!VC_SR ? "Spracherkennung wird hier nicht unterstützt" : VC.err ? esc(VC.err) : VC.on ? (VC.run ? "Läuft – sag „Stopp“" : "Hört zu – sag „Start“") : "Mikrofon aus"}</span></div>
-    <div class="gw-big fx ${VC.run ? "vc3-run" : ""}" id="w3vc">${fixD(fmtMs(ms))}</div>
-    ${VC_SR ? `<button class="gw-main ${VC.on ? "stop" : ""}" data-w3a="vcmic">${VC.on ? "Zuhören beenden" : "🎤 Zuhören starten"}</button>` : ""}
-    <div class="gw-row"><button data-w3a="vctap">${VC.run ? "■ Stopp (Tippen)" : "▶ Start (Tippen)"}</button></div>
-    <button class="gw-endless ${auto ? "on" : ""}" data-w3a="vcauto"><i></i><span><b>Automatisch als Satz speichern</b><small>${it.kind === "ex" ? "Jede gestoppte Zeit wird ein Satz" : "Zeit wird als Dauer eingetragen"}</small></span></button>
-    ${VC.list.length ? `<div class="vc3-l">${VC.list.slice(-5).map((x, i, a) => `<span><small>${VC.list.length - a.length + i + 1}.</small> ${fmtMs(x, false)}</span>`).join("")}</div>` : `<div class="gw-hint">Sag „Start“ oder „Los“, wenn du oben bist – und „Stopp“, wenn du runtergehst.</div>`}`;
+  const auto = W3T.vcAuto !== false, md = vcMode(), sens = W3T.vcSens || 5, paused = !VC.run && VC.acc > 0;
+  const st = md === "word" && !VC_SR ? "Spracherkennung wird hier nicht unterstützt – nimm „Geräusch“" : VC.err ? esc(VC.err)
+    : VC.on ? (md === "sound" ? (VC.run ? "Läuft – Laut zum Stoppen" : "Bereit – kurzer Laut zum Starten") : VC.run ? "Läuft – „Pause“ oder „Stopp“" : paused ? "Pausiert – „Weiter“ oder „Stopp“" : "Hört zu – sag „Start“") : "Mikrofon aus";
+  return `<div class="vc3-md"><button class="${md === "word" ? "on" : ""}" data-w3a="vcmd" data-v="word">Wörter</button><button class="${md === "sound" ? "on" : ""}" data-w3a="vcmd" data-v="sound">Geräusch · sofort</button></div>
+    <div class="vc3-st ${VC.on ? "on" : ""}"><i></i><span id="w3vcst">${st}</span></div>
+    ${md === "sound" && VC.on ? `<div class="vc3-meter"><b id="w3vclv"></b><em style="left:${vcThr() * 100 / .5}%"></em></div>` : ""}
+    <div class="gw-big fx ${VC.run ? "vc3-run" : paused ? "vc3-pa" : ""}" id="w3vc">${fixD(fmtMs(VC.run || paused ? vcMs() : VC.last))}</div>
+    <button class="gw-main ${VC.on ? "stop" : ""}" data-w3a="vcmic">${VC.on ? "Zuhören beenden" : "🎤 Zuhören starten"}</button>
+    <div class="gw-row vc3-btns">${VC.run ? `<button data-w3a="vcpause">❚❚ Pause</button>` : `<button data-w3a="vcgo">▶ ${paused ? "Weiter" : "Start"}</button>`}<button class="acc" data-w3a="vcstop" ${VC.run || paused ? "" : "disabled"}>■ Stopp</button><button data-w3a="vcreset" ${VC.run || paused ? "" : "disabled"}>↺</button></div>
+    ${md === "sound" ? `<div class="ac3-sl vc3-sens"><small>Empfindlichkeit</small><div><span>leise</span><input type="range" min="1" max="10" value="${sens}" data-vcsens="1"><span>laut</span></div></div>` : ""}
+    <button class="gw-endless ${auto ? "on" : ""}" data-w3a="vcauto"><i></i><span><b>Als Haltezeit speichern</b><small>${it.kind === "ex" ? "Bei „Stopp“ wird die Zeit ein Satz (Halten)" : "Bei „Stopp“ wird die Zeit als Dauer eingetragen"}</small></span></button>
+    ${VC.list.length ? `<div class="vc3-l">${VC.list.slice(-5).map((x, i, a) => `<span><small>${VC.list.length - a.length + i + 1}.</small> ${fmtMs(x, false)}</span>`).join("")}</div>`
+      : `<div class="gw-hint">${md === "word" ? "„Start“ · „Pause“ · „Weiter“ · „Stopp“ (speichert) · „Zurücksetzen“" : "Ein kurzer lauter Laut startet, der nächste stoppt und speichert. Gut im Handstand: „Hep!“ oder Schnalzen."}</div>`}`;
 }
-// Kurze Erkennungs-Runden (je ein Wort) statt Dauer-Modus – das reagiert auf dem Handy deutlich schneller.
-// Der Zeitpunkt wird auf den Beginn des gesprochenen Worts zurückgerechnet, damit die gemessene Zeit stimmt.
+// ---- Wörter: kurze Erkennungs-Runden, Zeit wird auf den Beginn des Worts zurückgerechnet
 function vcListen(on) {
-  if (!VC_SR) return;
-  if (!on) { VC.on = false; try { VC.rec?.abort(); } catch {} VC.rec = null; return; }
-  VC.on = true; VC.err = ""; vcSession();
+  if (!on) { VC.on = false; try { VC.rec?.abort(); } catch {} VC.rec = null; vcSoundOff(); return; }
+  VC.on = true; VC.err = ""; if (vcMode() === "sound") vcSoundOn(); else if (VC_SR) vcSession(); else VC.on = false;
 }
 function vcSession() {
-  if (!VC.on) return;
+  if (!VC.on || vcMode() !== "word") return;
   const r = new VC_SR(); VC.rec = r; r.lang = "de-DE"; r.continuous = false; r.interimResults = true; r.maxAlternatives = 3;
   VC.seen = null; VC.speechAt = 0;
   r.onspeechstart = r.onsoundstart = () => { if (!VC.speechAt) VC.speechAt = Date.now(); };
@@ -4964,37 +4994,62 @@ function vcSession() {
   r.onend = () => { if (VC.on && VC.rec === r) { try { vcSession(); } catch { setTimeout(vcSession, 200); } } };
   try { r.start(); } catch { setTimeout(() => { if (VC.on && VC.rec === r) vcSession(); }, 300); }
 }
-// Befehl einmal pro Runde auswerten; Zeit = Beginn des Worts (max. 2,5 s zurück)
 function vcCmd(t) {
-  if (VC.seen || Date.now() - (VC.cmdT || 0) < 700) return false; const w = t.split(/\s+/).slice(-3).join(" ");
-  const at = VC.speechAt && Date.now() - VC.speechAt < 2500 ? VC.speechAt : Date.now();
-  if (!VC.run && VC_GO.test(w)) { VC.seen = 1; VC.cmdT = Date.now(); vcStart(at); try { VC.rec?.abort(); } catch {} return true; }
-  if (VC.run && VC_STOP.test(w)) { VC.seen = 1; VC.cmdT = Date.now(); vcStop(at); try { VC.rec?.abort(); } catch {} return true; }
-  return false;
+  if (VC.seen || Date.now() - (VC.cmdT || 0) < 600) return false; const w = t.split(/\s+/).slice(-3).join(" ");
+  const at = VC.speechAt && Date.now() - VC.speechAt < 2500 ? VC.speechAt : Date.now(), paused = !VC.run && VC.acc > 0;
+  let ok = false;
+  if (VC_RESET.test(w) && (VC.run || paused)) { vcReset(); ok = true; }
+  else if (VC_PAUSE.test(w) && VC.run) { vcPause(at); ok = true; }
+  else if (VC_STOP.test(w) && (VC.run || paused)) { vcStop(at); ok = true; }
+  else if (VC_GO.test(w) && !VC.run) { vcStart(at); ok = true; }
+  if (ok) { VC.seen = 1; VC.cmdT = Date.now(); try { VC.rec?.abort(); } catch {} }
+  return ok;
 }
+// ---- Geräusch: Lautstärke direkt vom Mikrofon, Reaktion in ~50 ms
+const vcThr = () => { const s = W3T.vcSens || 5; return Math.max(VC.base * 3, .34 - s * .03); };
+async function vcSoundOn() {
+  try { VC.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } }); }
+  catch { VC.err = "Mikrofon nicht erlaubt – in den Einstellungen freigeben"; VC.on = false; vcRe(); return; }
+  if (!VC.on) return vcSoundOff();
+  const a = audio(); if (!a) return; try { await a.resume(); } catch {}
+  const src = a.createMediaStreamSource(VC.stream), an = a.createAnalyser(); an.fftSize = 512; src.connect(an); VC.an = an; VC.src = src;
+  const buf = new Float32Array(an.fftSize); VC.base = .01; VC.hot = 0; const t0 = Date.now();
+  clearInterval(VC.loop);
+  VC.loop = setInterval(() => { an.getFloatTimeDomainData(buf); let s = 0; for (const v of buf) s += v * v; const rms = Math.sqrt(s / buf.length); VC.lvl = rms;
+    if (Date.now() - t0 < 500) { VC.base = Math.max(VC.base, rms); return; }      // kurz einmessen (Umgebung)
+    if (!VC.run) VC.base = VC.base * .995 + Math.min(rms, VC.base * 2) * .005;      // Grundrauschen langsam nachführen
+    const lv = $("#w3vclv"); if (lv) lv.style.width = Math.min(100, rms * 200) + "%";
+    if (rms > vcThr()) { if (++VC.hot === 2 && Date.now() - (VC.cmdT || 0) > 700) { VC.cmdT = Date.now(); const at = Date.now() - 40; VC.run ? vcStop(at) : vcStart(at); } }
+    else VC.hot = 0;
+  }, 20);
+}
+function vcSoundOff() { clearInterval(VC.loop); VC.loop = 0; try { VC.src?.disconnect(); } catch {} try { VC.stream?.getTracks().forEach(t => t.stop()); } catch {} VC.stream = VC.src = VC.an = null; }
+// ---- Steuerung
 function vcStart(at = Date.now()) { VC.run = true; VC.t0 = at; pgBeep(880, 120, 1); pgBuzz(60); vcRe(); vcFrame(); }
-function vcFrame() { if (!VC.run) return; const el = $("#w3vc"); if (el) el.innerHTML = fixD(fmtMs(Date.now() - VC.t0)); requestAnimationFrame(vcFrame); }
+function vcPause(at = Date.now()) { if (!VC.run) return; VC.acc += Math.max(0, at - VC.t0); VC.run = false; pgBeep(660, 100, 1); pgBuzz(40); vcRe(); }
+function vcReset() { VC.run = false; VC.acc = 0; VC.last = 0; pgBeep(520, 90, 1); vcRe(); }
+function vcFrame() { if (!VC.run) return; const el = $("#w3vc"); if (el) el.innerHTML = fixD(fmtMs(vcMs())); requestAnimationFrame(vcFrame); }
 function vcStop(at = Date.now()) {
-  if (!VC.run) return; const ms = Math.max(0, at - VC.t0); VC.run = false; VC.last = ms; VC.list.push(ms); pgBeep(660, 180, 2); pgBuzz([60, 50, 60]);
+  if (!VC.run && !VC.acc) return; const ms = VC.acc + (VC.run ? Math.max(0, at - VC.t0) : 0); VC.run = false; VC.acc = 0; VC.last = ms; VC.list.push(Math.round(ms / 1000) * 1000); pgBeep(660, 180, 2); pgBuzz([60, 50, 60]);
   const secs = Math.max(1, Math.round(ms / 1000)), it = w3It(), w = S.workout;
   if (W3T.vcAuto !== false && it) {
     if (it.kind === "run") { w.run = { ...(w.run || {}), minutes: fmtMs(ms, false) }; saveWorkout(false); }
     else if (it.kind === "session") { w.session = { ...(w.session || {}), minutes: String(Math.max(1, Math.round(ms / 60000))) }; saveWorkout(false); }
-    else { const ex = w.exercises[it.i], m = exMode(ex); if (m === "time") W3.cur.sec = secs;
+    else { const ex = w.exercises[it.i], m = exMode(ex); W3.cur.sec = secs;
       w3AddSet(ex, m, m === "time" ? "" : numv(W3.cur?.reps) || "", { via: "voice", dur: secs, sec: String(secs) }); }
-    toast(`🎤 ${fmtMs(ms, false)} gespeichert`);
+    toast(`🎤 Haltezeit ${fmtMs(secs * 1000, false)} gespeichert`);
   } else if (it?.kind === "ex") { W3.cur.sec = secs; toast(`🎤 ${fmtMs(ms, false)} – in der Eingabe`); }
   vcRe();
 }
 const vcRe = () => { if ($("#w3")?.classList.contains("on")) w3Render(); };
-
 document.addEventListener("click", e => { const b = e.target.closest?.("#w3 [data-w3a^=vc]"); if (!b) return; e.stopImmediatePropagation(); const a = b.dataset.w3a;
   if (a === "vcmic") { if (VC.on) { vcListen(false); vcRe(); } else vcAsk(); }
   else if (a === "vcok") { $("#vc3ask")?.remove(); try { localStorage.setItem("tracker-vcok", "1"); } catch {} vcListen(true); vcRe(); }
   else if (a === "vcno") { $("#vc3ask")?.remove(); }
-  else if (a === "vctap") { VC.run ? vcStop() : vcStart(); }
+  else if (a === "vcgo") vcStart(); else if (a === "vcpause") vcPause(); else if (a === "vcstop") vcStop(); else if (a === "vcreset") vcReset();
+  else if (a === "vcmd") { const on = VC.on; vcListen(false); W3T.vcMode = b.dataset.v; w3TSave(); if (on) vcListen(true); vcRe(); }
   else if (a === "vcauto") { W3T.vcAuto = W3T.vcAuto === false; w3TSave(); vcRe(); } }, true);
-
+document.addEventListener("input", e => { const r = e.target.closest?.("[data-vcsens]"); if (!r) return; W3T.vcSens = +r.value; w3TSave(); const m = $("#w3 .vc3-meter em"); if (m) m.style.left = vcThr() * 100 / .5 + "%"; });
 // Eigene Erklärung im App-Design, bevor das Handy einmalig nach dem Mikrofon fragt
 async function vcAsk() {
   let ok = false; try { ok = localStorage.getItem("tracker-vcok") === "1"; } catch {}
@@ -5002,22 +5057,49 @@ async function vcAsk() {
   if (ok) { vcListen(true); vcRe(); return; }
   const d = document.createElement("div"); d.id = "vc3ask";
   d.innerHTML = `<div class="vc3a-card"><div class="vc3a-ic">${W3I.voice}</div><b>Mikrofon für die Sprach-Stoppuhr</b>
-    <p>Damit „Start“ und „Stopp“ funktionieren, braucht die App dein Mikrofon. Sie hört nur zu, solange dieses Fenster offen ist und „Zuhören“ an ist – es wird nichts gespeichert.</p>
+    <p>Damit „Start“, „Pause“ und „Stopp“ funktionieren, braucht die App dein Mikrofon. Sie hört nur zu, solange dieses Fenster offen ist und „Zuhören“ an ist – es wird nichts aufgenommen oder gespeichert.</p>
     <p class="vc3a-n">Gleich fragt dein Handy einmal nach – tippe dort auf <b>„Zulassen“</b> bzw. <b>„Bei Nutzung der App“</b>.</p>
     <div class="vc3a-a"><button data-w3a="vcno">Später</button><button class="acc" data-w3a="vcok">Weiter</button></div></div>`;
   $("#w3").appendChild(d);
 }
-
-// „Sätze“ bei Laufen / Einheiten: heutiger Eintrag + die letzten Male zum Vergleich
-function w3SetsRun(it) {
-  const w = S.workout, run = it.kind === "run", r = run ? (w.run || {}) : (w.session || {});
-  const prev = (S.allWo || []).filter(x => x.date < S.trainDate && x.plan === w.plan && (run ? x.run?.km || x.run?.minutes : x.session?.minutes)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
-  const row = (lbl, x, now) => { const p = run ? paceOf(x.km, x.minutes) : "";
-    return `<div class="${now ? "now" : ""}"><b>${lbl}</b>${run ? `<span>${x.km ? esc(String(x.km)) + " km" : "–"}</span><span>${x.minutes ? esc(String(x.minutes)) + (/^\d+$/.test(String(x.minutes)) ? " min" : "") : "–"}</span><span>${p ? p + "/km" : ""}</span>` : `<span>${x.minutes ? esc(String(x.minutes)) + " min" : "–"}</span>${x.done ? "<span>✓</span>" : ""}`}</div>`; };
-  return `<div class="gw-sets vc3-runs"><div class="gs-hd"><span></span>${run ? "<span>Strecke</span><span>Zeit</span><span>Tempo</span>" : "<span>Dauer</span>"}</div>
-    ${row("Heute", r, true)}${prev.map(x => row(new Date(fromKey(x.date)).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }), run ? x.run : x.session)).join("")}</div>
-    <div class="gw-hint">${prev.length ? "Heute oben, darunter deine letzten Male." : "Werte trägst du unter „Eingabe“ ein."}</div>`;
+// ---------- Tabata: eine Übung = ein Satz. Jede Runde addiert Zähler-Wdh. und reine Arbeitszeit ----------
+function w3TbAdd(it, ex, m, dur, rd) {
+  const tb = W3T.tb, n = W3T.cnt || 0; W3T.cnt = 0;
+  ex.form = { via: "tabata", work: tb.work, rest: tb.rest, rounds: tb.rounds };
+  const ref = tb.ref, st = ref && ref.date === S.trainDate && ref.i === it.i && ex.sets[ref.j]?.via === "tabata" ? ex.sets[ref.j] : null;
+  if (st) { if (n) st.reps = String(numv(st.reps) + n); st.dur = numv(st.dur) + dur; st.sec = String(st.dur); st.rd = (numv(st.rd) || 1) + 1; st.rest = tb.rest;
+    saveWorkout(false); pgBuzz(30); }
+  else { const j = w3SiDef(ex); w3AddSet(ex, m, n || "", { via: "tabata", dur, rd: 1, rest: tb.rest, sec: String(dur) }); tb.ref = { date: S.trainDate, i: it.i, j }; }
+  tb.saved = (tb.saved || 0) + 1; w3TSave(); if ($("#w3")?.classList.contains("on")) w3Render();
 }
+// ---------- Fenster einrasten (wie bei Windows): nah am Rand / in der Ecke → bündig andocken ----------
+const W3PIN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 14v7"/></svg>';
+function w3SnapZone() { const top = 4, bot = ($("#w3 .w3bot")?.getBoundingClientRect().top || innerHeight) - 6; return { top, bot }; }
+function w3SnapAt(x, y, w, h) {
+  const T = 30, Z = w3SnapZone(), R = innerWidth - w - 4, B = Math.min(innerHeight - h - 4, Z.bot - h);
+  let sx = null, sy = null;
+  if (x < 4 + T) sx = 4; else if (x > R - T) sx = R;
+  if (y < Z.top + T) sy = Z.top; else if (y > B - T) sy = Math.max(Z.top, B);
+  // an anderen Fenstern bündig ausrichten (untereinander/nebeneinander)
+  if (sx == null || sy == null) document.querySelectorAll("#w3 .gw:not(.drag)").forEach(o => { const r = o.getBoundingClientRect();
+    if (sy == null && Math.abs(y - (r.bottom + 6)) < 18 && x < r.right && x + w > r.left) sy = r.bottom + 6;
+    if (sx == null && Math.abs(x - r.left) < 18 && (y >= r.top - 40 && y <= r.bottom + 40)) sx = r.left; });
+  if (sx == null && sy == null) return null;
+  return { x: sx ?? x, y: sy ?? y };
+}
+function w3SnapShow(sn, w, h) { let g = $("#w3snap"); if (!sn) { g?.classList.remove("on"); return; }
+  if (!g) { g = document.createElement("div"); g.id = "w3snap"; $("#w3").appendChild(g); }
+  g.style.cssText = `left:${sn.x}px;top:${sn.y}px;width:${w}px;height:${h}px`; g.classList.add("on"); }
+document.addEventListener("click", e => { const b = e.target.closest?.('#w3 [data-w3a="pin"]'); if (!b) return; e.stopImmediatePropagation();
+  const it = w3It(), g = w3Wins(it)[b.dataset.v]; if (!g) return; g.pin = !g.pin; w3Save(); pgBuzz(20); toast(g.pin ? "📌 Fenster fixiert" : "Fenster gelöst"); w3Render(); }, true);
+// ---------- Bildschirm bleibt während des Trainings an ----------
+let W3LOCK = null;
+async function w3WakeSync() {
+  const want = !document.hidden && ($("#w3")?.classList.contains("on") || (S.workout && W3.start?.[S.trainDate] && !S.workout.finished && S.trainDate === todayKey()));
+  try { if (want && !W3LOCK && "wakeLock" in navigator) { W3LOCK = await navigator.wakeLock.request("screen"); W3LOCK.addEventListener?.("release", () => { W3LOCK = null; }); }
+    else if (!want && W3LOCK) { const l = W3LOCK; W3LOCK = null; await l.release(); } } catch { W3LOCK = null; }
+}
+setInterval(w3WakeSync, 3000); document.addEventListener("visibilitychange", () => setTimeout(w3WakeSync, 300));
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
    Eigene: users/{uid}/walls (Vorschau) + users/{uid}/wallImgs (Bild) – nur du siehst sie, auf allen Geräten.
@@ -5588,7 +5670,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794098408";
+const APP_VER = "1794172396";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
@@ -6443,7 +6525,7 @@ function achievements(all) {
   ].map(c => { const lvl = c.goals.filter(g => c.v >= g).length; const next = c.goals[lvl] ?? null, prev = c.goals[lvl - 1] ?? 0;
     return { ...c, lvl, next, prev, pct: next ? Math.min(1, (c.v - prev) / (next - prev)) : 1 }; })
   // Freigeschaltete oben (höchste Stufe zuerst, dann Fortschritt), Gesperrte unten nach Fortschritt
-  .sort((a, b) => (b.lvl > 0) - (a.lvl > 0) || b.lvl - a.lvl || b.pct - a.pct);
+  .sort((a, b) => { const ti = c => c.lvl ? (c.fmt ? c.goals[c.lvl - 1] : c.lvl - 1) : -1; return (b.lvl > 0) - (a.lvl > 0) || (isV2() ? ti(b) - ti(a) : 0) || b.lvl - a.lvl || b.pct - a.pct; });
   return { cats, trainings, km, longest, prCount, unlocked: cats.reduce((a, c) => a + c.lvl, 0), total: cats.reduce((a, c) => a + c.goals.length, 0) };
 }
 function renderAwards(all, part) {
