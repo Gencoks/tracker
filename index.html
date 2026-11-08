@@ -2353,6 +2353,15 @@ html:root.ui3 #w3 .gw-tbph:not(.work):not(.rest):not(.done) { background: #1c1c1
 @keyframes vc3p { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
 #w3 .vc3-run { color: var(--accent); }
 #w3 .vc3-l { display: flex; flex-wrap: wrap; gap: 6px; } #w3 .vc3-l span { padding: 4px 9px; border-radius: 999px; background: #1f1f22; font-size: 12px; font-weight: 700; } #w3 .vc3-l small { opacity: .5; font-weight: 600; }
+#vc3ask { position: absolute; inset: 0; z-index: 20; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; padding: 20px; }
+#vc3ask .vc3a-card { width: min(100%, 340px); background: #121213; border: 1px solid #2a2a2d; border-radius: 22px; padding: 20px 18px 16px; text-align: center; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 20px 50px rgba(0,0,0,.6); }
+#vc3ask .vc3a-ic { width: 56px; height: 56px; margin: 0 auto 2px; border-radius: 18px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 16%, #1a1a1c); color: var(--accent); }
+#vc3ask .vc3a-ic svg { width: 28px; height: 28px; }
+#vc3ask b { font-size: 16px; } #vc3ask p { margin: 0; font-size: 13px; line-height: 1.45; color: #b5b5bb; } #vc3ask p b { font-size: 13px; color: #f5f5f2; }
+#vc3ask .vc3a-n { padding: 8px 10px; border-radius: 12px; background: #1b1b1d; }
+#vc3ask .vc3a-a { display: flex; gap: 8px; margin-top: 6px; }
+#vc3ask .vc3a-a button { flex: 1; padding: 12px; border-radius: 14px; font: inherit; font-weight: 700; font-size: 14px; background: #1f1f22; color: #f5f5f2; border: 0; }
+#vc3ask .vc3a-a button.acc { background: var(--accent); color: var(--accent-ink, #111); }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -4928,25 +4937,35 @@ function vcHTML(it) {
     <button class="gw-endless ${auto ? "on" : ""}" data-w3a="vcauto"><i></i><span><b>Automatisch als Satz speichern</b><small>${it.kind === "ex" ? "Jede gestoppte Zeit wird ein Satz" : "Zeit wird als Dauer eingetragen"}</small></span></button>
     ${VC.list.length ? `<div class="vc3-l">${VC.list.slice(-5).map((x, i, a) => `<span><small>${VC.list.length - a.length + i + 1}.</small> ${fmtMs(x, false)}</span>`).join("")}</div>` : `<div class="gw-hint">Sag „Start“ oder „Los“, wenn du oben bist – und „Stopp“, wenn du runtergehst.</div>`}`;
 }
+// Kurze Erkennungs-Runden (je ein Wort) statt Dauer-Modus – das reagiert auf dem Handy deutlich schneller.
+// Der Zeitpunkt wird auf den Beginn des gesprochenen Worts zurückgerechnet, damit die gemessene Zeit stimmt.
 function vcListen(on) {
   if (!VC_SR) return;
   if (!on) { VC.on = false; try { VC.rec?.abort(); } catch {} VC.rec = null; return; }
-  VC.on = true; VC.err = "";
-  const r = new VC_SR(); VC.rec = r; r.lang = "de-DE"; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
-  r.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) { const t = e.results[i][0].transcript.trim(); if (!t) continue; vcCmd(t, i + ":" + t.length); } };
-  r.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed") { VC.err = "Mikrofon nicht erlaubt – in den Browser-Einstellungen freigeben"; VC.on = false; vcRe(); } };
-  r.onend = () => { if (VC.on && VC.rec === r) setTimeout(() => { if (VC.on && VC.rec === r) try { r.start(); } catch { vcListen(true); } }, 250); };
-  try { r.start(); } catch {}
+  VC.on = true; VC.err = ""; vcSession();
 }
-// Befehl nur einmal pro Satzteil auswerten, kurzer Schutz gegen Doppel-Erkennung
-function vcCmd(t, id) {
-  if (VC.seen === id || Date.now() - (VC.cmdT || 0) < 900) return; const w = t.split(/\s+/).slice(-3).join(" ");
-  if (!VC.run && VC_GO.test(w)) { VC.seen = id; VC.cmdT = Date.now(); vcStart(); }
-  else if (VC.run && VC_STOP.test(w)) { VC.seen = id; VC.cmdT = Date.now(); vcStop(); }
+function vcSession() {
+  if (!VC.on) return;
+  const r = new VC_SR(); VC.rec = r; r.lang = "de-DE"; r.continuous = false; r.interimResults = true; r.maxAlternatives = 3;
+  VC.seen = null; VC.speechAt = 0;
+  r.onspeechstart = r.onsoundstart = () => { if (!VC.speechAt) VC.speechAt = Date.now(); };
+  r.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) for (const alt of e.results[i]) { const t = (alt.transcript || "").trim(); if (t && vcCmd(t)) return; } };
+  r.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed") { VC.err = "Mikrofon nicht erlaubt – in den Einstellungen freigeben"; VC.on = false; vcRe(); } };
+  r.onend = () => { if (VC.on && VC.rec === r) { try { vcSession(); } catch { setTimeout(vcSession, 200); } } };
+  try { r.start(); } catch { setTimeout(() => { if (VC.on && VC.rec === r) vcSession(); }, 300); }
 }
-function vcStart() { VC.run = true; VC.t0 = Date.now(); pgBeep(880, 120, 1); pgBuzz(60); w3Tick(); vcRe(); }
-function vcStop() {
-  if (!VC.run) return; const ms = Date.now() - VC.t0; VC.run = false; VC.last = ms; VC.list.push(ms); pgBeep(660, 180, 2); pgBuzz([60, 50, 60]);
+// Befehl einmal pro Runde auswerten; Zeit = Beginn des Worts (max. 2,5 s zurück)
+function vcCmd(t) {
+  if (VC.seen || Date.now() - (VC.cmdT || 0) < 700) return false; const w = t.split(/\s+/).slice(-3).join(" ");
+  const at = VC.speechAt && Date.now() - VC.speechAt < 2500 ? VC.speechAt : Date.now();
+  if (!VC.run && VC_GO.test(w)) { VC.seen = 1; VC.cmdT = Date.now(); vcStart(at); try { VC.rec?.abort(); } catch {} return true; }
+  if (VC.run && VC_STOP.test(w)) { VC.seen = 1; VC.cmdT = Date.now(); vcStop(at); try { VC.rec?.abort(); } catch {} return true; }
+  return false;
+}
+function vcStart(at = Date.now()) { VC.run = true; VC.t0 = at; pgBeep(880, 120, 1); pgBuzz(60); vcRe(); vcFrame(); }
+function vcFrame() { if (!VC.run) return; const el = $("#w3vc"); if (el) el.innerHTML = fixD(fmtMs(Date.now() - VC.t0)); requestAnimationFrame(vcFrame); }
+function vcStop(at = Date.now()) {
+  if (!VC.run) return; const ms = Math.max(0, at - VC.t0); VC.run = false; VC.last = ms; VC.list.push(ms); pgBeep(660, 180, 2); pgBuzz([60, 50, 60]);
   const secs = Math.max(1, Math.round(ms / 1000)), it = w3It(), w = S.workout;
   if (W3T.vcAuto !== false && it) {
     if (it.kind === "run") { w.run = { ...(w.run || {}), minutes: fmtMs(ms, false) }; saveWorkout(false); }
@@ -4958,12 +4977,26 @@ function vcStop() {
   vcRe();
 }
 const vcRe = () => { if ($("#w3")?.classList.contains("on")) w3Render(); };
-// Live-Anzeige der Zeit
-setInterval(() => { if (!VC.run) return; const el = $("#w3vc"); if (el) el.innerHTML = fixD(fmtMs(Date.now() - VC.t0)); }, 100);
+
 document.addEventListener("click", e => { const b = e.target.closest?.("#w3 [data-w3a^=vc]"); if (!b) return; e.stopImmediatePropagation(); const a = b.dataset.w3a;
-  if (a === "vcmic") { vcListen(!VC.on); vcRe(); }
+  if (a === "vcmic") { if (VC.on) { vcListen(false); vcRe(); } else vcAsk(); }
+  else if (a === "vcok") { $("#vc3ask")?.remove(); try { localStorage.setItem("tracker-vcok", "1"); } catch {} vcListen(true); vcRe(); }
+  else if (a === "vcno") { $("#vc3ask")?.remove(); }
   else if (a === "vctap") { VC.run ? vcStop() : vcStart(); }
   else if (a === "vcauto") { W3T.vcAuto = W3T.vcAuto === false; w3TSave(); vcRe(); } }, true);
+
+// Eigene Erklärung im App-Design, bevor das Handy einmalig nach dem Mikrofon fragt
+async function vcAsk() {
+  let ok = false; try { ok = localStorage.getItem("tracker-vcok") === "1"; } catch {}
+  try { const p = await navigator.permissions?.query({ name: "microphone" }); if (p?.state === "granted") ok = true; } catch {}
+  if (ok) { vcListen(true); vcRe(); return; }
+  const d = document.createElement("div"); d.id = "vc3ask";
+  d.innerHTML = `<div class="vc3a-card"><div class="vc3a-ic">${W3I.voice}</div><b>Mikrofon für die Sprach-Stoppuhr</b>
+    <p>Damit „Start“ und „Stopp“ funktionieren, braucht die App dein Mikrofon. Sie hört nur zu, solange dieses Fenster offen ist und „Zuhören“ an ist – es wird nichts gespeichert.</p>
+    <p class="vc3a-n">Gleich fragt dein Handy einmal nach – tippe dort auf <b>„Zulassen“</b> bzw. <b>„Bei Nutzung der App“</b>.</p>
+    <div class="vc3a-a"><button data-w3a="vcno">Später</button><button class="acc" data-w3a="vcok">Weiter</button></div></div>`;
+  $("#w3").appendChild(d);
+}
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
    Eigene: users/{uid}/walls (Vorschau) + users/{uid}/wallImgs (Bild) – nur du siehst sie, auf allen Geräten.
@@ -5534,7 +5567,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794095646";
+const APP_VER = "1794096307";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
