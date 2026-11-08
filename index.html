@@ -2387,6 +2387,42 @@ html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: non
 #w3 .vc3-pa { color: #9a9aa0; }
 #w3 .vc3-btns button:disabled { opacity: .35; }
 #w3 .vc3-sens > div { margin-top: 4px; } #w3 .vc3-sens small { font-size: 10px; color: #8a8a90; } #w3 .vc3-sens span { font-size: 11px; color: #8a8a90; } #w3 .vc3-sens input { accent-color: var(--accent); }
+/* Art des Trainingsplans */
+.pm3-btn { margin-left: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 12.5px; font-weight: 700; }
+.pm3-btn span { font-size: 14px; }
+.pm3-card { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.pm3-h { display: flex; justify-content: space-between; align-items: baseline; } .pm3-h b { font-size: 15px; } .pm3-h small { color: var(--muted); font-size: 12.5px; }
+.pm3-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font: inherit; text-align: left; }
+.pm3-row:disabled { opacity: 1; } .pm3-row.ok { opacity: .55; }
+.pm3-row:not(:disabled):active { transform: scale(.98); }
+.pm3-i { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); flex: none; }
+.pm3-i svg { width: 22px; height: 22px; }
+.pm3-t { flex: 1; display: flex; flex-direction: column; min-width: 0; } .pm3-t b { font-size: 14.5px; } .pm3-t small { color: var(--muted); font-size: 12px; }
+.pm3-dots { display: flex; gap: 4px; } .pm3-dots i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--muted); } .pm3-dots i.on { background: var(--accent); border-color: var(--accent); }
+.pm3-hint { color: var(--muted); font-size: 12px; } .pm3-hint b { color: var(--text); }
+.pm3-cyc { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; } .pm3-cyc span { padding: 5px 11px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+.pm3-cyc span.on { background: var(--accent); color: var(--accent-ink, #111); border-color: var(--accent); } .pm3-cyc i { color: var(--muted); font-style: normal; }
+.pm3-modes { display: flex; flex-direction: column; gap: 8px; }
+.pm3-m { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 18px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font: inherit; text-align: left; }
+.pm3-m.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.pm3-mi { font-size: 22px; width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; background: var(--surface); flex: none; }
+.pm3-m > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; gap: 2px; } .pm3-m b { font-size: 14.5px; } .pm3-m small { color: var(--muted); font-size: 12px; line-height: 1.35; }
+.pm3-rad { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex: none; } .pm3-m.on .pm3-rad { border: 6px solid var(--accent); }
+.pm3-goals { display: flex; flex-direction: column; gap: 6px; }
+.pm3-g { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); }
+.pm3-g.on { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); } .pm3-g b { flex: 1; font-size: 14px; }
+.pm3-st { display: flex; align-items: center; gap: 6px; } .pm3-st span { min-width: 26px; text-align: center; font-weight: 700; }
+.pm3-st button { width: 32px; height: 32px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 17px; font-weight: 700; }
+.pm3-cl { display: flex; flex-direction: column; gap: 6px; } .pm3-cl > div { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); }
+.pm3-cl b { flex: 1; } .pm3-n { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink, #111); font-weight: 800; font-size: 12px; }
+.pm3-cl button { width: 30px; height: 30px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); } .pm3-cl button:disabled { opacity: .3; }
+/* Viertel-Fenster */
+#w3 .gw.q { transform-origin: 0 0; display: flex; flex-direction: column; overflow: hidden; transition: none; }
+#w3 .gw.q .gw-b { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+#w3 .gw.q .gw-b::-webkit-scrollbar { display: none; }
+#w3 .gw.q.min { height: auto; }
+#w3 .gw.q .gw-b { justify-content: flex-start; } #w3 .gw.q .gw-b > * { flex: none !important; }
+#w3 .gw.q .gw-b { align-content: start; grid-auto-rows: max-content; }
 
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
@@ -2483,7 +2519,7 @@ let TYPES = JSON.parse(JSON.stringify(DEFAULT_TYPES));
 let WEEK = { ...DEFAULT_WEEK };
 const KIND_LABEL = { gym: "Krafttraining", session: "Einheit (Dauer)", run: "Laufen", rest: "Pause" };
 const planByName = n => TYPES.find(p => p.name === n);
-const planFor = wd => planByName(WEEK[wd]) || { name: WEEK[wd] || "Frei", type: "rest" };
+const planFor = wd => (typeof pmPlanFor === "function" && pmPlanFor(wd)) || planByName(WEEK[wd]) || { name: WEEK[wd] || "Frei", type: "rest" };
 
 // Übungen pro Muskelgruppe (eigene Übungen kann man in der App ergänzen)
 const LIB = {
@@ -2587,7 +2623,7 @@ const DEFAULT_TASKS = [
   { key: "training", training: true },   // Name kommt aus dem Wochenplan
 ];
 function tasksFor(date) {
-  const wd = date.getDay(), p = planFor(wd);
+  const wd = date.getDay(), p = (typeof pmPlanForDate === "function" && pmPlanForDate(date)) || planFor(wd);
   return (S.taskCfg || DEFAULT_TASKS)
     .filter(t => !t.days || t.days.includes(wd))
     .filter(t => !t.training || p.type !== "rest")
@@ -4521,6 +4557,7 @@ function w3Overview() {
   v.querySelector(".note")?.remove();
   if (items.length && !locked && (!items[0].check || items.length > 1)) { const h2 = [...v.querySelectorAll("h2")].find(x => /Übungen|Eintrag/.test(x.textContent));
     if (h2) h2.insertAdjacentHTML("afterend", `<button class="btn primary block w3start2" data-w3="start">${V3_ICONS.play}${W3.start[S.trainDate] ? "Training fortsetzen" : "Training starten"}</button>`); }
+  try { pmDecorate(); } catch {}
 }
 // Einheit nur abhaken (z. B. Kickboxen): Dauer wird vom letzten Mal übernommen, sonst 60 Min.
 function w3Tick2() { const w = S.workout, on = !!(w.session?.minutes || w.session?.done);
@@ -4620,7 +4657,7 @@ function w3Render() {
   const o = $("#w3"), items = w3Items(), it = w3It(); if (!it) return w3Close();
   const last = W3.i === items.length - 1, wins = w3Wins(it), bar = W3.bar || (W3.bar = { x: innerWidth - 66, y: 90, h: 0 }); bar.h = 0; if (bar.v2 !== 1) { bar.v2 = 1; bar.x = Math.min(bar.x ?? innerWidth - 66, innerWidth - 66); bar.y = bar.y ?? 90; }
   const nSets = it.kind === "ex" ? S.workout.exercises[it.i].sets.filter(setFilled).length : 0, now = new Date();
-  const k = todayKey(), tasks = tasksFor(now), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
+  const k = todayKey(), tasks = tasksFor(appNow()), done = S.days[k]?.done || {}, cnt = tasks.filter(t => done[t.key]).length;
   o.innerHTML = `
     <div class="w3info"><b>${esc(w3Plan().name)}</b><small>Block ${W3.i + 1} von ${items.length} · ${W3.start[S.trainDate] ? `<span id="w3el">${fmtMs(Date.now() - W3.start[S.trainDate], false)}</span>` : `<button class="w3tgo" data-w3a="tgo">▶ Zeit starten</button>`}</small>
       <div class="w3prog">${items.map((x, n) => `<i class="${n === W3.i ? "on" : w3Done(x) ? "ok" : ""}"></i>`).join("")}</div><small>${cnt}/${tasks.length} Aufgaben heute</small></div>
@@ -4637,7 +4674,7 @@ function w3Render() {
 // Fenster im Bild halten
 function w3WinHTML(it, g, w) {
   const [, title, width] = W3G[g];
-  return `<div class="gw ${w.min ? "min" : ""} ${w.pin ? "pin" : ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${g === "count" ? W3I.plus : W3I[g]}${title}</span><button class="gw-pin ${w.pin ? "on" : ""}" data-w3a="pin" data-v="${g}" title="${w.pin ? "Lösen" : "Fixieren"}">${W3PIN}</button>${g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
+  return `<div class="gw ${w.min ? "min" : ""} ${w.pin ? "pin" : ""} ${w.q ? "q" : ""}" data-q="${w.q || ""}" data-g="${g}" style="left:${w.x}px;top:${w.y}px;width:${width}px"><div class="gw-h" data-drag="win:${g}"><span>${g === "count" ? W3I.plus : W3I[g]}${title}</span><button class="gw-pin ${w.pin ? "on" : ""}" data-w3a="pin" data-v="${g}" title="${w.pin ? "Lösen" : "Fixieren"}">${W3PIN}</button>${g === "tabata" ? `<button data-w3a="gset" data-v="${g}" title="Einstellen">⚙</button>` : ""}<button data-w3a="wmin" data-v="${g}">${w.min ? "▢" : "–"}</button><button data-w3a="win" data-v="${g}">✕</button></div>${w.min ? "" : `<div class="gw-b">${w3Body(it, g)}</div>`}</div>`;
 }
 function w3Step(field, label, val, step, unit = "") {
   return `<div class="w3step"><small>${label}${unit ? ` (${unit})` : ""}</small><div><button data-w3a="dec" data-f="${field}" data-s="${step}">−</button><input data-w3f="${field}" inputmode="decimal" value="${val === 0 || val ? val : ""}" placeholder="${esc(String(W3.ph?.[field] ?? ""))}"><button data-w3a="inc" data-f="${field}" data-s="${step}">+</button></div></div>`;
@@ -4717,6 +4754,8 @@ function w3DragStart(e) {
   const h = e.target.closest("[data-drag]"); if (!h || e.target.closest("button, input, select, textarea")) return;
   const el = h.closest(".gw, .gbar"); if (!el) return;
   if (el.classList.contains("pin")) { pgBuzz(15); toast("📌 Fixiert – zum Verschieben erst lösen"); return; }
+  if (el.classList.contains("q")) { el.classList.remove("q"); el.dataset.q = ""; el.style.transform = ""; el.style.height = "";
+    el.style.left = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, e.clientX - 60)) + "px"; el.style.top = Math.max(4, e.clientY - 18) + "px"; }
   e.preventDefault(); const r0 = el.getBoundingClientRect(), ox = e.clientX - r0.left, oy = e.clientY - r0.top, W = el.offsetWidth;
   try { h.setPointerCapture(e.pointerId); } catch {} el.classList.add("drag");
   // flüssig & sparsam: während des Ziehens nur per GPU verschieben (transform), höchstens einmal pro Bildschirm-Frame;
@@ -4724,16 +4763,21 @@ function w3DragStart(e) {
   let x = r0.left, y = r0.top, px = e.clientX, py = e.clientY, raf = 0, moved = false;
   let snap = null;
   const paint = () => { raf = 0; x = Math.max(4, Math.min(innerWidth - W - 4, px - ox)); y = Math.max(4, Math.min(innerHeight - el.offsetHeight - 4, py - oy));
-    snap = el.classList.contains("gw") ? w3SnapAt(x, y, W, el.offsetHeight) : null; w3SnapShow(snap, W, el.offsetHeight);
+    const qc = el.classList.contains("gw") ? w3QCorner(px, py) : null;
+    if (qc) { const R = w3QRect(qc); snap = { q: qc, ...R }; w3SnapShow(R, R.w, R.h); }
+    else { snap = el.classList.contains("gw") ? w3SnapAt(x, y, W, el.offsetHeight) : null; w3SnapShow(snap, W, el.offsetHeight); }
     el.style.transform = `translate3d(${x - r0.left}px, ${y - r0.top}px, 0)`; };
   const mv = ev => { px = ev.clientX; py = ev.clientY; if (Math.hypot(px - e.clientX, py - e.clientY) > 3) moved = true; if (!raf) raf = requestAnimationFrame(paint); };
   const up = () => { h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up);
     if (raf) { cancelAnimationFrame(raf); paint(); }
+    const qd = snap && moved && snap.q ? snap.q : null;
     if (snap && moved) { x = snap.x; y = snap.y; pgBuzz(20); } w3SnapShow(null);
     el.classList.remove("drag"); el.style.transform = ""; el.style.left = x + "px"; el.style.top = y + "px";
     const [kind, id] = h.dataset.drag.split(":"), it = w3It();
     if (kind === "bar" && !moved) { W3.bar = { ...(W3.bar || {}), x: r0.left, y: r0.top, c: !(W3.bar || {}).c }; w3Save(); w3Render(); return; }
-    if (kind === "bar") W3.bar = { ...(W3.bar || {}), x, y }; else if (kind === "win") Object.assign(w3Wins(it)[id], { x, y }); else { const t = W3.tabs.find(q => q.id === id); if (t) Object.assign(t, { x, y }); }
+    if (kind === "bar") W3.bar = { ...(W3.bar || {}), x, y }; else if (kind === "win") { const ws = w3Wins(it);
+      if (qd) Object.values(ws).forEach(o => { if (o.q === qd) o.q = null; });
+      Object.assign(ws[id], { x, y, q: qd || null }); if (qd) { w3Save(); return w3Render(); } } else { const t = W3.tabs.find(q => q.id === id); if (t) Object.assign(t, { x, y }); }
     w3Save(); };
   h.addEventListener("pointermove", mv, { passive: true }); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
 }
@@ -4947,7 +4991,8 @@ function w3TbSum(e) { const tb = (e.sets || []).filter(x => x.via === "tabata");
 // Fenster & Leiste immer vollständig im Bildschirm halten (auch nach Drehen oder alten gespeicherten Positionen)
 function w3Clamp() {
   const o = $("#w3"); if (!o?.classList.contains("on")) return; let ch = false; const it = w3It();
-  o.querySelectorAll(".gw, .gbar, .w3tab").forEach(el => { const w = el.offsetWidth, h = el.offsetHeight, x0 = el.offsetLeft, y0 = el.offsetTop;
+  o.querySelectorAll(".gw.q").forEach(w3QApply);
+  o.querySelectorAll(".gw:not(.q), .gbar, .w3tab").forEach(el => { const w = el.offsetWidth, h = el.offsetHeight, x0 = el.offsetLeft, y0 = el.offsetTop;
     const x = Math.round(Math.max(4, Math.min(innerWidth - w - 4, x0))), y = Math.round(Math.max(4, Math.min(innerHeight - h - 4, y0)));
     if (x === x0 && y === y0) return; el.style.left = x + "px"; el.style.top = y + "px"; ch = true;
     if (el.classList.contains("w3tab")) return; if (el.classList.contains("gbar")) W3.bar = { ...(W3.bar || {}), x, y }; else if (it && el.dataset.g) { const ws = w3Wins(it); if (ws[el.dataset.g]) Object.assign(ws[el.dataset.g], { x, y }); } });
@@ -5100,6 +5145,20 @@ async function w3WakeSync() {
     else if (!want && W3LOCK) { const l = W3LOCK; W3LOCK = null; await l.release(); } } catch { W3LOCK = null; }
 }
 setInterval(w3WakeSync, 3000); document.addEventListener("visibilitychange", () => setTimeout(w3WakeSync, 300));
+
+// ---------- Viertel-Fenster: in eine Ecke ziehen → Fenster füllt genau ein Viertel (Inhalt wird mitskaliert, nichts verzieht sich) ----------
+function w3QArea() { const o = $("#w3"), inf = o?.querySelector(".w3info"), bot = o?.querySelector(".w3bot");
+  const T = (inf ? inf.getBoundingClientRect().bottom : 110) + 8, B = (bot ? bot.getBoundingClientRect().top : innerHeight - 90) - 8;
+  return { L: 6, R: innerWidth - 6, T, B }; }
+function w3QRect(q) { const A = w3QArea(), gap = 6, w = (A.R - A.L - gap) / 2, h = (A.B - A.T - gap) / 2;
+  return { x: Math.round(q[1] === "l" ? A.L : A.L + w + gap), y: Math.round(q[0] === "t" ? A.T : A.T + h + gap), w: Math.round(w), h: Math.round(h) }; }
+// Finger nah an einer Bildschirmecke (bezogen auf den nutzbaren Bereich)?
+function w3QCorner(px, py) { const A = w3QArea(), Z = 56;
+  const l = px < A.L + Z, r = px > A.R - Z, t = py < A.T + Z, b = py > A.B - Z;
+  return (t || b) && (l || r) ? (t ? "t" : "b") + (l ? "l" : "r") : null; }
+function w3QApply(el) { const q = el.dataset.q; if (!q) return; const R = w3QRect(q), base = W3G[el.dataset.g]?.[2] || el.offsetWidth, z = Math.min(1, R.w / base);
+  el.style.left = R.x + "px"; el.style.top = R.y + "px"; el.style.width = base + "px"; el.style.transform = `scale(${z})`;
+  el.style.height = el.classList.contains("min") ? "" : Math.round(R.h / z) + "px"; }
 
 /* ===================== HINTERGRÜNDE: eigene + Grundhintergründe für alle =====================
    Eigene: users/{uid}/walls (Vorschau) + users/{uid}/wallImgs (Bild) – nur du siehst sie, auf allen Geräten.
@@ -5670,7 +5729,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794172396";
+const APP_VER = "1794173536";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
@@ -6292,6 +6351,108 @@ const frInviteText = () => `Lass uns im Tracker zusammen trainieren! 💪\nMein 
     if (FR.list.some(f => f.status === "accepted" && f.members.some(m => FR.profs[m]?.code === c))) return;
     if (await askYesNo(name ? `${name} hat dich zum Tracker eingeladen. Als Freund hinzufügen?` : `Du wurdest zum Tracker eingeladen (Code ${c.replace(/(...)(...)/, "$1 $2")}). Als Freund hinzufügen?`, "Hinzufügen")) await addFriend(c);
   }, 1000); }
+
+/* ===================== V3: Art des Trainingsplans =====================
+   users/{uid}: planMode "week" (fester Wochenplan) | "goals" (Wochenziele, spontan) | "cycle" (feste Reihenfolge) | "free" (ohne Plan)
+                weekGoals [{ n: "Cardio", c: 2 }], cycle ["Push", "Pull", "Beine"] */
+const PM_MODES = [
+  ["week", "📅", "Fester Wochenplan", "Jeder Wochentag hat sein Training – z. B. Montag Push, Dienstag Pull."],
+  ["goals", "🎯", "Wochenziele", "Du legst fest, was du pro Woche schaffen willst (z. B. 2× Cardio, 1× Rücken) und entscheidest spontan, wann."],
+  ["cycle", "🔁", "Feste Reihenfolge", "Trainings kommen immer der Reihe nach, egal an welchem Tag – z. B. Push → Pull → Beine → von vorn."],
+  ["free", "🌀", "Ohne Plan", "Kein Plan – du wählst einfach jedes Mal, was du machst."],
+];
+const PM = { mode: "week", goals: [], cycle: [], uid: null };
+function pmLoadLocal() { if (!S.uid || PM.uid === S.uid) return; PM.uid = S.uid; try { Object.assign(PM, JSON.parse(localStorage.getItem("tracker-pm-" + S.uid) || "{}")); } catch {} }
+function pmSaveLocal() { try { localStorage.setItem("tracker-pm-" + S.uid, JSON.stringify({ mode: PM.mode, goals: PM.goals, cycle: PM.cycle })); } catch {} }
+{ const go = setInterval(async () => { if (!S.uid) return; clearInterval(go); pmLoadLocal();
+    try { const u = await getDoc(userRef()); if (u.exists()) { const d = u.data(), m = d.planMode || "week";
+      const ch = m !== PM.mode || JSON.stringify(d.weekGoals || []) !== JSON.stringify(PM.goals) || JSON.stringify(d.cycle || []) !== JSON.stringify(PM.cycle);
+      PM.mode = m; PM.goals = d.weekGoals || []; PM.cycle = d.cycle || []; pmSaveLocal();
+      if (ch && S.workout && !hasContent(S.workout) && typeof loadWorkout === "function") loadWorkout(S.trainDate); } } catch {} }, 400); }
+const pmMode = () => { pmLoadLocal(); return isV2() ? PM.mode || "week" : "week"; };
+const pmRest = () => TYPES.find(t => t.type === "rest") || { name: "Rest Day", type: "rest" };
+const pmFree = () => ({ ...pmRest(), name: pmRest().name });
+// Woche (Mo–So) des Trainingstags
+function pmWeek(k = S.trainDate || todayKey()) { const d = fromKey(k), mon = addDays(d, -((d.getDay() + 6) % 7)); return [keyOf(mon), keyOf(addDays(mon, 6))]; }
+function pmCounts(k) { const [a, b] = pmWeek(k), c = {};
+  for (const w of S.allWo || []) if (w.date >= a && w.date <= b && hasContent(w)) c[w.plan] = (c[w.plan] || 0) + 1;
+  if (S.workout && S.workout.date >= a && S.workout.date <= b && hasContent(S.workout) && !(S.allWo || []).some(w => w.date === S.workout.date)) c[S.workout.plan] = (c[S.workout.plan] || 0) + 1;
+  return c; }
+// Nächstes Training in der Reihenfolge: nach dem zuletzt gemachten (vor heute)
+function pmNext(off = 0) { const cy = PM.cycle.filter(n => planByName(n)); if (!cy.length) return null;
+  const last = (S.allWo || []).filter(w => w.date < todayKey() && hasContent(w) && cy.includes(w.plan)).sort((a, b) => b.date.localeCompare(a.date))[0];
+  const i = last ? (cy.indexOf(last.plan) + 1) % cy.length : 0; return planByName(cy[(i + off) % cy.length]); }
+// Wird von planFor() gefragt: liefert den Plan für den Wochentag je nach Plan-Art (null = fester Wochenplan)
+function pmPlanFor(wd) {
+  const m = pmMode(); if (m === "week") return null;
+  if (m === "cycle" && wd === appNow().getDay() && S.trainDate === todayKey()) return pmNext() || pmFree();
+  return pmFree();
+}
+// ---------- Karte in der Trainingsübersicht ----------
+function pmCard() {
+  const m = pmMode(), today = S.trainDate === todayKey();
+  if (m === "goals") { const c = pmCounts(), G = PM.goals.filter(g => g.c > 0 && planByName(g.n));
+    if (!G.length) return `<div class="card pm3-card"><div class="pm3-h"><b>🎯 Wochenziele</b></div><p class="muted" style="margin:4px 0 10px;font-size:13px">Noch keine Ziele festgelegt.</p><button class="btn block" data-pmode="1">Ziele festlegen</button></div>`;
+    const open = G.reduce((a, g) => a + Math.max(0, g.c - (c[g.n] || 0)), 0);
+    return `<div class="card pm3-card"><div class="pm3-h"><b>🎯 Diese Woche</b><small>${open ? `noch ${open} ${open === 1 ? "Einheit" : "Einheiten"} offen` : "alles geschafft 🎉"}</small></div>
+      ${G.map(g => { const d = Math.min(g.c, c[g.n] || 0), p = planByName(g.n), ok = d >= g.c;
+        return `<button class="pm3-row ${ok ? "ok" : ""}" ${today && !ok ? `data-pmpick="${esc(g.n)}"` : "disabled"}><span class="pm3-i">${peIco(actIcon(g.n, p?.type))}</span><span class="pm3-t"><b>${esc(g.n)}</b><small>${ok ? "erledigt ✓" : `noch ${g.c - d}×`}</small></span><span class="pm3-dots">${Array.from({ length: g.c }, (_, i) => `<i class="${i < d ? "on" : ""}"></i>`).join("")}</span></button>`; }).join("")}
+      ${today && open ? `<small class="pm3-hint">Tippe auf ein Ziel, um es heute zu trainieren.</small>` : ""}</div>`; }
+  if (m === "cycle") { const n0 = pmNext(), n1 = pmNext(1), n2 = pmNext(2);
+    if (!n0) return `<div class="card pm3-card"><div class="pm3-h"><b>🔁 Reihenfolge</b></div><p class="muted" style="margin:4px 0 10px;font-size:13px">Lege fest, in welcher Reihenfolge du trainierst.</p><button class="btn block" data-pmode="1">Reihenfolge festlegen</button></div>`;
+    return `<div class="card pm3-card"><div class="pm3-h"><b>🔁 Reihenfolge</b><small>${PM.cycle.length} Trainings</small></div>
+      <div class="pm3-cyc">${PM.cycle.filter(n => planByName(n)).map(n => `<span class="${n === n0.name ? "on" : ""}">${esc(n)}</span>`).join('<i>›</i>')}</div>
+      <small class="pm3-hint">Als Nächstes: <b>${esc(n0.name)}</b>${n1 && n1.name !== n0.name ? ` · danach ${esc(n1.name)}${n2 && n2.name !== n0.name && n2.name !== n1.name ? `, ${esc(n2.name)}` : ""}` : ""}</small></div>`; }
+  return "";
+}
+// Nach dem Aufbau der Trainingsseite: Knopf oben rechts + Karte einsetzen
+function pmDecorate() {
+  const v = $("#view-train"); if (!v || !isV2()) return; const hd = v.querySelector("header.top");
+  if (hd && !hd.querySelector("[data-pmode]")) hd.insertAdjacentHTML("beforeend", `<button class="pm3-btn" data-pmode="1" title="Art des Trainingsplans"><span>${(PM_MODES.find(x => x[0] === pmMode()) || PM_MODES[0])[1]}</span>${(PM_MODES.find(x => x[0] === pmMode()) || PM_MODES[0])[2]}</button>`);
+  v.querySelector(".pm3-card")?.remove(); const card = pmCard(), ts = v.querySelector(".tsel"); if (card && ts) ts.insertAdjacentHTML("afterend", card);
+  const m = pmMode(); if (m !== "week" && (S.workout ? planByName(S.workout.plan)?.type : "rest") === "rest") {
+    const rc = [...v.querySelectorAll(".card")].find(c => /Rest Day|Erholung/.test(c.textContent) && !c.classList.contains("pm3-card"));
+    if (rc) rc.innerHTML = `<div style="font-size:30px">${m === "goals" ? "🎯" : m === "cycle" ? "🔁" : "🌀"}</div><b>Noch kein Training gewählt</b><p class="muted" style="margin:6px 0 0">${m === "goals" ? "Such dir oben ein offenes Ziel aus – oder gönn dir heute Pause." : "Wähle oben über „Ändern“, was du heute machst – oder gönn dir Pause."}</p>`; }
+}
+// ---------- Einstellungen ----------
+function openPlanMode() {
+  S.pmEdit = S.pmEdit || { mode: pmMode(), goals: JSON.parse(JSON.stringify(PM.goals)), cycle: [...PM.cycle] };
+  const E = S.pmEdit, types = TYPES.filter(t => t.type !== "rest"), gc = n => (E.goals.find(g => g.n === n) || {}).c || 0;
+  $("#sheetInner").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="font-size:18px">Wie trainierst du?</b><button class="mini" data-pmx="1">${ICON.x}</button></div>
+    <p class="muted" style="font-size:13px;margin:0 0 12px">Such dir aus, wie dein Training geplant wird. Du kannst jederzeit wechseln – deine Einträge bleiben.</p>
+    <div class="pm3-modes">${PM_MODES.map(([k, ic, n, d]) => `<button class="pm3-m ${E.mode === k ? "on" : ""}" data-pmm="${k}"><span class="pm3-mi">${ic}</span><span><b>${n}</b><small>${d}</small></span><i class="pm3-rad"></i></button>`).join("")}</div>
+    ${E.mode === "week" ? `<button class="btn block" style="margin-top:12px" data-action="planedit">✎ Wochenplan bearbeiten</button>` : ""}
+    ${E.mode === "goals" ? `<div class="pf3-h">Ziele pro Woche</div><div class="pm3-goals">${types.map(t => `<div class="pm3-g ${gc(t.name) ? "on" : ""}"><span class="pm3-i">${peIco(actIcon(t.name, t.type))}</span><b>${esc(t.name)}</b>
+        <div class="pm3-st"><button data-pmg="${esc(t.name)}" data-d="-1">−</button><span>${gc(t.name)}×</span><button data-pmg="${esc(t.name)}" data-d="1">+</button></div></div>`).join("")}</div>
+      <small class="muted" style="display:block;margin-top:8px">Fehlt etwas (z. B. „Cardio“ oder „Brust“)? Über „Ändern“ → „Neu hinzufügen“ legst du neue Trainingsarten an.</small>` : ""}
+    ${E.mode === "cycle" ? `<div class="pf3-h">Reihenfolge</div>${E.cycle.length ? `<div class="pm3-cl">${E.cycle.map((n, i) => `<div><span class="pm3-n">${i + 1}</span><b>${esc(n)}</b><button data-pmc="${i}" data-d="-1" ${i ? "" : "disabled"}>↑</button><button data-pmc="${i}" data-d="1" ${i < E.cycle.length - 1 ? "" : "disabled"}>↓</button><button data-pmc="${i}" data-d="0">✕</button></div>`).join("")}</div>` : `<div class="note">Tippe unten die Trainings in der gewünschten Reihenfolge an.</div>`}
+      <div class="groups" style="flex-wrap:wrap;margin-top:10px">${types.map(t => `<button class="chip" data-pmadd="${esc(t.name)}">＋ ${esc(t.name)}</button>`).join("")}</div>` : ""}
+    <button class="btn primary block" style="margin-top:16px" data-pmsave="1">Speichern</button>`;
+  showSheet(true);
+}
+document.addEventListener("click", async e => {
+  if (!isV2()) return;
+  if (e.target.closest("[data-pmode]")) { e.stopImmediatePropagation(); S.pmEdit = null; openPlanMode(); return; }
+  if (e.target.closest("[data-pmx]")) { S.pmEdit = null; closeSheet(); return; }
+  const E = S.pmEdit;
+  const mm = e.target.closest("[data-pmm]"); if (mm && E) { E.mode = mm.dataset.pmm; return openPlanMode(); }
+  const g = e.target.closest("[data-pmg]"); if (g && E) { const n = g.dataset.pmg; let it = E.goals.find(x => x.n === n); if (!it) E.goals.push(it = { n, c: 0 });
+    it.c = Math.max(0, Math.min(7, it.c + +g.dataset.d)); E.goals = E.goals.filter(x => x.c > 0); return openPlanMode(); }
+  const ad = e.target.closest("[data-pmadd]"); if (ad && E) { E.cycle.push(ad.dataset.pmadd); return openPlanMode(); }
+  const c = e.target.closest("[data-pmc]"); if (c && E) { const i = +c.dataset.pmc, d = +c.dataset.d;
+    if (!d) E.cycle.splice(i, 1); else { const j = i + d; [E.cycle[i], E.cycle[j]] = [E.cycle[j], E.cycle[i]]; } return openPlanMode(); }
+  if (e.target.closest("[data-pmsave]") && E) { e.stopImmediatePropagation();
+    if (E.mode === "goals" && !E.goals.length) { toast("Leg mindestens ein Ziel fest 🙂"); return; }
+    if (E.mode === "cycle" && E.cycle.length < 2) { toast("Wähle mindestens zwei Trainings für die Reihenfolge."); return; }
+    PM.mode = E.mode; PM.goals = E.goals; PM.cycle = E.cycle; pmSaveLocal(); S.pmEdit = null;
+    try { await setDoc(userRef(), { planMode: PM.mode, weekGoals: PM.goals, cycle: PM.cycle }, { merge: true }); } catch {}
+    closeSheet(); toast(`${(PM_MODES.find(x => x[0] === PM.mode) || [])[2]} gespeichert ✓`);
+    if (S.workout && !hasContent(S.workout)) loadWorkout(S.trainDate); else renderTrain(); return; }
+  const pk = e.target.closest("[data-pmpick]"); if (pk) { e.stopImmediatePropagation(); setTrainType(pk.dataset.pmpick); return; }
+}, true);
+// Aufgaben: bei Wochenzielen/Reihenfolge/ohne Plan zählt das an dem Tag gewählte Training
+function pmPlanForDate(date) { if (pmMode() === "week") return null; const k = keyOf(date);
+  const w = S.workout?.date === k ? S.workout : (S.allWo || []).find(x => x.date === k); return w && planByName(w.plan) || null; }
 
 function rankCard() {
   const st = rankState(), r = RANKS[st.tier], nx = st.next;
