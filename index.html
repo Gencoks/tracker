@@ -29,7 +29,7 @@
     r.dataset.ui = V2 ? "v2" : "v1"; r.classList.toggle("ui3", V3); r.dataset.pal = pal2; r.dataset.font = t.font || "modern"; r.dataset.wall = V2 ? wall2 : "";
     r.dataset.wfx = V2 && wall2 === "grad" && t.wallFx && t.wallGlow ? t.wallFx : "";
     if (V2 && wall2 === "grad" && t.wallGlow) r.style.setProperty("--wall-glow", t.wallGlow); else r.style.removeProperty("--wall-glow");
-    r.style.setProperty("--glass-a", (t.glassA ?? 80) + "%"); r.style.setProperty("--fz", V2 ? (t.fz ?? 100) / 100 : 1);
+    r.style.setProperty("--glass-a", (t.glassA ?? 80) + "%"); r.style.setProperty("--fz", V2 ? (t.fz ?? 95) / 100 : 1); r.style.setProperty("--fzs", V2 ? Math.max(1, (t.fz ?? 95) / 100) : 1);
     r.classList.toggle("v2-glass", V2 && t.glass2 !== false && wall2 !== "none");
     if (V2) {
       mode = PAL2[pal2][0]; accent = t.v2acc || PAL2[pal2][1];
@@ -2160,6 +2160,7 @@
   .v2acc-add small { font-size: 10.5px; color: var(--muted); } .v2acc-add input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   /* Schriftgröße */
   :root[data-ui=v2] .app > section, :root[data-ui=v2] #sheetInner { zoom: var(--fz, 1); }
+  :root[data-ui=v2] .app > section#view-start { zoom: var(--fzs, 1); }
   /* Leuchten deutlich sichtbar und auch im Modus „Ausgewogen“ (nur „Akku sparen“ hält an) */
   :root[data-ui=v2][data-wfx=glow] body::after { inset: -18%; animation: wfxdrift 11s ease-in-out infinite alternate, wfxpulse 5s ease-in-out infinite alternate; }
   @keyframes wfxdrift { 0% { transform: translate(-7%, -4%) scale(1); } 50% { transform: translate(4%, 3%) scale(1.12); } 100% { transform: translate(7%, -2%) scale(1.04); } }
@@ -2471,6 +2472,40 @@ html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: non
 .t4stats small { font-size: 11px; color: var(--muted); }
 .t4todo { margin-top: 10px; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--text) 16%, transparent); background: none; color: var(--text); font: inherit; font-size: 13px; font-weight: 600; }
 .t4todo em { font-style: normal; color: var(--muted); font-size: 18px; }
+
+/* ===== Einheitliche Schriftgrößen (Version 1): Freunde, Menüs, Profil ===== */
+:root[data-ui=v2] .fr-me .btn, :root[data-ui=v2] .fr-card .btn, :root[data-ui=v2] .pfv .btn { font-size: 14px; padding: 10px 12px; min-height: 0; border-radius: 11px; font-weight: 700; }
+:root[data-ui=v2] .fr-me .fr-row2 { gap: 6px; }
+:root[data-ui=v2] .fr-me .fr-code { font-size: 22px; letter-spacing: .16em; margin: 2px 0 10px; }
+:root[data-ui=v2] .fr-me .fr-code-k { font-size: 10.5px; }
+:root[data-ui=v2] .fr-me .fr-add .input, :root[data-ui=v2] .fr-card .fr-add .input { font-size: 14px; padding: 10px 12px; min-height: 0; }
+:root[data-ui=v2] .fr-me .fr-priv b { font-size: 13.5px; } :root[data-ui=v2] .fr-me .fr-priv small { font-size: 11.5px; }
+:root[data-ui=v2] .fr-me > summary b { font-size: 15px; } :root[data-ui=v2] .fr-me > summary small { font-size: 11.5px; }
+:root[data-ui=v2] .fr-me .pf-name-row b { font-size: 17px; }
+:root[data-ui=v2] .fr-item .fr-n b { font-size: 14.5px; } :root[data-ui=v2] .fr-item .fr-n small { font-size: 11.5px; }
+:root[data-ui=v2] .menu button { padding: 11px 12px; gap: 12px; font-size: 14px; border-radius: 12px; }
+:root[data-ui=v2] .menu button small { font-size: 11.5px; }
+/* Muskel-Fenster: kleiner und scrollbar */
+#w3 .gw[data-g=mus] .gw-b { max-height: min(46vh, 330px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 8px 10px 10px; gap: 8px; }
+#w3 .gw[data-g=mus] .mus3 { max-width: 190px; margin: 2px auto 0; }
+#w3 .gw[data-g=mus] .vc3-md button { font-size: 12px; padding: 6px 8px; }
+/* Jahresüberblick */
+.yr3 { margin-top: 14px; } .yr3-h { display: flex; align-items: center; gap: 8px; margin: 0 2px 8px; } .yr3-h b { flex: 1; font-size: 15px; }
+.yr3-h small { color: var(--muted); font-size: 12px; font-weight: 600; }
+.yr3-s { display: grid; grid-auto-flow: column; grid-auto-columns: 132px; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scroll-snap-type: x proximity; scrollbar-width: none; overscroll-behavior-x: contain; }
+.yr3-s::-webkit-scrollbar { display: none; }
+.yr3-m { scroll-snap-align: start; text-align: left; padding: 10px 10px 9px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; color: var(--text); }
+.yr3-m.cur { border-color: color-mix(in srgb, var(--accent) 70%, var(--border)); }
+.yr3-m > span { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; font-weight: 750; } .yr3-m > span small { font-size: 10.5px; color: var(--muted); font-weight: 650; }
+.yr3-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.yr3-g i { aspect-ratio: 1; border-radius: 3px; background: color-mix(in srgb, var(--text) 9%, transparent); }
+.yr3-g i.e { background: none; } .yr3-g i.p { background: color-mix(in srgb, var(--accent) 42%, transparent); } .yr3-g i.f { background: var(--accent); }
+.yr3-g i.fu { opacity: .35; } .yr3-g i.t { box-shadow: 0 0 0 1.5px var(--text); }
+/* Einstellungen: Bereiche auf- und zuklappen */
+#sheetInner .p3sec > summary .ps-t { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+#sheetInner .p3sec > summary .ps-t i { font-style: normal; width: 22px; text-align: center; }
+#sheetInner .p3sec > .ps-b { padding: 4px 12px 14px; }
+#sheetInner .p3sec > .ps-b > h2:first-child { margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -2966,8 +3001,29 @@ async function renderCal() {
       <div class="legend"><span><i style="background:var(--accent);border-color:var(--accent)"></i>alles erledigt</span>
         <span><i style="border-color:var(--accent)"></i>teilweise</span><span><i></i>nichts</span></div>
     </div>
-    <div class="cal-sum"><b>${fmtDate(sel)}</b><span>${selFuture ? "liegt in der Zukunft" : `${selTasks.filter(t => selDone[t.key]).length} von ${selTasks.length} erledigt`}</span></div>`;
+    <div class="cal-sum"><b>${fmtDate(sel)}</b><span>${selFuture ? "liegt in der Zukunft" : `${selTasks.filter(t => selDone[t.key]).length} von ${selTasks.length} erledigt`}</span></div>${isV2() ? yearHTML(y, mo) : ""}`;
+  if (isV2()) { const sc = $("#view-cal .yr3-s"); if (sc) { if (S.yrScroll != null && S.yrY === y) sc.scrollLeft = S.yrScroll; else { const c = sc.children[mo]; if (c) sc.scrollLeft = Math.max(0, c.offsetLeft - 20); } sc.onscroll = () => { S.yrScroll = sc.scrollLeft; S.yrY = y; }; }
+    if (S.yrLoaded !== y) { S.yrLoaded = y; loadRange(`${y}-01-01`, `${y}-12-31`).then(() => { if (S.tab === "cal") keepScroll(renderCal); }).catch(() => {}); } }
 }
+// Jahresüberblick: 12 kleine Monate nebeneinander, seitlich scrollbar – Tippen öffnet den Monat oben
+function yearHTML(y, curMo) {
+  const tk = todayKey(); let tf = 0, tp = 0;
+  const months = MONTHS.map((n, mo) => {
+    const daysIn = new Date(y, mo + 1, 0).getDate(), off = (new Date(y, mo, 1).getDay() + 6) % 7; let f = 0, pst = 0, cells = "<i class=e></i>".repeat(off);
+    for (let d = 1; d <= daysIn; d++) { const dk = `${y}-${pad(mo + 1)}-${pad(d)}`, fu = dk > tk, inf = fu ? null : dayInfo(dk);
+      if (!fu) { pst++; if (inf.complete) f++; }
+      cells += `<i class="${fu ? "fu" : inf.complete ? "f" : inf.count > 0 ? "p" : ""}${dk === tk ? " t" : ""}"></i>`; }
+    tf += f; tp += pst;
+    return `<button class="yr3-m ${mo === curMo ? "cur" : ""}" data-yrm="${mo}"><span>${n.slice(0, 3)}<small>${pst ? Math.round(f / pst * 100) + " %" : "–"}</small></span><div class="yr3-g">${cells}</div></button>`;
+  }).join("");
+  return `<div class="yr3"><div class="yr3-h"><button class="icon-btn" data-yrstep="-1">${ICON.left}</button><b>Jahresüberblick ${y}</b><small>${tf} Tage erfüllt</small><button class="icon-btn" data-yrstep="1">${ICON.right}</button></div><div class="yr3-s">${months}</div></div>`;
+}
+document.addEventListener("click", e => {
+  const m = e.target.closest?.("#view-cal [data-yrm]"), st = e.target.closest?.("#view-cal [data-yrstep]"); if (!m && !st) return;
+  e.stopImmediatePropagation();
+  if (st) { const y = S.calMonth.getFullYear() + +st.dataset.yrstep; S.yrScroll = null; S.calMonth = new Date(y, st.dataset.yrstep > 0 ? 0 : 11, 1); keepScroll(renderCal); loadRange(`${y}-01-01`, `${y}-12-31`).then(() => keepScroll(renderCal)).catch(() => {}); S.yrLoaded = y; return; }
+  S.calMonth = new Date(S.calMonth.getFullYear(), +m.dataset.yrm, 1); renderCal(); $("#view-cal .cal-head")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}, true);
 async function changeMonth(delta) {
   S.calMonth = new Date(S.calMonth.getFullYear(), S.calMonth.getMonth() + delta, 1);
   const y = S.calMonth.getFullYear(), mo = S.calMonth.getMonth();
@@ -4090,7 +4146,7 @@ function v2PrefsHTML(th) {
     <div class="v2acc">${[["", "Palette"], ["#ead7dd", "Rosé"], ["#f5f5f2", "Weiß"], ["#FFC400", "Gold"], ["#ff8a3d", "Orange"], ["#ff5c7a", "Koralle"], ["#c04dff", "Violett"], ["#6c8cff", "Blau"], ["#4cc9f0", "Cyan"], ["#5fd38d", "Grün"], ["#bcd6c3", "Salbei"], ["#b9b9c2", "Grau"], ...(th.accSaved || []).map(c => [c, "Eigene", 1])].map(([c, n, own]) => `<button class="${(th.v2acc || "") === c ? "on" : ""}" data-v2a="acc" data-v="${c}" title="${n}"><i style="background:${c || "conic-gradient(from 0deg, var(--text) 0 50%, var(--bg) 0)"}"></i><small>${n}</small>${own ? `<em data-accdel="${c}">×</em>` : ""}</button>`).join("")}
       <button class="v2acc-add" data-accpick="1" title="Eigene Farbe"><i>＋</i><small>Eigene</small></button></div>
     <h2>Schrift</h2>
-    <div class="v2row v2sl" style="margin:0 0 10px"><div><b>Schriftgröße</b><small>Texte und Kästchen etwas kleiner oder größer</small></div><div class="v2slw"><input type="range" min="85" max="120" step="5" value="${th.fz ?? 100}" data-v2sl="fz"><output>${th.fz ?? 100} %</output></div></div>
+    <div class="v2row v2sl" style="margin:0 0 10px"><div><b>Schriftgröße</b><small>Texte und Kästchen etwas kleiner oder größer</small></div><div class="v2slw"><input type="range" min="85" max="120" step="5" value="${th.fz ?? 95}" data-v2sl="fz"><output>${th.fz ?? 95} %</output></div></div>
     <div class="v2fonts">${V2_FONTS.map(([k, n, fam, css]) => `<button class="${font === k ? "on" : ""}" data-v2a="font" data-v="${k}"><b style="font-family:${css}">Aa Plan.</b><small>${n} · ${fam}</small></button>`).join("")}</div>
     <h2>Hintergrund</h2>
     <div class="v2walls">${V2_WALLS.map(([k, n]) => `<button class="${wall === k ? "on" : ""}" data-v2a="wall" data-v="${k}"><div class="wp" data-wp="${k}">${k === "custom" ? "📷" : ""}</div>${n}</button>`).join("")}</div>
@@ -4122,6 +4178,19 @@ async function v2WallUpload(file) {
   let q = .82, data = c.toDataURL("image/jpeg", q); while (data.length > 900000 && q > .4) { q -= .1; data = c.toDataURL("image/jpeg", q); }
   try { localStorage.setItem("tracker-wall", data); } catch { toast("Das Bild ist zu groß für den Speicher."); return; }
   setTheme({ wall: "custom" }); v2Reprefs();
+}
+const P3_OPEN = new Set(), PREF_IC = { "App-Version": "📱", "Farben": "🎨", "Akzentfarbe": "✨", "Schrift": "🔤", "Hintergrund": "🖼️", "Rang-Hintergründe": "🏔️", "Support": "💬", "Akku & Animationen": "🔋", "Pokale & Animationen": "🏆", "Profilrahmen": "⭕", "Erinnerung": "🔔", "Konto": "👤", "Admin": "🛠️" };
+function prefsAccordion() {
+  const root = $("#sheetInner"); if (!root) return;
+  const hs = [...root.children].filter(n => n.tagName === "H2"), groups = [];
+  // „Farben“ + „Akzentfarbe“, „Hintergrund“ + „Rang-Hintergründe“ bleiben eigene Bereiche – jede Überschrift wird ein Bereich
+  hs.forEach(h => {
+    const k = h.textContent.trim(), d = document.createElement("details"); d.className = "psec p3sec"; d.dataset.k = k; if (P3_OPEN.has(k)) d.open = true;
+    const sm = document.createElement("summary"); sm.innerHTML = `<span class="ps-t"><i>${PREF_IC[k] || "•"}</i>${h.innerHTML}</span>`; d.append(sm);
+    const b = document.createElement("div"); b.className = "ps-b"; d.append(b);
+    let n = h.nextSibling; while (n && !(n.nodeType === 1 && (n.tagName === "H2" || n.dataset?.action === "testtap"))) { const nx = n.nextSibling; b.append(n); n = nx; }
+    h.replaceWith(d); d.addEventListener("toggle", () => { d.open ? P3_OPEN.add(k) : P3_OPEN.delete(k); });
+  });
 }
 function v2Reprefs() { const y = $("#sheetInner").scrollTop; openPrefs(); $("#sheetInner").scrollTop = y; }
 document.addEventListener("click", e => {
@@ -4168,7 +4237,7 @@ document.addEventListener("click", e => { if (e.target.closest("[data-tipsreset]
 
 // Schieberegler (Durchsichtigkeit, Schriftgröße) & eigene Akzentfarben
 document.addEventListener("input", e => { const r = e.target.closest?.("[data-v2sl]"); if (!r) return; const k = r.dataset.v2sl, v = +r.value;
-  r.nextElementSibling.textContent = v + " %"; const R = document.documentElement; if (k === "glassA") R.style.setProperty("--glass-a", (100 - v) + "%"); else if (k === "fz") R.style.setProperty("--fz", v / 100); });
+  r.nextElementSibling.textContent = v + " %"; const R = document.documentElement; if (k === "glassA") R.style.setProperty("--glass-a", (100 - v) + "%"); else if (k === "fz") { R.style.setProperty("--fz", v / 100); R.style.setProperty("--fzs", Math.max(1, v / 100)); } });
 document.addEventListener("change", e => { const r = e.target.closest?.("[data-v2sl]"); if (!r) return; const v = +r.value; if (r.dataset.v2sl === "glassA") setTheme({ glassA: 100 - v }); else setTheme({ fz: v }); });
 document.addEventListener("change", e => { if (e.target.id !== "v2accPick") return; const c = e.target.value, th = curTheme();
   setTheme({ v2acc: c, accSaved: [c, ...(th.accSaved || []).filter(x => x !== c)].slice(0, 8) }); renderStart(); v2Reprefs(); toast("Eigene Farbe gespeichert ✓"); });
@@ -5188,22 +5257,22 @@ const MUS_F = [
   ["shoulders", "M40.5 37.6C35.6 38.4 31.4 41.4 29.8 45.6C33 46.8 37.4 47 41.4 46.2C43 43 42.8 39.8 40.5 37.6Z"],
   ["shoulders", "M29.8 45.8C28.6 48.6 28.4 51.4 28.8 54.4C32.4 53 35.8 50.6 37.8 47.4C35 47.4 32.4 46.8 29.8 45.8Z"],
   ["chest", "M59.3 39.5V47C53 47.5 47 46.5 42.5 45C42.6 42.5 43.5 41 44.5 40.5C49.5 39.8 54.5 39.4 59.3 39.5Z"],
-  ["chest", "M59.3 48V57.5C53.5 60 47 59 42.8 54.5C42 51.5 42 48.5 42.5 46.2C47 47.6 53 48.4 59.3 48Z"],
-  ["serratus", "M42.6 57.4L46.4 59.8L42.1 61.6ZM41.9 62.8L46.01 64.5L41.82 66.8ZM42.02 68L45.03 69L42.37 71.7Z"],
+  ["chest", "M59.3 48V57.5C53.51 60 47.01 59 42.8 54.5C42 51.5 42 48.5 42.5 46.2C47 47.6 53 48.4 59.3 48Z"],
+  ["serratus", "M42.61 57.4L46.41 59.8L42.13 61.6ZM41.95 62.8L46.07 64.5L41.97 66.8ZM42.22 68L45.24 69L42.82 71.7Z"],
   ["biceps", "M29.5 55C27.6 61 27.4 67.5 29 72.5C30.5 72.2 31.7 71.2 32.4 70C32 64 32.5 58.5 33.4 53.6C32 54.3 30.8 54.7 29.5 55Z"],
   ["biceps", "M33.4 53.6C34.4 53 35.3 52.3 36 51.5C36.5 55.5 36 60.5 35 65C34.4 67.3 33.5 69 32.4 70C32 64 32.5 58.5 33.4 53.6Z"],
   ["forearms", "M28.6 75.2C26.8 80 26 85 25.8 90C27.2 87 28.8 83 30.6 79C31.2 77.5 30.8 75.8 28.6 75.2Z"],
   ["forearms", "M30.8 76.5C33 76.8 34.8 76.8 35.6 76.5C35.2 84 33.4 92 30.4 101.5L25.4 100.6C25.4 97 25.6 93 25.8 90C27.5 86 29.5 81.5 30.8 76.5Z"],
   ["abs", "M52.8 60.6h6.5v7h-6.5zM52.8 69h6.5v7.2h-6.5zM52.8 77.6h6.5v7.2h-6.5zM52.8 86.2h6.5v7h-6.5zM53.4 94.6h5.9v7.4c-2.4-.4-4.4-1.8-5.9-3.6z"],
-  ["obliques", "M51.2 63C48 64 45.61 66 44.83 69.5C43.12 74 42.95 80 44.28 86C45.85 91.5 48.08 96 50.55 99.5L52.13 101.5Z"],
-  ["abductors", "M46.91 104C44.45 107 42.7 111 42.11 116C43.6 114 45.52 112 47.61 110.5C48.26 108 48 105.6 46.91 104Z"],
-  ["quads", "M42.11 116C39.8 124 39.2 134 40 145C40.8 152 43.2 157.5 46.4 160.5L49.4 160C47.3 156 46.2 151 45.6 145C44.6 134 45.01 122 47.61 110.5C45.52 112 43.41 113.8 42.11 116Z"],
-  ["quads", "M47.61 110.5C45.02 120 44.8 133 46 145C46.8 151 48.4 156 50.2 159.5C52.4 155 53.2 148 53.2 141C53.4 130 51.41 119.5 47.61 110.5Z"],
+  ["obliques", "M51.22 63C48.04 64 45.7 66 45.07 69.5C43.79 74 44.53 80 46.53 86C48.02 91.5 49.76 96 51.72 99.5L52.99 101.5Z"],
+  ["abductors", "M48.04 104C45.32 107 43.09 111 42.19 116C43.75 114 45.77 112 47.93 110.5C48.8 108 48.84 105.6 48.04 104Z"],
+  ["quads", "M42.19 116C39.8 124 39.2 134 40 145C40.8 152 43.2 157.5 46.4 160.5L49.4 160C47.3 156 46.2 151 45.6 145C44.6 134 45.02 122 47.93 110.5C45.77 112 43.57 113.8 42.19 116Z"],
+  ["quads", "M47.93 110.5C45.03 120 44.8 133 46 145C46.8 151 48.4 156 50.2 159.5C52.4 155 53.2 148 53.2 141C53.4 130 51.42 119.5 47.93 110.5Z"],
   ["quads", "M53.2 141C54.8 145 56.4 150 57 154.5C56.8 158 55.4 160.6 52.6 161.2C51 160.8 50.4 160.2 50.2 159.5C52.2 155 53.2 148 53.2 141Z"],
-  ["adductors", "M53.94 105C55.19 105.8 56.46 106.4 57.42 105.4C56.4 108 55.35 110.5 54.49 113C54 110.5 53.75 108 53.94 105Z"],
-  ["adductors", "M57.42 105.4C54.79 110 52.83 117 52.8 125C54 131 56.4 136 59.1 140L59.32 110C58.77 108 58.14 106.4 57.42 105.4Z"],
+  ["adductors", "M54.4 105C55.52 105.8 56.68 106.4 57.61 105.4C56.57 108 55.47 110.5 54.56 113C54.16 110.5 54.04 108 54.4 105Z"],
+  ["adductors", "M57.61 105.4C54.94 110 52.85 117 52.8 125C54 131 56.4 136 59.1 140L59.34 110C58.83 108 58.26 106.4 57.61 105.4Z"],
   ["adductors", "M59.1 140.6C59.4 146 58.8 152 57.8 158L56.4 154C57.4 149 58.4 144.6 59.1 140.6Z"],
-  ["quads", "M47.36 106.2C49.63 112 52.4 122 55 134C56.4 141 57.2 150 57.4 160L55.6 160.5C55.2 150 54.1 142 52.4 135C50 124 47.55 114 45.8 108Z"],
+  ["quads", "M48.17 106.2C49.81 112 52.4 122 55 134C56.4 141 57.2 150 57.4 160L55.6 160.5C55.2 150 54.1 142 52.4 135C50 124 47.66 114 46.46 108Z"],
   ["shins", "M47.4 170.4C46.2 180 46.6 192 48.6 205L50.4 205C50 193 50 181 50.2 170.8Z"],
   ["calves", "M50.6 170.6C53.6 172.2 55 178 54.8 186C54.4 192 53 197 51.2 201C50.6 191 50.4 180 50.6 170.6Z"],
   ["calves", "M47.2 170.2C44.6 175 43.4 183 44 192C44.6 200 45.8 207 47.4 212L48.6 205C46.6 192 46.2 180 47.2 170.2Z"],
@@ -5211,18 +5280,18 @@ const MUS_F = [
 const MUS_B = [
   ["traps", "M59.3 26.5C57 30.5 53.5 33.5 49 35.5C46 36.6 43.2 37.2 41 37.6C45 39.2 50.5 40.2 55 41.5C57 43 58.4 44 59.3 45Z"],
   ["traps", "M59.3 45C58.4 44 57 43 55 41.5C50.5 40.2 45 39.2 41 37.6C42.6 41 45.2 44.4 48.6 47.2C52.4 50.2 56 52 59.3 53.5Z"],
-  ["traps", "M59.3 53.5C56 52 52.4 50.2 48.6 47.2C50.4 54 53.6 62 59.3 72Z"],
+  ["traps", "M59.3 53.5C56 52 52.4 50.2 48.6 47.2C50.4 54 53.61 62 59.32 72Z"],
   ["shoulders", "M40.6 38C35.4 38.8 31.6 42 29.8 47C29.3 49.3 29.1 51.5 29.2 54C32.6 52 36.2 49.4 39 46.4C40.6 43.8 41.2 40.8 40.6 38Z"],
   ["shoulders", "M48.6 47.2C45.2 44.4 42.6 41 41 37.6C41.6 40.5 41.2 43.6 39.4 46.4C42 49 45.4 51 49.4 52.4C49.2 50.6 48.9 48.8 48.6 47.2Z"],
   ["lats", "M39.4 46.4C38.6 48.4 38.6 50.6 39.4 52.6C42.6 53.4 46 53.6 49.4 52.4C45.4 51 42 49 39.4 46.4Z"],
-  ["lats", "M39.6 53.4C39.8 60 41.63 69 45.85 79C48.43 84.5 51.49 89 55.01 92.5C55.4 86 56.47 80 58.61 74.6C55.6 66.6 52.4 58.6 49.8 53C46.2 54 42.8 54 39.6 53.4Z"],
-  ["lowerback", "M55.83 73.6C54.93 81.6 54.94 90.6 56.26 100.4L59.38 100.8V72.2C58.21 72.8 57.02 73.2 55.83 73.6Z"],
+  ["lats", "M39.6 53.4C39.82 60 41.89 69 47.02 79C49.97 84.5 52.8 89 55.77 92.5C56.06 86 56.8 80 58.67 74.6C55.63 66.6 52.4 58.6 49.8 53C46.2 54 42.8 54 39.6 53.4Z"],
+  ["lowerback", "M55.98 73.6C55.48 81.6 55.72 90.6 56.7 100.4L59.45 100.8V72.2C58.27 72.8 57.12 73.2 55.98 73.6Z"],
   ["triceps", "M29 55C27.4 61.5 27.6 68 29.4 74.5C30.8 73.4 31.8 71.6 32.4 69.4C31.6 64.6 31.8 59.4 32.8 53.6C31.4 54.2 30.2 54.6 29 55Z"],
   ["triceps", "M32.8 53.6C34.2 52.6 35.4 51.4 36.2 50C37 55 36.8 60 36 64.6C35.2 67.6 34 70 32.4 71.8C31.6 66 31.8 59.4 32.8 53.6Z"],
   ["forearms", "M28.6 76.5C26 84 25 92 25.2 100.5L27.6 101C28.4 93 29.8 85 31.4 77.6C30.4 77.4 29.5 77 28.6 76.5Z"],
   ["forearms", "M31.4 77.6C32.8 77.8 34.2 77.7 35.5 77.5C35 85.5 33 93.5 30 101.5L27.6 101C28.4 93 29.8 85 31.4 77.6Z"],
-  ["abductors", "M46.95 98C45.02 100.5 43.63 104 42.96 108C45.6 105.6 48.73 104 52.22 103.4C54.24 102.6 55.36 101 55.54 99.4C52.5 98.2 49.62 97.7 46.95 98Z"],
-  ["glutes", "M43.07 108.5C41.56 115 42.61 121 46 125C50.2 128.4 55.6 128 59.3 125V103C56.75 103.2 54.2 103.6 52.18 104C48.66 104.6 45.69 106.2 43.07 108.5Z"],
+  ["abductors", "M48.67 98C46.77 100.5 45.05 104 43.75 108C46.61 105.6 49.71 104 52.94 103.4C54.82 102.6 55.89 101 56.09 99.4C53.48 98.2 51 97.7 48.67 98Z"],
+  ["glutes", "M43.78 108.5C41.68 115 42.62 121 46 125C50.2 128.4 55.6 128 59.3 125V103C57.06 103.2 54.73 103.6 52.86 104C49.57 104.6 46.61 106.2 43.78 108.5Z"],
   ["hamstrings", "M44 128.5C41.2 137 40.6 147 42 156C42.8 159 44.4 161.5 46.6 162.4L49.8 161.6C49.4 150 49.8 139 51.4 130.2C48.6 130.4 46.2 129.8 44 128.5Z"],
   ["hamstrings", "M51.4 130.2C49.8 139 49.4 150 49.8 161.6L55.4 161.4C57 153 57.6 145 57.6 137C57.4 133.6 57 131 56.4 129C54.8 129.8 53.2 130.2 51.4 130.2Z"],
   ["adductors", "M56.4 129C57 131 57.4 133.6 57.6 137C57.6 142 57.4 146 57 150C58.6 145 59.3 138 59.3 128C58.4 128 57.4 128.4 56.4 129Z"],
@@ -5231,10 +5300,10 @@ const MUS_B = [
   ["calves", "M44.6 196C45 203 46 209 47.6 213L52.6 213C53.6 208 54.2 203 54.4 197.5C52.8 201.8 49.8 202.6 47.6 200.4C46.4 199.4 45.4 197.8 44.6 196Z"],
 ];
 // Körper-Umriss (dunkel, darauf liegen die Muskeln – die Lücken wirken wie Muskelfurchen)
-const MUS_SIL = "M60 29.5C56 29.5 54 30.6 52 32.6C47 35.4 42 37 39 37.6C33 38.4 29.2 43 28.4 50C26.8 58 26.4 66 27.6 74C25.4 82 24.2 91 24.4 100.4L31 102.2C33.8 94 35.8 85 36.6 77C37.2 70 37.61 63 37.6 57C38.61 63 39.84 69 40.96 75C42.29 85 43.1 95 42.73 104C39.65 114 38.4 128 39 142C39.6 152 42.4 160 44.8 166.4C42.6 174 41.6 184 42.6 194C43.4 202 44.4 208 45.6 214.4L53 214.4C54.6 206 55.8 198 55.8 188C56 180 55.2 172 54.2 166.4C57 160 58.8 150 59.4 140L60 110Z";
+const MUS_SIL = "M60 29.5C56 29.5 54 30.6 52 32.6C47 35.4 42 37 39 37.6C33 38.4 29.2 43 28.4 50C26.8 58 26.4 66 27.6 74C25.4 82 24.2 91 24.4 100.4L31 102.2C33.8 94 35.8 85 36.6 77C37.2 70 37.67 63 37.61 57C38.67 63 40.12 69 41.86 75C44.72 85 45.54 95 44.23 104C39.83 114 38.4 128 39 142C39.6 152 42.4 160 44.8 166.4C42.6 174 41.6 184 42.6 194C43.4 202 44.4 208 45.6 214.4L53 214.4C54.6 206 55.8 198 55.8 188C56 180 55.2 172 54.2 166.4C57 160 58.8 150 59.4 140L60 110Z";
 // feine Faserlinien, damit man die Muskelstränge erkennt
-const MUS_FIB_F = "M44.5 43.8Q51 43.6 59 42.4M43.4 48.6Q51 49.6 59 50.4M43.8 52.6Q51 55.2 59 54.6M38.4 40.6Q34.6 43 32.8 46.8M36.6 46.4Q33.4 49 31 52.2M31 58.4Q30.2 64 30.6 70M34.8 57Q34.6 62 33.8 67M43.21 121Q42.2 135 44 150M49.42 119Q50.6 134 50.8 152M29.4 82Q28 89 27.6 96M33 81Q31.6 89 29.6 97M46.43 70Q45.7 80 48.16 90",
-  MUS_FIB_B = "M42.6 57Q47.01 67 53.14 80M46.6 55Q51 64 56.43 74.6M50.4 37Q55 39.4 59 42.4M47.6 44.4Q53 47.8 58.6 50.6M30.6 58.4Q30 65 30.8 71M34.6 57Q34.6 62.6 33.8 68M45.64 110.8Q51.05 116.4 58.43 112.4M44.45 117.6Q51 123.4 58.4 121.4M45.2 135Q44 147 45.6 158M54 134Q53.4 147 53 159M44.8 175Q44.4 185 46 194M52 174Q53 185 52.2 196M57.44 78Q57.16 89 57.86 99M29.4 82Q28.2 89 27.8 96M33.2 81Q31.8 89 29.8 97";
+const MUS_FIB_F = "M44.5 43.8Q51 43.6 59 42.4M43.4 48.6Q51 49.6 59 50.4M43.8 52.6Q51 55.2 59 54.6M38.4 40.6Q34.6 43 32.8 46.8M36.6 46.4Q33.4 49 31 52.2M31 58.4Q30.2 64 30.6 70M34.8 57Q34.6 62 33.8 67M43.22 121Q42.2 135 44 150M49.43 119Q50.6 134 50.8 152M29.4 82Q28 89 27.6 96M33 81Q31.6 89 29.6 97M46.67 70Q47.03 80 49.99 90",
+  MUS_FIB_B = "M42.61 57Q47.12 67 53.78 80M46.6 55Q51.03 64 56.59 74.6M50.4 37Q55 39.4 59 42.4M47.6 44.4Q53 47.8 58.6 50.6M30.6 58.4Q30 65 30.8 71M34.6 57Q34.6 62.6 33.8 68M45.98 110.8Q51.08 116.4 58.45 112.4M44.49 117.6Q51 123.4 58.4 121.4M45.2 135Q44 147 45.6 158M54 134Q53.4 147 53 159M44.8 175Q44.4 185 46 194M52 174Q53 185 52.2 196M57.63 78Q57.6 89 58.13 99M29.4 82Q28.2 89 27.8 96M33.2 81Q31.8 89 29.8 97";
 const MUS_BASE = {
   head: '<ellipse cx="60" cy="16" rx="10.5" ry="12.5"/>',
   hands: '<ellipse cx="27.6" cy="107.4" rx="3.6" ry="6"/><ellipse cx="92.4" cy="107.4" rx="3.6" ry="6"/>',
@@ -5949,7 +6018,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1795555411";
+const APP_VER = "1795556361";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
@@ -10559,7 +10628,7 @@ function openPrefs() {
     <h2>Konto</h2>
     <button class="btn block" data-action="logout">${ICON.out.replace("<svg", '<svg width="18" height="18"')} Abmelden</button>
     <p class="muted" style="font-size:12px;text-align:center;margin:18px 0 4px" data-action="testtap">Tracker${S.code ? ` · Freundescode ${S.code}` : ""}</p>`;
-  showSheet(true); if (isV2()) v2WallPreviews();
+  showSheet(true); if (isV2()) { prefsAccordion(); v2WallPreviews(); }
 }
 
 /* ===================== UHRZEIT: ZEIGER-UHR + RAD (laufen zusammen) ===================== */
