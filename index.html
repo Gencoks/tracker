@@ -2428,6 +2428,18 @@ html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: non
 </style>
 <style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }#w3 .tb3-sv { display: flex; flex-direction: column; gap: 5px; } #w3 .tb3-sv > small { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8a8a90; font-weight: 700; }
 #w3 .tb3-sv em { font-style: normal; font-size: 11px; line-height: 1.35; color: #9a9aa0; }
+.mus3 { width: 100%; height: auto; display: block; margin: 6px 0 2px; }
+.mus3 path, .mus3 ellipse { stroke: #0b0b0c; stroke-width: .7; stroke-linejoin: round; }
+.mus3 .mb * { fill: #1d1d20; stroke: none; }
+.mus3 .mo { fill: #3a3a3f; }
+.mus3 .ms { fill: color-mix(in srgb, var(--accent) 38%, #3a3a3f); }
+.mus3 .mp { fill: var(--accent); }
+.mus3 .mf { fill: none; stroke: rgba(0,0,0,.32); stroke-width: .45; stroke-linecap: round; pointer-events: none; }
+.mus3 .mlab { fill: #8a8a90; font-size: 8px; text-anchor: middle; letter-spacing: .1em; }
+.mus3-lg { display: flex; flex-direction: column; gap: 6px; font-size: 12px; } .mus3-lg div { display: flex; gap: 8px; align-items: flex-start; }
+.mus3-lg > small { font-size: 10px; color: #9a9aa0; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; margin-top: 4px; }
+.mus3-lg i { width: 11px; height: 11px; border-radius: 4px; flex: none; margin-top: 3px; } .mus3-lg i.mp { background: var(--accent); } .mus3-lg i.ms { background: color-mix(in srgb, var(--accent) 38%, #3a3a3f); }
+.mus3-lg span { display: flex; flex-direction: column; } .mus3-lg em { font-style: normal; font-size: 11px; color: #9a9aa0; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -4640,6 +4652,7 @@ const w3SwMs = () => W3T.sw.acc + (W3T.sw.run ? Date.now() - W3T.sw.t0 : 0);
 const w3TmLeft = () => W3T.tm.run ? Math.max(0, W3T.tm.end - Date.now()) : W3T.tm.left;
 // Gadgets (Fenster), wie die Werkzeugleiste bei TradingView
 const W3I = {
+  mus: V3I('<circle cx="12" cy="4" r="2"/><path d="M8 8.5h8l1.5 5.5M8 8.5L6.5 14M10 8.5v6l-1 7M14 8.5v6l1 7M10 14.5h4"/>'),
   voice: V3I('<rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5v4M8.5 21.5h7"/>'),
   edit: V3I('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>'), sets: V3I('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>'),
   count: V3I('<path d="M6 5v14M10 5v14M14 5v14M18 5v14"/><path d="M3.5 16.5L20.5 7.5"/>'), sw: V3I('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 2.5h5M12 2.5V6M18.5 6.5l1.5-1.5"/>'),
@@ -4647,13 +4660,13 @@ const W3I = {
   notes: V3I('<path d="M5 3.5h10l4 4v13H5z"/><path d="M15 3.5v4h4M8.5 12h7M8.5 15.5h5"/>'), plus: V3I('<path d="M12 5v14M5 12h14"/>'), rot: V3I('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
 };
 const W3ARR = { l: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>', r: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>' };
-const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 210], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], voice: ["🎤", "Sprache", 236], sets: ["☰", "Sätze", 252], notes: ["📝", "Notiz", 256] };
+const W3G = { edit: ["✎", "Eingabe", 268], count: ["👆", "Zähler", 210], sw: ["⏱", "Stoppuhr", 240], timer: ["⏳", "Timer", 236], tabata: ["🔁", "Tabata", 240], voice: ["🎤", "Sprache", 236], mus: ["💪", "Muskeln", 250], sets: ["☰", "Sätze", 252], notes: ["📝", "Notiz", 256] };
 function w3Wins(it) {
   W3.win = W3.win || {}; const k = it.kind === "ex" ? "ex" : "run";
   if (!W3.win[k]) { const W = innerWidth, H = innerHeight;
     W3.win[k] = it.kind === "ex" ? { edit: { on: 0, x: 70, y: 96 }, sets: { on: 0, x: 70, y: Math.min(H - 300, 470) }, count: { on: 0, x: 60, y: 140 }, sw: { on: 0, x: 80, y: 200 }, timer: { on: 0, x: Math.max(8, W - 236), y: Math.min(H - 330, 400) } }
       : { edit: { on: 0, x: 70, y: 96 }, sw: { on: 0, x: 70, y: Math.min(H - 300, 400) }, timer: { on: 0, x: Math.max(8, W - 236), y: 160 } }; }
-  const ws = W3.win[k]; if (!ws.count) ws.count = { on: 0, x: 60, y: 140 }; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 }; if (!ws.voice) ws.voice = { on: 0, x: 64, y: 180 }; if (!ws.sets) ws.sets = { on: 0, x: 70, y: Math.min(innerHeight - 300, 470) }; if (!ws.edit) ws.edit = { on: 0, x: 70, y: 96 }; if (!ws.sw) ws.sw = { on: 0, x: 80, y: 200 }; if (!ws.timer) ws.timer = { on: 0, x: Math.max(8, innerWidth - 236), y: Math.min(innerHeight - 330, 400) };
+  const ws = W3.win[k]; if (!ws.mus) ws.mus = { on: 0, x: 40, y: 120 }; if (!ws.count) ws.count = { on: 0, x: 60, y: 140 }; if (!ws.tabata) ws.tabata = { on: 0, x: 60, y: Math.min(innerHeight - 380, 420) }; if (!ws.notes) ws.notes = { on: 0, x: 66, y: 150 }; if (!ws.voice) ws.voice = { on: 0, x: 64, y: 180 }; if (!ws.sets) ws.sets = { on: 0, x: 70, y: Math.min(innerHeight - 300, 470) }; if (!ws.edit) ws.edit = { on: 0, x: 70, y: 96 }; if (!ws.sw) ws.sw = { on: 0, x: 80, y: 200 }; if (!ws.timer) ws.timer = { on: 0, x: Math.max(8, innerWidth - 236), y: Math.min(innerHeight - 330, 400) };
   return ws;
 }
 function w3Render() {
@@ -4668,7 +4681,7 @@ function w3Render() {
     <div class="w3vert" aria-hidden="true"><b style="font-size:34px">${esc(it.name)}</b><span>${nSets ? `${nSets} ${nSets === 1 ? "Satz" : "Sätze"} · ` : ""}${WD_FULL[now.getDay()]}, ${now.getDate()}. ${MON_SHORT[now.getMonth()]}</span></div>
     ${Object.entries(wins).filter(([, w]) => w.on).sort((a, b) => (W3ZO[a[0]] || 0) - (W3ZO[b[0]] || 0)).map(([g, w]) => w3WinHTML(it, g, w)).join("")}
     <div class="gbar ${bar.h ? "h" : ""} ${bar.c ? "c" : ""}" style="left:${bar.x}px;top:${bar.y}px"><div class="gb-grip" data-drag="bar" title="Antippen: auf/zu · Ziehen: verschieben"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      ${bar.c ? "" : `${["edit", "sets", "sw", "timer", "count", "tabata", "voice", "notes"].filter(g => wins[g]).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${g === "count" ? W3I.plus : W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}`}</div>
+      ${bar.c ? "" : `${["edit", "sets", "sw", "timer", "count", "tabata", "voice", "mus", "notes"].filter(g => wins[g]).map(g => `<button class="${wins[g].on ? "on" : ""}" data-w3a="win" data-v="${g}" title="${W3G[g][1]}">${g === "count" ? W3I.plus : W3I[g]}<small>${W3G[g][1]}</small></button>`).join("")}`}</div>
     <div class="w3bot"><button class="w3nav" data-w3a="close" aria-label="Zur Übersicht" title="Zur Trainingsübersicht">${W3ARR.l}</button>
       ${it.kind === "ex" ? (() => { const ex = S.workout.exercises[it.i], si = Math.min(W3.si ?? w3SiDef(ex), ex.sets.length), isNew = si >= ex.sets.length - 1; return `<button class="w3nset" data-w3a="nextset" data-hold="sets">${isNew ? `${W3I.plus} Neuer Satz` : `Nächster Satz (${si + 2})`}</button>`; })() : ""}
       <button class="w3next ${last ? "fin" : ""}" data-w3a="${last ? "finish" : "next"}">${last ? "Abschließen ✓" : `Nächste Übung ${W3ARR.r}`}</button></div>`;
@@ -4685,6 +4698,7 @@ function w3Step(field, label, val, step, unit = "") {
 function w3Body(it, g) {
   const w = S.workout;
   if (g === "voice") return vcHTML(it);
+  if (g === "mus") return musWin(it);
   if (g === "sw") return `<div class="gw-big fx" id="w3sw">${fixD(fmtMs(w3SwMs()))}</div><button class="gw-main ${W3T.sw.run ? "stop" : ""}" data-w3a="${W3T.sw.run ? "swstop" : "swgo"}">${W3T.sw.run ? "Anhalten" : w3SwMs() ? "Weiter" : "Start"}</button>
       <div class="gw-row wrap"><button data-w3a="swreset">↺ Zurück</button>${w3SwMs() && !W3T.sw.run ? `<button class="acc" data-w3a="swtake">Übernehmen</button>` : ""}</div>`;
   if (g === "timer") return `<div class="gw-big fx ${W3T.tm.done ? "pg-done" : ""}" id="w3tm">${fixD(fmtMs(w3TmLeft(), false))}</div>
@@ -5129,6 +5143,156 @@ function w3TbAdd(it, ex, m, dur, rd) {
   else { const j = w3SiDef(ex); w3AddSet(ex, m, n || "", { via: "tabata", dur, rd: 1, rest: tb.rest, sec: String(dur) }); tb.ref = { date: S.trainDate, i: it.i, j }; }
   tb.saved = (tb.saved || 0) + 1; w3TSave(); if ($("#w3")?.classList.contains("on")) w3Render();
 }
+// ---------- Muskelkarte: selbst gezeichnete Figur (vorne/hinten) mit einzelnen Muskelsträngen ----------
+// Pfade für eine Körperhälfte (x 0–60, Raster 120 × 250), die andere Hälfte wird gespiegelt. [Gruppe, Pfad]
+const MUS_F = [
+  ["traps", "M51 33C47 35 44 36.5 40.5 37.5C44 38.5 48 38.8 52 38.5Z"],
+  ["traps", "M55.2 24.8C54.6 28.6 53.6 31.8 51.8 35L54.2 36.2C55.8 32.6 56.8 29.4 57.2 26Z"],
+  ["shoulders", "M40.5 37.6C35.6 38.4 31.4 41.4 29.8 45.6C33 46.8 37.4 47 41.4 46.2C43 43 42.8 39.8 40.5 37.6Z"],
+  ["shoulders", "M29.8 45.8C28.6 48.6 28.4 51.4 28.8 54.4C32.4 53 35.8 50.6 37.8 47.4C35 47.4 32.4 46.8 29.8 45.8Z"],
+  ["chest", "M59.3 39.5V47C53 47.5 47 46.5 42.5 45C42.6 42.5 43.5 41 44.5 40.5C49.5 39.8 54.5 39.4 59.3 39.5Z"],
+  ["chest", "M59.3 48V57.5C53.5 60 47 59 42.8 54.5C42 51.5 42 48.5 42.5 46.2C47 47.6 53 48.4 59.3 48Z"],
+  ["serratus", "M42.6 57.4L46.4 59.8L42.1 61.6ZM41.9 62.8L46 64.5L41.8 66.8ZM42 68L45 69L42.3 71.7Z"],
+  ["biceps", "M29.5 55C27.6 61 27.4 67.5 29 72.5C30.5 72.2 31.7 71.2 32.4 70C32 64 32.5 58.5 33.4 53.6C32 54.3 30.8 54.7 29.5 55Z"],
+  ["biceps", "M33.4 53.6C34.4 53 35.3 52.3 36 51.5C36.5 55.5 36 60.5 35 65C34.4 67.3 33.5 69 32.4 70C32 64 32.5 58.5 33.4 53.6Z"],
+  ["forearms", "M28.6 75.2C26.8 80 26 85 25.8 90C27.2 87 28.8 83 30.6 79C31.2 77.5 30.8 75.8 28.6 75.2Z"],
+  ["forearms", "M30.8 76.5C33 76.8 34.8 76.8 35.6 76.5C35.2 84 33.4 92 30.4 101.5L25.4 100.6C25.4 97 25.6 93 25.8 90C27.5 86 29.5 81.5 30.8 76.5Z"],
+  ["abs", "M52.8 60.6h6.5v7h-6.5zM52.8 69h6.5v7.2h-6.5zM52.8 77.6h6.5v7.2h-6.5zM52.8 86.2h6.5v7h-6.5zM53.4 94.6h5.9v7.4c-2.4-.4-4.4-1.8-5.9-3.6z"],
+  ["obliques", "M51.2 63C48 64 45.6 66 44.8 69.5C43 74 42.6 80 43.6 86C44.8 91.5 46.8 96 49.4 99.5L51.2 101.5Z"],
+  ["abductors", "M45.6 104C43.4 107 42.2 111 42 116C43.4 114 45.2 112 47.2 110.5C47.6 108 47 105.6 45.6 104Z"],
+  ["quads", "M42 116C39.8 124 39.2 134 40 145C40.8 152 43.2 157.5 46.4 160.5L49.4 160C47.3 156 46.2 151 45.6 145C44.6 134 45 122 47.2 110.5C45.2 112 43.2 113.8 42 116Z"],
+  ["quads", "M47.2 110.5C45 120 44.8 133 46 145C46.8 151 48.4 156 50.2 159.5C52.4 155 53.2 148 53.2 141C53.4 130 51.4 119.5 47.2 110.5Z"],
+  ["quads", "M53.2 141C54.8 145 56.4 150 57 154.5C56.8 158 55.4 160.6 52.6 161.2C51 160.8 50.4 160.2 50.2 159.5C52.2 155 53.2 148 53.2 141Z"],
+  ["adductors", "M53.4 105C54.8 105.8 56.2 106.4 57.2 105.4C56.2 108 55.2 110.5 54.4 113C53.8 110.5 53.4 108 53.4 105Z"],
+  ["adductors", "M57.2 105.4C54.6 110 52.8 117 52.8 125C54 131 56.4 136 59.1 140L59.3 110C58.7 108 58 106.4 57.2 105.4Z"],
+  ["adductors", "M59.1 140.6C59.4 146 58.8 152 57.8 158L56.4 154C57.4 149 58.4 144.6 59.1 140.6Z"],
+  ["quads", "M46.4 106.2C49.4 112 52.4 122 55 134C56.4 141 57.2 150 57.4 160L55.6 160.5C55.2 150 54.1 142 52.4 135C50 124 47.4 114 45 108Z"],
+  ["shins", "M47.4 170.4C46.2 180 46.6 192 48.6 205L50.4 205C50 193 50 181 50.2 170.8Z"],
+  ["calves", "M50.6 170.6C53.6 172.2 55 178 54.8 186C54.4 192 53 197 51.2 201C50.6 191 50.4 180 50.6 170.6Z"],
+  ["calves", "M47.2 170.2C44.6 175 43.4 183 44 192C44.6 200 45.8 207 47.4 212L48.6 205C46.6 192 46.2 180 47.2 170.2Z"],
+];
+const MUS_B = [
+  ["traps", "M59.3 26.5C57 30.5 53.5 33.5 49 35.5C46 36.6 43.2 37.2 41 37.6C45 39.2 50.5 40.2 55 41.5C57 43 58.4 44 59.3 45Z"],
+  ["traps", "M59.3 45C58.4 44 57 43 55 41.5C50.5 40.2 45 39.2 41 37.6C42.6 41 45.2 44.4 48.6 47.2C52.4 50.2 56 52 59.3 53.5Z"],
+  ["traps", "M59.3 53.5C56 52 52.4 50.2 48.6 47.2C50.4 54 53.6 62 59.3 72Z"],
+  ["shoulders", "M40.6 38C35.4 38.8 31.6 42 29.8 47C29.3 49.3 29.1 51.5 29.2 54C32.6 52 36.2 49.4 39 46.4C40.6 43.8 41.2 40.8 40.6 38Z"],
+  ["shoulders", "M48.6 47.2C45.2 44.4 42.6 41 41 37.6C41.6 40.5 41.2 43.6 39.4 46.4C42 49 45.4 51 49.4 52.4C49.2 50.6 48.9 48.8 48.6 47.2Z"],
+  ["lats", "M39.4 46.4C38.6 48.4 38.6 50.6 39.4 52.6C42.6 53.4 46 53.6 49.4 52.4C45.4 51 42 49 39.4 46.4Z"],
+  ["lats", "M39.6 53.4C39.8 60 41.6 69 45.6 79C48 84.5 51 89 54.6 92.5C55.2 86 56.4 80 58.6 74.6C55.6 66.6 52.4 58.6 49.8 53C46.2 54 42.8 54 39.6 53.4Z"],
+  ["lowerback", "M55.8 73.6C54.8 81.6 54.6 90.6 55.8 100.4L59.3 100.8V72.2C58.2 72.8 57 73.2 55.8 73.6Z"],
+  ["triceps", "M29 55C27.4 61.5 27.6 68 29.4 74.5C30.8 73.4 31.8 71.6 32.4 69.4C31.6 64.6 31.8 59.4 32.8 53.6C31.4 54.2 30.2 54.6 29 55Z"],
+  ["triceps", "M32.8 53.6C34.2 52.6 35.4 51.4 36.2 50C37 55 36.8 60 36 64.6C35.2 67.6 34 70 32.4 71.8C31.6 66 31.8 59.4 32.8 53.6Z"],
+  ["forearms", "M28.6 76.5C26 84 25 92 25.2 100.5L27.6 101C28.4 93 29.8 85 31.4 77.6C30.4 77.4 29.5 77 28.6 76.5Z"],
+  ["forearms", "M31.4 77.6C32.8 77.8 34.2 77.7 35.5 77.5C35 85.5 33 93.5 30 101.5L27.6 101C28.4 93 29.8 85 31.4 77.6Z"],
+  ["abductors", "M45.4 98C43.2 100.5 42 104 42 108C44.4 105.6 47.6 104 51.4 103.4C53.6 102.6 54.8 101 55 99.4C51.6 98.2 48.4 97.7 45.4 98Z"],
+  ["glutes", "M42.2 108.5C41.4 115 42.6 121 46 125C50.2 128.4 55.6 128 59.3 125V103C56.4 103.2 53.6 103.6 51.4 104C47.6 104.6 44.6 106.2 42.2 108.5Z"],
+  ["hamstrings", "M44 128.5C41.2 137 40.6 147 42 156C42.8 159 44.4 161.5 46.6 162.4L49.8 161.6C49.4 150 49.8 139 51.4 130.2C48.6 130.4 46.2 129.8 44 128.5Z"],
+  ["hamstrings", "M51.4 130.2C49.8 139 49.4 150 49.8 161.6L55.4 161.4C57 153 57.6 145 57.6 137C57.4 133.6 57 131 56.4 129C54.8 129.8 53.2 130.2 51.4 130.2Z"],
+  ["adductors", "M56.4 129C57 131 57.4 133.6 57.6 137C57.6 142 57.4 146 57 150C58.6 145 59.3 138 59.3 128C58.4 128 57.4 128.4 56.4 129Z"],
+  ["calves", "M45.2 168.5C42.4 173 41.4 180 42.2 187.5C43 193 45 197 47.6 199C48.6 192 49.4 184 49.6 176C49.6 172.5 49 170 48.4 168.4Z"],
+  ["calves", "M48.4 168.4C49 170 49.6 172.5 49.6 176C49.4 184 48.6 192 47.6 199C50 201.5 52.6 201.4 54 199C55.8 192 56 182 54.6 174C54 171 53 169 51.6 168Z"],
+  ["calves", "M44.6 196C45 203 46 209 47.6 213L52.6 213C53.6 208 54.2 203 54.4 197.5C52.8 201.8 49.8 202.6 47.6 200.4C46.4 199.4 45.4 197.8 44.6 196Z"],
+];
+// Körper-Umriss (dunkel, darauf liegen die Muskeln – die Lücken wirken wie Muskelfurchen)
+const MUS_SIL = "M60 29.5C56 29.5 54 30.6 52 32.6C47 35.4 42 37 39 37.6C33 38.4 29.2 43 28.4 50C26.8 58 26.4 66 27.6 74C25.4 82 24.2 91 24.4 100.4L31 102.2C33.8 94 35.8 85 36.6 77C37.2 70 37.6 63 37.6 57C38.6 63 39.8 69 40.8 75C41.6 85 41.4 95 41 104C39.4 114 38.4 128 39 142C39.6 152 42.4 160 44.8 166.4C42.6 174 41.6 184 42.6 194C43.4 202 44.4 208 45.6 214.4L53 214.4C54.6 206 55.8 198 55.8 188C56 180 55.2 172 54.2 166.4C57 160 58.8 150 59.4 140L60 110Z";
+// feine Faserlinien, damit man die Muskelstränge erkennt
+const MUS_FIB_F = "M44.5 43.8Q51 43.6 59 42.4M43.4 48.6Q51 49.6 59 50.4M43.8 52.6Q51 55.2 59 54.6M38.4 40.6Q34.6 43 32.8 46.8M36.6 46.4Q33.4 49 31 52.2M31 58.4Q30.2 64 30.6 70M34.8 57Q34.6 62 33.8 67M43.2 121Q42.2 135 44 150M49.4 119Q50.6 134 50.8 152M29.4 82Q28 89 27.6 96M33 81Q31.6 89 29.6 97M46.4 70Q45.4 80 47.4 90",
+  MUS_FIB_B = "M42.6 57Q47 67 53 80M46.6 55Q51 64 56.4 74.6M50.4 37Q55 39.4 59 42.4M47.6 44.4Q53 47.8 58.6 50.6M30.6 58.4Q30 65 30.8 71M34.6 57Q34.6 62.6 33.8 68M45.2 110.8Q51 116.4 58.4 112.4M44.4 117.6Q51 123.4 58.4 121.4M45.2 135Q44 147 45.6 158M54 134Q53.4 147 53 159M44.8 175Q44.4 185 46 194M52 174Q53 185 52.2 196M57.4 78Q57 89 57.6 99M29.4 82Q28.2 89 27.8 96M33.2 81Q31.8 89 29.8 97";
+const MUS_BASE = {
+  head: '<ellipse cx="60" cy="16" rx="10.5" ry="12.5"/>',
+  hands: '<ellipse cx="27.6" cy="107.4" rx="3.6" ry="6"/><ellipse cx="92.4" cy="107.4" rx="3.6" ry="6"/>',
+  knees: '<ellipse cx="51" cy="165.4" rx="4.8" ry="4.4"/><ellipse cx="69" cy="165.4" rx="4.8" ry="4.4"/>',
+  feet: '<path d="M45.6 215L53 215L54.4 225C51.2 227.2 47 227.2 43.4 225.6Z"/><path d="M74.4 215L67 215L65.6 225C68.8 227.2 73 227.2 76.6 225.6Z"/>',
+};
+const MUS_N = { chest: "Brust", shoulders: "Schultern", biceps: "Bizeps", triceps: "Trizeps", forearms: "Unterarme", abs: "Gerader Bauch", obliques: "Seitlicher Bauch", serratus: "Sägemuskel",
+  quads: "Oberschenkel vorne", adductors: "Adduktoren (Innenseite)", abductors: "Abduktoren (Hüfte außen)", hamstrings: "Beinbeuger", glutes: "Po", calves: "Waden", shins: "Schienbein",
+  traps: "Nacken", lats: "Latissimus (breiter Rücken)", lowerback: "Unterer Rücken" };
+// Fachbegriffe der Muskeln in jeder Gruppe
+const MUS_LAT = { chest: "Pectoralis major – oberer (Pars clavicularis) und unterer Teil", shoulders: "Deltoideus (vorderer, seitlicher, hinterer Kopf), Infraspinatus",
+  biceps: "Biceps brachii (langer & kurzer Kopf), Brachialis", triceps: "Triceps brachii (langer & seitlicher Kopf)", forearms: "Brachioradialis, Unterarm-Beuger & -Strecker",
+  abs: "Rectus abdominis", obliques: "Obliquus externus abdominis", serratus: "Serratus anterior", quads: "Quadrizeps: Rectus femoris, Vastus lateralis, Vastus medialis · Sartorius",
+  adductors: "Adductor longus, Adductor magnus, Pectineus, Gracilis", abductors: "Gluteus medius, Tensor fasciae latae", glutes: "Gluteus maximus",
+  hamstrings: "Biceps femoris, Semitendinosus, Semimembranosus", calves: "Gastrocnemius (innerer & äußerer Kopf), Soleus, Peroneus", shins: "Tibialis anterior",
+  traps: "Trapezius (oberer, mittlerer, unterer Teil), Sternocleidomastoideus", lats: "Latissimus dorsi, Teres major", lowerback: "Erector spinae (Rückenstrecker)" };
+// Welche Muskeln arbeiten bei welcher Übung? [Muster, Hauptmuskeln, mittrainiert]
+const MUS_RULES = [
+  [/handstand/i, "shoulders triceps", "traps abs chest forearms serratus"],
+  [/pike/i, "shoulders triceps", "chest traps serratus"],
+  [/muscle.?up/i, "lats chest triceps", "biceps shoulders forearms abs"],
+  [/dips?\b.*trizeps|trizeps.*dips|bench dip/i, "triceps", "chest shoulders"],
+  [/dips/i, "chest triceps", "shoulders"],
+  [/enges bank|diamond/i, "triceps chest", "shoulders"],
+  [/bankdr|bench|liegest|push.?up|brustpresse|chest press/i, "chest", "shoulders triceps serratus"],
+  [/butterfly(?!.*reverse)|fliegende|crossover|cable fly/i, "chest", "shoulders"],
+  [/reverse butterfly|face ?pull|vorgebeugtes seitheben|\brear/i, "shoulders traps", "lats"],
+  [/schulterdr|overhead|military|arnold|shoulder press/i, "shoulders", "triceps traps serratus"],
+  [/seitheben|frontheben|lateral raise/i, "shoulders", "traps"],
+  [/shrug/i, "traps", "forearms"],
+  [/rumänisch|romanian|rdl|good morning/i, "hamstrings glutes", "lowerback forearms adductors"],
+  [/kreuzheben|deadlift/i, "hamstrings glutes lowerback", "traps forearms quads lats adductors"],
+  [/klimmz|pull.?up|\bchin|latzug|lat pull/i, "lats", "biceps forearms traps shoulders"],
+  [/scapula/i, "lats traps", "forearms serratus"],
+  [/rudern(?!gerät)|\brow(?!ing)|australian/i, "lats traps", "biceps shoulders lowerback forearms"],
+  [/pullover/i, "lats", "chest triceps serratus"],
+  [/hammer/i, "biceps forearms", ""],
+  [/reverse curl|handgelenk|wrist/i, "forearms", "biceps"],
+  [/beinbeuger|leg curl/i, "hamstrings", "calves"],
+  [/curl/i, "biceps", "forearms"],
+  [/french|skull|trizeps|tricep|kickback|pushdown/i, "triceps", "shoulders"],
+  [/farmer|dead hang/i, "forearms", "traps shoulders abs"],
+  [/beinstreck|leg ext/i, "quads", ""],
+  [/adduktor|adductor/i, "adductors", ""],
+  [/abduktor|abductor|clam|seitliches beinheben/i, "abductors", "glutes"],
+  [/hip thrust|glute|hüftheb|kickback.*bein|brücke|bridge/i, "glutes", "hamstrings abductors"],
+  [/waden|calf/i, "calves", ""],
+  [/hyperext|rückenstreck/i, "lowerback", "glutes hamstrings"],
+  [/pistol|bulgarian|split|ausfall|lunge/i, "quads glutes", "hamstrings adductors abductors calves"],
+  [/kniebeug|squat|beinpresse|leg press|\bhack/i, "quads glutes", "adductors hamstrings lowerback calves"],
+  [/russian twist|seitst|side plank|oblique|holzhack|woodchop/i, "obliques", "abs"],
+  [/crunch|sit.?up|bauch|beinheben|leg raise|ab wheel|hollow|dragon|l-sit|knee raise/i, "abs", "obliques"],
+  [/plank|unterarmst/i, "abs", "obliques shoulders glutes"],
+  [/seilspring|\brope/i, "calves", "shins quads shoulders"],
+  [/laufen|laufband|joggen|\brun|sprint|gehen|steigung|wandern/i, "quads hamstrings calves", "glutes shins abs"],
+  [/radfahr|\brad\b|bike|ergometer|spinning/i, "quads", "glutes hamstrings calves"],
+  [/rudergerät|rowing/i, "lats quads", "hamstrings glutes biceps shoulders"],
+  [/crosstrainer|elliptical/i, "quads glutes", "hamstrings calves shoulders"],
+];
+const MUS_GROUP = { "Brust": ["chest", "shoulders triceps"], "Schultern": ["shoulders", "triceps traps"], "Trizeps": ["triceps", "chest"], "Rücken": ["lats traps", "biceps lowerback"],
+  "Bizeps": ["biceps", "forearms"], "Hintere Schulter": ["shoulders traps", "lats"], "Beine": ["quads glutes", "hamstrings calves"], "Bauch": ["abs", "obliques"],
+  "Unterarme": ["forearms", "biceps"], "Calisthenics Push": ["chest triceps", "shoulders"], "Calisthenics Pull": ["lats", "biceps forearms"],
+  "Calisthenics Beine": ["quads glutes", "hamstrings calves"], "Core": ["abs", "obliques"], "Ausdauer": ["quads calves", "hamstrings glutes"] };
+function musOf(name, group) {
+  const r = MUS_RULES.find(([re]) => re.test(name || "")), g = MUS_GROUP[group];
+  const [p, s] = r ? [r[1], r[2]] : g ? g : ["", ""];
+  const P = p.split(" ").filter(Boolean), Sx = s.split(" ").filter(x => x && !P.includes(x));
+  return { p: P, s: Sx };
+}
+function musMerge(list) { const p = new Set(), s = new Set(); list.forEach(m => { m.p.forEach(x => p.add(x)); m.s.forEach(x => s.add(x)); }); p.forEach(x => s.delete(x)); return { p: [...p], s: [...s] }; }
+function musFig(paths, base, m, dx, fib) {
+  const cls = k => m.p.includes(k) ? "mp" : m.s.includes(k) ? "ms" : "mo";
+  const half = paths.map(([k, d]) => `<path class="${cls(k)}" d="${d}"><title>${MUS_N[k]}</title></path>`).join("");
+  const sil = `<path d="${MUS_SIL}"/>`;
+  const f = `<path class="mf" d="${fib}"/>`;
+  return `<g transform="translate(${dx} 0)"><g class="mb">${sil}<g transform="matrix(-1 0 0 1 120 0)">${sil}</g>${base}</g>${half}<g transform="matrix(-1 0 0 1 120 0)">${half}</g>${f}<g transform="matrix(-1 0 0 1 120 0)">${f}</g></g>`;
+}
+function musSVG(m, opt = {}) {
+  const base = MUS_BASE.head + MUS_BASE.hands + MUS_BASE.knees + MUS_BASE.feet;
+  return `<svg class="mus3" viewBox="0 0 250 244" role="img" aria-label="Muskelkarte">${musFig(MUS_F, base, m, 0, MUS_FIB_F)}${musFig(MUS_B, base, m, 130, MUS_FIB_B)}
+    ${opt.labels !== false ? `<text x="60" y="241" class="mlab">vorne</text><text x="190" y="241" class="mlab">hinten</text>` : ""}</svg>`;
+}
+function musLegend(m) {
+  const row = (k, c) => `<div><i class="${c}"></i><span><b>${MUS_N[k]}</b><em>${MUS_LAT[k] || ""}</em></span></div>`;
+  return `<div class="mus3-lg">${m.p.length ? `<small>Hauptsächlich</small>${m.p.map(k => row(k, "mp")).join("")}` : ""}${m.s.length ? `<small>Mittrainiert</small>${m.s.map(k => row(k, "ms")).join("")}` : ""}${!m.p.length && !m.s.length ? `<div class="muted">Für diese Übung kenne ich die Muskeln noch nicht.</div>` : ""}</div>`;
+}
+
+// Fenster „Muskeln“: diese Übung oder das ganze Training von heute
+function musWin(it) {
+  const all = W3T.musAll === true, w = S.workout, exs = w.exercises || [];
+  const one = it.kind === "ex" ? musOf(exs[it.i].name, exs[it.i].group) : musOf(w.plan, it.kind === "run" ? "Ausdauer" : "");
+  const m = all ? musMerge([...(it.kind !== "ex" ? [one] : []), ...(w3Plan().type === "run" ? [musOf("Laufen", "Ausdauer")] : []), ...exs.map(e => musOf(e.name, e.group))]) : one;
+  return `<div class="vc3-md"><button class="${all ? "" : "on"}" data-w3a="musall" data-v="0">Diese Übung</button><button class="${all ? "on" : ""}" data-w3a="musall" data-v="1">Ganzes Training</button></div>${musSVG(m)}${musLegend(m)}`;
+}
+document.addEventListener("click", e => { const b = e.target.closest?.('#w3 [data-w3a="musall"]'); if (!b) return; e.stopImmediatePropagation(); W3T.musAll = b.dataset.v === "1"; w3TSave(); w3Render(); }, true);
 // „Gesamt“: Wiederholungen aus dem Zähler in den Tabata-Satz übernehmen (am Ende und für Nachzügler)
 function w3TbFlush() {
   const tb = W3T.tb, n = W3T.cnt || 0, it = w3It(); if (!tbTotal() || !n || !it || it.kind !== "ex") return 0;
@@ -5748,7 +5912,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1795553753";
+const APP_VER = "1795554620";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
