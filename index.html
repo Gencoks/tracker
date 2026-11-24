@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="text-scale" content="scale">
 <meta name="theme-color" content="#0e0e0f">
 <title>Tracker</title>
 <link rel="manifest" href="./manifest.json">
@@ -1971,7 +1972,7 @@
   #w3 .pg-pick { z-index: 10; }
 
   /* Rangkarte: Rangfarbe strahlt etwas stärker aus der linken oberen Ecke */
-  :root[data-ui=v2] .rank-card:not(.god) { background-image: radial-gradient(130% 100% at 0% 0%, color-mix(in srgb, var(--rc) 26%, transparent) 0%, color-mix(in srgb, var(--rc) 10%, transparent) 38%, transparent 68%) !important; }
+  :root[data-ui=v2] .rank-card:not(.god) { background-repeat: no-repeat !important; background-image: radial-gradient(130% 1100px at 0% 0%, color-mix(in srgb, var(--rc) 26%, transparent) 0%, color-mix(in srgb, var(--rc) 10%, transparent) 38%, transparent 68%) !important; }
   /* Erfolge: Linien-Symbole */
   :root[data-ui=v2] .ach-ico { color: var(--tc); }
   :root[data-ui=v2] .ach-ico .ach-svg { width: 24px; height: 24px; display: block; }
@@ -2425,7 +2426,9 @@ html:root.ui3 :focus:not(:focus-visible):not(input):not(textarea) { outline: non
 #w3 .gw.q .gw-b { align-content: start; grid-auto-rows: max-content; }
 
 </style>
-<style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }</style>
+<style>.rank-warn.danger { background: rgba(255,70,70,.14); border: 1px solid rgba(255,80,80,.55); color: #ff8a8a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13.5px; } .rank-warn.danger b { color: #ff5c5c; }#w3 .tb3-sv { display: flex; flex-direction: column; gap: 5px; } #w3 .tb3-sv > small { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8a8a90; font-weight: 700; }
+#w3 .tb3-sv em { font-style: normal; font-size: 11px; line-height: 1.35; color: #9a9aa0; }
+</style>
 </head>
 <body>
 
@@ -4693,13 +4696,15 @@ function w3Body(it, g) {
     const sel = (k, v) => `<select data-w3sel="tb${k}">${its.map((x, n) => `<option value="${n}" ${n === v ? "selected" : ""}>${n + 1}. ${esc(x.name)}</option>`).join("")}</select>`;
     return `${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tbrange"><label><small>Ab Übung</small>${sel("from", fr)}</label><label><small>Bis Übung</small>${sel("to", to)}</label></div>` : `<div class="gw-tbr">Tabata für Übung ${fr + 1}${to !== fr ? `–${to + 1}` : ""}</div>`}
       ${W3T.tbset || !b.acc && !b.run ? `<div class="gw-tb3"><label class="w3fld"><small>Arbeit s</small><input data-w3t="work" inputmode="numeric" value="${b.work}"></label><label class="w3fld"><small>Pause s</small><input data-w3t="rest" inputmode="numeric" value="${b.rest}"></label><label class="w3fld"><small>Runden</small><input data-w3t="rounds" inputmode="numeric" value="${b.rounds || ""}" placeholder="∞" ${b.rounds ? "" : "disabled"}></label></div>
-      <button class="gw-endless ${b.rounds ? "" : "on"}" data-w3a="tbinf"><i></i><span><b>Endlos</b><small>Läuft, bis du „Beenden“ tippst</small></span></button>` : ""}
+      <button class="gw-endless ${b.rounds ? "" : "on"}" data-w3a="tbinf"><i></i><span><b>Endlos</b><small>Läuft, bis du „Beenden“ tippst</small></span></button>
+      <div class="tb3-sv"><small>Speichern</small><div class="vc3-md"><button class="${tbTotal() ? "on" : ""}" data-w3a="tbsave" data-v="total">Gesamt</button><button class="${tbTotal() ? "" : "on"}" data-w3a="tbsave" data-v="round">Pro Runde</button></div>
+        <em>${tbTotal() ? "Zeit läuft durch, piept jede Runde – alle Wdh. aus dem Zähler landen am Ende in einem Satz (auch Nachzügler)." : "Jede Runde wird ein eigener Satz – die Wdh. werden beim Piepen übernommen."}</em></div>` : ""}
       <div class="gw-tbph ${t.done ? "done" : t.work ? "work" : "rest"}" id="w3tbph">${t.done ? "Geschafft! 💪" : !b.run && !b.acc ? "Bereit" : t.work ? "Belastung" : "Pause"}</div>
       <div class="gw-big fx" id="w3tb">${fixD(fmtMs(t.left || (!b.acc ? b.work * 1000 : 0), false))}</div>
       <div class="gw-tbr" id="w3tbr">${tbLine(t)}</div>
       <button class="gw-main ${b.run ? "stop" : ""}" data-w3a="${b.run ? "tbstop" : "tbgo"}">${b.run ? "Pause" : b.acc && !t.done ? "Weiter" : "Start"}</button>
       <div class="gw-row">${(b.run || b.acc) && !t.done ? `<button class="acc" data-w3a="tbend">■ Beenden</button>` : ""}<button data-w3a="tbreset">↺ Neu</button></div>
-      ${(b.run || b.acc) && !t.done ? `<div class="gw-hint">Schaffst du nicht mehr? „Beenden“ übernimmt alle Runden bis jetzt.</div>` : t.done && b.saved ? `<div class="gw-hint">${b.saved} ${b.saved === 1 ? "Runde" : "Runden"} als Sätze übernommen ✓</div>` : ""}`; }
+      ${(b.run || b.acc) && !t.done ? `<div class="gw-hint">Schaffst du nicht mehr? „Beenden“ übernimmt alle Runden bis jetzt.</div>` : t.done && b.saved ? `<div class="gw-hint">${b.saved} ${b.saved === 1 ? "Runde" : "Runden"} ${tbTotal() ? "in einem Satz" : "als Sätze"} gespeichert ✓</div>${tbTotal() && W3T.cnt > 0 && b.ref ? `<button class="gw-main" data-w3a="tbflush">＋ ${W3T.cnt} Wdh. nachtragen</button>` : ""}` : ""}`; }
   if (g === "sets" && it.kind !== "ex") return w3SetsRun(it);
   if (g === "notes" && it.kind !== "ex") { const o = it.kind === "run" ? "run" : "session"; return `<label class="w3fld"><small>Notiz zum Training heute</small><textarea data-w3in="${o}.note" placeholder="Wie lief es? Wetter, Gefühl, Schmerzen …">${esc((w[o] || {}).note || "")}</textarea></label>`; }
   if (it.kind !== "ex") { const r = it.kind === "run" ? (w.run || {}) : (w.session || {});
@@ -4820,7 +4825,9 @@ async function w3Click(e) {
     // laufende Arbeitsphase zählt mit, wenn schon ein paar Sekunden geschafft sind
     if (!t.done && t.work && b2.ph % 2 === 0) { const done = b2.work - Math.ceil(t.left / 1000); if (done >= 3) w3AutoSet("tabata", done, t.round); }
     b2.acc = tbMs(); b2.run = false; b2.done = true; b2.ended = Math.max(1, t.work ? t.round - 1 : t.round); b2.ph = -1; w3TSave();
-    pgBeep(784, 160, 2); pgBuzz([120, 60, 120]); toast(`🔁 Tabata beendet · ${b2.saved || 0} ${b2.saved === 1 ? "Runde" : "Runden"} in einem Satz gespeichert`); return re(); }
+    w3TbFlush(); pgBeep(784, 160, 2); pgBuzz([120, 60, 120]); toast(`🔁 Tabata beendet · ${b2.saved || 0} ${b2.saved === 1 ? "Runde" : "Runden"} ${tbTotal() ? "in einem Satz" : "als Sätze"} gespeichert`); return re(); }
+  if (a === "tbsave") { W3T.tb.save = b.dataset.v; W3T.tb.ref = null; w3TSave(); return re(); }
+  if (a === "tbflush") { const n = w3TbFlush(); toast(n ? `＋${n} Wdh. nachgetragen ✓` : "Nichts nachzutragen"); return re(); }
   if (a === "barrot") { const nb = { ...(W3.bar || {}), h: !(W3.bar || {}).h }; if (nb.h) { nb.x = 8; nb.y = Math.max(90, innerHeight - 260); } else { nb.x = innerWidth - 66; nb.y = 90; } W3.bar = nb; w3Save(); return re(); }
   if (a === "addcnt") { W3.tabs.push({ id: pgId(), type: "count", x: 90 + (W3.tabs.length % 3) * 20, y: 260 + (W3.tabs.length % 4) * 30, n: 0 }); w3Save(); return re(); }
   if (a === "mode" && ex) { ex.mode = b.dataset.v; if (!ex.sets.length) ex.sets = [emptySet(ex.mode)]; saveWorkout(false); w3Cur(true); return re(); }
@@ -4928,7 +4935,7 @@ function w3Tick() { if (w3TickT) return; w3TickT = setInterval(() => {
   if (W3T.tm.run && Date.now() >= W3T.tm.end) { W3T.tm.run = false; W3T.tm.left = 0; W3T.tm.done = true; w3TSave(); pgBeep(988, 220, 3); pgBuzz([300, 120, 300]);
     if (!W3T.tm.rest && W3T.cnt > 0) w3AutoSet("timer", W3T.tm.dur); else toast(W3T.tm.rest ? "⏳ Pause vorbei – nächster Satz!" : "⏳ Zeit ist um!"); if (on) w3Render(); }
   if (W3T.tb.run) { const t = tbState(); if ((t.done || t.idx !== W3T.tb.ph) && W3T.tb.ph >= 0 && W3T.tb.ph % 2 === 0) w3AutoSet("tabata", W3T.tb.work, W3T.tb.ph / 2 + 1);
-    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; toast(`🔁 Tabata geschafft · ${W3T.tb.saved || 0} Runden in einem Satz gespeichert`); w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
+    if (t.done) { W3T.tb.run = false; W3T.tb.acc = W3T.tb.rounds * (W3T.tb.work + W3T.tb.rest) * 1000; W3T.tb.done = true; w3TbFlush(); toast(`🔁 Tabata geschafft · ${W3T.tb.saved || 0} Runden ${tbTotal() ? "in einem Satz" : "als Sätze"} gespeichert`); w3TSave(); pgBeep(1046, 260, 3); pgBuzz([400, 150, 400]); if (on) w3Render(); }
     else { if (t.idx !== W3T.tb.ph) { W3T.tb.ph = t.idx; w3TSave(); pgBeep(t.work ? 988 : 660, 220, t.work ? 2 : 1); pgBuzz(t.work ? [200, 80, 200] : 250); }
       else if (t.left <= 3000 && t.left % 1000 > 750) pgBeep(560, 70); } }
   if (!on || document.hidden) { if (!W3T.tm.run && !W3T.sw.run && !W3T.tb.run) { clearInterval(w3TickT); w3TickT = 0; } return; }
@@ -5007,22 +5014,24 @@ const VC = { rec: null, on: false, run: false, t0: 0, acc: 0, last: 0, list: [],
 const VC_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 const VC_GO = /\b(start|starte|starten|los|go|weiter|jetzt)\b/i, VC_PAUSE = /\b(pause|pausieren|warte)\b/i,
   VC_STOP = /\b(stopp?|stoppen|ende|fertig|aus|halt|runter)\b/i, VC_RESET = /\b(zurücksetzen|zurück|reset|neu|löschen)\b/i;
-const vcMode = () => W3T.vcMode === "sound" ? "sound" : "word";
+const vcMode = () => W3T.vcMode === "sound" ? "sound" : "word", vcSum = () => W3T.vcSnd === "sum";
 const vcMs = () => VC.acc + (VC.run ? Date.now() - VC.t0 : 0);
 function vcHTML(it) {
   const auto = W3T.vcAuto !== false, md = vcMode(), sens = W3T.vcSens || 5, paused = !VC.run && VC.acc > 0;
   const st = md === "word" && !VC_SR ? "Spracherkennung wird hier nicht unterstützt – nimm „Geräusch“" : VC.err ? esc(VC.err)
-    : VC.on ? (md === "sound" ? (VC.run ? "Läuft – Laut zum Stoppen" : "Bereit – kurzer Laut zum Starten") : VC.run ? "Läuft – „Pause“ oder „Stopp“" : paused ? "Pausiert – „Weiter“ oder „Stopp“" : "Hört zu – sag „Start“") : "Mikrofon aus";
+    : VC.on ? (md === "sound" ? (VC.run ? (vcSum() ? "Läuft – Laut pausiert" : "Läuft – Laut zum Stoppen") : paused ? "Pausiert – Laut macht weiter, „Stopp“ speichert" : "Bereit – kurzer Laut zum Starten") : VC.run ? "Läuft – „Pause“ oder „Stopp“" : paused ? "Pausiert – „Weiter“ oder „Stopp“" : "Hört zu – sag „Start“") : "Mikrofon aus";
   return `<div class="vc3-md"><button class="${md === "word" ? "on" : ""}" data-w3a="vcmd" data-v="word">Wörter</button><button class="${md === "sound" ? "on" : ""}" data-w3a="vcmd" data-v="sound">Geräusch · sofort</button></div>
     <div class="vc3-st ${VC.on ? "on" : ""}"><i></i><span id="w3vcst">${st}</span></div>
     ${md === "sound" && VC.on ? `<div class="vc3-meter"><b id="w3vclv"></b><em style="left:${vcThr() * 100 / .5}%"></em></div>` : ""}
     <div class="gw-big fx ${VC.run ? "vc3-run" : paused ? "vc3-pa" : ""}" id="w3vc">${fixD(fmtMs(VC.run || paused ? vcMs() : VC.last))}</div>
     <button class="gw-main ${VC.on ? "stop" : ""}" data-w3a="vcmic">${VC.on ? "Zuhören beenden" : "🎤 Zuhören starten"}</button>
     <div class="gw-row vc3-btns">${VC.run ? `<button data-w3a="vcpause">❚❚ Pause</button>` : `<button data-w3a="vcgo">▶ ${paused ? "Weiter" : "Start"}</button>`}<button class="acc" data-w3a="vcstop" ${VC.run || paused ? "" : "disabled"}>■ Stopp</button><button data-w3a="vcreset" ${VC.run || paused ? "" : "disabled"}>↺</button></div>
+    ${md === "sound" ? `<div class="tb3-sv"><small>Laut / Pfiff</small><div class="vc3-md"><button class="${vcSum() ? "" : "on"}" data-w3a="vcsnd" data-v="stop">Stoppt & speichert</button><button class="${vcSum() ? "on" : ""}" data-w3a="vcsnd" data-v="sum">Pause · Zeit addiert</button></div>
+      <em>${vcSum() ? "Pfeifen startet, nochmal pausiert, nochmal läuft weiter – die Zeit zählt zusammen. Gespeichert wird mit „■ Stopp“." : "Pfeifen startet, nochmal pfeifen stoppt und speichert die Zeit."}</em></div>` : ""}
     ${md === "sound" ? `<div class="ac3-sl vc3-sens"><small>Empfindlichkeit</small><div><span>leise</span><input type="range" min="1" max="10" value="${sens}" data-vcsens="1"><span>laut</span></div></div>` : ""}
     <button class="gw-endless ${auto ? "on" : ""}" data-w3a="vcauto"><i></i><span><b>Als Haltezeit speichern</b><small>${it.kind === "ex" ? "Bei „Stopp“ wird die Zeit ein Satz (Halten)" : "Bei „Stopp“ wird die Zeit als Dauer eingetragen"}</small></span></button>
     ${VC.list.length ? `<div class="vc3-l">${VC.list.slice(-5).map((x, i, a) => `<span><small>${VC.list.length - a.length + i + 1}.</small> ${fmtMs(x, false)}</span>`).join("")}</div>`
-      : `<div class="gw-hint">${md === "word" ? "„Start“ · „Pause“ · „Weiter“ · „Stopp“ (speichert) · „Zurücksetzen“" : "Ein kurzer lauter Laut startet, der nächste stoppt und speichert. Gut im Handstand: „Hep!“ oder Schnalzen."}</div>`}`;
+      : `<div class="gw-hint">${md === "word" ? "„Start“ · „Pause“ · „Weiter“ · „Stopp“ (speichert) · „Zurücksetzen“" : vcSum() ? "Pfiff/Schnalzen: Start ↔ Pause, die Zeit addiert sich. „■ Stopp“ speichert alles." : "Ein kurzer lauter Laut startet, der nächste stoppt und speichert. Gut im Handstand: „Hep!“ oder Schnalzen."}</div>`}`;
 }
 // ---- Wörter: kurze Erkennungs-Runden, Zeit wird auf den Beginn des Worts zurückgerechnet
 function vcListen(on) {
@@ -5064,7 +5073,7 @@ async function vcSoundOn() {
     if (Date.now() - t0 < 500) { VC.base = Math.max(VC.base, rms); return; }      // kurz einmessen (Umgebung)
     if (!VC.run) VC.base = VC.base * .995 + Math.min(rms, VC.base * 2) * .005;      // Grundrauschen langsam nachführen
     const lv = $("#w3vclv"); if (lv) lv.style.width = Math.min(100, rms * 200) + "%";
-    if (rms > vcThr()) { if (++VC.hot === 2 && Date.now() - (VC.cmdT || 0) > 700) { VC.cmdT = Date.now(); const at = Date.now() - 40; VC.run ? vcStop(at) : vcStart(at); } }
+    if (rms > vcThr()) { if (++VC.hot === 2 && Date.now() - (VC.cmdT || 0) > 700) { VC.cmdT = Date.now(); const at = Date.now() - 40; VC.run ? (vcSum() ? vcPause(at) : vcStop(at)) : vcStart(at); } }
     else VC.hot = 0;
   }, 20);
 }
@@ -5092,6 +5101,7 @@ document.addEventListener("click", e => { const b = e.target.closest?.("#w3 [dat
   else if (a === "vcok") { $("#vc3ask")?.remove(); try { localStorage.setItem("tracker-vcok", "1"); } catch {} vcListen(true); vcRe(); }
   else if (a === "vcno") { $("#vc3ask")?.remove(); }
   else if (a === "vcgo") vcStart(); else if (a === "vcpause") vcPause(); else if (a === "vcstop") vcStop(); else if (a === "vcreset") vcReset();
+  else if (a === "vcsnd") { W3T.vcSnd = b.dataset.v; w3TSave(); vcRe(); }
   else if (a === "vcmd") { const on = VC.on; vcListen(false); W3T.vcMode = b.dataset.v; w3TSave(); if (on) vcListen(true); vcRe(); }
   else if (a === "vcauto") { W3T.vcAuto = W3T.vcAuto === false; w3TSave(); vcRe(); } }, true);
 document.addEventListener("input", e => { const r = e.target.closest?.("[data-vcsens]"); if (!r) return; W3T.vcSens = +r.value; w3TSave(); const m = $("#w3 .vc3-meter em"); if (m) m.style.left = vcThr() * 100 / .5 + "%"; });
@@ -5108,14 +5118,23 @@ async function vcAsk() {
   $("#w3").appendChild(d);
 }
 // ---------- Tabata: eine Übung = ein Satz. Jede Runde addiert Zähler-Wdh. und reine Arbeitszeit ----------
+function tbTotal() { return W3T.tb.save !== "round"; }
 function w3TbAdd(it, ex, m, dur, rd) {
-  const tb = W3T.tb, n = W3T.cnt || 0; W3T.cnt = 0;
+  const tb = W3T.tb, n = tbTotal() ? 0 : W3T.cnt || 0; if (!tbTotal()) W3T.cnt = 0;
   ex.form = { via: "tabata", work: tb.work, rest: tb.rest, rounds: tb.rounds };
+  if (!tbTotal()) { w3AddSet(ex, m, n || "", { via: "tabata", dur, rd, rest: tb.rest, sec: String(dur) }); tb.saved = (tb.saved || 0) + 1; w3TSave(); if ($("#w3")?.classList.contains("on")) w3Render(); return; }
   const ref = tb.ref, st = ref && ref.date === S.trainDate && ref.i === it.i && ex.sets[ref.j]?.via === "tabata" ? ex.sets[ref.j] : null;
   if (st) { if (n) st.reps = String(numv(st.reps) + n); st.dur = numv(st.dur) + dur; st.sec = String(st.dur); st.rd = (numv(st.rd) || 1) + 1; st.rest = tb.rest;
     saveWorkout(false); pgBuzz(30); }
   else { const j = w3SiDef(ex); w3AddSet(ex, m, n || "", { via: "tabata", dur, rd: 1, rest: tb.rest, sec: String(dur) }); tb.ref = { date: S.trainDate, i: it.i, j }; }
   tb.saved = (tb.saved || 0) + 1; w3TSave(); if ($("#w3")?.classList.contains("on")) w3Render();
+}
+// „Gesamt“: Wiederholungen aus dem Zähler in den Tabata-Satz übernehmen (am Ende und für Nachzügler)
+function w3TbFlush() {
+  const tb = W3T.tb, n = W3T.cnt || 0, it = w3It(); if (!tbTotal() || !n || !it || it.kind !== "ex") return 0;
+  const ex = S.workout.exercises[it.i], ref = tb.ref, st = ref && ref.date === S.trainDate && ref.i === it.i ? ex.sets[ref.j] : null;
+  if (!st || st.via !== "tabata") return 0;
+  st.reps = String(numv(st.reps) + n); W3T.cnt = 0; w3TSave(); saveWorkout(false); pgBuzz(30); return n;
 }
 // ---------- Fenster einrasten (wie bei Windows): nah am Rand / in der Ecke → bündig andocken ----------
 const W3PIN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 14v7"/></svg>';
@@ -5729,7 +5748,7 @@ document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id
 navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.type === "open" && e.data.what === "steps") stepsOpen(); });
 
 // ---------- Neue Version verfügbar? → kleines Fenster statt Neuladen beim Scrollen ----------
-const APP_VER = "1794173536";
+const APP_VER = "1795553753";
 async function updCheck() {
   if (location.protocol === "file:" || document.hidden || !navigator.onLine || $("#upd3")) return;
   try { const t = await (await fetch(`./index.html?u=${Date.now()}`, { cache: "no-store" })).text(), m = t.match(/const APP_VER = "(\d+)"/);
@@ -6768,6 +6787,7 @@ function watchTodos() {
   S.unsubTodos = onSnapshot(todoCol(), snap => {
     S.todos = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.created || "").localeCompare(b.created || ""));
     updateTodoBadge();
+    { const sig = JSON.stringify(S.todos.filter(t => !t.done && t.remind).map(t => [t.id, t.remind, t.due])); if (sig !== S._todoRemSig) { S._todoRemSig = sig; writePushCfg(); } }
     if (S.tab === "todo" && !S.noteOpen && document.activeElement?.id !== "todoIn") renderTodo();
     else if (S.tab === "todo" && !S.noteOpen) { const v = $("#todoIn").value; renderTodo(); const i = $("#todoIn"); i.value = v; i.focus(); }
     if (S.tab === "start") renderStart();
@@ -11021,6 +11041,7 @@ function writePushCfg() {
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Berlin",
       general: REMIND_TIMES, weekNames, restDays,
       tasks: (S.taskCfg || DEFAULT_TASKS).map(t => ({ key: t.key, t: t.t || "Training", days: t.days || null, remind: remindsOf(t)[0] || null, reminds: remindsOf(t), training: !!t.training, kind: t.kind || null })),
+      todoRem: (S.todos || []).filter(t => !t.done && t.remind).slice(0, 40).map(t => ({ id: t.id, remind: t.remind, due: t.due || null })),
     };
     setDoc(userRef(), { push: { enabled: true, cfg } }, { merge: true }).catch(() => {});
   }, 800);
